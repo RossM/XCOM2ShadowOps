@@ -924,7 +924,7 @@ static function UpgradeItems(XComGameState NewGameState, XComGameState_Item Item
 		for (iItems = 0; iItems < XComHQ.Inventory.Length; iItems++)
 		{
 			InventoryItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[iItems].ObjectID));
-			if (InventoryItemState.GetMyTemplateName() == BaseItemTemplate.DataName && InventoryItemState.GetMyWeaponUpgradeTemplates().Length > 0)
+			if (InventoryItemState.GetMyTemplateName() == BaseItemTemplate.DataName && InventoryItemState.HasBeenModified())
 			{
 				UpgradedItemState = UpgradeItemTemplate.CreateInstanceFromTemplate(NewGameState);
 				NewGameState.AddStateObject(UpgradedItemState);
@@ -935,6 +935,8 @@ static function UpgradeItems(XComGameState NewGameState, XComGameState_Item Item
 				{
 					UpgradedItemState.ApplyWeaponUpgradeTemplate(WeaponUpgradeTemplate);
 				}
+				UpgradedItemState.WeaponAppearance = InventoryItemState.WeaponAppearance;
+				UpgradedItemState.Nickname = InventoryItemState.Nickname;
 
 				// Delete the old item, and add the new item to the inventory
 				NewGameState.RemoveStateObject(InventoryItemState.GetReference().ObjectID);
@@ -964,6 +966,8 @@ static function UpgradeItems(XComGameState NewGameState, XComGameState_Item Item
 					{
 						UpgradedItemState.ApplyWeaponUpgradeTemplate(WeaponUpgradeTemplate);
 					}
+					UpgradedItemState.WeaponAppearance = InventoryItemState.WeaponAppearance;
+					UpgradedItemState.Nickname = InventoryItemState.Nickname;
 
 					// Delete the old item
 					NewGameState.RemoveStateObject(InventoryItemState.GetReference().ObjectID);
