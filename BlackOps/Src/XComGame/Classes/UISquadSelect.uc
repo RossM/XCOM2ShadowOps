@@ -480,12 +480,12 @@ simulated function UpdateNavHelp()
 		}
 
 		// Re-enabling this option for Steam builds to assist QA testing, TODO: disable this option before release
-`if(`notdefined(FINAL_RELEASE))
+//`if(`notdefined(FINAL_RELEASE))
 		if(CheatMgr == none || !CheatMgr.bGamesComDemo)
 		{
 			`HQPRES.m_kAvengerHUD.NavHelp.AddCenterHelp("SIM COMBAT", "", OnSimCombat, !CanLaunchMission(), GetTooltipText());
 		}	
-`endif
+//`endif
 	}
 }
 
