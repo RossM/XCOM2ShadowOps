@@ -2507,6 +2507,57 @@ exec function AddItem(string strItemTemplate, optional int Quantity = 1, optiona
 	`log("Added item" @ strItemTemplate @ "object id" @ ItemState.ObjectID);
 }
 
+exec function GiveAbilityToBarracks(name ability)
+{
+	local XComGameState NewGameState;
+	local XComGameState_HeadquartersXCom XComHQ;
+	local XComGameStateHistory History;
+	local ClassAgnosticAbility HiddenTalent;
+	local array<SoldierClassAbilityType> EligibleAbilities;
+	local XComGameState_Unit UnitState;
+	local X2AbilityTemplate AbilityTemplate;
+	local int idx, i;
+
+	History = `XCOMHISTORY;
+	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Rankup Soliers Cheat");
+	XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+	NewGameState.AddStateObject(XComHQ);
+
+	for(idx = 0; idx < XComHQ.Crew.Length; idx++)
+	{
+		UnitState = XComGameState_Unit(History.GetGameStateForObjectID(XComHQ.Crew[idx].ObjectID));
+		if(UnitState != none && UnitState.GetMyTemplateName() == 'Soldier')
+		{
+			EligibleAbilities = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().GetCrossClassAbilities(UnitState.GetSoldierClassTemplate());
+			for(i = 0; i < EligibleAbilities.Length; i++)
+			{
+				if (EligibleAbilities[i].AbilityName != ability)
+					continue;
+
+				HiddenTalent.AbilityType = EligibleAbilities[i];
+				HiddenTalent.iRank = 0;
+				HiddenTalent.bUnlocked = true;
+
+				UnitState.AWCAbilities.AddItem(HiddenTalent);
+
+				AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(EligibleAbilities[i].AbilityName);
+				if (AbilityTemplate != none && AbilityTemplate.SoldierAbilityPurchasedFn != none)
+					AbilityTemplate.SoldierAbilityPurchasedFn(NewGameState, UnitState);
+			}
+		}
+	}
+
+	if( NewGameState.GetNumGameStateObjects() > 0 )
+	{
+		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	}
+	else
+	{
+		History.CleanupPendingGameState(NewGameState);
+	}
+}
+
 // Level up all soldiers
 exec function LevelUpBarracks(optional int Ranks = 1)
 {

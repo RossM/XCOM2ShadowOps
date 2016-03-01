@@ -5,6 +5,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	local array<X2DataTemplate> Templates;
 	
 	Templates.AddItem(LightningReflexes());
+	Templates.AddItem(DeepPockets());
 
 	return Templates;
 }
@@ -63,3 +64,22 @@ function bool ReflexesEffectTicked(X2Effect_Persistent PersistentEffect, const o
 
 	return false;           //  do not end the effect
 }
+
+static function X2AbilityTemplate DeepPockets()
+{
+	local X2AbilityTemplate Template;
+
+	Template = PurePassive('DeepPockets', "img:///UILibrary_PerkIcons.UIPerk_deeppockets");
+
+	Template.SoldierAbilityPurchasedFn = DeepPocketsPurchased;
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function DeepPocketsPurchased(XComGameState NewGameState, XComGameState_Unit UnitState)
+{
+	UnitState.ValidateLoadout(NewGameState);
+}
+

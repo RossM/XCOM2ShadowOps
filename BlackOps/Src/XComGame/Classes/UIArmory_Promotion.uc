@@ -328,6 +328,7 @@ simulated function array<name> AwardAWCAbilities()
 	local XComGameState_Unit UnitState;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local array<name> AWCAbilityNames;
+	local X2AbilityTemplate AbilityTemplate;
 	local int idx;
 
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Unlock AWC Abilities");
@@ -344,6 +345,10 @@ simulated function array<name> AwardAWCAbilities()
 			{
 				UnitState.AWCAbilities[idx].bUnlocked = true;
 				AWCAbilityNames.AddItem(UnitState.AWCAbilities[idx].AbilityType.AbilityName);
+
+				AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(UnitState.AWCAbilities[idx].AbilityType.AbilityName);
+				if (AbilityTemplate != none && AbilityTemplate.SoldierAbilityPurchasedFn != none)
+					AbilityTemplate.SoldierAbilityPurchasedFn(NewGameState, UnitState);
 			}
 		}
 	}

@@ -5246,6 +5246,7 @@ simulated function UnapplyCombatSimStats(XComGameState_Item CombatSim, optional 
 simulated function bool RemoveItemFromInventory(XComGameState_Item Item, optional XComGameState CheckGameState)
 {
 	local int i;
+	local int slots;
 
 	if (CanRemoveItemFromInventory(Item, CheckGameState))
 	{		
@@ -5261,8 +5262,11 @@ simulated function bool RemoveItemFromInventory(XComGameState_Item Item, optiona
 				case eInvSlot_Armor:
 					if(!IsMPCharacter() && X2ArmorTemplate(Item.GetMyTemplate()).bAddsUtilitySlot)
 					{
-						SetBaseMaxStat(eStat_UtilityItems, 1.0f);
-						SetCurrentStat(eStat_UtilityItems, 1.0f);
+						slots = 1;
+						if (HasSoldierAbility('DeepPockets'))
+							slots += 1;
+						SetBaseMaxStat(eStat_UtilityItems, slots);
+						SetCurrentStat(eStat_UtilityItems, slots);
 					}
 					break;
 				case eInvSlot_Backpack:
@@ -7503,6 +7507,7 @@ function ValidateLoadout(XComGameState NewGameState)
 	local XComGameState_Item EquippedHeavyWeapon, EquippedGrenade, EquippedAmmo, UtilityItem; // Special slots
 	local array<XComGameState_Item> EquippedUtilityItems; // Utility Slots
 	local int idx;
+	local int slots;
 
 	// Grab HQ Object
 	History = `XCOMHISTORY;
@@ -7603,16 +7608,14 @@ function ValidateLoadout(XComGameState NewGameState)
 	// UtilitySlots (Already grabbed equipped)
 	if(!IsMPCharacter())
 	{
+		slots = 1;
 		if(X2ArmorTemplate(EquippedArmor.GetMyTemplate()).bAddsUtilitySlot)
-		{
-			SetBaseMaxStat(eStat_UtilityItems, 2.0f);
-			SetCurrentStat(eStat_UtilityItems, 2.0f);
-		}
-		else
-		{
-			SetBaseMaxStat(eStat_UtilityItems, 1.0f);
-			SetCurrentStat(eStat_UtilityItems, 1.0f);
-		}
+			slots += 1;
+		if (HasSoldierAbility('DeepPockets'))
+			slots += 1;
+
+		SetBaseMaxStat(eStat_UtilityItems, slots);
+		SetCurrentStat(eStat_UtilityItems, slots);
 	}
 
 	// Remove Extra Utility Items
