@@ -341,7 +341,7 @@ simulated function array<name> AwardAWCAbilities()
 		// if you have the AWC, and have reached the rank for one of your hidden abilities, unlock it
 		for(idx = 0; idx < UnitState.AWCAbilities.Length; idx++)
 		{
-			if(!UnitState.AWCAbilities[idx].bUnlocked && UnitState.AWCAbilities[idx].iRank == UnitState.GetRank())
+			if(!UnitState.AWCAbilities[idx].bUnlocked && UnitState.AWCAbilities[idx].iRank <= UnitState.GetRank())
 			{
 				UnitState.AWCAbilities[idx].bUnlocked = true;
 				AWCAbilityNames.AddItem(UnitState.AWCAbilities[idx].AbilityType.AbilityName);
