@@ -3387,18 +3387,20 @@ function ESoldierLocation GetHQLocation()
 	return HQLocation;
 }
 
-function int RollStat( int iLow, int iHigh, int iMultiple )
+function int RollStat( int iLow, int iHigh, int iMultiple, int iMaxPoints, int iTargetPoints, optional int iBias = 0 )
 {
-	local int iSpread, iNewStat; 
+	local int iSpread, iNewStat, iModifiedLow, iModifiedHigh; 
 
-	iSpread = iHigh - iLow;
+	iModifiedHigh = Min(iHigh, iLow + iTargetPoints / iMultiple);
+	iModifiedLow = Max(iLow, iHigh - (iMaxPoints - iTargetPoints) / iMultiple);
+	iModifiedLow = Min(iModifiedLow, iModifiedHigh);
 
-	iNewStat = iLow + `SYNC_RAND( iSpread/iMultiple + 1 ) * iMultiple;
+	iSpread = iModifiedHigh - iModifiedLow + Max(iBias, -iBias);
 
-	if( iNewStat == iHigh && `SYNC_RAND(2) == 0 )
-		iNewStat += iMultiple;
+	iNewStat = iModifiedLow + `SYNC_RAND( iSpread + 1 ) + Min(iBias, 0);
+	// `RedScreen(iModifiedLow @ "<" @ iNewStat @ "<" @ iModifiedHigh);
 
-	return iNewStat;
+	return Clamp(iNewStat, iModifiedLow, iModifiedHigh);
 }
 
 function bool ModifySkillValue(int iDelta)
@@ -3524,18 +3526,64 @@ function bool CanBeStaffed()
 
 function RandomizeStats()
 {
-	local int iMultiple;
+	local int iMaxPoints, iTargetPoints;
+	local int iMinOffense, iMaxOffense, iPointsOffense;
+	local int iMinMobility, iMaxMobility, iPointsMobility;
+	local int iMinDodge, iMaxDodge, iPointsDodge;
+	local int iMinWill, iMaxWill, iPointsWill;
+	local int iMinHP, iMaxHP, iPointsHP;
 
-	if( `GAMECORE.IsOptionEnabled( eGO_RandomRookieStats ) )
+	// The point values are based on the relative values of tier 3 PCs, relative to a Will PCS:
+	// Will and Dodge give up to 25 stat points. 25 / 25 = 1
+	// Offense gives up to 16 stat points. 25 / 16 ~ 2
+	// Mobility and HP give up to 3 stat points. 25 / 3 ~ 8
+	iMinOffense = 50;
+	iMaxOffense = 80;
+	iPointsOffense = 2;
+	iMinMobility = 10;
+	iMaxMobility = 14;
+	iPointsMobility = 8;
+	iMinWill = 25;
+	iMaxWill = 60;
+	iPointsWill = 1;
+	iMinDodge = 0;
+	iMaxDodge = 20;
+	iPointsDodge = 1;
+	iMinHP = GetMaxStat( eStat_HP ) - 1;
+	iMaxHP = GetMaxStat( eStat_HP ) + 1;
+	iPointsHP = 8;
+
+	iMaxPoints = (iMaxOffense - iMinOffense) * iPointsOffense +
+				 (iMaxMobility - iMinMobility) * iPointsMobility +
+				 (iMaxWill - iMinWill) * iPointsWill +
+				 (iMaxDodge - iMinDodge) * iPointsDodge +
+				 (iMaxHP - iMinHP) * iPointsHP;
+
+	iTargetPoints = iMaxPoints / 2;
+
+	//if( `GAMECORE.IsOptionEnabled( eGO_RandomRookieStats ) )
+	if ( true )
 	{
-		iMultiple = 5;
-		SetBaseMaxStat( eStat_Offense, RollStat( class'XGTacticalGameCore'.default.LOW_AIM, class'XGTacticalGameCore'.default.HIGH_AIM, iMultiple ) );
+		SetBaseMaxStat( eStat_HP, RollStat( iMinHP, iMaxHP, iPointsHP, iMaxPoints, iTargetPoints ) );
+		iMaxPoints -= (iMaxHP - iMinHP) * iPointsHP;
+		iTargetPoints -= (GetBaseStat( eStat_HP ) - iMinHP) * iPointsHP;
 
-		iMultiple = 1;
-		SetBaseMaxStat( eStat_Mobility, RollStat( class'XGTacticalGameCore'.default.LOW_MOBILITY, class'XGTacticalGameCore'.default.HIGH_MOBILITY, iMultiple ) );
+		SetBaseMaxStat( eStat_Dodge, RollStat( iMinDodge, iMaxDodge, iPointsDodge, iMaxPoints, iTargetPoints, -20 ) );
+		iMaxPoints -= (iMaxDodge - iMinDodge) * iPointsDodge;
+		iTargetPoints -= (GetBaseStat( eStat_Dodge ) - iMinDodge) * iPointsDodge;
 
-		iMultiple = 2;
-		SetBaseMaxStat( eStat_Will, RollStat( class'XGTacticalGameCore'.default.LOW_WILL, class'XGTacticalGameCore'.default.HIGH_WILL, iMultiple ) );
+		SetBaseMaxStat( eStat_Mobility, RollStat( iMinMobility, iMaxMobility, iPointsMobility, iMaxPoints, iTargetPoints ) );
+		iMaxPoints -= (iMaxMobility - iMinMobility) * iPointsMobility;
+		iTargetPoints -= (GetBaseStat( eStat_Mobility ) - iMinMobility) * iPointsMobility;
+
+		SetBaseMaxStat( eStat_Offense, RollStat( iMinOffense, iMaxOffense, iPointsOffense, iMaxPoints, iTargetPoints ) );
+		iMaxPoints -= (iMaxOffense - iMinOffense) * iPointsOffense;
+		iTargetPoints -= (GetBaseStat( eStat_Offense ) - iMinOffense) * iPointsOffense;
+
+		SetBaseMaxStat( eStat_Will, RollStat( iMinWill, iMaxWill, iPointsWill, iMaxPoints, iTargetPoints ) );
+		iMaxPoints -= (iMaxWill - iMinWill) * iPointsWill;
+		iTargetPoints -= (GetBaseStat( eStat_Will ) - iMinWill) * iPointsWill;
+
 	}
 }
 
