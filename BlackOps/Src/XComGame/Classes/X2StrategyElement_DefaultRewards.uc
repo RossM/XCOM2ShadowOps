@@ -534,7 +534,6 @@ function GeneratePersonnelReward(XComGameState_Reward RewardState, XComGameState
 	//Use the character pool's creation method to retrieve a unit
 	NewUnitState = `CHARACTERPOOLMGR.CreateCharacter(NewGameState, class'XComGameState_HeadquartersXCom'.default.RewardUnitCharacterPoolSelectionMode, RewardState.GetMyTemplate().rewardObjectTemplateName, nmCountry);
 	NewUnitState.RandomizeStats();
-	NewUnitState.GiveRandomPersonality();
 	NewGameState.AddStateObject(NewUnitState);
 
 	if(RewardState.GetMyTemplate().rewardObjectTemplateName == 'Soldier')

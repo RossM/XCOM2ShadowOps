@@ -1496,7 +1496,6 @@ static function CreateStartingSoldiers(XComGameState StartState, optional bool b
 			XComHQ.TutorialSoldier = NewSoldierState.GetReference();
 		}
 		
-		NewSoldierState.GiveRandomPersonality();
 		NewSoldierState.RandomizeStats();
 		NewSoldierState.ApplyInventoryLoadout(StartState);
 

@@ -136,7 +136,6 @@ function CreateRecruits(XComGameState StartState)
 	{
 		NewSoldierState = `CHARACTERPOOLMGR.CreateCharacter(StartState, eCPSM_Mixed);
 		NewSoldierState.RandomizeStats();
-		NewSoldierState.GiveRandomPersonality();
 		if(!NewSoldierState.HasBackground())
 			NewSoldierState.GenerateBackground();
 		NewSoldierState.ApplyInventoryLoadout(StartState);
@@ -305,7 +304,6 @@ function RefillRecruits(XComGameState NewGameState)
 	{
 		SoldierState = `CHARACTERPOOLMGR.CreateCharacter(NewGameState, RecruitsCharacterPoolSelectionMode);
 		SoldierState.RandomizeStats();
-		SoldierState.GiveRandomPersonality();
 		if(!SoldierState.HasBackground())
 			SoldierState.GenerateBackground();
 		SoldierState.ApplyInventoryLoadout(NewGameState);
