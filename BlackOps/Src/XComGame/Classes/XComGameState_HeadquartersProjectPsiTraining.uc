@@ -83,7 +83,9 @@ function int CalculatePointsToTrain(optional bool bClassTraining = false)
 	{
 		Unit = XComGameState_Unit(History.GetGameStateForObjectID(ProjectFocus.ObjectID));
 		RankDifference = Max(iAbilityRank - Unit.GetRank(), 0);
-		return (XComHQ.GetPsiTrainingDays() + Round(XComHQ.GetPsiTrainingScalar() * float(RankDifference))) * XComHQ.XComHeadquarters_DefaultPsiTrainingWorkPerHour * 24;
+		return (XComHQ.GetPsiTrainingDays() + Round(XComHQ.GetPsiTrainingScalar() * float(RankDifference))) * 
+			   (Unit.IsPsiOperative() ? 1.0f : 3.0f) *
+			   XComHQ.XComHeadquarters_DefaultPsiTrainingWorkPerHour * 24;
 	}
 }
 

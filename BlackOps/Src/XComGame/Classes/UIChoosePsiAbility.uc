@@ -133,7 +133,9 @@ simulated function int GetAbilityOrderDays(int iAbility)
 		Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(m_UnitRef.ObjectID));
 		RankDifference = Max(m_arrAbilities[iAbility].iRank - Unit.GetRank(), 0);
 		TrainingRateModifier = XComHQ.PsiTrainingRate / XComHQ.XComHeadquarters_DefaultPsiTrainingWorkPerHour;
-		return (XComHQ.GetPsiTrainingDays() + Round(XComHQ.GetPsiTrainingScalar() * float(RankDifference))) * (24 / TrainingRateModifier);
+		return (XComHQ.GetPsiTrainingDays() + Round(XComHQ.GetPsiTrainingScalar() * float(RankDifference))) * 
+			   (Unit.IsPsiOperative() ? 1.0f : 3.0f) *			   
+		       (24 / TrainingRateModifier);
 	}
 }
 
