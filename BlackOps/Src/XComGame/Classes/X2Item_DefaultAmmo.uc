@@ -211,6 +211,8 @@ static function X2DataTemplate BluescreenRounds()
 	DamageValue.Damage = default.BLUESCREEN_DMGMOD;
 	Template.AddAmmoDamageModifier(Condition_UnitProperty, DamageValue);
 	Template.CanBeBuilt = true;
+	Template.bInfiniteItem = true;
+	Template.bOneTimeBuild = true;
 	Template.TradingPostValue = 20;
 	Template.PointsToComplete = 0;
 	Template.Tier = 1;

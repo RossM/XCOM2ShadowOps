@@ -411,6 +411,8 @@ static function X2DataTemplate CreateFlashbangGrenade()
 	Template.GameArchetype = "WP_Grenade_Flashbang.WP_Grenade_Flashbang";
 
 	Template.CanBeBuilt = true;
+	Template.bInfiniteItem = true;
+	Template.bOneTimeBuild = true;
 
 	Template.iSoundRange = default.FLASHBANGGRENADE_ISOUNDRANGE;
 	Template.iEnvironmentDamage = default.FLASHBANGGRENADE_IENVIRONMENTDAMAGE;
@@ -421,7 +423,7 @@ static function X2DataTemplate CreateFlashbangGrenade()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 35;
+	Resources.Quantity = 100;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	// Soldier Bark
@@ -481,10 +483,12 @@ static function X2DataTemplate CreateSmokeGrenade()
 	Template.GameArchetype = "WP_Grenade_Smoke.WP_Grenade_Smoke";
 
 	Template.CanBeBuilt = true;
+	Template.bInfiniteItem = true;
+	Template.bOneTimeBuild = true;
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 25;
+	Resources.Quantity = 60;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.UpgradeItem = 'SmokeGrenadeMk2';
@@ -534,10 +538,12 @@ static function X2DataTemplate SmokeGrenadeMk2()
 	Template.GameArchetype = "WP_Grenade_Smoke.WP_Grenade_Smoke_Lv2";
 
 	Template.CanBeBuilt = true;
+	Template.bInfiniteItem = true;
+	Template.bOneTimeBuild = true;
 	
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 50;
+	Resources.Quantity = 75;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.Requirements.RequiredTechs.AddItem('AdvancedGrenades');
@@ -1130,6 +1136,8 @@ static function X2DataTemplate EMPGrenade()
 	Template.iPhysicsImpulse = 10;
 
 	Template.CanBeBuilt = true;
+	Template.bInfiniteItem = true;
+	Template.bOneTimeBuild = true;
 
 	UnitCondition = new class'X2Condition_UnitProperty';
 	UnitCondition.ExcludeOrganic = true;
@@ -1158,7 +1166,7 @@ static function X2DataTemplate EMPGrenade()
 	Template.LaunchedGrenadeEffects = Template.ThrownGrenadeEffects;
 	
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 50;
+	Resources.Quantity = 200;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.Requirements.RequiredTechs.AddItem('Bluescreen');
@@ -1206,6 +1214,8 @@ static function X2DataTemplate EMPGrenadeMk2()
 	Template.iPhysicsImpulse = 10;
 
 	Template.CanBeBuilt = true;
+	Template.bInfiniteItem = true;
+	Template.bOneTimeBuild = true;
 
 	UnitCondition = new class'X2Condition_UnitProperty';
 	UnitCondition.ExcludeOrganic = true;
@@ -1234,7 +1244,7 @@ static function X2DataTemplate EMPGrenadeMk2()
 	Template.LaunchedGrenadeEffects = Template.ThrownGrenadeEffects;
 
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 50;
+	Resources.Quantity = 200;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.Requirements.RequiredTechs.AddItem('Bluescreen');
@@ -1280,6 +1290,8 @@ static function X2GrenadeTemplate ProximityMine()
 	Template.iPhysicsImpulse = 10;
 
 	Template.CanBeBuilt = true;	
+	Template.bInfiniteItem = true;
+	Template.bOneTimeBuild = true;
 	Template.TradingPostValue = 25;
 	
 	// Requirements
@@ -1287,7 +1299,7 @@ static function X2GrenadeTemplate ProximityMine()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 100;
+	Resources.Quantity = 500;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.PROXIMITYMINE_RANGE);

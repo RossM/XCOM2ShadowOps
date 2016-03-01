@@ -381,7 +381,15 @@ simulated function ManufactureItem(UIList ContainerList, int ItemIndex)
 			// Otherwise if it builds instantly, immediately add it to the inventory
 			ItemState.OnItemBuilt(NewGameState);
 			
-			XComHQ.PutItemInInventory(NewGameState, ItemState);
+			if (ItemTemplate.bInfiniteItem)
+			{
+				// If the new item is infinite (ex: Alien Grenades), just add it directly to the inventory
+				XComHQ.AddItemToHQInventory(ItemState);
+			}
+			else
+			{
+				XComHQ.PutItemInInventory(NewGameState, ItemState);
+			}
 			
 			`XEVENTMGR.TriggerEvent('ItemConstructionCompleted', ItemState, ItemState, NewGameState);
 
