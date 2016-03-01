@@ -684,23 +684,20 @@ function name SelectNextSoldierClass(optional name ForcedClass)
 		// Must be a valid class in the distribution list
 		if(SoldierClassDistribution.Find('SoldierClassName', ForcedClass) != INDEX_NONE)
 		{
-			// If not in the class deck rebuild the class deck
-			if(SoldierClassDeck.Find(ForcedClass) == INDEX_NONE)
+			// Must be in the class deck
+			if(SoldierClassDeck.Find(ForcedClass) != INDEX_NONE)
 			{
-				BuildSoldierClassDeck();
+				ValidClasses.AddItem(ForcedClass);
 			}
-
-			ValidClasses.AddItem(ForcedClass);
 		}
 	}
 
-	// Only do this if not forced
 	if(ValidClasses.Length == 0)
 	{
 		ValidClasses = GetValidNextSoldierClasses();
 	}
 	
-	// If not forced, and no valid, rebuild
+	// If no valid, rebuild
 	if(ValidClasses.Length == 0)
 	{
 		BuildSoldierClassDeck();
