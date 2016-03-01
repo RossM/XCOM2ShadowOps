@@ -28,7 +28,7 @@ function SetProjectFocus(StateObjectReference FocusRef, optional XComGameState N
 	UnitState = XComGameState_Unit(NewGameState.GetGameStateForObjectID(ProjectFocus.ObjectID));
 
 	// If the soldier is not already a Psi Operative (if they are, the ability will be assigned from the player's choice)
-	if (UnitState.GetSoldierClassTemplateName() != 'PsiOperative')
+	if (UnitState.GetRank() == 0)
 	{
 		// Randomly choose a branch and ability from the starting two tiers of the Psi Op tree
 		iAbilityRank = `SYNC_RAND(2);
@@ -114,6 +114,9 @@ function OnProjectCompleted()
 	local XComGameState_Unit Unit;
 	local X2AbilityTemplate AbilityTemplate;
 	local name AbilityName;
+	local X2SoldierClassTemplate PsiOperativeClassTemplate;
+
+	PsiOperativeClassTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate('PsiOperative');
 
 	OrderInput.OrderType = eHeadquartersOrderType_PsiTrainingCompleted;
 	OrderInput.AcquireObjectReference = self.GetReference();
@@ -121,7 +124,7 @@ function OnProjectCompleted()
 	class'XComGameStateContext_HeadquartersOrder'.static.IssueHeadquartersOrder(OrderInput);
 
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ProjectFocus.ObjectID));
-	AbilityName = Unit.GetSoldierClassTemplate().GetAbilityName(iAbilityRank, iAbilityBranch);
+	AbilityName = PsiOperativeClassTemplate.GetAbilityName(iAbilityRank, iAbilityBranch);
 	AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(AbilityName);
 
 	`HQPRES.UIPsiTrainingComplete(ProjectFocus, AbilityTemplate);

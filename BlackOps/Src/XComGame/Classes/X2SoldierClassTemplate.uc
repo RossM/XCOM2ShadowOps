@@ -41,6 +41,21 @@ function name GetAbilityName(int iRank, int iBranch)
 	return SoldierRanks[iRank].aAbilityTree[iBranch].AbilityName;
 }
 
+function bool HasAbility(name AbilityName)
+{
+	local int iRank, iBranch;
+
+	for(iRank = 0; iRank < SoldierRanks.Length; iRank++)
+	{
+		for(iBranch = 0; iBranch < SoldierRanks[iRank].aAbilityTree.Length; iBranch++)
+		{
+			if (SoldierRanks[iRank].aAbilityTree[iBranch].AbilityName == AbilityName)
+				return true;
+		}
+	}
+	return false;
+}
+
 function int GetMaxConfiguredRank()
 {
 	return SoldierRanks.Length;

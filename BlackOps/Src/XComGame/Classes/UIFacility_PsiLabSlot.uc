@@ -70,7 +70,7 @@ simulated function OnPersonnelSelected(StaffUnitInfo UnitInfo)
 	
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitInfo.UnitRef.ObjectID));
 	
-	if (Unit.GetSoldierClassTemplateName() == 'PsiOperative')
+	if (Unit.GetSoldierRank() > 0)
 	{
 		`HQPRES.UIChoosePsiAbility(UnitInfo.UnitRef, StaffSlotRef);
 	}

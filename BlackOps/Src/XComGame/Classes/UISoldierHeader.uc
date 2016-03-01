@@ -154,7 +154,7 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 	ArmorBonus = Unit.GetUIStatFromInventory(eStat_ArmorMitigation, CheckGameState);
 	DodgeBonus = Unit.GetUIStatFromInventory(eStat_Dodge, CheckGameState);
 
-	if(Unit.IsPsiOperative())
+	if(Unit.IsPsiOperative() || Unit.PsiAbilityCount() > 0)
 	{
 		Psi = string(int(Unit.GetCurrentStat(eStat_PsiOffense)) + Unit.GetUIStatFromAbilities(eStat_PsiOffense));
 		PsiBonus = Unit.GetUIStatFromInventory(eStat_PsiOffense, CheckGameState);

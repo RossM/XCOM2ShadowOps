@@ -2535,8 +2535,11 @@ function RollForPsiAbilities()
 	local SCATProgression PsiAbility;
 	local array<SCATProgression> PsiAbilityDeck;
 	local int NumRanks, iRank, iBranch, idx;
+	local X2SoldierClassTemplate PsiOperativeClassTemplate;
 
-	NumRanks = m_SoldierClassTemplate.GetMaxConfiguredRank();
+	PsiOperativeClassTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate('PsiOperative');
+
+	NumRanks = PsiOperativeClassTemplate.GetMaxConfiguredRank();
 		
 	for (iRank = 0; iRank < NumRanks; iRank++)
 	{
@@ -5536,6 +5539,26 @@ simulated function int IsACV()
 	}
 }
 
+simulated function int PsiAbilityCount()
+{
+	local array<SoldierClassAbilityType> EarnedAbilities;
+	local SoldierClassAbilityType Ability;
+	local X2SoldierClassTemplate PsiOperativeClassTemplate;
+	local int count;
+
+	EarnedAbilities = GetEarnedSoldierAbilities();
+
+	PsiOperativeClassTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate('PsiOperative');
+
+	foreach EarnedAbilities(Ability)
+	{
+		if (PsiOperativeClassTemplate.HasAbility(Ability.AbilityName))
+			count++;
+	}
+
+	return count;
+}
+
 simulated function bool IsAfraidOfFire()
 {
 	return GetMyTemplate().bIsAfraidOfFire && !IsImmuneToDamage('Fire');
@@ -5543,7 +5566,7 @@ simulated function bool IsAfraidOfFire()
 
 simulated function bool IsPsionic()
 {
-	return GetMyTemplate().bIsPsionic || IsPsiOperative();
+	return GetMyTemplate().bIsPsionic || IsPsiOperative() || PsiAbilityCount() > 0;
 }
 
 simulated function bool HasScorchCircuits()
@@ -8677,8 +8700,7 @@ function bool CanRankUpSoldier()
 		}
 
 		if ( NumKills >= class'X2ExperienceConfig'.static.GetRequiredKills(m_SoldierRank + 1)
-			&& (GetStatus() != eStatus_PsiTesting && GetStatus() != eStatus_Training) 
-			&& GetSoldierClassTemplateName() != 'PsiOperative')
+			&& (GetStatus() != eStatus_PsiTesting && GetStatus() != eStatus_Training))
 			return true;
 	}
 
@@ -8715,10 +8737,10 @@ function RankUpSoldier(XComGameState NewGameState, optional name SoldierClass, o
 		//	RollForPsiGift();
 		//}
 
+		RollForPsiAbilities();
+
 		if (GetSoldierClassTemplateName() == 'PsiOperative')
 		{
-			RollForPsiAbilities();
-
 			// Adjust the soldiers appearance to have white hair and purple eyes - not permanent
 			kAppearance.iHairColor = 25;
 			kAppearance.iEyeColor = 19;
