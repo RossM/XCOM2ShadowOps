@@ -7441,6 +7441,15 @@ function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item Cu
 	{
 		// Make an instance of the best equipment we found and equip it
 		UpgradeItem = UpgradeTemplates[0].CreateInstanceFromTemplate(NewGameState);
+
+		//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+		//where we are handing out generic weapons.
+		if(UpgradeTemplates[0].InventorySlot == eInvSlot_PrimaryWeapon || UpgradeTemplates[0].InventorySlot == eInvSlot_SecondaryWeapon)
+		{
+			UpgradeItem.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+			UpgradeItem.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+		}
+
 		NewGameState.AddStateObject(UpgradeItem);
 		
 		return AddItemToInventory(UpgradeItem, Slot, NewGameState, (Slot == eInvSlot_Utility));
@@ -7466,6 +7475,15 @@ function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item Cu
 
 				// Make an instance of the best equipment we found and equip it
 				UpgradeItem = UpgradeTemplate.CreateInstanceFromTemplate(NewGameState);
+
+				//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+				//where we are handing out generic weapons.
+				if(UpgradeTemplates[0].InventorySlot == eInvSlot_PrimaryWeapon || UpgradeTemplates[0].InventorySlot == eInvSlot_SecondaryWeapon)
+				{
+					UpgradeItem.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+					UpgradeItem.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+				}
+
 				NewGameState.AddStateObject(UpgradeItem);
 				return AddItemToInventory(UpgradeItem, Slot, NewGameState);
 			}
