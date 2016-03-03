@@ -300,7 +300,7 @@ static function X2DataTemplate CreateMedikit()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 100;
+	Resources.Quantity = 50;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.UpgradeItem = 'NanoMedikit';
@@ -345,12 +345,8 @@ static function X2DataTemplate NanoMedikit()
 	Template.Tier = 1;
 
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 150;
+	Resources.Quantity = 50;
 	Template.Cost.ResourceCosts.AddItem(Resources);
-
-	Artifacts.ItemTemplateName = 'CorpseViper';
-	Artifacts.Quantity = 2;
-	Template.Cost.ArtifactCosts.AddItem(Artifacts);
 
 	Template.Requirements.RequiredTechs.AddItem('BattlefieldMedicine');
 
