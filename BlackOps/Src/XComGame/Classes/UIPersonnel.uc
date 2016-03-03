@@ -552,8 +552,8 @@ simulated function int SortByClass(StateObjectReference A, StateObjectReference 
 	SoldierClassA = UnitA.GetSoldierClassTemplate();
 	SoldierClassB = UnitB.GetSoldierClassTemplate();
 	
-	NameA = SoldierClassA.DisplayName;
-	NameB = SoldierClassB.DisplayName;
+	NameA = UnitA.GetSoldierClassDisplayName();
+	NameB = UnitB.GetSoldierClassDisplayName();
 
 	if( NameA < NameB )
 	{

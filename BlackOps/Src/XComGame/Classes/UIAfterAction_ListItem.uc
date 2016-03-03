@@ -93,7 +93,7 @@ simulated function UpdateData(optional StateObjectReference UnitRef)
 
 	// Don't show class label for rookies since their rank is shown which would result in a duplicate string
 	if(Unit.GetRank() > 0)
-		ClassStr = class'UIUtilities_Text'.static.GetColoredText(Caps(Unit.GetSoldierClassTemplate().DisplayName), eUIState_Faded, 17);
+		ClassStr = class'UIUtilities_Text'.static.GetColoredText(Caps(Unit.GetSoldierClassDisplayName), eUIState_Faded, 17);
 	else
 		ClassStr = "";
 
