@@ -61,6 +61,7 @@ static function X2AbilityTemplate Add_StandardShot( Name AbilityName='StandardSh
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 1;
 	ActionPointCost.bConsumeAllPoints = true;
+	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('BulletSwarm');
 	Template.AbilityCosts.AddItem(ActionPointCost);	
 
 	// Ammo

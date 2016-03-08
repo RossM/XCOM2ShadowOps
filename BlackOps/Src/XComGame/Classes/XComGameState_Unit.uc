@@ -2632,7 +2632,7 @@ function bool HasGrenadePocket()
 
 function bool HasAmmoPocket()
 {
-	return false; // HasSoldierAbility('WholeNineYards');	- deprecated ability
+	return (!IsMPCharacter() && HasSoldierAbility('Bandolier')); // HasSoldierAbility('WholeNineYards');	- deprecated ability
 }
 
 function bool HasExtraUtilitySlot()
