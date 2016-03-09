@@ -274,10 +274,7 @@ static function X2AbilityTemplate ZoneOfControl()
 	local X2AbilityCooldown             Cooldown;
 	local X2AbilityCost_Ammo            AmmoCost;
 	local X2AbilityCost_ActionPoints    ActionPointCost;
-	local X2AbilityTarget_Cursor        CursorTarget;
-	local X2AbilityMultiTarget_Cone     ConeMultiTarget;
 	local X2Effect_ReserveActionPoints  ReservePointsEffect;
-	local X2Effect_MarkValidActivationTiles MarkTilesEffect;
 	local X2Condition_UnitEffects           SuppressedCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ZoneOfControl');
