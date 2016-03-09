@@ -7,6 +7,7 @@
     <SteamPublishID>0</SteamPublishID>
     <AssemblyName>BlackOps</AssemblyName>
     <RootNamespace>BlackOps</RootNamespace>
+    <ProjectGuid>{8e7f8d96-b335-46c3-83a6-9af4051c347c}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Config\" />
@@ -34,10 +35,22 @@
     <Content Include="Config\XComEngine.ini" />
     <Content Include="Config\XComGame.ini" />
     <Content Include="Localization\XComGame.int" />
+    <Content Include="Src\BlackOps\Classes\X2Ability_DragoonAbilitySet.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Ability_InfantryAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Condition_NotVisibleToEnemies.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
+    <Content Include="Src\BlackOps\Classes\X2Effect_HeavyArmor.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_ShieldProtocol.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_GoodEye.uc">
       <SubType>Content</SubType>
     </Content>

@@ -2830,10 +2830,11 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 	local XComGameState_Item ItemIter, ItemInnerIter;
 	local X2WeaponTemplate MergeTemplate;
 	local int Idx, InnerIdx, BonusAmmo;
-	local bool bFieldMedic, bHeavyOrdnance;
+	local bool bFieldMedic, bHeavyOrdnance, bRocketeer;
 
 	bFieldMedic = HasSoldierAbility('FieldMedic');
 	bHeavyOrdnance = HasSoldierAbility('HeavyOrdnance');
+	bRocketeer = HasSoldierAbility('Rocketeer');
 
 	for (Idx = 0; Idx < InventoryItems.Length; ++Idx)
 	{
@@ -2849,6 +2850,8 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 					BonusAmmo += class'X2Ability_SpecialistAbilitySet'.default.FIELD_MEDIC_BONUS;
 				if (bHeavyOrdnance && ItemIter.InventorySlot == eInvSlot_GrenadePocket)
 					BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
+				if (bRocketeer && ItemIter.InventorySlot == eInvSlot_HeavyWeapon)
+					BonusAmmo += 1;
 
 				ItemIter.MergedItemCount = 1;
 				for (InnerIdx = Idx + 1; InnerIdx < InventoryItems.Length; ++InnerIdx)
@@ -2860,6 +2863,8 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 							BonusAmmo += class'X2Ability_SpecialistAbilitySet'.default.FIELD_MEDIC_BONUS;
 						if (bHeavyOrdnance && ItemInnerIter.InventorySlot == eInvSlot_GrenadePocket)
 							BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
+						if (bRocketeer && ItemInnerIter.InventorySlot == eInvSlot_HeavyWeapon)
+							BonusAmmo += 1;
 						ItemInnerIter.bMergedOut = true;
 						ItemInnerIter.Ammo = 0;
 						ItemIter.MergedItemCount++;
