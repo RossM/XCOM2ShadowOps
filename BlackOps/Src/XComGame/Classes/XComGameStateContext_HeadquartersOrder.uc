@@ -1146,7 +1146,6 @@ static function CompletePsiTraining(XComGameState AddToGameState, StateObjectRef
 	local XComGameStateHistory History;
 	local X2SoldierClassTemplate PsiOperativeClassTemplate;
 	local ClassAgnosticAbility HiddenTalent;
-	local name AbilityName;
 
 	History = `XCOMHISTORY;
 	ProjectState = XComGameState_HeadquartersProjectPsiTraining(`XCOMHISTORY.GetGameStateForObjectID(ProjectRef.ObjectID));

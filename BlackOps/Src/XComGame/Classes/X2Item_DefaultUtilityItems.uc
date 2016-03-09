@@ -313,7 +313,6 @@ static function X2DataTemplate NanoMedikit()
 {
 	local X2WeaponTemplate Template;
 	local ArtifactCost Resources;
-	local ArtifactCost Artifacts;
 	
 	`CREATE_X2TEMPLATE(class'X2WeaponTemplate', Template, 'NanoMedikit');
 	Template.ItemCat = 'heal';

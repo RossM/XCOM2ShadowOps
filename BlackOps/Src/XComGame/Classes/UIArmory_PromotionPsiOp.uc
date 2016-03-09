@@ -4,7 +4,7 @@ class UIArmory_PromotionPsiOp extends UIArmory_Promotion;
 simulated function PopulateData()
 {
 	local int i, maxRank;
-	local string AbilityIcon1, AbilityIcon2, AbilityName1, AbilityName2, HeaderString;
+	local string AbilityIcon2, AbilityName2, HeaderString;
 	local bool bHasAbility2, bHasRankAbility;
 	local XComGameState_Unit Unit;
 	local X2SoldierClassTemplate ClassTemplate;

@@ -113,7 +113,6 @@ function int CalculateWorkPerHour(optional XComGameState StartState = none, opti
 function OnProjectCompleted()
 {
 	local HeadquartersOrderInputContext OrderInput;
-	local XComGameState_Unit Unit;
 	local X2AbilityTemplate AbilityTemplate;
 	local name AbilityName;
 	local X2SoldierClassTemplate PsiOperativeClassTemplate;
@@ -125,7 +124,6 @@ function OnProjectCompleted()
 
 	class'XComGameStateContext_HeadquartersOrder'.static.IssueHeadquartersOrder(OrderInput);
 
-	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ProjectFocus.ObjectID));
 	AbilityName = PsiOperativeClassTemplate.GetAbilityName(iAbilityRank, iAbilityBranch);
 	AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(AbilityName);
 

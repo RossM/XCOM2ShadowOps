@@ -156,7 +156,7 @@ simulated function String GetButtonString(int ItemIndex)
 //This is overwritten in the research archives. 
 simulated function array<SoldierAbilityInfo> GetAbilities()
 {
-	local X2SoldierClassTemplate SoldierClassTemplate, PsiOperativeClassTemplate;
+	local X2SoldierClassTemplate PsiOperativeClassTemplate;
 	local X2AbilityTemplate AbilityTemplate;	
 	local SCATProgression ProgressAbility;
 	local array<SoldierAbilityInfo> SoldierAbilities;
@@ -169,7 +169,6 @@ simulated function array<SoldierAbilityInfo> GetAbilities()
 	local bool bAddAbility;
 
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(m_UnitRef.ObjectID));
-	SoldierClassTemplate = Unit.GetSoldierClassTemplate();
 	PsiOperativeClassTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate('PsiOperative');
 
 	// First check to see if the PsiOp has a paused ability training project

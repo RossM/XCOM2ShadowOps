@@ -792,10 +792,8 @@ static function FillPsiChamberSoldierSlot(XComGameState NewGameState, StateObjec
 	local XComGameState_HeadquartersXCom NewXComHQ;
 	local XComGameState_HeadquartersProjectPsiTraining ProjectState;
 	local StateObjectReference EmptyRef;
-	local XComGameState_HeadquartersXCom XComHQ;
 	local int SquadIndex;
 
-	XComHQ = class'UIUtilities_Strategy'.static.GetXComHQ();
 	FillSlot(NewGameState, SlotRef, UnitInfo, NewSlotState, NewUnitState);
 
 	//if (XComHQ.GetPsiTrainingProject(UnitInfo.UnitRef) == none && NewUnitState.GetStatus() != eStatus_PsiTraining)
@@ -912,9 +910,6 @@ static function bool ShouldDisplayPsiChamberSoldierToDoWarning(StateObjectRefere
 static function bool IsUnitValidForPsiChamberSoldierSlot(XComGameState_StaffSlot SlotState, StaffUnitInfo UnitInfo)
 {
 	local XComGameState_Unit Unit; 
-	local X2SoldierClassTemplate SoldierClassTemplate;
-	local SCATProgression ProgressAbility;
-	local name AbilityName;
 	
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitInfo.UnitRef.ObjectID));
 

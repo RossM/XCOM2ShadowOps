@@ -543,15 +543,11 @@ simulated function int SortByStatus(StateObjectReference A, StateObjectReference
 simulated function int SortByClass(StateObjectReference A, StateObjectReference B)
 {
 	local XComGameState_Unit UnitA, UnitB;
-	local X2SoldierClassTemplate SoldierClassA, SoldierClassB;
 	local string NameA, NameB;
 
 	UnitA = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(A.ObjectID));
 	UnitB = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(B.ObjectID));
 
-	SoldierClassA = UnitA.GetSoldierClassTemplate();
-	SoldierClassB = UnitB.GetSoldierClassTemplate();
-	
 	NameA = UnitA.GetSoldierClassDisplayName();
 	NameB = UnitB.GetSoldierClassDisplayName();
 
