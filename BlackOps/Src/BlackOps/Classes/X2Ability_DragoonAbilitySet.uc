@@ -105,7 +105,7 @@ static function X2AbilityTemplate HeavyArmor()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'HeavyArmor');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_willtosurvive";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -145,7 +145,7 @@ static function X2AbilityTemplate Finesse()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Finesse');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sprinter";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -393,7 +393,7 @@ static function X2AbilityTemplate ECM()
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bioelectricskin";
 	Template.Hostility = eHostility_Neutral;
 	
 	Template.AbilityToHitCalc = default.DeadEye;
