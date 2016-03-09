@@ -170,16 +170,16 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 		EquipmentTemplate = X2EquipmentTemplate(TmpItem.GetMyTemplate());
 		if (EquipmentTemplate != none)
 		{
-			WillBonus += EquipmentTemplate.GetUIStatMarkup(eStat_Will, TmpItem);
-			AimBonus += EquipmentTemplate.GetUIStatMarkup(eStat_Offense, TmpItem);
-			HealthBonus += EquipmentTemplate.GetUIStatMarkup(eStat_HP, TmpItem);
-			MobilityBonus += EquipmentTemplate.GetUIStatMarkup(eStat_Mobility, TmpItem);
-			TechBonus += EquipmentTemplate.GetUIStatMarkup(eStat_Hacking, TmpItem);
-			ArmorBonus += EquipmentTemplate.GetUIStatMarkup(eStat_ArmorMitigation, TmpItem);
-			DodgeBonus += EquipmentTemplate.GetUIStatMarkup(eStat_Dodge, TmpItem);
+			WillBonus += Unit.GetUIStatFromItem(eStat_Will, TmpItem);
+			AimBonus += Unit.GetUIStatFromItem(eStat_Offense, TmpItem);
+			HealthBonus += Unit.GetUIStatFromItem(eStat_HP, TmpItem);
+			MobilityBonus += Unit.GetUIStatFromItem(eStat_Mobility, TmpItem);
+			TechBonus += Unit.GetUIStatFromItem(eStat_Hacking, TmpItem);
+			ArmorBonus += Unit.GetUIStatFromItem(eStat_ArmorMitigation, TmpItem);
+			DodgeBonus += Unit.GetUIStatFromItem(eStat_Dodge, TmpItem);
 		
 			if(Unit.IsPsiOperative())
-				PsiBonus += EquipmentTemplate.GetUIStatMarkup(eStat_PsiOffense, TmpItem);
+				PsiBonus += Unit.GetUIStatFromItem(eStat_PsiOffense, TmpItem);
 		}
 	}
 
@@ -193,16 +193,16 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 		EquipmentTemplate = X2EquipmentTemplate(TmpItem.GetMyTemplate());
 		if (EquipmentTemplate != none)
 		{
-			WillBonus -= EquipmentTemplate.GetUIStatMarkup(eStat_Will, TmpItem);
-			AimBonus -= EquipmentTemplate.GetUIStatMarkup(eStat_Offense, TmpItem);
-			HealthBonus -= EquipmentTemplate.GetUIStatMarkup(eStat_HP, TmpItem);
-			MobilityBonus -= EquipmentTemplate.GetUIStatMarkup(eStat_Mobility, TmpItem);
-			TechBonus -= EquipmentTemplate.GetUIStatMarkup(eStat_Hacking, TmpItem);
-			ArmorBonus -= EquipmentTemplate.GetUIStatMarkup(eStat_ArmorMitigation, TmpItem);
-			DodgeBonus -= EquipmentTemplate.GetUIStatMarkup(eStat_Dodge, TmpItem);
+			WillBonus -= Unit.GetUIStatFromItem(eStat_Will, TmpItem);
+			AimBonus -= Unit.GetUIStatFromItem(eStat_Offense, TmpItem);
+			HealthBonus -= Unit.GetUIStatFromItem(eStat_HP, TmpItem);
+			MobilityBonus -= Unit.GetUIStatFromItem(eStat_Mobility, TmpItem);
+			TechBonus -= Unit.GetUIStatFromItem(eStat_Hacking, TmpItem);
+			ArmorBonus -= Unit.GetUIStatFromItem(eStat_ArmorMitigation, TmpItem);
+			DodgeBonus -= Unit.GetUIStatFromItem(eStat_Dodge, TmpItem);
 		
 			if(Unit.IsPsiOperative())
-				PsiBonus -= EquipmentTemplate.GetUIStatMarkup(eStat_PsiOffense, TmpItem);
+				PsiBonus -= Unit.GetUIStatFromItem(eStat_PsiOffense, TmpItem);
 		}
 	}
 
