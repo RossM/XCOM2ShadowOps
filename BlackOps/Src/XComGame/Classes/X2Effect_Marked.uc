@@ -8,6 +8,9 @@ var config int ACCURACY_CHANCE_BONUS;
 var config int CRIT_CHANCE_BONUS;
 var config int CRIT_DAMAGE_BONUS;
 
+var int AccuracyBonus;
+var bool bOverrideAccuracy;
+
 function int GetDefendingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, 
 										const out EffectAppliedData AppliedData, const int CurrentDamage, X2Effect_ApplyWeaponDamage WeaponDamageEffect)
 {
@@ -23,7 +26,10 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 	local ShotModifierInfo AccuracyInfo, CritInfo;
 
 	AccuracyInfo.ModType = eHit_Success;
-	AccuracyInfo.Value = default.ACCURACY_CHANCE_BONUS;
+	if (bOverrideAccuracy)
+		AccuracyInfo.Value = AccuracyBonus;
+	else
+		AccuracyInfo.Value = default.ACCURACY_CHANCE_BONUS;
 	AccuracyInfo.Reason = FriendlyName;
 	ShotModifiers.AddItem(AccuracyInfo);
 

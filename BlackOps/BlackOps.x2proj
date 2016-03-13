@@ -38,6 +38,9 @@
     <Content Include="Src\BlackOps\Classes\X2Ability_DragoonAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Ability_HunterAbilitySet.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Ability_InfantryAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
@@ -46,6 +49,12 @@
     </Content>
     <Content Include="Src\BlackOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
     <Content Include="Src\BlackOps\Classes\X2Effect_HeavyArmor.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_HunterLowProfile.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_Precision.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_ShieldProtocol.uc">
@@ -58,6 +67,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_RemoveEffectsWithAbilitySource.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_VitalPoint.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XComGame\Classes\AnimNotify_ApplyPsiEffectsToTarget.uc" />
