@@ -49,6 +49,16 @@ event bool BlocksAbilityActivation()
 	return false;
 }
 
+function bool IsWaitingOnActionTrigger()
+{
+	return true;
+}
+
+function TriggerWaitCondition()
+{
+	bAbilityEffectReceived = true;
+}
+
 //------------------------------------------------------------------------------------------------
 
 simulated state Executing

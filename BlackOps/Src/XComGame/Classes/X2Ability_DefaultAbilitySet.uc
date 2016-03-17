@@ -2031,7 +2031,6 @@ static function X2AbilityTemplate AddLootAbility()
 	local X2AbilityTrigger_EventListener    EventTrigger;
 	local X2AbilityMultiTarget_Radius       MultiTarget;
 	local X2AbilityTarget_Single            SingleTarget;
-	local array<name>						SkipExclusions;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Loot');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_loot"; 
@@ -2050,9 +2049,6 @@ static function X2AbilityTemplate AddLootAbility()
 	UnitPropertyCondition.ImpairedIgnoresStuns = true;
 	UnitPropertyCondition.ExcludePanicked = true;
 	Template.AbilityShooterConditions.AddItem(UnitPropertyCondition);
-
-	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
-	Template.AddShooterEffectExclusions(SkipExclusions);
 
 	LootableCondition = new class'X2Condition_Lootable';
 	LootableCondition.LootableRange = default.LOOT_RANGE;

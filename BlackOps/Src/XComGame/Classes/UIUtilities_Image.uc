@@ -139,6 +139,8 @@ const HTML_MicOn     = "mic_on";
 const HTML_MicOff    = "mic_off";
 const HTML_MicActive = "mic_active";
 
+const HTML_AnarchysChildrenIcon = "anarchy_icon";
+
 // ----------------------------------------------------------------------------------------
 
 /// <summary>

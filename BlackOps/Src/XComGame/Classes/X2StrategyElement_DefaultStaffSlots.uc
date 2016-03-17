@@ -796,15 +796,9 @@ static function FillPsiChamberSoldierSlot(XComGameState NewGameState, StateObjec
 
 	FillSlot(NewGameState, SlotRef, UnitInfo, NewSlotState, NewUnitState);
 
-	//if (XComHQ.GetPsiTrainingProject(UnitInfo.UnitRef) == none && NewUnitState.GetStatus() != eStatus_PsiTraining)
-	if (NewUnitState.GetRank() == 0)
+	if (NewUnitState.GetRank() == 0) // If the Unit is a rookie, start the project to train them as a Psi Operative
 	{
-		if (NewUnitState.GetRank() == 0)
-		{
-			NewUnitState.SetStatus(eStatus_PsiTesting);
-		}
-		else
-			NewUnitState.SetStatus(eStatus_PsiTraining);
+		NewUnitState.SetStatus(eStatus_PsiTesting);
 
 		NewXComHQ = GetNewXComHQState(NewGameState);
 
@@ -910,6 +904,9 @@ static function bool ShouldDisplayPsiChamberSoldierToDoWarning(StateObjectRefere
 static function bool IsUnitValidForPsiChamberSoldierSlot(XComGameState_StaffSlot SlotState, StaffUnitInfo UnitInfo)
 {
 	local XComGameState_Unit Unit; 
+	local X2SoldierClassTemplate SoldierClassTemplate;
+	local SCATProgression ProgressAbility;
+	local name AbilityName;
 	
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitInfo.UnitRef.ObjectID));
 
@@ -923,13 +920,17 @@ static function bool IsUnitValidForPsiChamberSoldierSlot(XComGameState_StaffSlot
 		{
 			return true;
 		}
-		else if (Unit.GetSoldierClassTemplateName() == 'PsiOperative') // Psi Ops can train one ability per rank
+		else if (Unit.GetSoldierClassTemplateName() == 'PsiOperative') // But Psi Ops can only train until they learn all abilities
 		{
-			return Unit.PsiAbilityCount() < Unit.GetRank();
-		}
-		else // Other soldiers can train one ability per 3 ranks
-		{
-			return Unit.PsiAbilityCount() < Unit.GetRank() / 3;
+			SoldierClassTemplate = Unit.GetSoldierClassTemplate();
+			foreach Unit.PsiAbilities(ProgressAbility)
+			{
+				AbilityName = SoldierClassTemplate.GetAbilityName(ProgressAbility.iRank, ProgressAbility.iBranch);
+				if (AbilityName != '' && !Unit.HasSoldierAbility(AbilityName))
+				{
+					return true; // If we find an ability that the soldier hasn't learned yet, they are valid
+				}
+			}
 		}
 	}
 
@@ -944,9 +945,6 @@ static function string GetPsiChamberSoldierBonusDisplayString(XComGameState_Staf
 	local X2AbilityTemplate AbilityTemplate;
 	local name AbilityName;
 	local string Contribution;
-	local X2SoldierClassTemplate PsiOperativeClassTemplate;
-
-	PsiOperativeClassTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate('PsiOperative');
 
 	if (SlotState.IsSlotFilled())
 	{
@@ -954,9 +952,9 @@ static function string GetPsiChamberSoldierBonusDisplayString(XComGameState_Staf
 		TrainProject = XComHQ.GetPsiTrainingProject(SlotState.GetAssignedStaffRef());
 		Unit = SlotState.GetAssignedStaff();
 
-		if (Unit.GetRank() >= 1 && TrainProject != none)
+		if (Unit.GetSoldierClassTemplateName() == 'PsiOperative' && TrainProject != none)
 		{
-			AbilityName = PsiOperativeClassTemplate.GetAbilityName(TrainProject.iAbilityRank, TrainProject.iAbilityBranch);
+			AbilityName = Unit.GetSoldierClassTemplate().GetAbilityName(TrainProject.iAbilityRank, TrainProject.iAbilityBranch);
 			AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(AbilityName);
 			Contribution = Caps(AbilityTemplate.LocFriendlyName);
 		}

@@ -4,11 +4,11 @@ class UIArmory_PromotionPsiOp extends UIArmory_Promotion;
 simulated function PopulateData()
 {
 	local int i, maxRank;
-	local string AbilityIcon2, AbilityName2, HeaderString;
-	local bool bHasAbility2, bHasRankAbility;
+	local string AbilityIcon1, AbilityIcon2, AbilityName1, AbilityName2, HeaderString;
+	local bool bHasAbility1, bHasAbility2, bHasRankAbility;
 	local XComGameState_Unit Unit;
 	local X2SoldierClassTemplate ClassTemplate;
-	local X2AbilityTemplate AbilityTemplate2;
+	local X2AbilityTemplate AbilityTemplate1, AbilityTemplate2;
 	local X2AbilityTemplateManager AbilityTemplateManager;
 	local array<SoldierClassAbilityType> AbilityTree;
 	local UIArmory_PromotionItem Item;
@@ -95,12 +95,19 @@ simulated function PopulateData()
 		Item.ClassName = ClassTemplate.DataName;
 		Item.SetRankData(class'UIUtilities_Image'.static.GetRankIcon(i, ClassTemplate.DataName), Caps(class'X2ExperienceConfig'.static.GetRankName(i, ClassTemplate.DataName)));
 
-		if (i - 1 < AbilityTree.Length)
-			AbilityTemplate2 = AbilityTemplateManager.FindAbilityTemplate(AbilityTree[i - 1].AbilityName);
-		else
-			AbilityTemplate2 = none;
+		AbilityTree = ClassTemplate.GetAbilityTree(Item.Rank);
+		AbilityTemplate1 = AbilityTemplateManager.FindAbilityTemplate(AbilityTree[0].AbilityName);
+		AbilityTemplate2 = AbilityTemplateManager.FindAbilityTemplate(AbilityTree[1].AbilityName);
 
+		bHasAbility1 = Unit.HasSoldierAbility(AbilityTemplate1.DataName);
 		bHasAbility2 = Unit.HasSoldierAbility(AbilityTemplate2.DataName);
+
+		if (AbilityTemplate1 != none)
+		{
+			Item.AbilityName1 = AbilityTemplate1.DataName;
+			AbilityName1 = bHasAbility1 ? Caps(AbilityTemplate1.LocFriendlyName) : class'UIUtilities_Text'.static.GetColoredText(m_strAbilityLockedTitle, eUIState_Disabled);
+			AbilityIcon1 = bHasAbility1 ? AbilityTemplate1.IconImage : class'UIUtilities_Image'.const.UnknownAbilityIcon;
+		}
 
 		if (AbilityTemplate2 != none)
 		{
@@ -108,13 +115,10 @@ simulated function PopulateData()
 			AbilityName2 = bHasAbility2 ? Caps(AbilityTemplate2.LocFriendlyName) : class'UIUtilities_Text'.static.GetColoredText(m_strAbilityLockedTitle, eUIState_Disabled);
 			AbilityIcon2 = bHasAbility2 ? AbilityTemplate2.IconImage : class'UIUtilities_Image'.const.UnknownAbilityIcon;
 		}
-		bHasRankAbility = bHasAbility2;
+		bHasRankAbility = bHasAbility1 || bHasAbility2;
 
-		if (AbilityTemplate2 != none)
-			Item.SetAbilityData("", "", AbilityIcon2, AbilityName2);
-		else
-			Item.SetAbilityData("", "", "", "");
-		Item.SetEquippedAbilities(false, bHasAbility2);
+		Item.SetAbilityData(AbilityIcon1, AbilityName1, AbilityIcon2, AbilityName2);
+		Item.SetEquippedAbilities(bHasAbility1, bHasAbility2);
 
 		Item.SetPromote(false);
 		if (bHasRankAbility)

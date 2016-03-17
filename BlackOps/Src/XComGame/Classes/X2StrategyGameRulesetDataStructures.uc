@@ -1864,8 +1864,7 @@ static function name PromoteSoldier(StateObjectReference UnitRef)
 	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState NewGameState;
-	local XComGameState_Unit UnitState, CharacterPoolUnitState;
-	local CharacterPoolManager CharacterPool;
+	local XComGameState_Unit UnitState;
 	local name SoldierClassName;
 
 	History = `XCOMHISTORY;
@@ -1888,17 +1887,7 @@ static function name PromoteSoldier(StateObjectReference UnitRef)
 			}
 			else
 			{
-				CharacterPool = `CHARACTERPOOLMGR;
-				CharacterPoolUnitState = CharacterPool.GetCharacter(UnitState.GetFullName());
-				if (CharacterPoolUnitState != none)
-				{
-					// `RedScreen("Trying to force" @ UnitState.GetFullName() @ "to class" @ CharacterPoolUnitState.GetSoldierClassTemplateName());
-					SoldierClassName = XComHQ.SelectNextSoldierClass(CharacterPoolUnitState.GetSoldierClassTemplateName());
-				}
-				else
-				{
-					SoldierClassName = XComHQ.SelectNextSoldierClass();
-				}
+				SoldierClassName = XComHQ.SelectNextSoldierClass();
 			}
 			
 		}

@@ -21,7 +21,6 @@ var bool				bRepeatable;
 var bool				bJumpToLabs;  // On complete does this tech automatically jump to the labs
 var string				strImage;
 var array<Name>			ItemRewards;
-var array<Name>			ItemsToUpgrade; // Items that should be upgraded upon completion of this tech
 var Name				RewardDeck; // Deck a random reward should be drawn from
 var int					SortingTier; // The importance "tier" of this tech, used for sorting in lists
 

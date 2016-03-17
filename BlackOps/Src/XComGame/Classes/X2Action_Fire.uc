@@ -41,6 +41,7 @@ var X2AbilityTemplate AbilityTemplate;
 var bool bUpdatedMusicState;
 
 var Actor FOWViewer;
+var Actor SourceFOWViewer;
 
 function Init(const out VisualizationTrack InTrack)
 {
@@ -449,6 +450,10 @@ simulated state Executing
 
 		XGUnit(PrimaryTarget).SetForceVisibility(eForceVisible);
 		XGUnit(PrimaryTarget).GetPawn().UpdatePawnVisibility();
+
+		SourceFOWViewer = `XWORLD.CreateFOWViewer(Unit.GetPawn().Location, class'XComWorldData'.const.WORLD_StepSize * 3);
+		Unit.SetForceVisibility(eForceVisible);
+		Unit.GetPawn().UpdatePawnVisibility();
 	}
 
 Begin:
@@ -457,7 +462,7 @@ Begin:
 		HideFOW();
 
 		// Sleep long enough for the fog to be revealed
-		Sleep(1.0f);
+		Sleep(1.0f * GetDelayModifier());
 	}
 
 	
@@ -471,15 +476,23 @@ Begin:
 	//Failure case handling! We failed to notify our targets that damage was done. Notify them now.
 	SetTargetUnitDiscState();
 
-	if (FOWViewer != none)
+	if( FOWViewer != none )
 	{
 		`XWORLD.DestroyFOWViewer(FOWViewer);
 
-		if(XGUnit(PrimaryTarget).IsAlive())
+		if( XGUnit(PrimaryTarget).IsAlive() )
 		{
 			XGUnit(PrimaryTarget).SetForceVisibility(eForceNone);
 			XGUnit(PrimaryTarget).GetPawn().UpdatePawnVisibility();
 		}
+	}
+
+	if( SourceFOWViewer != none )
+	{
+		`XWORLD.DestroyFOWViewer(SourceFOWViewer);
+
+		Unit.SetForceVisibility(eForceNone);
+		Unit.GetPawn().UpdatePawnVisibility();
 	}
 
 	CompleteAction();
@@ -497,4 +510,5 @@ DefaultProperties
 	NotifyTargetTimer = 0.75;
 	TimeoutSeconds = 10.0f; //Should eventually be an estimate of how long we will run
 	bNotifyMultiTargetsAtOnce = true
+	bCauseTimeDilationWhenInterrupting = true
 }

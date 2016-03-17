@@ -515,6 +515,15 @@ simulated function ClearPawns()
 			`HQPRES.GetUIPawnMgr().ReleasePawn(self, UnitPawn.ObjectID);
 		}
 	}
+
+	foreach UnitPawnsCinematic(UnitPawn)
+	{
+		if (UnitPawn != none)
+		{
+			UnitPawn.Destroy();
+		}
+	}
+
 }
 
 simulated function ResetUnitLocations()

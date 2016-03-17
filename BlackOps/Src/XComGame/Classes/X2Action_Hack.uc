@@ -377,7 +377,7 @@ Begin:
 	}
 
 	// sleep a few more moments so they can see the results on screen before he puts the pad away.
-	Sleep(DelayAfterHackCompletes);
+	Sleep(DelayAfterHackCompletes * GetDelayModifier());
 
 	// if this was a successful hack and we are a key, update the pathing around the doors we unlocked
 	if(AbilityContext.IsResultContextHit()

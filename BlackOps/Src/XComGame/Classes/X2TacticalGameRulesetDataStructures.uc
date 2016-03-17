@@ -776,7 +776,11 @@ struct native X2PartInfo
 	var name CharacterTemplate;
 	var name Tech;
 
-	var string PartType;	
+	//Allows body parts to belong to 'set' of parts keyed off of the torso selection
+	var array<name> SetNames;
+
+	var string PartType;
+	var string DLCName; //Name of the DLC / Mod this part is a part of
 };
 
 //End - Body part template info

@@ -513,8 +513,6 @@ static function X2DataTemplate CreateTemplate_AssaultRifle_Conventional()
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
 	
-	Template.UpgradeItem = 'AssaultRifle_MG';
-
 	Template.fKnockbackDamageAmount = 5.0f;
 	Template.fKnockbackDamageRadius = 0.0f;
 
@@ -565,7 +563,8 @@ static function X2DataTemplate CreateTemplate_AssaultRifle_Magnetic()
 
 	Template.iPhysicsImpulse = 5;
 	
-	Template.UpgradeItem = 'AssaultRifle_BM';
+	Template.CreatorTemplateName = 'AssaultRifle_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'AssaultRifle_CV'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -619,6 +618,9 @@ static function X2DataTemplate CreateTemplate_AssaultRifle_Beam()
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
 
+	Template.CreatorTemplateName = 'AssaultRifle_BM_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'AssaultRifle_MG'; // Which item this will be upgraded from
+
 	Template.DamageTypeTemplateName = 'Projectile_BeamXCom';
 
 	return Template;
@@ -668,8 +670,6 @@ static function X2DataTemplate CreateTemplate_Pistol_Conventional()
 
 	Template.iPhysicsImpulse = 5;
 	
-	Template.UpgradeItem = 'Pistol_MG';
-
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
 
@@ -721,7 +721,8 @@ static function X2DataTemplate CreateTemplate_Pistol_Magnetic()
 
 	Template.iPhysicsImpulse = 5;
 
-	Template.UpgradeItem = 'Pistol_BM';
+	Template.CreatorTemplateName = 'Pistol_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Pistol_CV'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -773,6 +774,9 @@ static function X2DataTemplate CreateTemplate_Pistol_Beam()
 	Template.GameArchetype = "WP_Pistol_BM.WP_Pistol_BM";
 
 	Template.iPhysicsImpulse = 5;
+
+	Template.CreatorTemplateName = 'Pistol_BM_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Pistol_MG'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -834,8 +838,6 @@ static function X2DataTemplate CreateTemplate_Shotgun_Conventional()
 	Template.fKnockbackDamageAmount = 10.0f;
 	Template.fKnockbackDamageRadius = 16.0f;
 
-	Template.UpgradeItem = 'Shotgun_MG';
-
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
 
@@ -889,7 +891,8 @@ static function X2DataTemplate CreateTemplate_Shotgun_Magnetic()
 	Template.fKnockbackDamageAmount = 10.0f;
 	Template.fKnockbackDamageRadius = 16.0f;
 
-	Template.UpgradeItem = 'Shotgun_BM';
+	Template.CreatorTemplateName = 'Shotgun_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Shotgun_CV'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -944,6 +947,9 @@ static function X2DataTemplate CreateTemplate_Shotgun_Beam()
 
 	Template.fKnockbackDamageAmount = 10.0f;
 	Template.fKnockbackDamageRadius = 16.0f;
+
+	Template.CreatorTemplateName = 'Shotgun_BM_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Shotgun_MG'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1001,8 +1007,6 @@ static function X2DataTemplate CreateTemplate_Cannon_Conventional()
 
 	Template.iPhysicsImpulse = 5;
 
-	Template.UpgradeItem = 'Cannon_MG';
-
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
 
@@ -1053,7 +1057,8 @@ static function X2DataTemplate CreateTemplate_Cannon_Magnetic()
 
 	Template.iPhysicsImpulse = 5;
 
-	Template.UpgradeItem = 'Cannon_BM';
+	Template.CreatorTemplateName = 'Cannon_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Cannon_CV'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1105,6 +1110,9 @@ static function X2DataTemplate CreateTemplate_Cannon_Beam()
 	Template.AddDefaultAttachment('Light', "BeamAttachments.Meshes.BeamFlashLight");
 
 	Template.iPhysicsImpulse = 5;
+
+	Template.CreatorTemplateName = 'Cannon_BM_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Cannon_MG'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1164,8 +1172,6 @@ static function X2DataTemplate CreateTemplate_SniperRifle_Conventional()
 
 	Template.iPhysicsImpulse = 5;
 
-	Template.UpgradeItem = 'SniperRifle_MG';
-
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
 
@@ -1220,7 +1226,8 @@ static function X2DataTemplate CreateTemplate_SniperRifle_Magnetic()
 
 	Template.iPhysicsImpulse = 5;
 
-	Template.UpgradeItem = 'SniperRifle_BM';
+	Template.CreatorTemplateName = 'SniperRifle_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'SniperRifle_CV'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1273,6 +1280,9 @@ static function X2DataTemplate CreateTemplate_SniperRifle_Beam()
 
 	Template.iPhysicsImpulse = 5;
 
+	Template.CreatorTemplateName = 'SniperRifle_BM_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'SniperRifle_MG'; // Which item this will be upgraded from
+
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
 
@@ -1316,8 +1326,6 @@ static function X2DataTemplate CreateTemplate_Sword_Conventional()
 	Template.iSoundRange = default.RANGERSWORD_CONVENTIONAL_ISOUNDRANGE;
 	Template.iEnvironmentDamage = default.RANGERSWORD_CONVENTIONAL_IENVIRONMENTDAMAGE;
 	Template.BaseDamage.DamageType = 'Melee';
-
-	Template.UpgradeItem = 'Sword_MG';
 	
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
@@ -1361,7 +1369,8 @@ static function X2DataTemplate CreateTemplate_Sword_Magnetic()
 
 	Template.BonusWeaponEffects.AddItem(class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, default.RANGERSWORD_MAGNETIC_STUNCHANCE));
 
-	Template.UpgradeItem = 'Sword_BM';
+	Template.CreatorTemplateName = 'Sword_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Sword_CV'; // Which item this will be upgraded from
 	
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1407,6 +1416,9 @@ static function X2DataTemplate CreateTemplate_Sword_Beam()
 
 	Template.BonusWeaponEffects.AddItem(class'X2StatusEffects'.static.CreateBurningStatusEffect(2, 0));
 	
+	Template.CreatorTemplateName = 'Sword_BM_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Sword_MG'; // Which item this will be upgraded from
+
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
 
@@ -1444,8 +1456,6 @@ static function X2DataTemplate CreateTemplate_GremlinDrone_Conventional()
 	Template.NumUpgradeSlots = 1;
 	Template.InfiniteAmmo = true;
 	Template.iPhysicsImpulse = 5;
-
-	Template.UpgradeItem = 'Gremlin_MG';
 
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
@@ -1485,7 +1495,8 @@ static function X2DataTemplate CreateTemplate_GremlinDrone_Magnetic()
 	Template.InfiniteAmmo = true;
 	Template.iPhysicsImpulse = 5;
 
-	Template.UpgradeItem = 'Gremlin_BM';
+	Template.CreatorTemplateName = 'Gremlin_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Gremlin_CV'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1526,6 +1537,9 @@ static function X2DataTemplate CreateTemplate_GremlinDrone_Beam()
 	Template.NumUpgradeSlots = 2;
 	Template.InfiniteAmmo = true;
 	Template.iPhysicsImpulse = 5;
+
+	Template.CreatorTemplateName = 'Gremlin_BM_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'Gremlin_MG'; // Which item this will be upgraded from
 	
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1606,8 +1620,6 @@ static function X2DataTemplate CreateTemplate_PsiAmp_Conventional()
 	
 	Template.ExtraDamage = default.PSIAMPT1_ABILITYDAMAGE;
 
-	Template.UpgradeItem = 'PsiAmp_MG';
-
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
 
@@ -1643,7 +1655,8 @@ static function X2DataTemplate CreateTemplate_PsiAmp_Magnetic()
 
 	Template.ExtraDamage = default.PSIAMPT2_ABILITYDAMAGE;
 
-	Template.UpgradeItem = 'PsiAmp_BM';
+	Template.CreatorTemplateName = 'PsiAmp_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'PsiAmp_CV'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1676,6 +1689,9 @@ static function X2DataTemplate CreateTemplate_PsiAmp_Beam()
 	Template.Abilities.AddItem('PsiAmpBM_BonusStats');
 
 	Template.ExtraDamage = default.PSIAMPT3_ABILITYDAMAGE;
+
+	Template.CreatorTemplateName = 'PsiAmp_BM_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'PsiAmp_MG'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;

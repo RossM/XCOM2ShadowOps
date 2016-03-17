@@ -45,7 +45,7 @@ simulated function InitListItem(StateObjectReference initUnitRef)
 					Caps(Unit.GetName(eNameType_Nick)),
 					Caps(`GET_RANK_ABBRV(Unit.GetRank(), SoldierClass.DataName)),
 					rankIcon,
-					Caps(SoldierClass != None ? Unit.GetSoldierClassDisplayName() : ""),
+					Caps(SoldierClass != None ? SoldierClass.DisplayName : ""),
 					classIcon,
 					status,
 					statusTimeValue $"\n" $ Class'UIUtilities_Text'.static.CapsCheckForGermanScharfesS(Class'UIUtilities_Text'.static.GetSizedText( statusTimeLabel, 12)),

@@ -71,6 +71,10 @@ var config array<string> ForceLoadCinematicMaps;                // Any maps requ
 var config array<string> arrHeightFogAdjustedPlots;				// any maps required to adjust heightfog actor properties through a remote event.
 var config float DepletedAvatarHealthMod;                       // the health mod applied to the first avatar spawned in as a result of skulljacking the codex
 var config bool ActionsBlockAbilityActivation;					// the default setting for whether or not X2Actions block ability activation (can be overridden on a per-action basis)
+var config float ZipModeMoveSpeed;								// in zip mode, all movement related animations are played at this speed
+var config float ZipModeTrivialAnimSpeed;						// in zip mode, all trivial animations (like step outs) are played at this speed
+var config float ZipModeDelayModifier;							// in zip mode, all action delays are modified by this value
+var config float ZipModeDoomVisModifier;						// in zip mode, the doom visualization timers are modified by this value
 //****************************************
 
 var int LastNeutralReactionEventChainIndex; // Last event chain index to prevent multiple civilian reactions from same event. Also used for simultaneous civilian movement.
@@ -1237,7 +1241,7 @@ function EventListenerReturn HandleAdditionalFalling(Object EventData, Object Ev
 	{
 		DeadUnit = XComGameState_Unit( History.GetGameStateForObjectID( UnitRef.ObjectID ) );
 
-		if( DeadUnit != none )
+		if( DeadUnit != none && !WorldData.IsTileOutOfRange(DeadUnit.TileLocation) )
 		{
 			if ((XGUnit(DeadUnit.GetVisualizer()).GetPawn().RagdollFlag == ERagdoll_Never) && DeadUnit.bFallingApplied)
 			{
@@ -1253,7 +1257,7 @@ function EventListenerReturn HandleAdditionalFalling(Object EventData, Object Ev
 
 	foreach History.IterateByClassType( class'XComGameState_LootDrop', Loot )
 	{
-		if (!WorldData.IsFloorTile( Loot.TileLocation ))
+		if (!WorldData.IsTileOutOfRange(DeadUnit.TileLocation) && !WorldData.IsFloorTile( Loot.TileLocation ))
 		{
 			if (NewGameState == none)
 			{
@@ -3428,7 +3432,6 @@ Begin:
 
 			sleep(0.0);
 		}
-		bSkipRemainingTurnActivty = false;
 
 		`SETLOC("Checking for Tactical Game Ended");
 		//Perform fail safe checking for whether the tactical battle is over
@@ -3440,6 +3443,10 @@ Begin:
 			sleep(0.0);
 		}
 
+		// Moved to clear the SkipRemainingTurnActivty flag until after the visualizer finishes.  Prevents an exploit where
+		// the end/back button is spammed during the player's final action. Previously the Skip flag was set to true 
+		// while visualizing the action, after the flag was already cleared, causing the subsequent AI turn to get skipped.
+		bSkipRemainingTurnActivty = false;
 		`SETLOC("Going to the Next Player");
 	}
 	until( !NextPlayer() ); //NextPlayer returns false when the UnitActionPlayerIndex has reached the end of PlayerTurnOrder in the BattleData state.

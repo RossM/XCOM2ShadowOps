@@ -55,8 +55,6 @@ static function X2WeaponTemplate CreateBattleScanner()
 	Template.iRange = default.BATTLESCANNER_RANGE;
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 	Template.PointsToComplete = 0;
 	Template.TradingPostValue = 6;
 
@@ -68,7 +66,7 @@ static function X2WeaponTemplate CreateBattleScanner()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 75;
+	Resources.Quantity = 30;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 	
 	return Template;
@@ -100,8 +98,6 @@ static function X2WeaponTemplate CreateMimicBeacon()
 	Template.iRange = default.MIMICBEACON_RANGE;
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 	Template.PointsToComplete = 0;
 	Template.TradingPostValue = 15;
 
@@ -112,11 +108,11 @@ static function X2WeaponTemplate CreateMimicBeacon()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 300;
+	Resources.Quantity = 75;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Artifacts.ItemTemplateName = 'CorpseFaceless';
-	Artifacts.Quantity = 8;
+	Artifacts.Quantity = 2;
 	Template.Cost.ArtifactCosts.AddItem(Artifacts);
 
 	return Template;
@@ -166,8 +162,6 @@ static function X2DataTemplate CreateNanoScaleVest()
 	Template.Abilities.AddItem('NanofiberVestBonus');
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 	Template.TradingPostValue = 15;
 	Template.PointsToComplete = 0;
 	Template.Tier = 0;
@@ -179,11 +173,11 @@ static function X2DataTemplate CreateNanoScaleVest()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 75;
+	Resources.Quantity = 30;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Artifacts.ItemTemplateName = 'CorpseAdventTrooper';
-	Artifacts.Quantity = 6;
+	Artifacts.Quantity = 2;
 	Template.Cost.ArtifactCosts.AddItem(Artifacts);
 
 	return Template;
@@ -292,18 +286,15 @@ static function X2DataTemplate CreateMedikit()
 	Template.GameArchetype = "WP_Medikit.WP_Medikit";
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 	Template.TradingPostValue = 15;
 	Template.PointsToComplete = 0;
 	Template.Tier = 0;
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 50;
+	Resources.Quantity = 35;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
-	Template.UpgradeItem = 'NanoMedikit';
 	Template.HideIfResearched = 'BattlefieldMedicine';
 
 	return Template;
@@ -313,6 +304,7 @@ static function X2DataTemplate NanoMedikit()
 {
 	local X2WeaponTemplate Template;
 	local ArtifactCost Resources;
+	local ArtifactCost Artifacts;
 	
 	`CREATE_X2TEMPLATE(class'X2WeaponTemplate', Template, 'NanoMedikit');
 	Template.ItemCat = 'heal';
@@ -337,8 +329,6 @@ static function X2DataTemplate NanoMedikit()
 	Template.GameArchetype = "WP_Medikit.WP_Medikit_Lv2";
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 	Template.TradingPostValue = 25;
 	Template.PointsToComplete = 0;
 	Template.Tier = 1;
@@ -347,7 +337,15 @@ static function X2DataTemplate NanoMedikit()
 	Resources.Quantity = 50;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
+
+	Artifacts.ItemTemplateName = 'CorpseViper';
+	Artifacts.Quantity = 1;
+	Template.Cost.ArtifactCosts.AddItem(Artifacts);
+
 	Template.Requirements.RequiredTechs.AddItem('BattlefieldMedicine');
+
+	Template.CreatorTemplateName = 'BattlefieldMedicine'; // The schematic which creates this item
+	Template.BaseItem = 'Medikit'; // Which item this will be upgraded from
 
 	return Template;
 }
@@ -367,8 +365,6 @@ static function X2DataTemplate MindShield()
 	Template.Abilities.AddItem('MindShield');
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 	Template.TradingPostValue = 12;
 	Template.PointsToComplete = 0;
 	Template.Tier = 1;
@@ -378,11 +374,11 @@ static function X2DataTemplate MindShield()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 120;
+	Resources.Quantity = 45;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Artifacts.ItemTemplateName = 'CorpseSectoid';
-	Artifacts.Quantity = 2;
+	Artifacts.Quantity = 1;
 	Template.Cost.ArtifactCosts.AddItem(Artifacts);
 	
 	return Template;
@@ -444,8 +440,6 @@ static function X2DataTemplate Hellweave()
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.BurnChanceLabel, , class'X2Ability_ItemGrantedAbilitySet'.default.SCORCHCIRCUITS_APPLY_CHANCE);
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 	Template.TradingPostValue = 15;
 	Template.Tier = 2;
 
@@ -454,11 +448,11 @@ static function X2DataTemplate Hellweave()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 300;
+	Resources.Quantity = 65;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Artifacts.ItemTemplateName = 'CorpseChryssalid';
-	Artifacts.Quantity = 8;
+	Artifacts.Quantity = 2;
 	Template.Cost.ArtifactCosts.AddItem(Artifacts);
 
 	return Template;

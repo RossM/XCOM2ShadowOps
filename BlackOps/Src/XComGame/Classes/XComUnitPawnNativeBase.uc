@@ -244,6 +244,9 @@ var SkeletalMeshComponent				m_kHeadMeshComponent; //Alias to the base mesh for 
 var SkeletalMeshComponent	            m_kTorsoComponent, m_kArmsMC, m_kLegsMC, m_kHelmetMC, m_kDecoKitMC, m_kEyeMC, m_kTeethMC, m_kHairMC, m_kBeardMC, m_kUpperFacialMC, m_kLowerFacialMC;
 var protectedwrite SkeletalMeshComponent HairComponent;       //  jbouscher - this was pulled from XComHumanPawn as it is needed in native code for terrible reasons
 
+//Independently selectable arm meshes
+var transient SkeletalMeshComponent     m_kLeftArm, m_kRightArm, m_kLeftArmDeco, m_kRightArmDeco;
+
 var array<ParticleSystemComponent>      m_arrRemovePSCOnDeath;
 
 var private bool                        m_bTexturesBoosted;     //  used in strategy for getting textures to load early
@@ -1484,6 +1487,14 @@ simulated function UpdateHeadLookAtTarget()
 	
 	History = `XCOMHISTORY;
 	PresLayer = `PRES;
+
+	// no heads turning on dead guys
+	if (m_kGameUnit.IsDead())
+		return;
+
+	// similarly if we're not force updated or onscreen
+	if (!(Mesh.bUpdateSkelWhenNotRendered || Mesh.bRecentlyRendered))
+		return;
 
 	if( PresLayer != none && PresLayer.GetTacticalHUD() != None )
 	{

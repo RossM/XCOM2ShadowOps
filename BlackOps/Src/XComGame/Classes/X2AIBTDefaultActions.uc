@@ -773,6 +773,15 @@ function bt_status SelectAbility()
 		{
 			m_kBehavior.bSetDestinationWithAbility = false;
 		}
+
+		// Wait until next tick to execute the ability.
+		if( !m_kBehavior.WaitForExecuteAbility )
+		{
+			m_kBehavior.WaitForExecuteAbility = true;
+			return BTS_RUNNING;
+		}
+
+		m_kBehavior.WaitForExecuteAbility = false;
 		// Mark ability as selected.
 		m_kBehavior.m_strBTAbilitySelection = SplitNameParam;
 		

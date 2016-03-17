@@ -595,6 +595,21 @@ exec function Y_Button_Release()
 {
 	XComInputBase(PlayerInput).InputEvent( class'UIUtilities_Input'.const.FXS_BUTTON_Y, class'UIUtilities_Input'.const.FXS_ACTION_RELEASE  );
 }
+
+exec function A_Button_Steam_Press()
+{
+	if( bBlockingInputAfterMovie ) return;
+
+	XComInputBase(PlayerInput).InputEvent(class'UIUtilities_Input'.const.FXS_BUTTON_A_STEAM);
+}
+exec function A_Button_Steam_Release()
+{
+	if( bBlockingInputAfterMovie ) return;
+
+	XComInputBase(PlayerInput).InputEvent(class'UIUtilities_Input'.const.FXS_BUTTON_A_STEAM, class'UIUtilities_Input'.const.FXS_ACTION_RELEASE);
+}
+
+
 //---------------------------------------------------------------------------------------
 exec function DPad_Right_Press()
 {
@@ -961,6 +976,9 @@ exec function E_Key_Release()   {   if( !WorldInfo.IsConsoleBuild() ) XComInputB
 //---------------------------------------------------------------------------------------
 exec function F_Key_Press()     {   if( !WorldInfo.IsConsoleBuild() ) XComInputBase(PlayerInput).InputEvent( class'UIUtilities_Input'.const.FXS_KEY_F );}
 exec function F_Key_Release()   {   if( !WorldInfo.IsConsoleBuild() ) XComInputBase(PlayerInput).InputEvent( class'UIUtilities_Input'.const.FXS_KEY_F, class'UIUtilities_Input'.const.FXS_ACTION_RELEASE  );}
+//---------------------------------------------------------------------------------------
+exec function I_Key_Press()     {   if( !WorldInfo.IsConsoleBuild() ) XComInputBase(PlayerInput).InputEvent( class'UIUtilities_Input'.const.FXS_KEY_I );}
+exec function I_Key_Release()   {   if( !WorldInfo.IsConsoleBuild() ) XComInputBase(PlayerInput).InputEvent( class'UIUtilities_Input'.const.FXS_KEY_I, class'UIUtilities_Input'.const.FXS_ACTION_RELEASE  );}
 //---------------------------------------------------------------------------------------
 exec function J_Key_Press()     {   if( !WorldInfo.IsConsoleBuild() ) XComInputBase(PlayerInput).InputEvent( class'UIUtilities_Input'.const.FXS_KEY_J );}
 exec function J_Key_Release()   {   if( !WorldInfo.IsConsoleBuild() ) XComInputBase(PlayerInput).InputEvent( class'UIUtilities_Input'.const.FXS_KEY_J, class'UIUtilities_Input'.const.FXS_ACTION_RELEASE  );}

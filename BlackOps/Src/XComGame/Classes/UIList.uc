@@ -496,6 +496,18 @@ simulated function OnChildMouseEvent(UIPanel Control, int cmd)
 				OnItemClicked(self, SelectedIndex);
 		}
 		break;
+
+	case class'UIUtilities_Input'.const.FXS_L_MOUSE_UP_DELAYED:
+		if( `XENGINE.m_SteamControllerManager.IsSteamControllerActive() )
+		{
+			if( HasItem(Control) )
+			{
+				SetSelectedIndex(GetItemIndex(Control));
+				if( OnItemClicked != none )
+					OnItemClicked(self, SelectedIndex);
+			}
+		}
+		break;
 	case class'UIUtilities_Input'.const.FXS_L_MOUSE_DOUBLE_UP:
 		if( HasItem(Control) )
 		{

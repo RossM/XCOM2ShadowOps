@@ -6,6 +6,7 @@ var config float PSIDET_RADIUS_METERS;
 var config int SECTOID_MINDSPIN_DISORIENTED_DURATION;
 var config int SECTOID_MINDSPIN_CONFUSED_DURATION;
 var config int SECTOID_MINDSPIN_CONTROL_DURATION;
+var config float SECTOID_REANIMATION_ZOMBIE_RISE_DELAY;
 
 var name DelayedPsiExplosionEffectName;
 var name PsiExplosionTriggerName;
@@ -394,10 +395,12 @@ simulated function PsiReanimation_BuildVisualization(XComGameState VisualizeGame
 	local X2Action_PlayAnimation AnimationAction;
 
 	local VisualizationTrack EmptyTrack;
-	local VisualizationTrack BuildTrack, ZombieTrack;
+	local VisualizationTrack BuildTrack, ZombieTrack, DeadUnitTrack;
 	local XComGameState_Unit SpawnedUnit, DeadUnit, SectoidUnit;
 	local UnitValue SpawnedUnitValue;
 	local X2Effect_SpawnPsiZombie SpawnPsiZombieEffect;
+	local X2Action_TimedWait ReanimateTimedWaitAction;
+	local X2Action_SendInterTrackMessage SendMessageAction;
 
 	History = `XCOMHISTORY;
 
@@ -415,16 +418,15 @@ simulated function PsiReanimation_BuildVisualization(XComGameState VisualizeGame
 
 	if( SectoidUnit != none )
 	{
-		class'X2Action_ExitCover'.static.AddToVisualizationTrack(BuildTrack, Context);
-		class'X2Action_AbilityPerkStart'.static.AddToVisualizationTrack(BuildTrack, Context);
-		AnimationAction = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, Context));
-		AnimationAction.Params.AnimName = 'HL_Psi_ReAnimate';
-
 		// Configure the visualization track for the psi zombie
 		//******************************************************************************************
+		DeadUnitTrack.StateObject_OldState = History.GetGameStateForObjectID(Context.InputContext.PrimaryTarget.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex);
+		DeadUnitTrack.StateObject_NewState = DeadUnitTrack.StateObject_OldState;
 		DeadUnit = XComGameState_Unit(VisualizeGameState.GetGameStateForObjectID(Context.InputContext.PrimaryTarget.ObjectID));
 		`assert(DeadUnit != none);
+		DeadUnitTrack.TrackActor = History.GetVisualizer(DeadUnit.ObjectID);
 
+		// Get the ObjectID for the ZombieUnit created from the DeadUnit
 		DeadUnit.GetUnitValue(class'X2Effect_SpawnUnit'.default.SpawnedUnitValueName, SpawnedUnitValue);
 
 		ZombieTrack = EmptyTrack;
@@ -443,11 +445,35 @@ simulated function PsiReanimation_BuildVisualization(XComGameState VisualizeGame
 			return;
 		}
 
+		// Build the tracks
+		class'X2Action_ExitCover'.static.AddToVisualizationTrack(BuildTrack, Context);
+		class'X2Action_AbilityPerkStart'.static.AddToVisualizationTrack(BuildTrack, Context);
+
+		// Let the dead unit know that it may start its rise timer
+		SendMessageAction = X2Action_SendInterTrackMessage(class'X2Action_SendInterTrackMessage'.static.AddToVisualizationTrack(BuildTrack, Context));
+		SendMessageAction.SendTrackMessageToRef = DeadUnit.GetReference();
+
+		AnimationAction = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, Context));
+		AnimationAction.Params.AnimName = 'HL_Psi_ReAnimate';
+
 		class'X2Action_AbilityPerkEnd'.static.AddToVisualizationTrack(BuildTrack, Context);
 		class'X2Action_EnterCover'.static.AddToVisualizationTrack(BuildTrack, Context);
-		SpawnPsiZombieEffect.AddSpawnVisualizationsToTracks(Context, SpawnedUnit, ZombieTrack, DeadUnit, BuildTrack);
+
+		// Dead unit should wait for the Sectoid to play its Reanimation animation
+		class'X2Action_WaitForAbilityEffect'.static.AddToVisualizationTrack(DeadUnitTrack, Context);
+
+		// Preferable to have an anim notify from content but can't do that currently, animation gave the time to wait before the zombie rises
+		ReanimateTimedWaitAction = X2Action_TimedWait(class'X2Action_TimedWait'.static.AddToVisualizationTrack(DeadUnitTrack, Context));
+		ReanimateTimedWaitAction.DelayTimeSec = default.SECTOID_REANIMATION_ZOMBIE_RISE_DELAY;
+
+		// Let the spawned Zombie unit know that it may now rise
+		SendMessageAction = X2Action_SendInterTrackMessage(class'X2Action_SendInterTrackMessage'.static.AddToVisualizationTrack(DeadUnitTrack, Context));
+		SendMessageAction.SendTrackMessageToRef = SpawnedUnit.GetReference();
+
+		SpawnPsiZombieEffect.AddSpawnVisualizationsToTracks(Context, SpawnedUnit, ZombieTrack, DeadUnit, DeadUnitTrack);
 	
 		OutVisualizationTracks.AddItem(BuildTrack);
+		OutVisualizationTracks.AddItem(DeadUnitTrack);
 		OutVisualizationTracks.AddItem(ZombieTrack);
 	}
 }

@@ -340,6 +340,18 @@ var int BTTargetIndex;    // from deprecated XGAIAbilityDM class
 var private native Map_Mirror       CachedEnemyCover{TMap<INT, FXComCoverPoint>};        //  maps unit id to a group id.
 
 var bool BTSkipTurnOnFailure;
+struct native CachedAbilityNameList
+{
+	var int HistoryIndex;
+	var array<Name> NameList;
+	structdefaultproperties
+	{
+		HistoryIndex = INDEX_NONE
+	}
+};
+
+var CachedAbilityNameList CachedAbilityNames;	// Cached names of all abilities available to this unit for the current BT run.
+var bool WaitForExecuteAbility;					// Flag to indicate we are waiting on a pending ability to be submitted.
 
 function int GetAIUnitDataID(int UnitID)
 {
@@ -1720,9 +1732,12 @@ function BTExecuteAbility()
 function InitBehaviorTree(bool bSkipTurnOnFailure=false)
 {
 	local X2AIBTBehavior BT;
+	local array<Name> dummyList;
 	BT = GetBehaviorTree();
+`if(`notdefined(FINAL_RELEASE))
 	BT.SetTraversalIndex(0); // Set node indices for each node in the behavior tree.  
-							// This traverses the entire tree recursively - but only used for debug logging.
+						// This traverses the entire tree recursively - but only used for debug logging.
+`endif
 
 	BTSkipTurnOnFailure = bSkipTurnOnFailure;
 	m_arrBTBestTargetOption.Length = 0;
@@ -1751,6 +1766,8 @@ function InitBehaviorTree(bool bSkipTurnOnFailure=false)
 
 	CacheAllies();
 	CacheKnownEnemies();
+
+	FindOrGetAbilityList('', dummyList); // Cache ability name list
 
 	if( m_kPlayer != None )
 	{
@@ -3223,15 +3240,17 @@ function SetAOETargetLocations(const AvailableTarget Targets)
 }
 
 // Save out list of traversals to our unit AI data state.
-// Update - due to save file constraints, this now saves BT traversals locally.  
+// Update - due to save file constraints, this now saves BT traversals locally.  Also- this is only for debug.
 function SaveBTTraversals()
 {
+`if(`notdefined(FINAL_RELEASE))
 	local int RootIndex;
 	local array<BTDetailedInfo> arrStatusList;
 
 	BT_GetNodeDetailList(arrStatusList);
 	RootIndex = `BEHAVIORTREEMGR.GetNodeIndex(m_kBehaviorTree.m_strName);
 	AddTraversalData(arrStatusList, RootIndex);
+`endif
 }
 
 function AddTraversalData(array<BTDetailedInfo> TraversalData, int RootIndex)
@@ -4116,7 +4135,19 @@ function bool FindOrGetAbilityList(Name TargetName, out array<Name> AbilityNames
 	local AvailableAction kAbility;
 	local XComGameState_Ability AbilityState;
 	local Name AbilityName;
+	local int HistoryIndex;
 	History = `XCOMHISTORY;
+	HistoryIndex = History.GetCurrentHistoryIndex();
+
+	if( CachedAbilityNames.HistoryIndex == HistoryIndex )
+	{
+		AbilityNames = CachedAbilityNames.NameList;
+		if( AbilityNames.Find(TargetName) != INDEX_NONE )
+		{
+			return true;
+		}
+		return false;
+	}
 
 	foreach UnitAbilityInfo.AvailableActions(kAbility)
 	{
@@ -4128,7 +4159,14 @@ function bool FindOrGetAbilityList(Name TargetName, out array<Name> AbilityNames
 		}
 		AbilityNames.AddItem(AbilityName);
 	}
+	AddCachedAbilityNameList(AbilityNames, HistoryIndex);
 	return false;
+}
+
+function AddCachedAbilityNameList(array<Name> AbilityNames, int HistoryIndex)
+{
+	CachedAbilityNames.NameList = AbilityNames;
+	CachedAbilityNames.HistoryIndex = HistoryIndex;
 }
 
 
@@ -6031,7 +6069,7 @@ simulated function bool IsInBadArea( Vector vLoc, bool bDebugLog=false, optional
 		return true;
 	}
 
-	if( class'XComSpawnRestrictor'.static.IsInvalidPathLocation(vLoc) )
+	if( class'XComSpawnRestrictor'.static.IsInvalidPathLocationNative(vLoc) )
 	{
 		return true;
 	}
@@ -7632,9 +7670,13 @@ state EndOfTurn
 	}
 
 Begin:
-		OnUnitEndTurn();
+
+	Sleep(0.1f);
+
+	OnUnitEndTurn();
 //		`Log("Completed OnUnitEndTurn fn. Entering state Inactive."@self@GetStateName());
-		GotoState('Inactive');
+
+	GotoState('Inactive');
 }
 //------------------------------------------------------------------------------------------------
 simulated event Tick( float fDeltaT )

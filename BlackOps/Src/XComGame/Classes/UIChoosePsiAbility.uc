@@ -133,9 +133,7 @@ simulated function int GetAbilityOrderDays(int iAbility)
 		Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(m_UnitRef.ObjectID));
 		RankDifference = Max(m_arrAbilities[iAbility].iRank - Unit.GetRank(), 0);
 		TrainingRateModifier = XComHQ.PsiTrainingRate / XComHQ.XComHeadquarters_DefaultPsiTrainingWorkPerHour;
-		return (XComHQ.GetPsiTrainingDays() + Round(XComHQ.GetPsiTrainingScalar() * float(RankDifference))) * 
-			   (Unit.IsPsiOperative() ? 1.0f : 3.0f) *			   
-		       (24 / TrainingRateModifier);
+		return (XComHQ.GetPsiTrainingDays() + Round(XComHQ.GetPsiTrainingScalar() * float(RankDifference))) * (24 / TrainingRateModifier);
 	}
 }
 
@@ -156,7 +154,7 @@ simulated function String GetButtonString(int ItemIndex)
 //This is overwritten in the research archives. 
 simulated function array<SoldierAbilityInfo> GetAbilities()
 {
-	local X2SoldierClassTemplate PsiOperativeClassTemplate;
+	local X2SoldierClassTemplate SoldierClassTemplate;
 	local X2AbilityTemplate AbilityTemplate;	
 	local SCATProgression ProgressAbility;
 	local array<SoldierAbilityInfo> SoldierAbilities;
@@ -169,14 +167,14 @@ simulated function array<SoldierAbilityInfo> GetAbilities()
 	local bool bAddAbility;
 
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(m_UnitRef.ObjectID));
-	PsiOperativeClassTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate('PsiOperative');
+	SoldierClassTemplate = Unit.GetSoldierClassTemplate();
 
 	// First check to see if the PsiOp has a paused ability training project
 	AbilityProject = XComHQ.GetPsiTrainingProject(m_UnitRef);
 	if (AbilityProject != none && AbilityProject.bForcePaused)
 	{
 		// Only add the paused ability to the list as a choice to resume
-		AbilityName = PsiOperativeClassTemplate.GetAbilityName(AbilityProject.iAbilityRank, AbilityProject.iAbilityBranch);
+		AbilityName = SoldierClassTemplate.GetAbilityName(AbilityProject.iAbilityRank, AbilityProject.iAbilityBranch);
 		AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(AbilityName);
 
 		SoldierAbility.AbilityTemplate = AbilityTemplate;
@@ -195,7 +193,7 @@ simulated function array<SoldierAbilityInfo> GetAbilities()
 				break;
 
 			bAddAbility = false;
-			AbilityName = PsiOperativeClassTemplate.GetAbilityName(ProgressAbility.iRank, ProgressAbility.iBranch);
+			AbilityName = SoldierClassTemplate.GetAbilityName(ProgressAbility.iRank, ProgressAbility.iBranch);
 			if (AbilityName != '' && !Unit.HasSoldierAbility(AbilityName) && AddedAbilityNames.Find(AbilityName) == INDEX_NONE)
 			{
 				AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(AbilityName);
@@ -212,7 +210,7 @@ simulated function array<SoldierAbilityInfo> GetAbilities()
 							if (!Unit.HasSoldierAbility(AbilityName)) // if the soldier does not have the prereq ability, replace it
 							{
 								AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(AbilityName);
-								ProgressAbility = PsiOperativeClassTemplate.GetSCATProgressionForAbility(AbilityName);
+								ProgressAbility = SoldierClassTemplate.GetSCATProgressionForAbility(AbilityName);
 
 								if (AddedAbilityNames.Find(AbilityName) != INDEX_NONE)
 								{

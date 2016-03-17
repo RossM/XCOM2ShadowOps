@@ -245,6 +245,14 @@ exec function UISetDistortion( float Value )
 	XComPlayerController(Outer).Pres.SetUIDistortionStrength(Value);
 }
 
+exec function UIClearCustomizeAlerts()
+{
+	`XPROFILESETTINGS.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Length = 0;
+	`ONLINEEVENTMGR.SaveProfileSettings(true);
+
+	`log("Customize alert categories cleared.");
+}
+
 exec function UIEnableTooltips()
 {
 	XComPlayerController(Outer).Pres.m_kTooltipMgr.bEnableTooltips = true;
@@ -649,7 +657,8 @@ exec function  Help(optional string tok)
 		HelpDESC("UIDrawGrid",			"Draw a grid at 25% increments in UI pixel space in the 2D movie.");
 		HelpDESC("UIDrawGridPixel",		"Specify a grid in UI pixel space to draw, in 2D or 3D.");
 		HelpDESC("UIDrawGridPercent",	"Specify a grid using percent in UI pixel space to draw, in 2D or 3D.");
-		HelpDESC("UISetDistortion",	    "Set the value for the UI distortion on the 3D material instance.");
+		HelpDESC("UISetDistortion", "Set the value for the UI distortion on the 3D material instance.");
+		HelpDESC("UIClearCustomizeAlerts", "Clear the array of alert categories you've seen in the UICustomizesystem from your profile.");
 	}
 	else
 	{

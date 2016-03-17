@@ -3569,7 +3569,7 @@ static function X2CharacterTemplate CreateTemplate_MimicBeacon()
 	CharTemplate.bCanUse_eTraversal_WallClimb = false;
 	CharTemplate.bCanUse_eTraversal_BreakWall = false;
 	CharTemplate.bAppearanceDefinesPawn = false;
-	CharTemplate.bCanTakeCover = true;
+	CharTemplate.bCanTakeCover = false;
 
 	CharTemplate.bSkipDefaultAbilities = true;
 
@@ -3591,6 +3591,7 @@ static function X2CharacterTemplate CreateTemplate_MimicBeacon()
 	CharTemplate.bNeverSelectable = true;
 
 	CharTemplate.Abilities.AddItem('MimicBeaconInitialize');
+	CharTemplate.Abilities.AddItem('GuaranteedToHit');
 
 	return CharTemplate;
 }

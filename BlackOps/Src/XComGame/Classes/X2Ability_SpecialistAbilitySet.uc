@@ -1794,10 +1794,12 @@ simulated function GremlinRestoration_BuildVisualization(XComGameState Visualize
 		{
 			PlayAnimation = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, Context));
 			PlayAnimation.Params.AnimName = 'NO_RevivalProtocol';
+			PlayAnimation.Params.PlayRate = PlayAnimation.GetNonCriticalAnimationSpeed();
 			PlayAnimation.bFinishAnimationWait = true;
 		}
 		PlayAnimation = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, Context));
 		PlayAnimation.Params.AnimName = 'NO_MedicalProtocol';
+		PlayAnimation.Params.PlayRate = PlayAnimation.GetNonCriticalAnimationSpeed();
 		PlayAnimation.bFinishAnimationWait = true;
 
 		//  tell multi target to go ahead

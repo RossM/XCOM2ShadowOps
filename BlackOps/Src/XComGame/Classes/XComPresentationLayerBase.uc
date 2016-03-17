@@ -2309,6 +2309,16 @@ simulated function Notify(string Notice, optional string ImagePath = "")
 	m_kEventNotices.Notify(Notice, ImagePath);
 }
 
+simulated function ClickPathUnderMouse( optional bool bDebugLogs = false )
+{
+	Get2DMovie().ClickPathUnderMouse(bDebugLogs);
+}
+
+simulated function ClickPathUnderMouse3D( optional bool bDebugLogs = false )
+{
+	Get3DMovie().ClickPathUnderMouse(bDebugLogs);
+}
+
 DefaultProperties
 {
 	MoviesInited=0;

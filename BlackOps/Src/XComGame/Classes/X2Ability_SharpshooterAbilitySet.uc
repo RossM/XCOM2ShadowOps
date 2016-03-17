@@ -832,6 +832,7 @@ static function X2AbilityTemplate KillZoneShot()
 	local X2Effect_Persistent               KillZoneEffect;
 	local X2Condition_UnitEffectsWithAbilitySource  KillZoneCondition;
 	local X2Condition_Visibility            TargetVisibilityCondition;
+	local X2Condition_UnitProperty          ShooterCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'KillZoneShot');
 
@@ -872,6 +873,9 @@ static function X2AbilityTemplate KillZoneShot()
 	Template.AddTargetEffect(KillZoneEffect);
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	ShooterCondition = new class'X2Condition_UnitProperty';
+	ShooterCondition.ExcludeConcealed = true;
+	Template.AbilityShooterConditions.AddItem(ShooterCondition);
 	Template.AddShooterEffectExclusions();
 
 	SingleTarget = new class'X2AbilityTarget_Single';

@@ -31,6 +31,7 @@ Begin:
 
 	// Play the teleport start animation
 	Params.AnimName = 'HL_TeleportStart';
+	Params.PlayRate = GetMoveAnimationSpeed();
 	FinishAnim(UnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(Params));
 
 	// Move the pawn to the end position

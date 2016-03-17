@@ -480,12 +480,12 @@ simulated function UpdateNavHelp()
 		}
 
 		// Re-enabling this option for Steam builds to assist QA testing, TODO: disable this option before release
-//`if(`notdefined(FINAL_RELEASE))
+`if(`notdefined(FINAL_RELEASE))
 		if(CheatMgr == none || !CheatMgr.bGamesComDemo)
 		{
 			`HQPRES.m_kAvengerHUD.NavHelp.AddCenterHelp("SIM COMBAT", "", OnSimCombat, !CanLaunchMission(), GetTooltipText());
 		}	
-//`endif
+`endif
 	}
 }
 
@@ -1213,6 +1213,10 @@ state Cinematic_PawnControl
 				{
 					UnitPawns[PawnIndex].SetHardAttach(true);
 					UnitPawns[PawnIndex].SetBase(Cinedummy);
+
+					//RAM - this combination of flags is necessary to correct an update order issue between the characters, the lift, and their body parts.
+					UnitPawns[PawnIndex].SetTickGroup(TG_PostAsyncWork);
+					UnitPawns[PawnIndex].Mesh.bForceUpdateAttachmentsInTick = false;
 				}
 
 				HumanPawn = XComHumanPawn(UnitPawns[PawnIndex]);

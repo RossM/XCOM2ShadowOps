@@ -1368,7 +1368,7 @@ simulated static function array<String> GetItemUnlockStrings(array<X2ItemTemplat
 
 	for( i = 0; i < arrNewItems.Length; i++ )
 	{
-		ParamTag.StrValue0 = arrNewItems[i].GetItemFriendlyName();
+		ParamTag.StrValue0 = arrNewItems[i].GetItemFriendlyName(, false);
 		arrStrings.AddItem(`XEXPAND.ExpandString(default.m_strItemUnlock));
 	}
 
@@ -2213,7 +2213,7 @@ simulated function BuildItemCompleteAlert()
 {
 	local TAlertCompletedInfo kInfo;
 
-	kInfo.strName = ItemTemplate.GetItemFriendlyName();
+	kInfo.strName = ItemTemplate.GetItemFriendlyName(, false);
 	kInfo.strHeaderLabel = m_strItemCompleteLabel;
 	kInfo.strBody = m_strManufacturingComplete;
 	kInfo.strConfirm = m_strAssignNewProjects;
@@ -2751,7 +2751,7 @@ simulated function BuildItemAvailableAlert()
 	local TAlertAvailableInfo kInfo;
 
 	kInfo.strTitle = m_strNewItemAvailable;
-	kInfo.strName = ItemTemplate.GetItemFriendlyName();
+	kInfo.strName = ItemTemplate.GetItemFriendlyName(, false);
 	kInfo.strBody = ItemTemplate.GetItemBriefSummary();
 	kInfo.strConfirm = m_strAccept;
 	kInfo.strImage = ItemTemplate.strImage;
@@ -2768,8 +2768,8 @@ simulated function BuildItemReceivedAlert()
 	local TAlertAvailableInfo kInfo;
 
 	kInfo.strTitle = m_strNewItemReceived;
-	kInfo.strName = ItemTemplate.GetItemFriendlyName();
-	kInfo.strBody = ItemTemplate.GetItemBriefSummary() $ "\n\n" $ Repl(m_strItemReceivedInInventory, "%ITEMNAME", ItemTemplate.GetItemFriendlyName());
+	kInfo.strName = ItemTemplate.GetItemFriendlyName(, false);
+	kInfo.strBody = ItemTemplate.GetItemBriefSummary() $ "\n\n" $ Repl(m_strItemReceivedInInventory, "%ITEMNAME", ItemTemplate.GetItemFriendlyName(, false));
 	kInfo.strConfirm = m_strAccept;
 	kInfo.strImage = ItemTemplate.strImage;
 	kInfo.eColor = eUIState_Good;
@@ -2790,8 +2790,8 @@ simulated function BuildItemReceivedProvingGroundAlert()
 	TitleStr = Repl(m_strNewItemReceivedProvingGround, "%PROJECTNAME", Caps(TechState.GetDisplayName()));
 
 	kInfo.strTitle = TitleStr;
-	kInfo.strName = ItemTemplate.GetItemFriendlyName();
-	kInfo.strBody = ItemTemplate.GetItemBriefSummary() $ "\n\n" $ Repl(m_strItemReceivedInInventory, "%ITEMNAME", ItemTemplate.GetItemFriendlyName());
+	kInfo.strName = ItemTemplate.GetItemFriendlyName(, false);
+	kInfo.strBody = ItemTemplate.GetItemBriefSummary() $ "\n\n" $ Repl(m_strItemReceivedInInventory, "%ITEMNAME", ItemTemplate.GetItemFriendlyName(, false));
 	kInfo.strConfirm = m_strAccept;
 	kInfo.strImage = ItemTemplate.strImage;
 	kInfo.eColor = eUIState_Good;
@@ -2807,7 +2807,7 @@ simulated function BuildItemUpgradedAlert()
 	local TAlertAvailableInfo kInfo;
 
 	kInfo.strTitle = m_strNewItemUpgraded;
-	kInfo.strName = ItemTemplate.GetItemFriendlyName();
+	kInfo.strName = ItemTemplate.GetItemFriendlyName(, false);
 	kInfo.strBody = ItemTemplate.GetItemBriefSummary();
 	kInfo.strConfirm = m_strAccept;
 	kInfo.strImage = ItemTemplate.strImage;

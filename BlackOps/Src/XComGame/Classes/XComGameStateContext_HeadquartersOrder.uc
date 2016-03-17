@@ -850,21 +850,24 @@ static function CompleteUnitHealing(XComGameState AddToGameState, StateObjectRef
 		}
 		
 		// If the unit is a Psi Operative who was training an ability before they got hurt, continue the training automatically
-		PsiProjectState = XComHQ.GetPsiTrainingProject(UnitState.GetReference());
-		if (PsiProjectState != none) // A paused Psi Training project was found for the unit
+		if (UnitState.GetSoldierClassTemplateName() == 'PsiOperative')
 		{
-			// Get the Psi Chamber facility and staff the unit in it if there is an open slot
-			FacilityState = XComHQ.GetFacilityByName('PsiChamber');
-			SlotIndex = FacilityState.GetEmptySoldierStaffSlotIndex();
-			if (SlotIndex >= 0)
+			PsiProjectState = XComHQ.GetPsiTrainingProject(UnitState.GetReference());
+			if (PsiProjectState != none) // A paused Psi Training project was found for the unit
 			{
-				// Restart the paused training project
-				PsiProjectState = XComGameState_HeadquartersProjectPsiTraining(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersProjectPsiTraining', PsiProjectState.ObjectID));
-				AddToGameState.AddStateObject(PsiProjectState);
-				PsiProjectState.bForcePaused = false;
+				// Get the Psi Chamber facility and staff the unit in it if there is an open slot
+				FacilityState = XComHQ.GetFacilityByName('PsiChamber');
+				SlotIndex = FacilityState.GetEmptySoldierStaffSlotIndex();
+				if (SlotIndex >= 0)
+				{
+					// Restart the paused training project
+					PsiProjectState = XComGameState_HeadquartersProjectPsiTraining(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersProjectPsiTraining', PsiProjectState.ObjectID));
+					AddToGameState.AddStateObject(PsiProjectState);
+					PsiProjectState.bForcePaused = false;
 
-				UnitInfo.UnitRef = UnitState.GetReference();
-				FacilityState.GetStaffSlot(SlotIndex).FillSlot(AddToGameState, UnitInfo);
+					UnitInfo.UnitRef = UnitState.GetReference();
+					FacilityState.GetStaffSlot(SlotIndex).FillSlot(AddToGameState, UnitInfo);
+				}
 			}
 		}
 	}
@@ -1144,12 +1147,9 @@ static function CompletePsiTraining(XComGameState AddToGameState, StateObjectRef
 	local XComGameState_Unit UnitState;
 	local XComGameState_StaffSlot StaffSlotState;
 	local XComGameStateHistory History;
-	local X2SoldierClassTemplate PsiOperativeClassTemplate;
-	local ClassAgnosticAbility HiddenTalent;
 
 	History = `XCOMHISTORY;
 	ProjectState = XComGameState_HeadquartersProjectPsiTraining(`XCOMHISTORY.GetGameStateForObjectID(ProjectRef.ObjectID));
-	PsiOperativeClassTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate('PsiOperative');
 
 	if (ProjectState != none)
 	{
@@ -1169,27 +1169,10 @@ static function CompletePsiTraining(XComGameState AddToGameState, StateObjectRef
 			UnitState = XComGameState_Unit(AddToGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
 
 			// Rank up the solder. Will also apply class if they were a Rookie.
-			if (UnitState.GetRank() == 0)
-			{
-				UnitState.RankUpSoldier(AddToGameState, 'PsiOperative');
-			}
+			UnitState.RankUpSoldier(AddToGameState, 'PsiOperative');
 			
 			// Teach the soldier the ability which was associated with the project
-			if (UnitState.IsPsiOperative())
-			{
-				UnitState.BuySoldierProgressionAbility(AddToGameState, ProjectState.iAbilityRank, ProjectState.iAbilityBranch);
-			}
-			else
-			{
-				HiddenTalent.AbilityType = PsiOperativeClassTemplate.GetAbilityTree(ProjectState.iAbilityRank)[ProjectState.iAbilityBranch];
-				HiddenTalent.iRank = 0;
-				HiddenTalent.bUnlocked = true;
-
-				UnitState.AWCAbilities.AddItem(HiddenTalent);
-
-				// Add some psi offense to the soldier
-				UnitState.SetBaseMaxStat(eStat_PsiOffense, UnitState.GetMaxStat(eStat_PsiOffense) + 40);
-			}
+			UnitState.BuySoldierProgressionAbility(AddToGameState, ProjectState.iAbilityRank, ProjectState.iAbilityBranch);
 
 			if (UnitState.GetRank() == 1) // They were just promoted to Initiate
 			{

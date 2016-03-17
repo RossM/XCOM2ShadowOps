@@ -31,7 +31,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 
 	//TestHorizontalList();
 	//TestVericalList();
-	TestVericalListWithConfirms();
+	//TestVericalListWithConfirms();
 	//TestHorizontalScrollingText();
 	//TestVerticalScrollingText();
 
@@ -63,7 +63,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 	//TestSpinnerList();
 	//TestStaffIcons();
 
-	//TestTutorialBladeMessages();
+	TestTutorialBladeMessages();
 	//TestTutorialArrows();
 }
 
@@ -725,7 +725,11 @@ public function OnClickStaffIcon(UIPanel Panel, int Cmd)
 
 simulated function TestTutorialBladeMessages()
 {
-	Movie.Pres.GetWorldMessenger().BladeMessage("This is a tutorial message. Click [" $class'XComKeybindingData'.default.m_arrLocalizedKeyNames[eLKN_LeftMouseButton] $"] to do some stuff.", "blademessage");
+	local string Msg; 
+
+	Msg = "This is a tutorial message. Press %KEY:ENTER% to do some stuff.";
+	Msg = class'UIUtilities_Input'.static.InsertPCIcons(Msg); 
+	Movie.Pres.GetWorldMessenger().BladeMessage(Msg, "blademessage");
 }
 
 function TestPolishNames()

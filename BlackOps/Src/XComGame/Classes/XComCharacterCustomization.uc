@@ -57,6 +57,10 @@ enum EUICustomizeCategory
 	eUICustomizeCat_FacePaint,
 	eUICustomizeCat_DEV1,
 	eUICustomizeCat_DEV2,
+	eUICustomizeCat_LeftArm,
+	eUICustomizeCat_RightArm,
+	eUICustomizeCat_LeftArmDeco,
+	eUICustomizeCat_RightArmDeco,
 };
 enum ENameCustomizationOptions
 {
@@ -99,6 +103,12 @@ var localized string CustomizeNickName;
 var localized string CustomizeWeaponName;
 var localized string RandomClass; 
 
+var XComOnlineProfileSettings m_kProfileSettings;
+
+var array< delegate<GetIconsForBodyPartCallback> >  arrGetIconsForBodyPartDelegates;
+
+delegate string GetIconsForBodyPartCallback(X2BodyPartTemplate BodyPart);
+
 simulated function Init(XComGameState_Unit _Unit, optional Actor RequestedActorPawn = none, optional XComGameState gameState = none)
 {
 	History = `XCOMHISTORY;
@@ -124,6 +134,8 @@ simulated function Init(XComGameState_Unit _Unit, optional Actor RequestedActorP
 	{
 		class'WorldInfo'.static.GetWorldInfo().GetALocalPlayerController().ConsoleCommand("show postprocess");
 	}
+
+	m_kProfileSettings = `XPROFILESETTINGS;
 }
 
 simulated function Refresh(XComGameState_Unit PreviousUnit, XComGameState_Unit NewUnit)
@@ -167,11 +179,12 @@ function UpdateBodyPartFilterForNewUnit(XComGameState_Unit NewUnit)
 	BodyPartFilter.Set(EGender(Unit.kAppearance.iGender), ECharacterRace(Unit.kAppearance.iRace), Unit.kAppearance.nmTorso, !Unit.IsASoldier(), Unit.IsVeteran() || InShell());
 }
 
-function bool HasPartsForPartType(string PartType)
+//BodyPartFilter.FilterAny
+function bool HasPartsForPartType(string PartType, delegate<X2BodyPartFilter.FilterCallback> CallbackFn)
 {
 	local array<X2BodyPartTemplate> Templates;
 
-	PartManager.GetFilteredUberTemplates(PartType, BodyPartFilter, BodyPartFilter.FilterAny, Templates);
+	PartManager.GetFilteredUberTemplates(PartType, BodyPartFilter, CallbackFn, Templates);
 
 	return Templates.Length > 0;
 }
@@ -413,6 +426,28 @@ function CyclePartSimple( string BodyPartType, int direction, delegate<X2BodyPar
 
 //==============================================================================
 
+//This method will check whether a given part selection is valid given the current torso.
+function bool ValidatePartSelection(string PartType, name PartSelection)
+{
+	local array<X2BodyPartTemplate> BodyParts;
+	local int Index;	
+
+	//Retrieve a list of valid parts for the specified part type
+	BodyPartFilter.Set(EGender(UpdatedUnitState.kAppearance.iGender), ECharacterRace(UpdatedUnitState.kAppearance.iRace), UpdatedUnitState.kAppearance.nmTorso, !UpdatedUnitState.IsASoldier(), UpdatedUnitState.IsVeteran() || InShell());
+	PartManager.GetFilteredUberTemplates(PartType, BodyPartFilter, BodyPartFilter.FilterByTorsoAndArmorMatch, BodyParts);
+
+	//See if the part selection is in the list of filtered templates. If it is, the part selection is valid.
+	for(Index = 0; Index < BodyParts.Length; ++Index)
+	{
+		if(BodyParts[Index].DataName == PartSelection)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 // direction will either be -1 (left arrow), or 1 (right arrow)xcom
 simulated function OnCategoryValueChange(int categoryIndex, int direction, optional int specificIndex = -1)
 {	
@@ -424,7 +459,8 @@ simulated function OnCategoryValueChange(int categoryIndex, int direction, optio
 	local array<XComGameState_Item> Items; //Used for setting the tint / pattern on items
 	local int Index;
 	local XComUnitPawn CosmeticUnitPawn;
-		
+	local X2BodyPartTemplate BodyPart;	
+
 	//Set the body part filter with latest data so that the filters can operate	
 	BodyPartFilter.Set(EGender(UpdatedUnitState.kAppearance.iGender), ECharacterRace(UpdatedUnitState.kAppearance.iRace), UpdatedUnitState.kAppearance.nmTorso, !UpdatedUnitState.IsASoldier(), UpdatedUnitState.IsVeteran() || InShell());
 
@@ -432,9 +468,87 @@ simulated function OnCategoryValueChange(int categoryIndex, int direction, optio
 	{
 	case eUICustomizeCat_Torso:       
 		UpdateCategory("Torso", direction, BodyPartFilter.FilterByTorsoAndArmorMatch, UpdatedUnitState.kAppearance.nmTorso, specificIndex);
+
+		if(UpdatedUnitState.kAppearance.nmArms != '' && !ValidatePartSelection("Arms", UpdatedUnitState.kAppearance.nmArms))
+		{
+			UpdatedUnitState.kAppearance.nmArms = '';
+
+			//Dual arm selection was not valid, choose individual arms
+			BodyPart = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager().GetRandomUberTemplate("LeftArm", BodyPartFilter, BodyPartFilter.FilterByTorsoAndArmorMatch);
+			if(BodyPart != none)
+			{
+				UpdatedUnitState.kAppearance.nmLeftArm = BodyPart.DataName;
+			}
+
+			BodyPart = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager().GetRandomUberTemplate("RightArm", BodyPartFilter, BodyPartFilter.FilterByTorsoAndArmorMatch);
+			if(BodyPart != none)
+			{
+				UpdatedUnitState.kAppearance.nmRightArm = BodyPart.DataName;
+			}
+
+			//No individual arms, pick a dual arms selection
+			if(BodyPart == none)
+			{
+				BodyPart = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager().GetRandomUberTemplate("Arms", BodyPartFilter, BodyPartFilter.FilterByTorsoAndArmorMatch);
+				if(BodyPart != none)
+				{
+					UpdatedUnitState.kAppearance.nmArms = BodyPart.DataName;
+				}
+			}
+		}
+
+		if(!ValidatePartSelection("Legs", UpdatedUnitState.kAppearance.nmLegs))
+		{			
+			BodyPart = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager().GetRandomUberTemplate("Legs", BodyPartFilter, BodyPartFilter.FilterByTorsoAndArmorMatch);
+			if(BodyPart != none)
+			{
+				UpdatedUnitState.kAppearance.nmLegs = BodyPart.DataName;
+			}
+		}
+
+		XComHumanPawn(ActorPawn).SetAppearance(UpdatedUnitState.kAppearance);
 		break;
 	case eUICustomizeCat_Arms:
 		UpdateCategory("Arms", direction, BodyPartFilter.FilterByTorsoAndArmorMatch, UpdatedUnitState.kAppearance.nmArms, specificIndex);
+
+		//Set individual arm options to none when setting dual arms
+		UpdatedUnitState.kAppearance.nmLeftArm = '';
+		UpdatedUnitState.kAppearance.nmRightArm = '';
+		UpdatedUnitState.kAppearance.nmLeftArmDeco = '';
+		UpdatedUnitState.kAppearance.nmRightArmDeco = '';
+		XComHumanPawn(ActorPawn).SetAppearance(UpdatedUnitState.kAppearance);
+		break;
+	case eUICustomizeCat_LeftArm:
+		UpdateCategory("LeftArm", direction, BodyPartFilter.FilterByTorsoAndArmorMatch, UpdatedUnitState.kAppearance.nmLeftArm, specificIndex);
+		if(UpdatedUnitState.kAppearance.nmRightArm == '')
+		{
+			BodyPart = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager().GetRandomUberTemplate("RightArm", BodyPartFilter, BodyPartFilter.FilterByTorsoAndArmorMatch);
+			if(BodyPart != none)
+			{
+				UpdatedUnitState.kAppearance.nmRightArm = BodyPart.DataName;
+			}
+		}		
+		UpdatedUnitState.kAppearance.nmArms = ''; //Clear dual arms selection
+		XComHumanPawn(ActorPawn).SetAppearance(UpdatedUnitState.kAppearance);
+		break;
+	case eUICustomizeCat_RightArm:
+		UpdateCategory("RightArm", direction, BodyPartFilter.FilterByTorsoAndArmorMatch, UpdatedUnitState.kAppearance.nmRightArm, specificIndex);
+		if(UpdatedUnitState.kAppearance.nmLeftArm == '')
+		{
+			BodyPart = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager().GetRandomUberTemplate("LeftArm", BodyPartFilter, BodyPartFilter.FilterByTorsoAndArmorMatch);
+			if(BodyPart != none)
+			{
+				UpdatedUnitState.kAppearance.nmLeftArm = BodyPart.DataName;
+			}
+		}
+		UpdatedUnitState.kAppearance.nmArms = ''; //Clear dual arms selection
+		XComHumanPawn(ActorPawn).SetAppearance(UpdatedUnitState.kAppearance);
+		break;
+	case eUICustomizeCat_LeftArmDeco:
+		UpdateCategory("LeftArmDeco", direction, BodyPartFilter.FilterByTorsoAndArmorMatch, UpdatedUnitState.kAppearance.nmLeftArmDeco, specificIndex);
+		break;
+	case eUICustomizeCat_RightArmDeco:
+		UpdateCategory("RightArmDeco", direction, BodyPartFilter.FilterByTorsoAndArmorMatch, UpdatedUnitState.kAppearance.nmRightArmDeco, specificIndex);
 		break;
 	case eUICustomizeCat_Legs:                  
 		UpdateCategory("Legs", direction, BodyPartFilter.FilterByTorsoAndArmorMatch, UpdatedUnitState.kAppearance.nmLegs, specificIndex);
@@ -655,6 +769,8 @@ simulated function OnCategoryValueChange(int categoryIndex, int direction, optio
 	// Only update the camera when editing a unit, not when customizing weapons
 	if(`SCREENSTACK.HasInstanceOf(class'UICustomize'))
 		UpdateCamera(categoryIndex);
+
+	AccessedCategoryCheckDLC(EUICustomizeCategory(categoryIndex));
 }
 
 function UpdateCamera(optional int categoryIndex = -1)
@@ -877,7 +993,26 @@ simulated function string GetCategoryDisplay(int catType)
 		Result = string(GetCategoryValue("Torso", UpdatedUnitState.kAppearance.nmTorso, BodyPartFilter.FilterByTorsoAndArmorMatch));
 		break;
 	case eUICustomizeCat_Arms:              
-		Result = string(GetCategoryValue("Arms", UpdatedUnitState.kAppearance.nmArms, BodyPartFilter.FilterByTorsoAndArmorMatch));
+		if(UpdatedUnitState.kAppearance.nmArms == '')
+		{
+			Result = "";
+		}
+		else
+		{
+			Result = string(GetCategoryValue("Arms", UpdatedUnitState.kAppearance.nmArms, BodyPartFilter.FilterByTorsoAndArmorMatch));
+		}
+		break;
+	case eUICustomizeCat_LeftArm:
+		Result = GetCategoryDisplayName("LeftArm", UpdatedUnitState.kAppearance.nmLeftArm, BodyPartFilter.FilterByTorsoAndArmorMatch);
+		break;
+	case eUICustomizeCat_RightArm:
+		Result = GetCategoryDisplayName("RightArm", UpdatedUnitState.kAppearance.nmRightArm, BodyPartFilter.FilterByTorsoAndArmorMatch);
+		break;
+	case eUICustomizeCat_LeftArmDeco:
+		Result = GetCategoryDisplayName("LeftArmDeco", UpdatedUnitState.kAppearance.nmLeftArmDeco, BodyPartFilter.FilterByTorsoAndArmorMatch);
+		break;
+	case eUICustomizeCat_RightArmDeco:
+		Result = GetCategoryDisplayName("RightArmDeco", UpdatedUnitState.kAppearance.nmRightArmDeco, BodyPartFilter.FilterByTorsoAndArmorMatch);
 		break;
 	case eUICustomizeCat_Legs:              
 		Result = string(GetCategoryValue("Legs", UpdatedUnitState.kAppearance.nmLegs, BodyPartFilter.FilterByTorsoAndArmorMatch));
@@ -984,7 +1119,8 @@ private function int GetCategoryValueGeneric( string BodyPart, name PartToMatch,
 
 simulated function string FormatCategoryDisplay(int catType, optional EUIState ColorState = eUIState_Normal, optional int FontSize = -1)
 {
-	return class'UIUtilities_Text'.static.GetColoredText(GetCategoryDisplay(catType), ColorState, FontSize);
+	return class'UIUtilities_Text'.static.GetSizedText(GetCategoryDisplay(catType), FontSize);
+	//return class'UIUtilities_Text'.static.GetColoredText(GetCategoryDisplay(catType), ColorState, FontSize);
 }
 
 //==============================================================================
@@ -1045,6 +1181,18 @@ reliable client function array<string> GetCategoryList( int categoryIndex )
 	case eUICustomizeCat_Arms:
 		GetGenericCategoryList(Items, "Arms", BodyPartFilter.FilterByTorsoAndArmorMatch, class'UICustomize_Props'.default.m_strArms);
 		return Items;
+	case eUICustomizeCat_LeftArm:
+		GetGenericCategoryList(Items, "LeftArm", BodyPartFilter.FilterByTorsoAndArmorMatch, class'UICustomize_Props'.default.m_strLeftArm);
+		return Items;		
+	case eUICustomizeCat_RightArm:
+		GetGenericCategoryList(Items, "RightArm", BodyPartFilter.FilterByTorsoAndArmorMatch, class'UICustomize_Props'.default.m_strRightArm);
+		return Items;
+	case eUICustomizeCat_LeftArmDeco:
+		GetGenericCategoryList(Items, "LeftArmDeco", BodyPartFilter.FilterByTorsoAndArmorMatch, class'UICustomize_Props'.default.m_strLeftArmDeco);
+		return Items;		
+	case eUICustomizeCat_RightArmDeco:
+		GetGenericCategoryList(Items, "RightArmDeco", BodyPartFilter.FilterByTorsoAndArmorMatch, class'UICustomize_Props'.default.m_strRightArmDeco);
+		return Items;		
 	case eUICustomizeCat_Torso:
 		GetGenericCategoryList(Items, "Torso", BodyPartFilter.FilterByTorsoAndArmorMatch, class'UICustomize_Props'.default.m_strTorso);
 		return Items;
@@ -1105,19 +1253,362 @@ reliable client function array<string> GetCategoryList( int categoryIndex )
 
 private function GetGenericCategoryList(out array<string> Items,  string BodyPart, delegate<X2BodyPartFilter.FilterCallback> FilterFn, optional string PrefixLocText )
 {
-	local int i;
+	local int i, iDel;
 	local array<X2BodyPartTemplate> BodyParts;
+	local string Label;
+	local delegate< GetIconsForBodyPartCallback > dCallback;
 
 	PartManager.GetFilteredUberTemplates(BodyPart, self, FilterFn, BodyParts);
 	for( i = 0; i < BodyParts.Length; ++i )
 	{
 		if(BodyParts[i].DisplayName != "")
-			Items.AddItem(BodyParts[i].DisplayName);
+			Label = BodyParts[i].DisplayName;
 		else if(PrefixLocText != "")
-			Items.AddItem(PrefixLocText @ i);
+			Label = PrefixLocText @ i;
 		else
-			Items.AddItem(string(i));
+			Label = string(i);
+
+		for( iDel = 0; iDel < arrGetIconsForBodyPartDelegates.Length; iDel++ )
+		{
+			dCallback = arrGetIconsForBodyPartDelegates[iDel];
+
+			if( dCallback != none )
+				Label = dCallback(Bodyparts[i]) $ Label;
+		}
+
+		Items.AddItem(Label);
 	}
+}
+
+
+simulated function SubscribeToGetIconsForBodyPart(delegate<GetIconsForBodyPartCallback> fCallback)
+{
+	local int foundIndex;
+
+	foundIndex = arrGetIconsForBodyPartDelegates.Find(fCallback);
+
+	if( foundIndex == -1 )
+		arrGetIconsForBodyPartDelegates.AddItem(fCallback);
+	else
+		`log("Can not SubscribeToGetIconsForBodyPart callback ("$fCallback$"); already found at arrGetIconsForBodyPartDelegates["$foundIndex$"].", , 'uixcom');
+}
+
+simulated function UnsubscribeToGetIconsForBodyPart(delegate<GetIconsForBodyPartCallback> fCallback)
+{
+	local int foundIndex;
+
+	foundIndex = arrGetIconsForBodyPartDelegates.Find(fCallback);
+
+	if( foundIndex == -1 )
+		`log("Can not UnsubscribeToGetIconsForBodyPart callback ("$fCallback$"); not found in arrGetIconsForBodyPartDelegates", , 'uixcom');
+	else
+		arrGetIconsForBodyPartDelegates.RemoveItem(fCallback);
+}
+
+function string CheckForAttentionIcon(int catType)
+{	
+	local bool bNeedsAttention;
+	local bool bHasDLC, bCategoryHasDLC; 
+
+	if( m_kProfileSettings == none ) return "";
+
+	switch( catType )
+	{
+	case eUICustomizeCat_FirstName: // Info group 
+
+		if( !bNeedsAttention && !bHasDLC )
+		{
+
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_Country);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_Country) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_Gender);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_Gender) == -1;
+			}
+		}
+		break; 
+	case eUICustomizeCat_NickName: //Props group 
+
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_Helmet);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_Helmet) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_Arms);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_Arms) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_LeftArm);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_LeftArm) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_RightArm);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_RightArm) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_Legs);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_Legs) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_Torso);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_Torso) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_FaceDecorationUpper);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_FaceDecorationUpper) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_FaceDecorationLower);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_FaceDecorationLower) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_ArmorPatterns);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_ArmorPatterns) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_WeaponPatterns);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_WeaponPatterns) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_FacePaint);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_FacePaint) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_LeftArmTattoos);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_LeftArmTattoos) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_RightArmTattoos);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_RightArmTattoos) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_TattooColor);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_TattooColor) == -1;
+			}
+		}
+		if( !bNeedsAttention && !bHasDLC )
+		{
+			bCategoryHasDLC = DoesCategoryHaveDLC(eUICustomizeCat_Scars);
+			if( bCategoryHasDLC )
+			{
+				bHasDLC = bCategoryHasDLC;
+				bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(eUICustomizeCat_Scars) == -1;
+			}
+		}
+		break; 
+
+	case eUICustomizeCat_WeaponName:
+	case eUICustomizeCat_Torso:
+	case eUICustomizeCat_Arms:
+	case eUICustomizeCat_Legs:
+	case eUICustomizeCat_Skin:
+	case eUICustomizeCat_Face:
+	case eUICustomizeCat_EyeColor:
+	case eUICustomizeCat_Hairstyle:
+	case eUICustomizeCat_HairColor:
+	case eUICustomizeCat_FaceDecorationUpper:
+	case eUICustomizeCat_FaceDecorationLower:
+	case eUICustomizeCat_FacialHair:
+	case eUICustomizeCat_Personality:
+	case eUICustomizeCat_Country:
+	case eUICustomizeCat_Voice:
+	case eUICustomizeCat_Gender:
+	case eUICustomizeCat_Race:
+	case eUICustomizeCat_Helmet:
+	case eUICustomizeCat_PrimaryArmorColor:
+	case eUICustomizeCat_SecondaryArmorColor:
+	case eUICustomizeCat_WeaponColor:
+	case eUICustomizeCat_ArmorPatterns:
+	case eUICustomizeCat_WeaponPatterns:
+	case eUICustomizeCat_LeftArmTattoos:
+	case eUICustomizeCat_RightArmTattoos:
+	case eUICustomizeCat_TattooColor:
+	case eUICustomizeCat_Scars:
+	case eUICustomizeCat_Class:
+	case eUICustomizeCat_AllowTypeSoldier:
+	case eUICustomizeCat_AllowTypeVIP:
+	case eUICustomizeCat_AllowTypeDarkVIP:
+	case eUICustomizeCat_FacePaint:
+	case eUICustomizeCat_DEV1:
+	case eUICustomizeCat_DEV2:
+	case eUICustomizeCat_LeftArm:
+	case eUICustomizeCat_RightArm:
+	case eUICustomizeCat_LeftArmDeco:
+	case eUICustomizeCat_RightArmDeco:
+
+		bCategoryHasDLC = DoesCategoryHaveDLC(catType); 
+		if( bCategoryHasDLC )
+		{
+			bHasDLC = bCategoryHasDLC;
+			bNeedsAttention = m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(catType) == -1;
+		}
+		break;
+	}
+
+
+	if( bNeedsAttention && bHasDLC )
+		return class'UIUtilities_Text'.static.InjectImage(class'UIUtilities_Image'.const.HTML_AttentionIcon, 26, 26, -4) $ " ";
+	else
+		return "";
+}
+
+
+function AccessedCategoryCheckDLC(int iCat)
+{
+	if( m_kProfileSettings == none ) return;
+	if( !DoesCategoryHaveDLC(iCat) ) return;
+
+	if( m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.Find(iCat) == -1 )
+	{
+		m_kProfileSettings.Data.m_arrCharacterCustomizationCategoriesClearedAttention.AddItem(iCat);
+		`ONLINEEVENTMGR.SaveProfileSettings(true);
+	}
+}
+
+
+function bool DoesCategoryHaveDLC( int catType )
+{
+	local array<X2BodyPartTemplate> BodyParts;
+	local int Index;
+	local string PartType; 
+
+
+	switch( catType )
+	{
+	case eUICustomizeCat_Torso:					PartType = "Torso"; break;
+	case eUICustomizeCat_Arms:					PartType = "Arms"; break;
+	case eUICustomizeCat_Legs:					PartType = "Legs"; break;
+	case eUICustomizeCat_Skin:					PartType = ""; break;
+	case eUICustomizeCat_Face:					PartType = ""; break;
+	case eUICustomizeCat_EyeColor:				PartType = ""; break;
+	case eUICustomizeCat_Hairstyle:				PartType = "Hair"; break;
+	case eUICustomizeCat_HairColor:				PartType = ""; break;
+	case eUICustomizeCat_FaceDecorationUpper:	PartType = "FacePropsUpper"; break;
+	case eUICustomizeCat_FaceDecorationLower:	PartType = "FacePropsLower"; break;
+	case eUICustomizeCat_FacialHair:			PartType = "Beards"; break;
+	case eUICustomizeCat_Personality:			PartType = ""; break;
+	case eUICustomizeCat_Country:				PartType = ""; break;
+	case eUICustomizeCat_Voice:					PartType = "Voice"; break;
+	case eUICustomizeCat_Gender:				PartType = ""; break;
+	case eUICustomizeCat_Race:					PartType = ""; break;
+	case eUICustomizeCat_Helmet:				PartType = ""; break;
+	case eUICustomizeCat_PrimaryArmorColor:		PartType = ""; break;
+	case eUICustomizeCat_SecondaryArmorColor:	PartType = ""; break;
+	case eUICustomizeCat_WeaponColor:			PartType = ""; break;
+	case eUICustomizeCat_ArmorPatterns:			PartType = ""; break;
+	case eUICustomizeCat_WeaponPatterns:		PartType = ""; break;
+	case eUICustomizeCat_LeftArmTattoos:		PartType = "Tattoos"; break;
+	case eUICustomizeCat_RightArmTattoos:		PartType = "Tattoos"; break;
+	case eUICustomizeCat_TattooColor:			PartType = ""; break;
+	case eUICustomizeCat_Scars:					PartType = "Scars"; break;
+	case eUICustomizeCat_Class:					PartType = ""; break;
+	case eUICustomizeCat_FacePaint:				PartType = "Facepaint"; break;
+	case eUICustomizeCat_LeftArm:				PartType = "LeftArm"; break;
+	case eUICustomizeCat_RightArm:				PartType = "RightArm"; break;
+	case eUICustomizeCat_LeftArmDeco:			PartType = "LeftArmDeco"; break;
+	case eUICustomizeCat_RightArmDeco:			PartType = "RightArmDeco"; break;
+
+		break;
+	default:
+		PartType = ""; 
+	}
+	
+	if( PartType != "" )
+	{
+		//Retrieve a list of valid parts for the specified part type
+		BodyPartFilter.Set(EGender(UpdatedUnitState.kAppearance.iGender), ECharacterRace(UpdatedUnitState.kAppearance.iRace), UpdatedUnitState.kAppearance.nmTorso, !UpdatedUnitState.IsASoldier(), UpdatedUnitState.IsVeteran() || InShell());
+		PartManager.GetFilteredUberTemplates(PartType, BodyPartFilter, BodyPartFilter.FilterAny, BodyParts);
+
+		//See if the part has a DLC identified. 
+		for( Index = 0; Index < BodyParts.Length; ++Index )
+		{
+			if( BodyParts[Index].DLCName != '' )
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 simulated function bool HasMultipleCustomizationOptions(int catType)
@@ -1148,6 +1639,18 @@ simulated function int GetCategoryIndex(int catType)
 		break;
 	case eUICustomizeCat_Arms:              
 		Result = GetCategoryValue("Arms", UpdatedUnitState.kAppearance.nmArms, BodyPartFilter.FilterByTorsoAndArmorMatch);
+		break;
+	case eUICustomizeCat_LeftArm:
+		Result = GetCategoryValue("LeftArm", UpdatedUnitState.kAppearance.nmLeftArm, BodyPartFilter.FilterByTorsoAndArmorMatch);
+		break;		
+	case eUICustomizeCat_RightArm:
+		Result = GetCategoryValue("RightArm", UpdatedUnitState.kAppearance.nmRightArm, BodyPartFilter.FilterByTorsoAndArmorMatch);
+		break;
+	case eUICustomizeCat_LeftArmDeco:
+		Result = GetCategoryValue("LeftArmDeco", UpdatedUnitState.kAppearance.nmLeftArmDeco, BodyPartFilter.FilterByTorsoAndArmorMatch);
+		break;
+	case eUICustomizeCat_RightArmDeco:
+		Result = GetCategoryValue("RightArmDeco", UpdatedUnitState.kAppearance.nmRightArmDeco, BodyPartFilter.FilterByTorsoAndArmorMatch);
 		break;
 	case eUICustomizeCat_Legs:              
 		Result = GetCategoryValue("Legs", UpdatedUnitState.kAppearance.nmLegs, BodyPartFilter.FilterByTorsoAndArmorMatch);
@@ -1516,6 +2019,9 @@ simulated function OnDeactivate( bool bAcceptChanges )
 	{
 		class'WorldInfo'.static.GetWorldInfo().GetALocalPlayerController().ConsoleCommand("show postprocess");
 	}
+
+	//Clear out any delegates that may be around.
+	arrGetIconsForBodyPartDelegates.length = 0;
 }
 
 simulated function SubmitWeaponCustomizationChanges()

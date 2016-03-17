@@ -758,19 +758,74 @@ static function X2AbilityTemplate ChainShot()
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildVisualizationFn = ChainShot1_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
 	Template.AdditionalAbilities.AddItem('ChainShot2');
 	Template.PostActivationEvents.AddItem('ChainShot2');
-	Template.CinescriptCameraType = "StandardGunFiring";
 
 	Template.DamagePreviewFn = ChainShotDamagePreview;
 	Template.bCrossClassEligible = true;
 
-	Template.bPreventsTargetTeleport = true;
-
 	return Template;
+}
+
+simulated function ChainShot1_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameStateContext Context;
+	local XComGameStateContext_Ability TestAbilityContext;
+	local int EventChainIndex, TrackIndex, ActionIndex;
+	local XComGameStateHistory History;
+	local X2Action_EnterCover EnterCoverAction;
+	local X2Action_EndCinescriptCamera EndCinescriptCameraAction;
+
+	// Build the first shot of Rapid Fire's visualization
+	TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);
+
+	Context = VisualizeGameState.GetContext();
+	AbilityContext = XComGameStateContext_Ability(Context);
+
+	if( AbilityContext.EventChainStartIndex != 0 )
+	{
+		History = `XCOMHISTORY;
+
+		// This GameState is part of a chain, which means there may be a second shot for rapid fire
+		for( EventChainIndex = AbilityContext.EventChainStartIndex; !Context.bLastEventInChain; ++EventChainIndex )
+		{
+			Context = History.GetGameStateFromHistory(EventChainIndex).GetContext();
+
+			TestAbilityContext = XComGameStateContext_Ability(Context);
+
+			if( TestAbilityContext.InputContext.AbilityTemplateName == 'ChainShot2' &&
+				TestAbilityContext.InputContext.SourceObject.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID &&
+				TestAbilityContext.InputContext.PrimaryTarget.ObjectID == AbilityContext.InputContext.PrimaryTarget.ObjectID )
+			{
+				// Found a RapidFire2 visualization
+				for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
+				{
+					if( OutVisualizationTracks[TrackIndex].StateObject_NewState.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID)
+					{
+						// Found the Source track
+						break;
+					}
+				}
+
+				for( ActionIndex = OutVisualizationTracks[TrackIndex].TrackActions.Length - 1; ActionIndex >= 0; --ActionIndex )
+				{
+					EnterCoverAction = X2Action_EnterCover(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+					EndCinescriptCameraAction = X2Action_EndCinescriptCamera(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+					if ( (EnterCoverAction != none) ||
+						 (EndCinescriptCameraAction != none) )
+					{
+						OutVisualizationTracks[TrackIndex].TrackActions.Remove(ActionIndex, 1);
+					}
+				}
+
+				break;
+			}
+		}
+	}
 }
 
 function bool ChainShotDamagePreview(XComGameState_Ability AbilityState, StateObjectReference TargetRef, out WeaponDamageValue MinDamagePreview, out WeaponDamageValue MaxDamagePreview, out int AllowsShield)
@@ -841,11 +896,45 @@ static function X2AbilityTemplate ChainShot2()
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_chainshot";
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildVisualizationFn = ChainShot2_BuildVisualization;
 	Template.bShowActivation = true;
-	Template.CinescriptCameraType = "StandardGunFiring";
 
 	return Template;
+}
+
+simulated function ChainShot2_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{
+	local XComGameStateContext Context;
+	local XComGameStateContext_Ability AbilityContext;
+	local int TrackIndex, ActionIndex;
+	local X2Action_ExitCover ExitCoverAction;
+	local X2Action_StartCinescriptCamera StartCinescriptCameraAction;
+
+	// Build the first shot of Rapid Fire's visualization
+	TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);
+
+	Context = VisualizeGameState.GetContext();
+	AbilityContext = XComGameStateContext_Ability(Context);
+
+	for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
+	{
+		if( OutVisualizationTracks[TrackIndex].StateObject_NewState.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID)
+		{
+			// Found the Source track
+			break;
+		}
+	}
+
+	for( ActionIndex = OutVisualizationTracks[TrackIndex].TrackActions.Length - 1; ActionIndex >= 0; --ActionIndex )
+	{
+		ExitCoverAction = X2Action_ExitCover(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+		StartCinescriptCameraAction = X2Action_StartCinescriptCamera(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+		if ( (ExitCoverAction != none) ||
+				(StartCinescriptCameraAction != none) )
+		{
+			OutVisualizationTracks[TrackIndex].TrackActions.Remove(ActionIndex, 1);
+		}
+	}
 }
 
 static function X2AbilityTemplate Demolition()

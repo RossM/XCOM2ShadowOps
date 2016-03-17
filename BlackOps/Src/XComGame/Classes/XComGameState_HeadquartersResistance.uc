@@ -128,13 +128,15 @@ static function SetUpHeadquarters(XComGameState StartState, optional bool bTutor
 function CreateRecruits(XComGameState StartState)
 {
 	local XComGameState_Unit NewSoldierState;
+	local XComOnlineProfileSettings ProfileSettings;
 	local int Index;
 
 	assert(StartState != none);
+	ProfileSettings = `XPROFILESETTINGS;
 
 	for(Index = 0; Index < GetStartingNumRecruits(); ++Index)
 	{
-		NewSoldierState = `CHARACTERPOOLMGR.CreateCharacter(StartState, eCPSM_Mixed);
+		NewSoldierState = `CHARACTERPOOLMGR.CreateCharacter(StartState, ProfileSettings.Data.m_eCharPoolUsage);
 		NewSoldierState.RandomizeStats();
 		if(!NewSoldierState.HasBackground())
 			NewSoldierState.GenerateBackground();
@@ -245,7 +247,7 @@ function bool Update(XComGameState NewGameState)
 	bUpdated = false;
 	
 	// Don't trigger end of month while the Avenger or Skyranger are flying, or if another popup is already being presented
-	if (StrategyMap != none && StrategyMap.m_eUIState != eSMS_Flight && !`HQPRES.ScreenStack.HasInstanceOf(class'UIAlert'))
+	if (StrategyMap != none && StrategyMap.m_eUIState != eSMS_Flight && !`HQPRES.ScreenStack.IsCurrentClass(class'UIAlert'))
 	{
 		if (!bInactive && class'X2StrategyGameRulesetDataStructures'.static.LessThan(MonthIntervalEndTime, `STRATEGYRULES.GameTime))
 		{
@@ -298,11 +300,14 @@ function RefillRecruits(XComGameState NewGameState)
 {
 	local array<StateObjectReference> NewRecruitList;
 	local XComGameState_Unit SoldierState;
+	local XComOnlineProfileSettings ProfileSettings;
 	local int idx;
+
+	ProfileSettings = `XPROFILESETTINGS;
 
 	for(idx = 0; idx < GetRefillNumRecruits(); idx++)
 	{
-		SoldierState = `CHARACTERPOOLMGR.CreateCharacter(NewGameState, RecruitsCharacterPoolSelectionMode);
+		SoldierState = `CHARACTERPOOLMGR.CreateCharacter(NewGameState, ProfileSettings.Data.m_eCharPoolUsage);
 		SoldierState.RandomizeStats();
 		if(!SoldierState.HasBackground())
 			SoldierState.GenerateBackground();

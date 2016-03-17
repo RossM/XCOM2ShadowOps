@@ -310,6 +310,7 @@ static function int GetNumCiviliansKilled(optional out int iTotal, optional bool
 
 static native function int FindTileInList(TTile Tile, const out array<TTile> List);
 static native function RemoveTileSubset(out array<TTile> ResultList, const out array<TTile> Superset, const out array<TTile> Subset);
+static native function bool VectorContainsNaNOrInfinite(Vector V);
 
 cpptext
 {

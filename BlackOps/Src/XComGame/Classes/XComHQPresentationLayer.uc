@@ -546,12 +546,22 @@ function DisableFlightModeAndTriggerGeoscapeEvent()
 
 function GeoscapeEntryEvent()
 {
+	local XComGameState_CampaignSettings CampaignState;
 	local XComGameState NewGameState;
 
 	// Use this event if something should be triggered after the Geoscape finishes loading (Ex: Camera pans to reveal missions)
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Trigger Entered Geoscape Event");
-	`XEVENTMGR.TriggerEvent('OnGeoscapeEntry', , , NewGameState);	
+	`XEVENTMGR.TriggerEvent('OnGeoscapeEntry', , , NewGameState);
 	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	
+	CampaignState = XComGameState_CampaignSettings(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_CampaignSettings'));
+	if (CampaignState.bSuppressFirstTimeNarrative)
+	{
+		// Trigger the event to spawn a POI the first time the player enters the Geoscape
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Trigger First Time POI Event");
+		`XEVENTMGR.TriggerEvent('SpawnFirstPOI', , , NewGameState);
+		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	}
 
 	m_bBlockNarrative = false; // Turn off the narrative block in case it never got reset
 	m_bRecentStaffAvailable = false; // Turn off the recent staff available block
@@ -698,6 +708,11 @@ private function XComGameState_HeadquartersRoom GetCICRoom()
 // DOOM EFFECT
 //----------------------------------------------------
 
+function float GetDoomTimerVisModifiers()
+{
+	return `XPROFILESETTINGS.Data.bEnableZipMode ? class'X2TacticalGameRuleset'.default.ZipModeDoomVisModifier : 1.0;
+}
+
 //---------------------------------------------------------------------------------------
 function NonPanClearDoom(bool bPositive)
 {
@@ -714,7 +729,7 @@ function NonPanClearDoom(bool bPositive)
 		`XSTRATEGYSOUNDMGR.PlaySoundEvent("Doom_IncreasedScreenTear_ON");
 	}
 
-	SetTimer(3.0f, false, nameof(NoPanClearDoomPt2));
+	SetTimer(3.0f * GetDoomTimerVisModifiers(), false, nameof(NoPanClearDoomPt2));
 }
 
 //---------------------------------------------------------------------------------------
@@ -732,11 +747,11 @@ function NoPanClearDoomPt2()
 
 	if(AlienHQ.PendingDoomData.Length > 0)
 	{
-		SetTimer(4.0f, false, nameof(NoPanClearDoomPt2));
+		SetTimer(4.0f * GetDoomTimerVisModifiers(), false, nameof(NoPanClearDoomPt2));
 	}
 	else
 	{
-		SetTimer(4.0f, false, nameof(UnPanDoomFinished));
+		SetTimer(4.0f * GetDoomTimerVisModifiers(), false, nameof(UnPanDoomFinished));
 	}
 }
 
@@ -767,11 +782,11 @@ function DoomCameraPan(XComGameState_GeoscapeEntity EntityState, bool bPositive,
 
 	if(bFirstFacility)
 	{
-		SetTimer(3.0f, false, nameof(StartFirstFacilityCameraPan));
+		SetTimer(3.0f * GetDoomTimerVisModifiers(), false, nameof(StartFirstFacilityCameraPan));
 	}
 	else
 	{
-		SetTimer(3.0f, false, nameof(StartDoomCameraPan));
+		SetTimer(3.0f * GetDoomTimerVisModifiers(), false, nameof(StartDoomCameraPan));
 	}
 }
 
@@ -781,7 +796,7 @@ function StartDoomCameraPan()
 	// Pan to the location
 	CAMLookAtEarth(DoomEntityLoc, 0.5f, `HQINTERPTIME);
 	`XSTRATEGYSOUNDMGR.PlaySoundEvent("Doom_Camera_Whoosh");
-	SetTimer((`HQINTERPTIME + 3.0f), false, nameof(DoomCameraPanComplete));
+	SetTimer((`HQINTERPTIME + 3.0f * GetDoomTimerVisModifiers()), false, nameof(DoomCameraPanComplete));
 }
 
 //---------------------------------------------------------------------------------------
@@ -807,11 +822,11 @@ function DoomCameraPanComplete()
 
 	if(AlienHQ.PendingDoomData.Length > 0)
 	{
-		SetTimer(4.0f, false, nameof(DoomCameraPanComplete));
+		SetTimer(4.0f * GetDoomTimerVisModifiers(), false, nameof(DoomCameraPanComplete));
 	}
 	else
 	{
-		SetTimer(4.0f, false, nameof(UnpanDoomCamera));
+		SetTimer(4.0f * GetDoomTimerVisModifiers(), false, nameof(UnpanDoomCamera));
 	}
 }
 
@@ -860,7 +875,7 @@ function UnpanDoomCamera()
 {
 	CAMRestoreSavedLocation();
 	`XSTRATEGYSOUNDMGR.PlaySoundEvent("Doom_Camera_Whoosh");
-	SetTimer((`HQINTERPTIME + 3.0f), false, nameof(UnPanDoomFinished));
+	SetTimer((`HQINTERPTIME + 3.0f * GetDoomTimerVisModifiers()), false, nameof(UnPanDoomFinished));
 }
 
 //---------------------------------------------------------------------------------------

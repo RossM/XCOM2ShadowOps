@@ -270,6 +270,8 @@ event OnActiveUnitChanged(XComGameState_Unit NewActiveUnit)
 {
 	super.OnActiveUnitChanged(NewActiveUnit);
 
+	MoveAbilitySubmitted = false;
+
 	if(  XGUnit(NewActiveUnit.GetVisualizer()).GetPlayer() == XComTacticalController(`BATTLE.GetALocalPlayerController()).m_XGPlayer )
 	{
 		CenterOnUnitIfOffscreen(NewActiveUnit);

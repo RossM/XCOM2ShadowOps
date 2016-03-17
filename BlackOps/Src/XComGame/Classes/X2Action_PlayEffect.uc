@@ -202,7 +202,7 @@ Begin:
 		{
 			RequestLookAtCamera();
 
-			while( (bWaitForCameraCompletion || bWaitForCameraArrival) && LookAtCam != None && !LookAtCam.HasArrived )
+			while( (bWaitForCameraCompletion || bWaitForCameraArrival) && LookAtCam != None && !LookAtCam.HasArrived && LookAtCam.IsLookAtValid() )
 			{
 				Sleep(0.0);
 			}

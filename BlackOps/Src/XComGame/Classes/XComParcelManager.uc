@@ -1141,7 +1141,10 @@ function GetValidSpawns(out array<XComGroupSpawn> arrSpawns)
 		if(arrFalconVolumes.Length == 0)
 		{
 			ScoreSoldierSpawn(kSpawn);
-			arrSpawns.AddItem(kSpawn);
+			if( kSpawn.Score > 0.0 )
+			{
+				arrSpawns.AddItem(kSpawn);
+			}
 		}
 		else
 		{
@@ -1151,7 +1154,10 @@ function GetValidSpawns(out array<XComGroupSpawn> arrSpawns)
 				if(kFalconVolume.ContainsPoint(kSpawn.Location))
 				{
 					ScoreSoldierSpawn(kSpawn);
-					arrSpawns.AddItem(kSpawn);
+					if( kSpawn.Score > 0.0 )
+					{
+						arrSpawns.AddItem(kSpawn);
+					}
 					break;
 				}
 			}

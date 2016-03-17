@@ -28,7 +28,7 @@ function SetProjectFocus(StateObjectReference FocusRef, optional XComGameState N
 	UnitState = XComGameState_Unit(NewGameState.GetGameStateForObjectID(ProjectFocus.ObjectID));
 
 	// If the soldier is not already a Psi Operative (if they are, the ability will be assigned from the player's choice)
-	if (UnitState.GetRank() == 0)
+	if (UnitState.GetSoldierClassTemplateName() != 'PsiOperative')
 	{
 		// Randomly choose a branch and ability from the starting two tiers of the Psi Op tree
 		iAbilityRank = `SYNC_RAND(2);
@@ -83,9 +83,7 @@ function int CalculatePointsToTrain(optional bool bClassTraining = false)
 	{
 		Unit = XComGameState_Unit(History.GetGameStateForObjectID(ProjectFocus.ObjectID));
 		RankDifference = Max(iAbilityRank - Unit.GetRank(), 0);
-		return (XComHQ.GetPsiTrainingDays() + Round(XComHQ.GetPsiTrainingScalar() * float(RankDifference))) * 
-			   (Unit.IsPsiOperative() ? 1.0f : 3.0f) *
-			   XComHQ.XComHeadquarters_DefaultPsiTrainingWorkPerHour * 24;
+		return (XComHQ.GetPsiTrainingDays() + Round(XComHQ.GetPsiTrainingScalar() * float(RankDifference))) * XComHQ.XComHeadquarters_DefaultPsiTrainingWorkPerHour * 24;
 	}
 }
 
@@ -113,18 +111,17 @@ function int CalculateWorkPerHour(optional XComGameState StartState = none, opti
 function OnProjectCompleted()
 {
 	local HeadquartersOrderInputContext OrderInput;
+	local XComGameState_Unit Unit;
 	local X2AbilityTemplate AbilityTemplate;
 	local name AbilityName;
-	local X2SoldierClassTemplate PsiOperativeClassTemplate;
-
-	PsiOperativeClassTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate('PsiOperative');
 
 	OrderInput.OrderType = eHeadquartersOrderType_PsiTrainingCompleted;
 	OrderInput.AcquireObjectReference = self.GetReference();
 
 	class'XComGameStateContext_HeadquartersOrder'.static.IssueHeadquartersOrder(OrderInput);
 
-	AbilityName = PsiOperativeClassTemplate.GetAbilityName(iAbilityRank, iAbilityBranch);
+	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ProjectFocus.ObjectID));
+	AbilityName = Unit.GetSoldierClassTemplate().GetAbilityName(iAbilityRank, iAbilityBranch);
 	AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(AbilityName);
 
 	`HQPRES.UIPsiTrainingComplete(ProjectFocus, AbilityTemplate);

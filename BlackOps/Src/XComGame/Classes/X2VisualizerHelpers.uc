@@ -83,6 +83,13 @@ static function ParsePath(const out XComGameStateContext_Ability AbilityContext,
 			MoveSpeedModifier = 1.0f;
 		}
 
+		// gremlin flies much faster in zip mode
+		if( UnitState.GetMyTemplate().bIsCosmetic && `XPROFILESETTINGS.Data.bEnableZipMode )
+		{
+			MoveSpeedModifier *= class'X2TacticalGameRuleset'.default.ZipModeTrivialAnimSpeed;
+		}
+
+
 		//Truncate the path if the unit did not make it to their destination but is still alive. In this situation the unit should still play
 		//move end animation and generally behave as if that is what they meant to do. For other cases such as where the unit dies, the death
 		//action takes care of animations at the end of the interrupted move...
@@ -256,7 +263,7 @@ static function ParsePath(const out XComGameStateContext_Ability AbilityContext,
 			}
 
 			VisualizerHelper.AddTrackAction_BeginMove(AbilityContext, BuildTrack, MoveSpeedModifier);
-			VisualizerHelper.AddTrackActions_MoveOverPath(LastTraversalType, Point, NextPoint, NewDirection, DistanceBetweenPoints, 0, VisualizerHelper.InputData.MovementData, AbilityContext, BuildTrack, InShouldSkipStop, MoveSpeedModifier);
+			VisualizerHelper.AddTrackActions_MoveOverPath(LastTraversalType, Point, NextPoint, NewDirection, DistanceBetweenPoints, 0, VisualizerHelper.InputData.MovementData, AbilityContext, BuildTrack, InShouldSkipStop,, MoveSpeedModifier);
 
 			// MHU - Set the total path length distance into the pawn.
 			Unit.GetPawn().m_fTotalDistanceAlongPath = DistanceBetweenPoints;

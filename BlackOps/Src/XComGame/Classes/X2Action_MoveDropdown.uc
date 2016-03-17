@@ -52,7 +52,8 @@ Begin:
 	
 	DropHeight = UnitPawn.Location.Z - Destination.Z;
 
-	if (DropHeight <= 256)
+	AnimParams.PlayRate = GetMoveAnimationSpeed();
+	if( DropHeight <= 256 )
 	{
 		AnimParams.AnimName = bClimbOver ?  'MV_ClimbDropLow_StartWall' : 'MV_ClimbDropLow_Start';
 		if(!UnitPawn.GetAnimTreeController().CanPlayAnimation(AnimParams.AnimName))
@@ -91,6 +92,7 @@ Begin:
 	}
 
 	AnimParams = default.AnimParams;
+	AnimParams.PlayRate = GetMoveAnimationSpeed();
 	AnimParams.HasDesiredEndingAtom = true;
 	AnimParams.DesiredEndingAtom.Translation = Destination;
 	AnimParams.DesiredEndingAtom.Rotation = QuatFromRotator(DesiredRotation);

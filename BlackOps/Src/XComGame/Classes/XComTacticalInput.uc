@@ -601,21 +601,28 @@ state InReplayPlayback
 	function bool Key_S( int ActionMask ){ return ArrowDown( ActionMask );}
 	function bool Key_D( int ActionMask ){ return ArrowRight( ActionMask );}
 	
-	function bool Key_Q( int ActionMask ){ return Dpad_Left( ActionMask );}
-	function bool Key_E( int ActionMask ){ return Dpad_Right( ActionMask );}
 	function bool Key_F( int ActionMask ){ return Dpad_Up( ActionMask );}
 	function bool Key_C( int ActionMask ){ return Dpad_Down( ActionMask );}
 
-	function bool DPad_Right( int ActionMask )
+	function bool Key_Q( int ActionMask )
+	{
+		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
+			XComTacticalController(Outer).YawCamera(90.0);
+		return false;
+	}
+	function bool Key_E( int ActionMask )
 	{
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(-90.0);
 		return false;
 	}
+
+	function bool DPad_Right( int ActionMask )
+	{
+		return false;
+	}
 	function bool DPad_Left( int ActionMask )
 	{
-		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
-			XComTacticalController(Outer).YawCamera(90.0);
 		return false;
 	}
 	function bool DPad_Up( int ActionMask )
@@ -927,8 +934,6 @@ state UsingTargetingMethod
 		}
 	}
 	
-	function bool Key_Q( int ActionMask ){ return Dpad_Left( ActionMask );}
-	function bool Key_E( int ActionMask ){ return Dpad_Right( ActionMask );}
 	function bool Key_F( int ActionMask ){ return Dpad_Up( ActionMask );}
 	function bool Key_C( int ActionMask ){ return Dpad_Down( ActionMask );}
 
@@ -959,7 +964,16 @@ state UsingTargetingMethod
 		return true; 
 	}
 
+	function bool DPad_Left( int ActionMask )
+	{
+		return false;
+	}
 	function bool DPad_Right( int ActionMask )
+	{
+		return false;
+	}
+
+	function bool Key_E( int ActionMask )
 	{
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_PRESS) != 0)
 		{
@@ -968,7 +982,7 @@ state UsingTargetingMethod
 		return true;
 	}
 
-	function bool DPad_Left( int ActionMask )
+	function bool Key_Q( int ActionMask )
 	{
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_PRESS) != 0)
 		{
@@ -1192,6 +1206,19 @@ state Multiplayer_Inactive
 		return true; 
 	}
 
+	function bool Key_E( int ActionMask )
+	{
+		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
+			XComTacticalController(Outer).YawCamera(-90.0);
+		return false;
+	}
+	function bool Key_Q( int ActionMask )
+	{
+		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
+			XComTacticalController(Outer).YawCamera(90.0);
+		return false;
+	}
+
 	function bool DPad_Right( int ActionMask )
 	{
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
@@ -1247,8 +1274,6 @@ state Multiplayer_Inactive
 	function bool Key_S( int ActionMask ){ return ArrowDown( ActionMask );}
 	function bool Key_D( int ActionMask ){ return ArrowRight( ActionMask );}
 	
-	function bool Key_Q( int ActionMask ){ return Dpad_Left( ActionMask );}
-	function bool Key_E( int ActionMask ){ return Dpad_Right( ActionMask );}
 	function bool Key_F( int ActionMask ){ return Dpad_Up( ActionMask );}
 	function bool Key_C( int ActionMask ){ return Dpad_Down( ActionMask );}
 
@@ -1293,7 +1318,9 @@ state Multiplayer_Inactive
 		return false;
 	}
 
+	
 	simulated function bool ArrowLeft( int ActionMask )
+
 	{
 		// Only pay attention to presses or repeats
 		if ( (ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_PRESS) != 0 
@@ -1303,7 +1330,7 @@ state Multiplayer_Inactive
 			// Rotate Camera
 			if(IsKeyPressed(eTBC_CamRotateLeft))
 			{
-				DPad_Left(ActionMask);
+				Key_Q(ActionMask);
 				return true;
 			}
 
@@ -1324,7 +1351,7 @@ state Multiplayer_Inactive
 			// Rotate Camera
 			if(IsKeyPressed(eTBC_CamRotateRight))
 			{
-				DPad_Right(ActionMask);
+				Key_E(ActionMask);
 				return true;
 			}
 
@@ -1630,54 +1657,26 @@ state ActiveUnit_Moving
 
 	function bool A_Button( int ActionMask )
 	{
-		local IMouseInteractionInterface MouseTarget;
-		local bool bHandled;
-
-		if((ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_PRESS ) != 0)
+		if( (ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_PRESS) != 0 )
 		{
-			m_bReceivedPress = true; 
+			m_bReceivedPress = true;
 		}
 		// IF( Button was held down )
-		else if((ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_HOLD ) != 0)
+		else if( (ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_HOLD) != 0 )
 		{
-			if( !m_bReceivedPress ) return true; 
+			if( !m_bReceivedPress ) return true;
 
-			if(XComTacticalController(Outer).CheatManager != none && class'Engine'.static.IsConsoleAllowed())
+			if( XComTacticalController(Outer).CheatManager != none && class'Engine'.static.IsConsoleAllowed() )
 			{
-				XComTacticalController(Outer).ServerTeleportActiveUnitTo(XComCheatManager( XComTacticalController(Outer).CheatManager ).GetCursorLoc());
+				XComTacticalController(Outer).ServerTeleportActiveUnitTo(XComCheatManager(XComTacticalController(Outer).CheatManager).GetCursorLoc());
 				m_bReceivedPress = false;
 			}
 			return true;
 		}
-		// ELSE( Button was simply pressed )
-		else if ( (ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
+		else
+		if( (ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0 )
 		{
-			// Steam controller code below; this button was unused, try to make it an all-in-one targeting/pathing tool
-			bHandled = false;
-			MouseTarget = GetMouseInterfaceTarget();
-			if (MouseTarget != none)
-			{
-				//Try to click a unit first
-				bHandled = ClickSoldier(MouseTarget);
-
-				//Loot comes before opponent targeting because it's a valid ability on dead targets! But we don't want to use the shot HUD
-				if (!bHandled)
-					bHandled = ClickLoot(MouseTarget);
-
-				//See if we're trying to target an opponent 
-				if (!bHandled)
-					bHandled = ClickUnitToTarget(MouseTarget);
-
-				// See if we're trying to click on an interactive object
-				if (!bHandled)
-					bHandled = ClickInterativeLevelActor(MouseTarget);
-			}
-			if (bHandled == false)
-			{
-				ClickToPath();
-			}
 			m_bReceivedPress = false;
-			return true;
 		}
 		return false;
 	}
@@ -1837,8 +1836,11 @@ state ActiveUnit_Moving
 	{
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 		{
-			OpenShotHUD();
-		}
+			if( XComPresentationLayer(XComTacticalController(Outer).Pres).GetTacticalHUD().IsMenuRaised() )
+				CloseShotHUD();
+			else
+				OpenShotHUD();
+		}	
 		return false;
 	}
 
@@ -1870,6 +1872,10 @@ state ActiveUnit_Moving
 			//Begin targeting / activating the ShotHUD
 			XComPresentationLayer(XComTacticalController(Outer).Pres).GetTacticalHUD().m_kAbilityHUD.SelectAbility(0);
 		}
+	}
+	private function CloseShotHUD()
+	{
+		XComPresentationLayer(XComTacticalController(Outer).Pres).GetTacticalHUD().LowerTargetSystem();
 	}
 	
 	function bool Key_P(int ActionMask)
@@ -1975,18 +1981,25 @@ state ActiveUnit_Moving
 	function bool Key_S( int ActionMask ){ return ArrowDown( ActionMask );}
 	function bool Key_D( int ActionMask ){ return ArrowRight( ActionMask );}
 	
-	function bool Key_Q( int ActionMask ){ return Dpad_Left( ActionMask );}
-	function bool Key_E( int ActionMask ){ return Dpad_Right( ActionMask );}
 	function bool Key_F( int ActionMask ){ return Dpad_Up( ActionMask );}
 	function bool Key_C( int ActionMask ){ return Dpad_Down( ActionMask );}
 
 	function bool DPad_Right( int ActionMask )
+	{ 
+		return false;
+	}
+	function bool DPad_Left( int ActionMask )
+	{ 
+		return false;
+	}
+
+	function bool Key_E( int ActionMask )
 	{
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(-90.0);
 		return false;
 	}
-	function bool DPad_Left( int ActionMask )
+	function bool Key_Q( int ActionMask )
 	{
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(90.0);
@@ -2844,6 +2857,56 @@ function DrawHUD( HUD HUD )
 }
 
 function bool SelectSoldier( int iIndex )
+{
+	return false;
+}
+
+function bool AttemptSteamControllerConfirm(int cmd)
+{
+	local IMouseInteractionInterface MouseTarget;
+	local bool bHandled; 
+
+	if( cmd != class'UIUtilities_Input'.const.FXS_BUTTON_A_STEAM || !IsControllerActive() ) return false;
+
+	// Steam controller code below; this button was unused, try to make it an all-in-one targeting/pathing tool
+
+	bHandled = super.AttemptSteamControllerConfirm(cmd);
+
+	if( !bHandled )
+	{
+		MouseTarget = GetMouseInterfaceTarget();
+		if( MouseTarget != none )
+		{
+			//Try to click a unit first
+			bHandled = ClickSoldier(MouseTarget);
+
+			//Loot comes before opponent targeting because it's a valid ability on dead targets! But we don't want to use the shot HUD
+			if( !bHandled )
+				bHandled = ClickLoot(MouseTarget);
+
+			//See if we're trying to target an opponent 
+			if( !bHandled )
+				bHandled = ClickUnitToTarget(MouseTarget);
+
+			// See if we're trying to click on an interactive object
+			if( !bHandled )
+				bHandled = ClickInterativeLevelActor(MouseTarget);
+		}
+		if( !bHandled )
+		{
+			ClickToPath();
+		}
+	}
+	return bHandled; 
+}
+
+
+function bool ClickSoldier(IMouseInteractionInterface MouseTarget)
+{
+	return false;
+}
+
+function bool ClickLoot(IMouseInteractionInterface MouseTarget)
 {
 	return false;
 }

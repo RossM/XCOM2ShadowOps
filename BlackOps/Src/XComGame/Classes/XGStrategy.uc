@@ -769,6 +769,7 @@ state StartingDebugCheatGame
 		local XComGameState NewGameState;
 		local XComGameState_HeadquartersXCom XComHQ;
 		local XComGameState_Unit UnitState;
+		local XComOnlineProfileSettings ProfileSettings;
 		local int idx, i;
 
 		History = `XCOMHISTORY;
@@ -777,9 +778,11 @@ state StartingDebugCheatGame
 		XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 		NewGameState.AddStateObject(XComHQ);
 
+		ProfileSettings = `XPROFILESETTINGS;
+
 		for(idx = 0; idx < default.DEBUG_StartingSoldierClasses.Length; idx++)
 		{
-			UnitState = `CHARACTERPOOLMGR.CreateCharacter(NewGameState, class'XComGameState_HeadquartersXCom'.default.InitialSoldiersCharacterPoolSelectionMode);
+			UnitState = `CHARACTERPOOLMGR.CreateCharacter(NewGameState, ProfileSettings.Data.m_eCharPoolUsage);
 			NewGameState.AddStateObject(UnitState);
 			UnitState.RandomizeStats();
 			UnitState.ApplyInventoryLoadout(NewGameState);

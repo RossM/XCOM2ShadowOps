@@ -217,9 +217,7 @@ static function X2DataTemplate CreateFirebomb()
 	Template.iPhysicsImpulse = 10;
 
 	Template.CanBeBuilt = false;
-
-	Template.UpgradeItem = 'FirebombMK2';
-
+	
 	Template.RewardDecks.AddItem('ExperimentalGrenadeRewards');
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.FIREGRENADE_RANGE);
@@ -269,6 +267,9 @@ static function X2DataTemplate FirebombMK2()
 
 	Template.CanBeBuilt = false;
 
+	Template.CreatorTemplateName = 'AdvancedGrenades'; // The schematic which creates this item
+	Template.BaseItem = 'Firebomb'; // Which item this will be upgraded from
+
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.FIREBOMB_RANGE);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RadiusLabel, , default.FIREBOMB_RADIUS);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ShredLabel, , default.FIREGRENADEM2_BASEDAMAGE.Shred);
@@ -312,7 +313,6 @@ static function X2DataTemplate CreateFragGrenade()
 	Template.ThrownGrenadeEffects.AddItem(WeaponDamageEffect);
 	Template.LaunchedGrenadeEffects.AddItem(WeaponDamageEffect);
 
-	Template.UpgradeItem = 'AlienGrenade';
 	Template.HideIfResearched = 'PlasmaGrenade';
 
 	Template.OnThrowBarkSoundCue = 'ThrowGrenade';
@@ -364,6 +364,9 @@ static function X2DataTemplate CreateAlienGrenade()
 
 	Template.iPhysicsImpulse = 10;
 
+	Template.CreatorTemplateName = 'PlasmaGrenade'; // The schematic which creates this item
+	Template.BaseItem = 'FragGrenade'; // Which item this will be upgraded from
+
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
 
@@ -411,8 +414,6 @@ static function X2DataTemplate CreateFlashbangGrenade()
 	Template.GameArchetype = "WP_Grenade_Flashbang.WP_Grenade_Flashbang";
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 
 	Template.iSoundRange = default.FLASHBANGGRENADE_ISOUNDRANGE;
 	Template.iEnvironmentDamage = default.FLASHBANGGRENADE_IENVIRONMENTDAMAGE;
@@ -423,7 +424,7 @@ static function X2DataTemplate CreateFlashbangGrenade()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 100;
+	Resources.Quantity = 35;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	// Soldier Bark
@@ -483,15 +484,12 @@ static function X2DataTemplate CreateSmokeGrenade()
 	Template.GameArchetype = "WP_Grenade_Smoke.WP_Grenade_Smoke";
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 60;
+	Resources.Quantity = 25;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
-	Template.UpgradeItem = 'SmokeGrenadeMk2';
 	Template.HideIfResearched = 'AdvancedGrenades';
 
 	// Soldier Bark
@@ -538,12 +536,13 @@ static function X2DataTemplate SmokeGrenadeMk2()
 	Template.GameArchetype = "WP_Grenade_Smoke.WP_Grenade_Smoke_Lv2";
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
+
+	Template.CreatorTemplateName = 'AdvancedGrenades'; // The schematic which creates this item
+	Template.BaseItem = 'SmokeGrenade'; // Which item this will be upgraded from
 	
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 75;
+	Resources.Quantity = 50;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.Requirements.RequiredTechs.AddItem('AdvancedGrenades');
@@ -597,8 +596,6 @@ static function X2DataTemplate CreateGasGrenade()
 
 	Template.CanBeBuilt = false;
 	
-	Template.UpgradeItem = 'GasGrenadeMk2';
-
 	Template.RewardDecks.AddItem('ExperimentalGrenadeRewards');
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.GASGRENADE_RANGE);
@@ -647,6 +644,9 @@ static function X2DataTemplate CreateGasGrenadeMk2()
 	Template.GameArchetype = "WP_Grenade_Gas.WP_Grenade_Gas_Lv2";
 
 	Template.CanBeBuilt = false;
+	
+	Template.CreatorTemplateName = 'AdvancedGrenades'; // The schematic which creates this item
+	Template.BaseItem = 'GasGrenade'; // Which item this will be upgraded from
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.GASBOMB_RANGE);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RadiusLabel, , default.GASBOMB_RADIUS);
@@ -695,9 +695,7 @@ static function X2DataTemplate CreateAcidGrenade()
 	Template.GameArchetype = "WP_Grenade_Acid.WP_Grenade_Acid";
 
 	Template.CanBeBuilt = false;
-
-	Template.UpgradeItem = 'AcidGrenadeMk2';
-
+	
 	Template.RewardDecks.AddItem('ExperimentalGrenadeRewards');
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.ACIDGRENADE_RANGE);
@@ -748,6 +746,9 @@ static function X2DataTemplate CreateAcidGrenadeMk2()
 
 	Template.CanBeBuilt = false;
 
+	Template.CreatorTemplateName = 'AdvancedGrenades'; // The schematic which creates this item
+	Template.BaseItem = 'AcidGrenade'; // Which item this will be upgraded from
+
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.ACIDBOMB_RANGE);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RadiusLabel, , default.ACIDBOMB_RADIUS);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ShredLabel, , default.ACIDGRENADEM2_BASEDAMAGE.Shred);
@@ -774,9 +775,7 @@ static function X2GrenadeLauncherTemplate GrenadeLauncher()
 	Template.IncreaseGrenadeRange = default.GRENADELAUNCHER_RANGEBONUS;
 
 	Template.GameArchetype = "WP_GrenadeLauncher_CV.WP_GrenadeLauncher_CV";
-
-	Template.UpgradeItem = 'GrenadeLauncher_MG';
-
+	
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
 
@@ -805,6 +804,9 @@ static function X2GrenadeLauncherTemplate AdvGrenadeLauncher()
 	Template.IncreaseGrenadeRange = default.ADVGRENADELAUNCHER_RANGEBONUS;
 
 	Template.GameArchetype = "WP_GrenadeLauncher_MG.WP_GrenadeLauncher_MG";
+
+	Template.CreatorTemplateName = 'GrenadeLauncher_MG_Schematic'; // The schematic which creates this item
+	Template.BaseItem = 'GrenadeLauncher_CV'; // Which item this will be upgraded from
 
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
@@ -1136,8 +1138,6 @@ static function X2DataTemplate EMPGrenade()
 	Template.iPhysicsImpulse = 10;
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 
 	UnitCondition = new class'X2Condition_UnitProperty';
 	UnitCondition.ExcludeOrganic = true;
@@ -1166,12 +1166,11 @@ static function X2DataTemplate EMPGrenade()
 	Template.LaunchedGrenadeEffects = Template.ThrownGrenadeEffects;
 	
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 200;
+	Resources.Quantity = 50;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.Requirements.RequiredTechs.AddItem('Bluescreen');
 
-	Template.UpgradeItem = 'EMPGrenadeMk2';
 	Template.HideIfResearched = 'AdvancedGrenades';
 	
 	Template.bHideDamageStat = true;
@@ -1214,8 +1213,6 @@ static function X2DataTemplate EMPGrenadeMk2()
 	Template.iPhysicsImpulse = 10;
 
 	Template.CanBeBuilt = true;
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 
 	UnitCondition = new class'X2Condition_UnitProperty';
 	UnitCondition.ExcludeOrganic = true;
@@ -1243,8 +1240,11 @@ static function X2DataTemplate EMPGrenadeMk2()
 
 	Template.LaunchedGrenadeEffects = Template.ThrownGrenadeEffects;
 
+	Template.CreatorTemplateName = 'AdvancedGrenades'; // The schematic which creates this item
+	Template.BaseItem = 'EMPGrenade'; // Which item this will be upgraded from
+
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 200;
+	Resources.Quantity = 50;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.Requirements.RequiredTechs.AddItem('Bluescreen');
@@ -1290,8 +1290,6 @@ static function X2GrenadeTemplate ProximityMine()
 	Template.iPhysicsImpulse = 10;
 
 	Template.CanBeBuilt = true;	
-	Template.bInfiniteItem = true;
-	Template.bOneTimeBuild = true;
 	Template.TradingPostValue = 25;
 	
 	// Requirements
@@ -1299,7 +1297,7 @@ static function X2GrenadeTemplate ProximityMine()
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 500;
+	Resources.Quantity = 100;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.PROXIMITYMINE_RANGE);

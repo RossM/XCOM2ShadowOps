@@ -406,6 +406,7 @@ function bool Init( XGPlayer kPlayer, XGSquad kSquad, XComGameState_Unit UnitSta
 	local Vector NewWorldSpaceOffset;
 	local XComUnitPawn PawnArchetype;
 	local XComHumanPawn HumanPawn;
+	local CharacterPoolManager CharacterPoolMgr;
 
 	super.Init(kPlayer, kSquad, UnitState, bDestroyOnBadLocation);	
 
@@ -441,6 +442,10 @@ function bool Init( XGPlayer kPlayer, XGSquad kSquad, XComGameState_Unit UnitSta
 	HumanPawn = XComHumanPawn(m_kPawn);
 	if(HumanPawn != none)
 	{
+		// This is a last chance check whether the body parts selected for this character are available / valid and replace them if not.
+		CharacterPoolMgr = CharacterPoolManager(`XENGINE.GetCharacterPoolManager());
+		CharacterPoolMgr.FixAppearanceOfInvalidAttributes(UnitState.kAppearance);
+
 		HumanPawn.SetAppearance(UnitState.kAppearance);
 	}
 

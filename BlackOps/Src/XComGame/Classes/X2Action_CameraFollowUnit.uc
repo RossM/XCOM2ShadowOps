@@ -44,7 +44,7 @@ Begin:
 		`CAMERASTACK.AddCamera(FollowCamera);
 
 		// wait for it to get to the lookat point on screen
-		while( FollowCamera != None && !FollowCamera.HasArrived )
+		while( FollowCamera != None && !FollowCamera.HasArrived && FollowCamera.IsLookAtValid() )
 		{
 			Sleep(0.0);
 		}

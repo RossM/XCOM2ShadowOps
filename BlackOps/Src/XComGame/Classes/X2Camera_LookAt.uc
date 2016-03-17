@@ -84,6 +84,11 @@ protected static native final function bool IsPointWithinTether(TPOV Camera, Vec
 /// </summary>
 protected function Vector GetCameraLookat();
 
+function bool IsLookAtValid()
+{
+	return !class'Helpers'.static.VectorContainsNaNOrInfinite(GetCameraLookat());
+}
+
 function native TPOV GetCameraLocationAndOrientation();
 
 function bool ShouldBlendFromCamera(X2Camera PreviousActiveCamera)

@@ -206,7 +206,7 @@ simulated function bool OnUnrealCommand(int ucmd, int arg)
 				bHandled = false;
 			break;
 
-		case (class'UIUtilities_Input'.const.FXS_DPAD_LEFT):
+		//case (class'UIUtilities_Input'.const.FXS_DPAD_LEFT):
 		case (class'UIUtilities_Input'.const.FXS_ARROW_LEFT):
 			if( UITacticalHUD(Owner).IsMenuRaised() )
 				CycleAbilitySelection(-1);
@@ -214,7 +214,7 @@ simulated function bool OnUnrealCommand(int ucmd, int arg)
 				bHandled = false;
 			break;
 
-		case (class'UIUtilities_Input'.const.FXS_DPAD_RIGHT):	
+		//case (class'UIUtilities_Input'.const.FXS_DPAD_RIGHT):	
 		case (class'UIUtilities_Input'.const.FXS_ARROW_RIGHT):
 			if( UITacticalHUD(Owner).IsMenuRaised() )
 				CycleAbilitySelection(1);	
@@ -398,6 +398,7 @@ simulated public function bool ConfirmAbility( optional AvailableAction Availabl
 	if(AvailableActionInfo.AvailableCode != 'AA_Success')
 	{
 		Movie.Pres.PlayUISound(eSUISound_MenuClickNegative);
+		m_iCurrentIndex = -1;
 		return false;
 	}
 
@@ -435,10 +436,10 @@ simulated public function bool ConfirmAbility( optional AvailableAction Availabl
 
 		PC.SetInputState('ActiveUnit_Moving');
 
-		m_iCurrentIndex = -1;
-
 		`Pres.m_kUIMouseCursor.HideMouseCursor();
 	}
+
+	m_iCurrentIndex = -1;
 
 	return bSubmitSuccess;
 }

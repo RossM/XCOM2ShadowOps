@@ -1621,7 +1621,7 @@ static function AddEffectCameraPanToAffectedUnitToTrack(out VisualizationTrack B
 
 	CameraLookAt = X2Action_CameraLookAt(class'X2Action_CameraLookAt'.static.AddToVisualizationTrack(BuildTrack, Context));
 	CameraLookAt.LookAtObject = BuildTrack.StateObject_NewState;
-	CameraLookAt.LookAtDuration = Delay;
+	CameraLookAt.LookAtDuration = Delay * (`XPROFILESETTINGS.Data.bEnableZipMode ? class'X2TacticalGameRuleset'.default.ZipModeDelayModifier : 1.0);
 	CameraLookAt.BlockUntilActorOnScreen = true;
 	CameraLookAt.UseTether = false;
 	CameraLookAt.DesiredCameraPriority = eCameraPriority_GameActions; // increased camera priority so it doesn't get stomped

@@ -42,6 +42,7 @@ var localized string m_strIsSuperSoldier;
 var localized string m_strNeedsVeteranStatus;
 var localized string m_strRemoveHelmet;
 var localized string m_strNoVariations;
+var localized string m_strIncompatibleStatus;
 
 delegate static bool IsSoldierEligible(XComGameState_Unit Soldier);
 
@@ -76,6 +77,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 	List = Spawn(class'UIList', self).InitList('armoryMenuList');
 	List.ItemPadding = 5;
 	List.bStickyHighlight = false;
+	List.width = 538;
 	ListBG.ProcessMouseEvents(List.OnChildMouseEvent);
 
 	Header = Spawn(class'UISoldierHeader', self);

@@ -710,6 +710,8 @@ state ExecutingVisualization
 		local bool bResumeFromInterrupt;
 		local X2ReactionFireSequencer ReactionFireSequencer;
 		local int TrackActionIndex;
+		local bool bAnyNonWaitActionsExecuting;
+		local X2Action FirstWaitAction;
 
 		for( BlockIndex = ActiveVisualizationBlocks.Length - 1; BlockIndex > -1; --BlockIndex )
 		{
@@ -769,6 +771,9 @@ state ExecutingVisualization
 				bBlockFinished = true;
 				bBlockInterrupted = GetContextInterruptionStatus(BlockIndex) == eInterruptionStatus_Interrupt;
 				
+				bAnyNonWaitActionsExecuting = false;
+				FirstWaitAction = None;
+
 				for( TrackIndex = 0; TrackIndex < ActiveVisualizationBlocks[BlockIndex].Tracks.Length; ++TrackIndex )
 				{
 					ProcessTrack = ActiveVisualizationBlocks[BlockIndex].Tracks[TrackIndex];
@@ -779,6 +784,15 @@ state ExecutingVisualization
 						if( CurrentTrackAction.IsInState('Executing') )
 						{
 							CurrentTrackAction.UpdateExecutingTime(fDeltaT);
+
+							if( !CurrentTrackAction.IsWaitingOnActionTrigger() )
+							{
+								bAnyNonWaitActionsExecuting = true;
+							}
+							else if( FirstWaitAction == None )
+							{
+								FirstWaitAction = CurrentTrackAction;
+							}
 						}
 
 						if( CurrentTrackAction.IsInState('WaitingToStart') )
@@ -805,6 +819,12 @@ state ExecutingVisualization
 						MarkVisualizationTrackComplete(ProcessTrack);
 						ActiveVisualizationBlocks[BlockIndex].Tracks[TrackIndex] = ProcessTrack; // Since MarkVisualizationTrackComplete can change the Track
 					}
+				}
+
+				// if the only executing action(s) is a Wait, release the wait. This prevents long timeouts when there is no pending inter-track message
+				if( !bAnyNonWaitActionsExecuting && FirstWaitAction != None )
+				{
+					FirstWaitAction.TriggerWaitCondition();
 				}
 
 				UpdateTrackActorTimeDilation(BlockIndex, false);

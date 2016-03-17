@@ -25,6 +25,9 @@ struct native MarketingPreset
 
 var MarketingPreset MarketingPresets;
 
+// Stores the player's selection for the part packs ( chance to see the various parts show up on generated soldiers )
+var array<PartPackPreset> PartPackPresets;
+
 // Single Player Tactical Debug Launch
 var array<byte>                         TacticalGameStartState; //Compressed data representing the last game state used to launch a tactical game
 
@@ -84,6 +87,14 @@ var int	m_ContinentBonusMask;
 var int m_BlackMarketSuppliesReceived;
 var int m_iGlobalAlienKills;
 var int m_iVOIPVolume;
+
+// Character Pool Usage
+var ECharacterPoolSelectionMode m_eCharPoolUsage;
+var bool bEnableZipMode;
+var int MaxVisibleCrew;
+
+// Character customization usage 
+var array<int> m_arrCharacterCustomizationCategoriesClearedAttention;
 
 event bool IsMouseActive()
 {
@@ -280,4 +291,7 @@ defaultproperties
 	bHasPlayedDLCCampaign=false;
 
 	m_bAutoSave=true
+
+	m_eCharPoolUsage=eCPSM_PoolOnly
+	MaxVisibleCrew=30
 }

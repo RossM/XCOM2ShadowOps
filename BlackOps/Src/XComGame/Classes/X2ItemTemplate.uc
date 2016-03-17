@@ -48,7 +48,9 @@ var(X2ItemTemplate) bool            CanBeBuilt;                     // Can XCom 
 var(X2ItemTemplate) bool			bOneTimeBuild;					// This item can only be built once (Story Items, Schematic Projects)
 var(X2ItemTemplate) bool			bBlocked;						// This item must be unblocked before it can be built
 
+var(X2ItemTemplate) name			CreatorTemplateName;			// This item is created by this template (normally a schematic or tech)
 var(X2ItemTemplate) name			UpgradeItem;					// This item can be upgraded into another item defined by the named template
+var(X2ItemTemplate) name			BaseItem;						// The item this one was upgraded from
 var(X2ItemTemplate) name			HideIfResearched;				// If this tech is researched, do not display in Build Items
 var(X2ItemTemplate) name			HideIfPurchased;				// If the referenced item is purchased, do not display in Build Items
 
@@ -176,7 +178,7 @@ function string GetItemFriendlyNameNoStats()
 	}
 }
 
-function string GetItemFriendlyName(optional int ItemID = 0)
+function string GetItemFriendlyName(optional int ItemID = 0, optional bool bShowSquadUpgrade)
 {
 	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;

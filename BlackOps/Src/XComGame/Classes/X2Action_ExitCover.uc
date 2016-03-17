@@ -508,7 +508,7 @@ Begin:
 		// but it should have the same delay as a standalone frame action
 		if( AbilityContext.ShouldFrameAbility() && !bNewUnitSelected )
 		{
-			Sleep(class'X2Action_CameraFrameAbility'.default.FrameDuration);
+			Sleep(class'X2Action_CameraFrameAbility'.default.FrameDuration * GetDelayModifier());
 		}
 	}
 
@@ -564,6 +564,7 @@ Begin:
 			if( Unit.CanUseCover() )
 			{
 				AnimParams = default.AnimParams;
+				AnimParams.PlayRate = GetNonCriticalAnimationSpeed();
 				switch( Unit.m_eCoverState )
 				{
 				case eCS_LowLeft:
@@ -597,7 +598,8 @@ Begin:
 		if( Unit.bShouldStepOut && Unit.m_eCoverState != eCS_None )
 		{
 			AnimParams = default.AnimParams;
-					
+			AnimParams.PlayRate = GetNonCriticalAnimationSpeed();
+
 			switch( Unit.m_eCoverState )
 			{
 			case eCS_LowLeft:
@@ -665,6 +667,8 @@ Begin:
 		if( Unit.bShouldStepOut == false )
 		{
 			AnimParams = default.AnimParams;
+			AnimParams.PlayRate = GetNonCriticalAnimationSpeed();
+
 			AnimParams.HasDesiredEndingAtom = true;
 			AnimParams.DesiredEndingAtom.Scale = 1.0f;
 			AnimParams.DesiredEndingAtom.Translation = UnitPawn.Location;

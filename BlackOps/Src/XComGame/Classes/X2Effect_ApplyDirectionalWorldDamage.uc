@@ -85,7 +85,10 @@ simulated function ApplyDirectionalDamageToTarget(XComGameState_Unit SourceUnit,
 			}
 		}
 
-		DamageEvent.HitLocation = SourceLocation;
+		if (bHitSourceTile)
+			DamageEvent.HitLocation = SourceLocation;
+		else
+			DamageEvent.HitLocation = TargetLocation;
 		DamageEvent.Momentum = DamageDirection;
 		DamageEvent.DamageDirection = DamageDirection; //Limit environmental damage to the attack direction( ie. spare floors )
 		DamageEvent.PhysImpulse = 100;

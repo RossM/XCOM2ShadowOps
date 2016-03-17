@@ -817,7 +817,7 @@ native function FindFloorInfoForEffect(ParticleSystemComponent ParticleEffect, T
 //------------------------------------------------------------------------------
 delegate CanSeeLocationCallback();
 native function bool IsInNoSpawnZone( const out Vector vLoc, bool bCivilian=FALSE, bool bLogFailures=false );
-
+native function CollectLadderLandingTiles(out array<TTile> LadderTiles);
 //------------------------------------------------------------------------------
 // Visibility
 //------------------------------------------------------------------------------

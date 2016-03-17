@@ -19,6 +19,7 @@ simulated state Executing
 	}
 
 Begin:
+	Duration = Duration * GetDelayModifier();
 	TimeoutSeconds = Duration + 1.0f;
 
 	while(Duration > 0)

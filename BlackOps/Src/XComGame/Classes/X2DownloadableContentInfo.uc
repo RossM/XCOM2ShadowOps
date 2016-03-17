@@ -15,6 +15,13 @@ class X2DownloadableContentInfo extends Object
 	native(Core);
 
 var config string DLCIdentifier; //The directory name that the DLC resides in
+var config bool bHasOptionalNarrativeContent;
+
+var localized string PartContentLabel; // Label for use in the game play options menu allowing users to decide how this content pack is applied to new soldiers
+var localized string PartContentSummary; // Tooltip for the part content slider
+
+var localized string NarrativeContentLabel; // Label next to the checkbox in pre-campaign menu
+var localized string NarrativeContentSummary; // Longer description of narrative content for pre-campaign menu
 
 /// <summary>
 /// This method is run if the player loads a saved game that was created prior to this DLC / Mod being installed, and allows the 

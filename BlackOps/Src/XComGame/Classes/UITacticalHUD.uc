@@ -439,7 +439,7 @@ simulated function bool CancelTargetingAction()
 	LowerTargetSystem();
 	//XComPresentationLayer(Movie.Pres).m_kSightlineHUD.ClearSelectedEnemy();
 	PC.SetInputState('ActiveUnit_Moving');
-	return false;
+	return true;
 }
 
 simulated function TargetEnemy( int TargetIndex )

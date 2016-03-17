@@ -264,7 +264,7 @@ simulated function OnUnitActionPhase_ActionsAvailable(XComGameState_Unit UnitSta
 function bool IsReadyForNextUnit()
 {
 	local XGAIBehavior kBehavior;
-	if( IsScampering() && !WaitingForScamperSetup() )
+	if( (IsScampering() && !WaitingForScamperSetup()) || `XWORLD.HasPendingVisibilityUpdates() )
 	{
 		return false;
 	}
@@ -1611,6 +1611,8 @@ simulated function XGUnit GetCloserUnit(XGUnit kActiveUnit, XGUnit kUnitA, XGUni
 // Store all logs from the last turn here.  Clears each turn begin.
 static function LogAI(string strLog, name strLabel)
 {
+`if(`notdefined(FINAL_RELEASE))
+
 	local XGAIPlayer kPlayer;
 	kPlayer = XGAIPlayer(`BATTLE.GetAIPlayer());
 	if( kPlayer != None )
@@ -1618,13 +1620,17 @@ static function LogAI(string strLog, name strLabel)
 		kPlayer.TurnLog.AddItem(strLog);
 	}
 	`Log(strLog,, strLabel);
+
+`endif
 }
 
 // Add to AI log
 static function LogAIBT(string strLog)
 {
+`if(`notdefined(FINAL_RELEASE))
 	`BEHAVIORTREEMGR.LogNodeDetailText(strLog);
 	LogAI(strLog, 'AI');
+`endif
 }
 
 function ResetLogCache()

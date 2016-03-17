@@ -173,77 +173,62 @@ function array<X2SchematicTemplate> GetAllSchematicTemplates()
 	return arrSchematicTemplates;
 }
 
-// XCom does not already have the schematic and is close enough in tech
-function array<X2SchematicTemplate> GetAllValidSchematicTemplates()
+function array<X2ItemTemplate> GetAllItemsCreatedByTemplate(name TemplateName)
 {
-	local array<X2SchematicTemplate> arrSchematicTemplates;
-	local XComGameStateHistory History;
-	local XComGameState_HeadquartersXCom XComHQ;
-	local int idx;
+	local array<X2ItemTemplate> arrItemTemplates;
+	local X2DataTemplate Template;
+	local X2ItemTemplate ItemTemplate;
 
-	History = `XCOMHISTORY;
-	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
-	arrSchematicTemplates = GetAllSchematicTemplates();
-
-	for(idx = 0; idx < arrSchematicTemplates.Length; idx++)
+	foreach IterateTemplates(Template, none)
 	{
-		if(XComHQ.HasItem(arrSchematicTemplates[idx]) || !ItemValidGivenCurrentProgression(arrSchematicTemplates[idx]))
+		ItemTemplate = X2ItemTemplate(Template);
+
+		if (ItemTemplate != none && ItemTemplate.CreatorTemplateName == TemplateName)
 		{
-			arrSchematicTemplates.Remove(idx, 1);
-			idx--;
+			arrItemTemplates.AddItem(ItemTemplate);
 		}
 	}
 
-	return arrSchematicTemplates;
+	return arrItemTemplates;
 }
 
-// Call when XCom would be given a schematic
-function X2SchematicTemplate RollForValidSchematic()
+// This uses the *mostly* deprecated UpgradeItem variable, mainly existing for backwards compatibility with Day 0 DLC
+function array<X2ItemTemplate> GetAllBaseItemTemplatesFromUpgrade(name UpgradeTemplateName)
 {
-	local array<X2SchematicTemplate> arrSchematicTemplates;
-
-	arrSchematicTemplates = GetAllValidSchematicTemplates();
-
-	if(arrSchematicTemplates.Length == 0)
-	{
-		return none;
-	}
-
-	return arrSchematicTemplates[`SYNC_RAND(arrSchematicTemplates.Length)];
-}
-
-// Is XCom close enough Tech-wise for this item to be a valid drop
-function bool ItemValidGivenCurrentProgression(X2ItemTemplate CheckTemplate)
-{
-	local X2SchematicTemplate SchematicTemplate;
+	local array<X2ItemTemplate> arrItemTemplates;
+	local X2DataTemplate Template;
 	local X2ItemTemplate ItemTemplate;
-	local X2StrategyElementTemplateManager StratMgr;
-	local X2TechTemplate TechTemplate;
-	local int idx, TotalDistance;
 
-	StratMgr = class'X2StrategyElementTemplateManager'.static.GetStrategyElementTemplateManager();
-	SchematicTemplate = X2SchematicTemplate(CheckTemplate);
-	TotalDistance = 0;
-
-	if(SchematicTemplate != none)
+	foreach IterateTemplates(Template, none)
 	{
-		ItemTemplate = FindItemTemplate(SchematicTemplate.ItemsToUpgrade[0]);
+		ItemTemplate = X2ItemTemplate(Template);
 
-		if(ItemTemplate != none)
+		if (ItemTemplate != none && ItemTemplate.UpgradeItem == UpgradeTemplateName)
 		{
-			for(idx = 0; idx < ItemTemplate.Requirements.RequiredTechs.Length; idx++)
-			{
-				TechTemplate = X2TechTemplate(StratMgr.FindStrategyElementTemplate(ItemTemplate.Requirements.RequiredTechs[idx]));
-
-				if(TechTemplate != none)
-				{
-					TotalDistance += StratMgr.GetDistanceToTech(TechTemplate);
-				}
-			}
-		}		
+			arrItemTemplates.AddItem(ItemTemplate);
+		}
 	}
 
-	return (TotalDistance <= default.MaxTechDistanceForValidDrop);
+	return arrItemTemplates;
+}
+
+// Every upgraded item should have only one base
+function X2ItemTemplate GetUpgradedItemTemplateFromBase(name BaseTemplateName)
+{	
+	local X2DataTemplate Template;
+	local X2ItemTemplate ItemTemplate;
+
+	foreach IterateTemplates(Template, none)
+	{
+		ItemTemplate = X2ItemTemplate(Template);
+
+		if (ItemTemplate != none && ItemTemplate.BaseItem == BaseTemplateName)
+		{
+			return ItemTemplate;
+		}
+	}
+
+	return none;
 }
 
 function array<X2ItemTemplate> GetBuildableItemTemplates()

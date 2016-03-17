@@ -831,6 +831,30 @@ simulated function EndRagDoll()
 		GotoState('');
 }
 
+simulated function UpdateAuxParameters(bool bDisableAuxMaterials)
+{
+	local XGUnitNativeBase kGameUnit;
+
+	UpdateAuxParameterState(bDisableAuxMaterials);
+
+	if (m_bAuxParametersDirty)
+	{
+		// if we have death handler we need to end it before reattaching our components otherwise particles will retrigger
+		if (m_deathHandler != none)
+		{
+			m_deathHandler.EndDeath(self);
+			m_deathHandler = none;
+		}
+
+		// If the pawn is dying or is dead and ticking for the last time, don't update the aux parameters, they've already been disabled
+		kGameUnit = GetGameUnit();
+		if (kGameUnit != none && kGameUnit.GetIsAliveInVisualizer())
+		{
+			SetAuxParameters(m_bAuxParamNeedsPrimary, m_bAuxParamNeedsSecondary, m_bAuxParamUse3POutline);
+		}
+	}
+}
+
 simulated event Tick(float DT)
 {
 `if(`notdefined(FINAL_RELEASE))	
@@ -840,7 +864,6 @@ simulated event Tick(float DT)
 	local XComTacticalCheatManager kTacticalCheatMgr;
 	local bool bDisableAuxMaterials;
 	local XComTacticalController kTacticalController;
-	local XGUnitNativeBase kGameUnit;
 	local PrimitiveComponent PreviousCollisionComponent;
 
 	kTacticalController = XComTacticalController(GetALocalPlayerController());
@@ -867,24 +890,7 @@ simulated event Tick(float DT)
 
 		CalculateVisibilityPercentage();
 
-		UpdateAuxParameterState(bDisableAuxMaterials);
-
-		if (m_bAuxParametersDirty)
-		{
-			// if we have death handler we need to end it before reattaching our components otherwise particles will retrigger
-			if( m_deathHandler != none )
-			{
-				m_deathHandler.EndDeath(self);
-				m_deathHandler = none;
-			}
-
-			// If the pawn is dying or is dead and ticking for the last time, don't update the aux parameters, they've already been disabled
-			kGameUnit = GetGameUnit();
-			if( kGameUnit != none && kGameUnit.GetIsAliveInVisualizer() )
-			{
-				SetAuxParameters(m_bAuxParamNeedsPrimary, m_bAuxParamNeedsSecondary, m_bAuxParamUse3POutline);
-			}
-		}
+		UpdateAuxParameters(bDisableAuxMaterials);
 	}
 
 	//Fallback to forcing the pawns visible if they are participating in a matinee, but only in tactical

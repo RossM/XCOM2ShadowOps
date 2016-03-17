@@ -111,6 +111,9 @@ var privatewrite bool          bConfigIsUpToDate;
 
 var privatewrite EOnlineStatusType OnlineStatus;
 
+var privatewrite bool			bProfileDirty; //Marks profile as needing to be saved. Used for deferred saving, preventing multiple requests from issuing multiple tasks in a single frame.
+var privatewrite bool			bForceShowSaveIcon; //Saved option for deferred profile saving, indiciating if SaveIcon needs to be shown.
+
 var bool bSaveExplanationScreenHasShown;
 var private int                m_iCurrentGame;
 
@@ -1978,8 +1981,8 @@ simulated function SelectStorageDevice()
 	}
 }
 
-function SaveProfileSettings(optional bool bForceShowSaveIndicator=false)
-{	
+function SaveProfileSettingsImmediate()
+{
 	local delegate<SaveProfileSettingsComplete> dSaveProfileSettingsComplete;
 	local bool bWritingProfileSettings;
 	local bool bWroteSettingsToBuffer;
@@ -1988,27 +1991,27 @@ function SaveProfileSettings(optional bool bForceShowSaveIndicator=false)
 	PlayerInterfaceEx = OnlineSub.PlayerInterfaceEx;
 
 	ProfileSettings = XComOnlineProfileSettings(LocalEngine.GetProfileSettings());
-	if( bHasProfileSettings && ProfileSettings != none && ProfileSettings.Data != none )
-	{	
-		`log("Saving profile to disk",,'XCom_Online');
+	if (bHasProfileSettings && ProfileSettings != none && ProfileSettings.Data != none)
+	{
+		`log("Saving profile to disk", , 'XCom_Online');
 
 		ProfileSettings.PreSaveData();
 
 		bWroteSettingsToBuffer = WriteProfileSettingsToBuffer();
 
-		if( bWroteSettingsToBuffer )
+		if (bWroteSettingsToBuffer)
 		{
 			ProfileIsSerializing = true;
 
 			StorageDeviceIndex = PlayerInterfaceEx.GetDeviceSelectionResults(LocalUserIndex, StorageDeviceName);
 			bWritingProfileSettings = OnlineSub.PlayerInterface.WritePlayerStorage(LocalUserIndex, ProfileSettings, StorageDeviceIndex);
 
-			if( bWritingProfileSettings && (bShowSaveIndicatorForProfileSaves || bForceShowSaveIndicator) )
+			if (bWritingProfileSettings && (bShowSaveIndicatorForProfileSaves || bForceShowSaveIcon))
 				ShowSaveIndicator(true);
 		}
 		else
 		{
-			`log("Cannot save profile settings: WriteProfileSettingsToBuffer failed!",,'XCom_Online');
+			`log("Cannot save profile settings: WriteProfileSettingsToBuffer failed!", , 'XCom_Online');
 			foreach m_SaveProfileSettingsCompleteDelegates(dSaveProfileSettingsComplete)
 			{
 				dSaveProfileSettingsComplete(false);
@@ -2017,12 +2020,21 @@ function SaveProfileSettings(optional bool bForceShowSaveIndicator=false)
 	}
 	else
 	{
-		`log("Cannot save profile settings: No profile available!",,'XCom_Online');
+		`log("Cannot save profile settings: No profile available!", , 'XCom_Online');
 		foreach m_SaveProfileSettingsCompleteDelegates(dSaveProfileSettingsComplete)
 		{
 			dSaveProfileSettingsComplete(false);
 		}
 	}
+
+	bProfileDirty = false;
+	bForceShowSaveIcon = false;
+}
+
+function SaveProfileSettings(optional bool bForceShowSaveIndicator=false)
+{	
+	bProfileDirty = true;
+	bForceShowSaveIcon = bForceShowSaveIcon || bForceShowSaveIndicator;
 }
 
 function DebugSaveProfileSettingsCompleteDelegate()
@@ -2324,6 +2336,11 @@ event Tick(float DeltaTime)
 	if( bSaveDataOwnerErrPending )
 	{
 		ShowPostLoadMessages();
+	}
+
+	if (bProfileDirty)
+	{
+		SaveProfileSettingsImmediate();
 	}
 }
 

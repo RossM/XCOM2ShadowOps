@@ -339,6 +339,8 @@ Begin:
 	{	
 		Unit.bShouldStepOut = false;
 		AnimParams = default.AnimParams;
+		AnimParams.PlayRate = GetNonCriticalAnimationSpeed();
+
 		AnimParams.HasDesiredEndingAtom = true;
 		AnimParams.DesiredEndingAtom.Translation = Unit.RestoreLocation;
 		AnimParams.DesiredEndingAtom.Rotation = QuatFromRotator(Rotator(Unit.RestoreHeading));
@@ -372,6 +374,8 @@ Begin:
 	else
 	{
 		AnimParams = default.AnimParams;
+		AnimParams.PlayRate = GetNonCriticalAnimationSpeed();
+
 		AnimParams.HasDesiredEndingAtom = true;
 		AnimParams.DesiredEndingAtom.Translation = Unit.RestoreLocation;
 		AnimParams.DesiredEndingAtom.Rotation = QuatFromRotator(Rotator(Unit.RestoreHeading));
@@ -461,7 +465,7 @@ Begin:
 	Unit.IdleStateMachine.PlayIdleAnim();
 	if (!bInstantEnterCover)
 	{
-		Sleep(1.5f); // From Jake: Keep the focus on what we're looking at
+		Sleep(1.5f * GetDelayModifier()); // From Jake: Keep the focus on what we're looking at
 	}
 
 	if (!bInstantEnterCover)
@@ -471,7 +475,7 @@ Begin:
 			//Don't linger in the targeting camera if the character is going to start talking.
 			`CAMERASTACK.OnCinescriptAnimNotify("EnterCoverCut");
 
-			Sleep(1.25f); // let the audio finish playing. 
+			Sleep(1.25f * GetDelayModifier()); // let the audio finish playing. 
 		}
 	}
 

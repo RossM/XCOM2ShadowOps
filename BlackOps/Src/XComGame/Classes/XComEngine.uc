@@ -93,7 +93,7 @@ var public bool								bReviewFlagged;
 
 var CharacterPoolManager					m_CharacterPoolManager;
 
-var private XComSteamControllerManager		m_SteamControllerManager;
+var XComSteamControllerManager				m_SteamControllerManager;
 
 //=======================================================================================
 
@@ -392,6 +392,8 @@ event BuildLocalization()
 
 // jboswell: bOverrideAll should only be true when working around fullscreen movies
 static native final function AddStreamingTextureSlaveLocation(vector Loc, rotator Rot, float Duration, bool bOverrideAll=false);
+
+native function SetEnableAllLightsInLevel(Level kLevel, bool bEnable);
 
 defaultproperties
 {

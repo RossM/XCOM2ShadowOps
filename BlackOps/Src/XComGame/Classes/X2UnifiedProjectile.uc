@@ -102,6 +102,11 @@ var private name OrdnanceType;
 var bool bFirstShotInVolley;							//Indicate this is the first shot in the volley
 var private bool bProjectileFired;						//Indicate that at least a shot has been fired;
 
+cpptext
+{
+	virtual void PostLoad();
+}
+
 function ConfigureNewProjectile(X2Action_Fire InFireAction, 
 								AnimNotify_FireWeaponVolley InVolleyNotify,
 								XComGameStateContext_Ability AbilityContext,
