@@ -8,7 +8,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	local array<X2DataTemplate> Templates;
 	
 	Templates.AddItem(BulletSwarm());
-	Templates.AddItem(PurePassive('Bandolier', "img:///UILibrary_PerkIcons.UIPerk_wholenineyards", true));
+	Templates.AddItem(Bandolier());
 	Templates.AddItem(Magnum());
 	Templates.AddItem(GoodEye());
 	Templates.AddItem(AlwaysReady());
@@ -27,11 +27,11 @@ static function X2AbilityTemplate BulletSwarm()
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2Condition_UnitActionPoints		UnitActionPointCondition;
 
 	Template=class'X2Ability_WeaponCommon'.static.Add_StandardShot('BulletSwarm');
 	Template.OverrideAbilities.AddItem('StandardShot');
 
+	Template.bDontDisplayInAbilitySummary = false;
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bulletswarm";
 
 	Template.AbilityCosts.Length=0;
@@ -53,6 +53,23 @@ static function X2AbilityTemplate BulletSwarm()
 	return Template;	
 }
 
+static function X2AbilityTemplate Bandolier()
+{
+	local X2AbilityTemplate Template;
+
+	Template = PurePassive('Bandolier', "img:///UILibrary_PerkIcons.UIPerk_wholenineyards");
+
+	Template.SoldierAbilityPurchasedFn = BandolierPurchased;
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function BandolierPurchased(XComGameState NewGameState, XComGameState_Unit UnitState)
+{
+	UnitState.ValidateLoadout(NewGameState);
+}
 
 static function X2AbilityTemplate Magnum()
 {

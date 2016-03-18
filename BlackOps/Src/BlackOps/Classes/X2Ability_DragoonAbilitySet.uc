@@ -176,9 +176,61 @@ static function X2AbilityTemplate Finesse()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
 
+	Template.SoldierAbilityPurchasedFn = FinessePurchased;
+
 	Template.bCrossClassEligible = false;
 
 	return Template;
+}
+
+static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit UnitState)
+{
+	local XComGameState_Item RelevantItem, ItemState;
+	local X2WeaponTemplate WeaponTemplate, NewWeaponTemplate;
+	local XComGameStateHistory History;
+	local XComGameState_HeadquartersXCom XComHQ;
+
+	// Grab HQ Object
+	History = `XCOMHISTORY;
+	
+	foreach NewGameState.IterateByClassType(class'XComGameState_HeadquartersXCom', XComHQ)
+	{
+		break;
+	}
+
+	if(XComHQ == none)
+	{
+		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
+		XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+		NewGameState.AddStateObject(XComHQ);
+	}
+
+	RelevantItem = UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon);
+	if (RelevantItem != none)
+		WeaponTemplate = X2WeaponTemplate(RelevantItem.GetMyTemplate());
+
+	if (WeaponTemplate == none || WeaponTemplate.WeaponCat != 'rifle')
+	{
+		if (RelevantItem != none)
+		{
+			UnitState.RemoveItemFromInventory(RelevantItem , NewGameState);
+			XComHQ.PutItemInInventory(NewGameState, RelevantItem);
+		}
+
+		NewWeaponTemplate = X2WeaponTemplate(class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate('AssaultRifle_CV'));
+
+		if (!UnitState.CanAddItemToInventory(NewWeaponTemplate, NewWeaponTemplate.InventorySlot, NewGameState))
+		{
+			`RedScreen("Unable to add assault rifle to inventory." @ NewWeaponTemplate.DataName);
+			return;
+		}
+
+		ItemState = NewWeaponTemplate.CreateInstanceFromTemplate(NewGameState);
+		ItemState.WeaponAppearance.iWeaponTint = UnitState.kAppearance.iWeaponTint;
+		ItemState.WeaponAppearance.nmWeaponPattern = UnitState.kAppearance.nmWeaponPattern;
+		UnitState.AddItemToInventory(ItemState, NewWeaponTemplate.InventorySlot, NewGameState);
+		NewGameState.AddStateObject(ItemState);
+	}
 }
 
 static function X2AbilityTemplate StealthProtocol()

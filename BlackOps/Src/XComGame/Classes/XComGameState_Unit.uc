@@ -2605,9 +2605,10 @@ function bool HasGrenadePocket()
 	return (!IsMPCharacter() && HasSoldierAbility('LaunchGrenade'));
 }
 
+// Modified for Bandolier ability
 function bool HasAmmoPocket()
 {
-	return false; // HasSoldierAbility('WholeNineYards');	- deprecated ability
+	return (!IsMPCharacter() && HasSoldierAbility('Bandolier'));
 }
 
 function bool HasExtraUtilitySlot()
@@ -2800,15 +2801,17 @@ function int GetUnitPointValue()
 	return Points;
 }
 
+// Modified for Rocketeer ability
 function protected MergeAmmoAsNeeded(XComGameState StartState)
 {
 	local XComGameState_Item ItemIter, ItemInnerIter;
 	local X2WeaponTemplate MergeTemplate;
 	local int Idx, InnerIdx, BonusAmmo;
-	local bool bFieldMedic, bHeavyOrdnance;
+	local bool bFieldMedic, bHeavyOrdnance, bRocketeer;
 
 	bFieldMedic = HasSoldierAbility('FieldMedic');
 	bHeavyOrdnance = HasSoldierAbility('HeavyOrdnance');
+	bRocketeer = HasSoldierAbility('Rocketeer');
 
 	for (Idx = 0; Idx < InventoryItems.Length; ++Idx)
 	{
@@ -2824,6 +2827,8 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 					BonusAmmo += class'X2Ability_SpecialistAbilitySet'.default.FIELD_MEDIC_BONUS;
 				if (bHeavyOrdnance && ItemIter.InventorySlot == eInvSlot_GrenadePocket)
 					BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
+				if (bRocketeer && ItemIter.InventorySlot == eInvSlot_HeavyWeapon)
+					BonusAmmo += 1;
 
 				ItemIter.MergedItemCount = 1;
 				for (InnerIdx = Idx + 1; InnerIdx < InventoryItems.Length; ++InnerIdx)
@@ -2835,6 +2840,8 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 							BonusAmmo += class'X2Ability_SpecialistAbilitySet'.default.FIELD_MEDIC_BONUS;
 						if (bHeavyOrdnance && ItemInnerIter.InventorySlot == eInvSlot_GrenadePocket)
 							BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
+						if (bRocketeer && ItemInnerIter.InventorySlot == eInvSlot_HeavyWeapon)
+							BonusAmmo += 1;
 						ItemInnerIter.bMergedOut = true;
 						ItemInnerIter.Ammo = 0;
 						ItemIter.MergedItemCount++;
@@ -5286,9 +5293,11 @@ simulated function UnapplyCombatSimStats(XComGameState_Item CombatSim, optional 
 	}
 }
 
+// Modified for Deep Pockets ability
 simulated function bool RemoveItemFromInventory(XComGameState_Item Item, optional XComGameState CheckGameState)
 {
 	local int i;
+	local int slots;
 
 	if (CanRemoveItemFromInventory(Item, CheckGameState))
 	{		
@@ -5304,8 +5313,11 @@ simulated function bool RemoveItemFromInventory(XComGameState_Item Item, optiona
 				case eInvSlot_Armor:
 					if(!IsMPCharacter() && X2ArmorTemplate(Item.GetMyTemplate()).bAddsUtilitySlot)
 					{
-						SetBaseMaxStat(eStat_UtilityItems, 1.0f);
-						SetCurrentStat(eStat_UtilityItems, 1.0f);
+						slots = 1;
+						if (HasSoldierAbility('DeepPockets'))
+							slots += 1;
+						SetBaseMaxStat(eStat_UtilityItems, slots);
+						SetCurrentStat(eStat_UtilityItems, slots);
 					}
 					break;
 				case eInvSlot_Backpack:
@@ -7458,6 +7470,7 @@ function array<X2EquipmentTemplate> GetBestGearForSlot(EInventorySlot Slot)
 	return EmptyList;
 }
 
+// Bugfix: Keep the weapon color and pattern configured in the character pool when upgrading equipment
 function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item CurrentEquipment, array<X2EquipmentTemplate> UpgradeTemplates, EInventorySlot Slot, optional out XComGameState_Item UpgradeItem)
 {
 	local XComGameStateHistory History;
@@ -7490,6 +7503,15 @@ function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item Cu
 	{
 		// Make an instance of the best equipment we found and equip it
 		UpgradeItem = UpgradeTemplates[0].CreateInstanceFromTemplate(NewGameState);
+
+		//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+		//where we are handing out generic weapons.
+		if(UpgradeTemplates[0].InventorySlot == eInvSlot_PrimaryWeapon || UpgradeTemplates[0].InventorySlot == eInvSlot_SecondaryWeapon)
+		{
+			UpgradeItem.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+			UpgradeItem.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+		}
+
 		NewGameState.AddStateObject(UpgradeItem);
 		
 		return AddItemToInventory(UpgradeItem, Slot, NewGameState, (Slot == eInvSlot_Utility));
@@ -7515,6 +7537,15 @@ function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item Cu
 
 				// Make an instance of the best equipment we found and equip it
 				UpgradeItem = UpgradeTemplate.CreateInstanceFromTemplate(NewGameState);
+
+				//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+				//where we are handing out generic weapons.
+				if(UpgradeTemplates[0].InventorySlot == eInvSlot_PrimaryWeapon || UpgradeTemplates[0].InventorySlot == eInvSlot_SecondaryWeapon)
+				{
+					UpgradeItem.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+					UpgradeItem.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+				}
+
 				NewGameState.AddStateObject(UpgradeItem);
 				return AddItemToInventory(UpgradeItem, Slot, NewGameState);
 			}
@@ -7526,6 +7557,7 @@ function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item Cu
 
 //------------------------------------------------------
 // After loadout change verify # of slots/valid items in slots
+// Modified for Deep Pockets ability
 function ValidateLoadout(XComGameState NewGameState)
 {
 	local XComGameStateHistory History;
@@ -7534,6 +7566,7 @@ function ValidateLoadout(XComGameState NewGameState)
 	local XComGameState_Item EquippedHeavyWeapon, EquippedGrenade, EquippedAmmo, UtilityItem; // Special slots
 	local array<XComGameState_Item> EquippedUtilityItems; // Utility Slots
 	local int idx;
+	local int slots;
 
 	// Grab HQ Object
 	History = `XCOMHISTORY;
@@ -7634,16 +7667,14 @@ function ValidateLoadout(XComGameState NewGameState)
 	// UtilitySlots (Already grabbed equipped)
 	if(!IsMPCharacter())
 	{
+		slots = 1;
 		if(X2ArmorTemplate(EquippedArmor.GetMyTemplate()).bAddsUtilitySlot)
-		{
-			SetBaseMaxStat(eStat_UtilityItems, 2.0f);
-			SetCurrentStat(eStat_UtilityItems, 2.0f);
-		}
-		else
-		{
-			SetBaseMaxStat(eStat_UtilityItems, 1.0f);
-			SetCurrentStat(eStat_UtilityItems, 1.0f);
-		}
+			slots += 1;
+		if (HasSoldierAbility('DeepPockets'))
+			slots += 1;
+
+		SetBaseMaxStat(eStat_UtilityItems, slots);
+		SetCurrentStat(eStat_UtilityItems, slots);
 	}
 
 	// Remove Extra Utility Items
@@ -9429,24 +9460,53 @@ simulated function GetUISummary_TargetableUnits(out array<StateObjectReference> 
 	}
 }
 
+// New function, added to make Finesse and Heavy Armor work correctly
+simulated function int GetUIStatFromItem(ECharStatType Stat, XComGameState_Item InventoryItem)
+{
+	local int Result;
+	local X2EquipmentTemplate EquipmentTemplate;
+	local X2ArmorTemplate ArmorTemplate;
+	local X2WeaponTemplate WeaponTemplate;
+
+	EquipmentTemplate = X2EquipmentTemplate(InventoryItem.GetMyTemplate());
+	if (EquipmentTemplate != none)
+	{
+		// Don't include sword boosts or any other equipment in the EquipmentExcludedFromStatBoosts array
+		if(class'UISoldierHeader'.default.EquipmentExcludedFromStatBoosts.Find(EquipmentTemplate.DataName) == INDEX_NONE)
+			Result += EquipmentTemplate.GetUIStatMarkup(Stat, InventoryItem);
+	}
+
+	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
+	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && HasSoldierAbility('Finesse'))
+	{
+		if (Stat == eStat_Mobility)
+			Result += 3;
+		else if (Stat == eStat_Offense)
+			Result += 10;
+	}
+
+	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
+	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && HasSoldierAbility('HeavyArmor'))
+	{
+		if (Stat == eStat_ArmorMitigation)
+			Result += 1;
+	}
+
+	return Result;
+}
+
+// Modified for Finesse and Heavy Armor
 simulated function int GetUIStatFromInventory(ECharStatType Stat, optional XComGameState CheckGameState)
 {
 	local int Result;
 	local XComGameState_Item InventoryItem;
-	local X2EquipmentTemplate EquipmentTemplate;
 	local array<XComGameState_Item> CurrentInventory;
 
 	//  Gather abilities from the unit's inventory
 	CurrentInventory = GetAllInventoryItems(CheckGameState);
 	foreach CurrentInventory(InventoryItem)
 	{
-		EquipmentTemplate = X2EquipmentTemplate(InventoryItem.GetMyTemplate());
-		if (EquipmentTemplate != none)
-		{
-			// Don't include sword boosts or any other equipment in the EquipmentExcludedFromStatBoosts array
-			if(class'UISoldierHeader'.default.EquipmentExcludedFromStatBoosts.Find(EquipmentTemplate.DataName) == INDEX_NONE)
-				Result += EquipmentTemplate.GetUIStatMarkup(Stat, InventoryItem);
-		}
+		Result += GetUIStatFromItem(Stat, InventoryItem);
 	}	
 
 	return Result;
