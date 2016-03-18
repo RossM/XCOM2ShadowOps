@@ -64,7 +64,7 @@ static function X2AbilityTemplate Magnum()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Magnum');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_gunslinger";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -103,7 +103,7 @@ static function X2AbilityTemplate GoodEye()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'GoodEye');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_platform_stability";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -350,7 +350,7 @@ static function X2AbilityTemplate ZoneOfControl()
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_rapidreaction";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.bDisplayInUITooltip = false;
 	Template.bDisplayInUITacticalText = false;

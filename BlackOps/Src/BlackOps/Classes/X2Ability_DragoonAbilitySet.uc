@@ -14,6 +14,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ECM());
 	Templates.AddItem(PurePassive('Rocketeer', "img:///UILibrary_PerkIcons.UIPerk_rocketeer", true));
 	Templates.AddItem(Vanish());
+	Templates.AddItem(VanishHide());
 
 	return Templates;
 }
@@ -342,7 +343,7 @@ static function X2AbilityTemplate ShieldsUp()
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_absorption_fields";
 	Template.Hostility = eHostility_Neutral;
 	
 	Template.AbilityToHitCalc = default.DeadEye;
@@ -437,16 +438,25 @@ static function X2Effect ECMEffect(string FriendlyName, string LongDescription)
 static function X2AbilityTemplate Vanish()
 {
 	local X2AbilityTemplate						Template;
+	Template = PurePassive('Vanish', "img:///UILibrary_PerkIcons.UIPerk_quadricepshypertrophy", true);
+	Template.AdditionalAbilities.AddItem('VanishHide');
+
+	return Template;
+}
+
+static function X2AbilityTemplate VanishHide()
+{
+	local X2AbilityTemplate						Template;
 	local X2Effect_RangerStealth                StealthEffect;
 	local X2Condition_NotVisibleToEnemies		VisibilityCondition;
 	local X2AbilityTrigger_EventListener		EventListener;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Vanish');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'VanishHide');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_quadricepshypertrophy";
 
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SelfTarget;
