@@ -214,7 +214,7 @@ static function X2DataTemplate HunterMark()
 	local X2Condition_UnitEffects UnitEffectsCondition;
 	local X2AbilityTarget_Single SingleTarget;
 	local X2AbilityTrigger_PlayerInput InputTrigger;
-	local X2Effect_Marked MarkedEffect;
+	local X2Effect_Persistent MarkedEffect;
 	local X2Effect_RemoveEffects RemovePreviousMarkEffect;
 	local X2AbilityCooldown Cooldown;
 
@@ -278,10 +278,8 @@ static function X2DataTemplate HunterMark()
 	RemovePreviousMarkEffect.EffectNamesToRemove.AddItem(class'X2StatusEffects'.default.MarkedName);
 	Template.AddShooterEffect(RemovePreviousMarkEffect);
 
-	//// Create the Marked effect
-	MarkedEffect = X2Effect_Marked(class'X2StatusEffects'.static.CreateMarkedEffect(1, true));
-	MarkedEffect.AccuracyBonus = 15;
-	MarkedEffect.bOverrideAccuracy = true;
+	// Create the Marked effect
+	MarkedEffect = CreateMarkedEffect(1, true);
 
 	Template.AddTargetEffect(MarkedEffect); //BMU - changing to an immediate execution for evaluation
 
@@ -292,6 +290,24 @@ static function X2DataTemplate HunterMark()
 	Template.CinescriptCameraType = "Mark_Target";
 	
 	return Template;
+}
+
+static function X2Effect_Marked_BO CreateMarkedEffect(int NumTurns, bool bIsInfinite)
+{
+	local X2Effect_Marked_BO MarkedEffect;
+
+	MarkedEffect = new class 'X2Effect_Marked_BO';
+	MarkedEffect.EffectName = class'X2StatusEffects'.default.MarkedName;
+	MarkedEffect.DuplicateResponse = eDupe_Ignore;
+	MarkedEffect.BuildPersistentEffect(NumTurns, bIsInfinite, true,,eGameRule_PlayerTurnEnd);
+	MarkedEffect.SetDisplayInfo(ePerkBuff_Penalty, class'X2StatusEffects'.default.MarkedFriendlyName, class'X2StatusEffects'.default.MarkedFriendlyDesc, "img:///UILibrary_PerkIcons.UIPerk_mark");
+	MarkedEffect.VisualizationFn = class'X2StatusEffects'.static.MarkedVisualization;
+	MarkedEffect.EffectTickedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationTicked;
+	MarkedEffect.EffectRemovedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationRemoved;
+	MarkedEffect.bRemoveWhenTargetDies = true;
+	MarkedEffect.AccuracyBonus = 15;
+
+	return MarkedEffect;
 }
 
 static function X2AbilityTemplate VitalPoint()

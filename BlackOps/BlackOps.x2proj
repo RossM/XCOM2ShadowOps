@@ -35,6 +35,9 @@
     <Content Include="Config\XComEngine.ini" />
     <Content Include="Config\XComGame.ini" />
     <Content Include="Localization\XComGame.int" />
+    <Content Include="Src\BlackOps\Classes\UIArmory_Promotion_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Ability_DragoonAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
@@ -54,6 +57,9 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_HunterLowProfile.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_Marked_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_Precision.uc">
       <SubType>Content</SubType>
     </Content>
@@ -70,6 +76,12 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_VitalPoint.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\XComGameState_Ability_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\XComGameState_Unit_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XComGame\Classes\AnimNotify_ApplyPsiEffectsToTarget.uc" />

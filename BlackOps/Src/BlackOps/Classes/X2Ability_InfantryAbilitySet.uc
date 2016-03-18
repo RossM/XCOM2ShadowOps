@@ -7,7 +7,7 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 	
-	Templates.AddItem(PurePassive('BulletSwarm', "img:///UILibrary_PerkIcons.UIPerk_bulletswarm", true));
+	Templates.AddItem(BulletSwarm());
 	Templates.AddItem(PurePassive('Bandolier', "img:///UILibrary_PerkIcons.UIPerk_wholenineyards", true));
 	Templates.AddItem(Magnum());
 	Templates.AddItem(GoodEye());
@@ -20,6 +20,39 @@ static function array<X2DataTemplate> CreateTemplates()
 
 	return Templates;
 }
+
+// Standard Shot, but does not end the turn
+static function X2AbilityTemplate BulletSwarm()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2Condition_UnitActionPoints		UnitActionPointCondition;
+
+	Template=class'X2Ability_WeaponCommon'.static.Add_StandardShot('BulletSwarm');
+	Template.OverrideAbilities.AddItem('StandardShot');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bulletswarm";
+
+	Template.AbilityCosts.Length=0;
+
+	// Action Point
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = false;
+	Template.AbilityCosts.AddItem(ActionPointCost);	
+
+	// Ammo
+	AmmoCost = new class'X2AbilityCost_Ammo';	
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+	Template.bAllowAmmoEffects = true;
+
+	Template.bCrossClassEligible = true;
+
+	return Template;	
+}
+
 
 static function X2AbilityTemplate Magnum()
 {
@@ -127,7 +160,7 @@ static function X2AbilityTemplate AlwaysReadyTrigger()
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
 	Trigger.ListenerData.EventID = 'PlayerTurnEnded';
 	Trigger.ListenerData.Filter = eFilter_Player;
-	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.AlwaysReadyTurnEndListener;
+	Trigger.ListenerData.EventFn = class'XComGameState_Ability_BO'.static.AlwaysReadyTurnEndListener;
 	Template.AbilityTriggers.AddItem(Trigger);
 
 	AlwaysReadyEffect = new class'X2Effect_Persistent';
