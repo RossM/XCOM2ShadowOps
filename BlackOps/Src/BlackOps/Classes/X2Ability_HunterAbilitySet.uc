@@ -222,7 +222,7 @@ static function X2DataTemplate HunterMark()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'HunterMark');
 
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_mark";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_targetpaint";
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Offensive;
@@ -321,7 +321,7 @@ static function X2AbilityTemplate VitalPoint()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'VitalPoint');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_momentum";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;

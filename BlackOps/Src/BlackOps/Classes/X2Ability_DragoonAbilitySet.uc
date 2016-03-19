@@ -11,10 +11,12 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(StealthProtocol());
 	Templates.AddItem(BurstFire());
 	Templates.AddItem(ShieldsUp());
+	Templates.AddItem(ShieldsUpTrigger());
 	Templates.AddItem(ECM());
+	Templates.AddItem(ECMTrigger());
 	Templates.AddItem(PurePassive('Rocketeer', "img:///UILibrary_PerkIcons.UIPerk_rocketeer", true));
 	Templates.AddItem(Vanish());
-	Templates.AddItem(VanishHide());
+	Templates.AddItem(VanishTrigger());
 
 	return Templates;
 }
@@ -146,7 +148,7 @@ static function X2AbilityTemplate Finesse()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Finesse');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sprinter";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stickandmove";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -326,7 +328,7 @@ static function X2AbilityTemplate BurstFire()
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_demolition";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_barage";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
 
@@ -359,7 +361,7 @@ static function X2AbilityTemplate BurstFire()
 
 	WorldDamage = new class'X2Effect_ApplyDirectionalWorldDamage';
 	WorldDamage.bUseWeaponDamageType = true;
-	WorldDamage.bUseWeaponEnvironmentalDamage = true;
+	WorldDamage.EnvironmentalDamageAmount = 10;
 	WorldDamage.bApplyOnHit = true;
 	WorldDamage.bApplyOnMiss = true;
 	WorldDamage.bApplyToWorldOnHit = true;
@@ -386,12 +388,19 @@ static function X2AbilityTemplate BurstFire()
 
 static function X2AbilityTemplate ShieldsUp()
 {
+	local X2AbilityTemplate						Template;
+	Template = PurePassive('ShieldsUp', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false);
+	Template.AdditionalAbilities.AddItem('ShieldsUpTrigger');
+
+	return Template;
+}
+
+static function X2AbilityTemplate ShieldsUpTrigger()
+{
 	local X2AbilityTemplate                     Template;
-	//local X2Condition_UnitProperty              TargetProperty;
-	local X2Condition_UnitEffects               EffectsCondition;
 	local X2AbilityMultiTarget_AllUnits			MultiTargetStyle;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShieldsUp');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShieldsUpTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -406,10 +415,6 @@ static function X2AbilityTemplate ShieldsUp()
 
 	MultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
 	Template.AbilityMultiTargetStyle = MultiTargetStyle;
-
-	EffectsCondition = new class'X2Condition_UnitEffects';
-	EffectsCondition.AddExcludeEffect('ShieldProtocol', 'AA_UnitIsImmune');
-	Template.AbilityTargetConditions.AddItem(EffectsCondition);
 
 	Template.AddMultiTargetEffect(ShieldsUpEffect(Template.LocFriendlyName, Template.GetMyLongDescription()));
 
@@ -428,25 +433,34 @@ static function X2Effect ShieldsUpEffect(string FriendlyName, string LongDescrip
 	local X2Effect_ShieldProtocol ShieldedEffect;
 
 	ShieldedEffect = new class'X2Effect_ShieldProtocol';
+	ShieldedEffect.EffectName = 'ShieldsUpEffect';
 	ShieldedEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
 	ShieldedEffect.BaseShield = 2;
 	ShieldedEffect.BonusShield = 1;
-	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", true);
+	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", true);
 
 	return ShieldedEffect;
 }
 
 static function X2AbilityTemplate ECM()
 {
+	local X2AbilityTemplate						Template;
+	Template = PurePassive('ECM', "img:///UILibrary_PerkIcons.UIPerk_jamthesignal", false);
+	Template.AdditionalAbilities.AddItem('ECMTrigger');
+
+	return Template;
+}
+
+static function X2AbilityTemplate ECMTrigger()
+{
 	local X2AbilityTemplate                     Template;
-	local X2Condition_UnitEffects               EffectsCondition;
 	local X2AbilityMultiTarget_AllUnits			MultiTargetStyle;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ECM');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ECMTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bioelectricskin";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_jamthesignal";
 	Template.Hostility = eHostility_Neutral;
 	
 	Template.AbilityToHitCalc = default.DeadEye;
@@ -457,10 +471,6 @@ static function X2AbilityTemplate ECM()
 
 	MultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
 	Template.AbilityMultiTargetStyle = MultiTargetStyle;
-
-	EffectsCondition = new class'X2Condition_UnitEffects';
-	EffectsCondition.AddExcludeEffect('ECM', 'AA_UnitIsImmune');
-	Template.AbilityTargetConditions.AddItem(EffectsCondition);
 
 	Template.AddMultiTargetEffect(ECMEffect(Template.LocFriendlyName, Template.GetMyLongDescription()));
 
@@ -479,10 +489,10 @@ static function X2Effect ECMEffect(string FriendlyName, string LongDescription)
 	local X2Effect_PersistentStatChange Effect;
 
 	Effect = new class'X2Effect_PersistentStatChange';
-	Effect.EffectName = 'ECM';
+	Effect.EffectName = 'ECMEffect';
 	Effect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
 	Effect.AddPersistentStatChange(eStat_DetectionModifier, 0.2);
-	Effect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", true);
+	Effect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_jamthesignal", true);
 
 	return Effect;
 }
@@ -491,19 +501,19 @@ static function X2AbilityTemplate Vanish()
 {
 	local X2AbilityTemplate						Template;
 	Template = PurePassive('Vanish', "img:///UILibrary_PerkIcons.UIPerk_quadricepshypertrophy", true);
-	Template.AdditionalAbilities.AddItem('VanishHide');
+	Template.AdditionalAbilities.AddItem('VanishTrigger');
 
 	return Template;
 }
 
-static function X2AbilityTemplate VanishHide()
+static function X2AbilityTemplate VanishTrigger()
 {
 	local X2AbilityTemplate						Template;
 	local X2Effect_RangerStealth                StealthEffect;
 	local X2Condition_NotVisibleToEnemies		VisibilityCondition;
 	local X2AbilityTrigger_EventListener		EventListener;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'VanishHide');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'VanishTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
@@ -538,8 +548,6 @@ static function X2AbilityTemplate VanishHide()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.bSkipFireAction = true;
-
-	Template.bCrossClassEligible = true;
 
 	return Template;
 }
