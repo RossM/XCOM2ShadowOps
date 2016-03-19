@@ -12,6 +12,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(HipFire());
 	Templates.AddItem(Precision());
 	Templates.AddItem(LowProfile());
+	Templates.AddItem(Sprinter());
 
 	return Templates;
 }
@@ -497,6 +498,47 @@ static function X2AbilityTemplate LowProfile()
 	//  NOTE: No visualization on purpose!
 
 	Template.bCrossClassEligible = false;
+
+	return Template;
+}
+
+static function X2AbilityTemplate Sprinter()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_PersistentStatChange         PersistentEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Sprinter');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sprinter";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	PersistentEffect = new class'X2Effect_PersistentStatChange';
+	PersistentEffect.EffectName = 'Sprinter';
+	PersistentEffect.BuildPersistentEffect(1, true, true, true);
+	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	PersistentEffect.AddPersistentStatChange(eStat_Mobility, 4);
+	Template.AddTargetEffect(PersistentEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_Mobility, 4);
 
 	return Template;
 }
