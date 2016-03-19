@@ -54,6 +54,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
+    <Content Include="Src\BlackOps\Classes\X2Effect_Assassin.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_HeavyArmor.uc">
       <SubType>Content</SubType>
     </Content>
