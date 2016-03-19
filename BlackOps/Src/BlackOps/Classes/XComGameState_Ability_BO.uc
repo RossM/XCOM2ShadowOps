@@ -1,3 +1,6 @@
+// This file is for documentation purposes only. Game state classes cannot be overridden in mods.
+// The relevant functions have been copied to the corresponding base game classes.
+
 class XComGameState_Ability_BO extends XComGameState_Ability;
 
 function EventListenerReturn AlwaysReadyTurnEndListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)

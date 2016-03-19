@@ -177,7 +177,7 @@ static function X2AbilityTemplate AlwaysReadyTrigger()
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
 	Trigger.ListenerData.EventID = 'PlayerTurnEnded';
 	Trigger.ListenerData.Filter = eFilter_Player;
-	Trigger.ListenerData.EventFn = class'XComGameState_Ability_BO'.static.AlwaysReadyTurnEndListener;
+	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.AlwaysReadyTurnEndListener;
 	Template.AbilityTriggers.AddItem(Trigger);
 
 	AlwaysReadyEffect = new class'X2Effect_Persistent';
