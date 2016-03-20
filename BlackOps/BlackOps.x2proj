@@ -29,6 +29,9 @@
     <Content Include="Config\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\XComGameData_WeaponData.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Content\UILibrary_BlackOps.upk">
       <SubType>Content</SubType>
     </Content>
@@ -44,7 +47,13 @@
     <Content Include="Src\BlackOps\Classes\UISoldierHeader_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2AbilityMultiTarget_SoldierBonusRadius_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Ability_DragoonAbilitySet.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2Ability_EngineerAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2Ability_HunterAbilitySet.uc">
@@ -87,7 +96,13 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_RemoveEffectsWithAbilitySource.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_SmokeGrenade_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_VitalPoint.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2TargetingMethod_Grenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\XComGameState_Ability_BO.uc">
