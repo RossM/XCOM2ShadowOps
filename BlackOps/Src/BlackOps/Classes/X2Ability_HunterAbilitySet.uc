@@ -808,9 +808,6 @@ static function X2AbilityTemplate SliceAndDice2()
 	Template.AbilityTargetStyle = new class'X2AbilityTarget_MovingMelee';
 	Template.TargetingMethod = class'X2TargetingMethod_MeleePath';
 
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-	Template.AbilityTriggers.AddItem(new class'X2AbilityTrigger_EndOfMove');
-
 	// Target Conditions
 	//
 	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
