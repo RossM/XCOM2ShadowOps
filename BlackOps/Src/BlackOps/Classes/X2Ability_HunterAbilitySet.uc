@@ -16,6 +16,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Assassin());
 	Templates.AddItem(AssassinTrigger());
 	Templates.AddItem(Fade());
+	Templates.AddItem(SliceAndDice());
+	Templates.AddItem(SliceAndDice2());
 
 	return Templates;
 }
@@ -675,6 +677,165 @@ static function X2AbilityTemplate Fade()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.bSkipFireAction = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate SliceAndDice()
+{
+	local X2AbilityTemplate                 Template;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2AbilityToHitCalc_StandardMelee  StandardMelee;
+	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
+	local X2AbilityCooldown                 Cooldown;
+	local array<name>                       SkipExclusions;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'SliceAndDice');
+
+	Template.AbilitySourceName = 'eAbilitySource_Standard';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.CinescriptCameraType = "Ranger_Reaper";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_swordSlash";
+	Template.bHideOnClassUnlock = false;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
+	Template.AbilityConfirmSound = "TacticalUI_SwordConfirm";
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+	
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 1;
+	Template.AbilityCooldown = Cooldown;
+
+	StandardMelee = new class'X2AbilityToHitCalc_StandardMelee';
+	Template.AbilityToHitCalc = StandardMelee;
+
+	Template.AbilityTargetStyle = new class'X2AbilityTarget_MovingMelee';
+	Template.TargetingMethod = class'X2TargetingMethod_MeleePath';
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+	Template.AbilityTriggers.AddItem(new class'X2AbilityTrigger_EndOfMove');
+
+	// Target Conditions
+	//
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+	Template.AbilityTargetConditions.AddItem(default.MeleeVisibilityCondition);
+
+	// Shooter Conditions
+	//
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	SkipExclusions.AddItem(class'X2StatusEffects'.default.BurningName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+
+	// Damage Effect
+	//
+	WeaponDamageEffect = new class'X2Effect_ApplyWeaponDamage';
+	Template.AddTargetEffect(WeaponDamageEffect);
+
+	Template.AdditionalAbilities.AddItem('SliceAndDice2');
+	Template.PostActivationEvents.AddItem('SliceAndDice2');
+
+	Template.bAllowBonusWeaponEffects = true;
+	Template.bSkipMoveStop = true;
+	
+	// Voice events
+	//
+	Template.SourceMissSpeech = 'SwordMiss';
+
+	Template.BuildNewGameStateFn = TypicalMoveEndAbility_BuildGameState;
+	Template.BuildInterruptGameStateFn = TypicalMoveEndAbility_BuildInterruptGameState;
+
+	Template.DamagePreviewFn = SliceAndDiceDamagePreview;
+
+	return Template;
+}
+
+function bool SliceAndDiceDamagePreview(XComGameState_Ability AbilityState, StateObjectReference TargetRef, out WeaponDamageValue MinDamagePreview, out WeaponDamageValue MaxDamagePreview, out int AllowsShield)
+{
+	local XComGameState_Unit AbilityOwner;
+	local StateObjectReference SliceAndDice2Ref;
+	local XComGameState_Ability SliceAndDice2Ability;
+	local XComGameStateHistory History;
+
+	AbilityState.NormalDamagePreview(TargetRef, MinDamagePreview, MaxDamagePreview, AllowsShield);
+
+	History = `XCOMHISTORY;
+	AbilityOwner = XComGameState_Unit(History.GetGameStateForObjectID(AbilityState.OwnerStateObject.ObjectID));
+	SliceAndDice2Ref = AbilityOwner.FindAbility('SliceAndDice2');
+	SliceAndDice2Ability = XComGameState_Ability(History.GetGameStateForObjectID(SliceAndDice2Ref.ObjectID));
+	if (SliceAndDice2Ability == none)
+	{
+		`RedScreenOnce("Unit has SliceAndDice but is missing SliceAndDice2. Not good. -jbouscher @gameplay");
+	}
+	else
+	{
+		SliceAndDice2Ability.NormalDamagePreview(TargetRef, MinDamagePreview, MaxDamagePreview, AllowsShield);
+	}
+	return true;
+}
+
+static function X2AbilityTemplate SliceAndDice2()
+{
+	local X2AbilityTemplate                 Template;
+	local X2AbilityToHitCalc_StandardMelee  StandardMelee;
+	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
+	local array<name>                       SkipExclusions;
+	local X2AbilityTrigger_EventListener    Trigger;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'SliceAndDice2');
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.CinescriptCameraType = "Ranger_Reaper";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_swordSlash";
+
+	Trigger = new class'X2AbilityTrigger_EventListener';
+	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
+	Trigger.ListenerData.EventID = 'SliceAndDice2';
+	Trigger.ListenerData.Filter = eFilter_Unit;
+	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.ChainShotListener;
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	StandardMelee = new class'X2AbilityToHitCalc_StandardMelee';
+	Template.AbilityToHitCalc = StandardMelee;
+
+	Template.AbilityTargetStyle = new class'X2AbilityTarget_MovingMelee';
+	Template.TargetingMethod = class'X2TargetingMethod_MeleePath';
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+	Template.AbilityTriggers.AddItem(new class'X2AbilityTrigger_EndOfMove');
+
+	// Target Conditions
+	//
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+	Template.AbilityTargetConditions.AddItem(default.MeleeVisibilityCondition);
+
+	// Shooter Conditions
+	//
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	SkipExclusions.AddItem(class'X2StatusEffects'.default.BurningName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+
+	// Damage Effect
+	//
+	WeaponDamageEffect = new class'X2Effect_ApplyWeaponDamage';
+	Template.AddTargetEffect(WeaponDamageEffect);
+
+	Template.bAllowBonusWeaponEffects = true;
+	Template.bSkipMoveStop = true;
+	
+	// Voice events
+	//
+	Template.SourceMissSpeech = 'SwordMiss';
+
+	Template.BuildNewGameStateFn = TypicalMoveEndAbility_BuildGameState;
+	Template.BuildInterruptGameStateFn = TypicalMoveEndAbility_BuildInterruptGameState;
 
 	return Template;
 }
