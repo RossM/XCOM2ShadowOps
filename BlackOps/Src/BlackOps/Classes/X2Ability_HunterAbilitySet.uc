@@ -298,11 +298,11 @@ static function X2DataTemplate HunterMark()
 	return Template;
 }
 
-static function X2Effect_Marked_BO CreateMarkedEffect(int NumTurns, bool bIsInfinite)
+static function X2Effect_HunterMarked CreateMarkedEffect(int NumTurns, bool bIsInfinite)
 {
-	local X2Effect_Marked_BO MarkedEffect;
+	local X2Effect_HunterMarked MarkedEffect;
 
-	MarkedEffect = new class 'X2Effect_Marked_BO';
+	MarkedEffect = new class 'X2Effect_HunterMarked';
 	MarkedEffect.EffectName = class'X2StatusEffects'.default.MarkedName;
 	MarkedEffect.DuplicateResponse = eDupe_Ignore;
 	MarkedEffect.BuildPersistentEffect(NumTurns, bIsInfinite, true,,eGameRule_PlayerTurnEnd);

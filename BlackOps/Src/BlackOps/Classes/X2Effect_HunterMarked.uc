@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
-class X2Effect_Marked_BO extends X2Effect_Persistent
+class X2Effect_HunterMarked extends X2Effect_Persistent
 	config(GameCore);
 
 var int AccuracyBonus;
