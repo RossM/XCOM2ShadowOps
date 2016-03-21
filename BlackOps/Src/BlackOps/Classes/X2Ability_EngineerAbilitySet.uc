@@ -7,7 +7,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(DeepPockets());
 	Templates.AddItem(PurePassive('DenseSmoke', "img:///UILibrary_PerkIcons.UIPerk_densesmoke", true));
-	Templates.AddItem(PurePassive('UtilityBelt', "img:///UILibrary_PerkIcons.UIPerk_unknown", true));
+	Templates.AddItem(PurePassive('SmokeAndMirrors', "img:///UILibrary_PerkIcons.UIPerk_smokeandmirrors", true));
 
 	return Templates;
 }

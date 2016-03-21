@@ -34,11 +34,11 @@ static function X2AbilityTemplate ThrowGrenade()
 	AmmoCost.iAmmo = 1;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost = new class'X2AbilityCost_GrenadeActionPoints';
 	ActionPointCost.iNumPoints = 1;
 	ActionPointCost.bConsumeAllPoints = true;
 	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('Salvo');
-	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('UtilityBelt');
+	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('SmokeAndMirrors');
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
@@ -138,11 +138,11 @@ static function X2DataTemplate LaunchGrenade()
 	AmmoCost.UseLoadedAmmo = true;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost = new class'X2AbilityCost_GrenadeActionPoints';
 	ActionPointCost.iNumPoints = 1;
 	ActionPointCost.bConsumeAllPoints = true;
 	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('Salvo');
-	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('UtilityBelt');
+	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('SmokeAndMirrors');
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
