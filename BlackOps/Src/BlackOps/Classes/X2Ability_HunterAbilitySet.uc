@@ -233,7 +233,7 @@ static function X2DataTemplate HunterMark()
 	Template.Hostility = eHostility_Offensive;
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 2;
+	Cooldown.iNumTurns = 3;
 	Template.AbilityCooldown = Cooldown;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -654,7 +654,7 @@ static function X2AbilityTemplate Fade()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 3;
+	Cooldown.iNumTurns = 4;
 	Template.AbilityCooldown = Cooldown;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -708,7 +708,7 @@ static function X2AbilityTemplate SliceAndDice()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 1;
+	Cooldown.iNumTurns = 2;
 	Template.AbilityCooldown = Cooldown;
 
 	StandardMelee = new class'X2AbilityToHitCalc_StandardMelee';
