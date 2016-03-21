@@ -33,7 +33,7 @@ simulated function CalculateRadiusModifier(const XComGameState_Ability Ability)
 
 		if (SourceUnit != none && SourceUnit.HasSoldierAbility('DenseSmoke'))
 		{
-			fRadiusModifier += 2 * class'XComWorldData'.const.WORLD_StepSize * class'XComWorldData'.const.WORLD_UNITS_TO_METERS_MULTIPLIER;
+			fRadiusModifier += 2;
 		}
 	}
 }
