@@ -56,6 +56,9 @@
     <Content Include="Src\BlackOps\Classes\X2Ability_EngineerAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2AbilityOverrides_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Ability_HunterAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>

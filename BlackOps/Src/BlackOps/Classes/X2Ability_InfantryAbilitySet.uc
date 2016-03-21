@@ -7,7 +7,7 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 	
-	Templates.AddItem(BulletSwarm());
+	Templates.AddItem(PurePassive('BulletSwarm', "img:///UILibrary_PerkIcons.UIPerk_bulletswarm", true));
 	Templates.AddItem(Bandolier());
 	Templates.AddItem(Magnum());
 	Templates.AddItem(GoodEye());
@@ -19,38 +19,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZoneOfControlShot());
 
 	return Templates;
-}
-
-// Standard Shot, but does not end the turn
-static function X2AbilityTemplate BulletSwarm()
-{
-	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_ActionPoints        ActionPointCost;
-	local X2AbilityCost_Ammo                AmmoCost;
-
-	Template=class'X2Ability_WeaponCommon'.static.Add_StandardShot('BulletSwarm');
-	Template.OverrideAbilities.AddItem('StandardShot');
-
-	Template.bDontDisplayInAbilitySummary = false;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bulletswarm";
-
-	Template.AbilityCosts.Length=0;
-
-	// Action Point
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);	
-
-	// Ammo
-	AmmoCost = new class'X2AbilityCost_Ammo';	
-	AmmoCost.iAmmo = 1;
-	Template.AbilityCosts.AddItem(AmmoCost);
-	Template.bAllowAmmoEffects = true;
-
-	Template.bCrossClassEligible = true;
-
-	return Template;	
 }
 
 static function X2AbilityTemplate Bandolier()

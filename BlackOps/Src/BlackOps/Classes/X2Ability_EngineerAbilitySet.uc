@@ -7,6 +7,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(DeepPockets());
 	Templates.AddItem(PurePassive('DenseSmoke', "img:///UILibrary_PerkIcons.UIPerk_densesmoke", true));
+	Templates.AddItem(PurePassive('UtilityBelt', "img:///UILibrary_PerkIcons.UIPerk_unknown", true));
 
 	return Templates;
 }
@@ -28,3 +29,4 @@ static function DeepPocketsPurchased(XComGameState NewGameState, XComGameState_U
 {
 	UnitState.ValidateLoadout(NewGameState);
 }
+
