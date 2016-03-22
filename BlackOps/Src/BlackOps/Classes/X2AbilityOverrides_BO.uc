@@ -13,7 +13,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	return Templates;
 }
 
-// Modified for Utility Belt. TODO: Incomplete.
+// Modified for Smoke and Mirrors, and Fastball.
 static function X2AbilityTemplate ThrowGrenade()
 {
 	local X2AbilityTemplate                 Template;	
@@ -39,6 +39,8 @@ static function X2AbilityTemplate ThrowGrenade()
 	ActionPointCost.bConsumeAllPoints = true;
 	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('Salvo');
 	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('SmokeAndMirrors');
+	ActionPointCost.DoNotConsumeAllEffects.AddItem('Fastball');
+	ActionPointCost.AllowedTypes.AddItem('grenade');
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
@@ -109,6 +111,8 @@ static function X2AbilityTemplate ThrowGrenade()
 	Template.TargetingMethod = class'X2TargetingMethod_Grenade';
 	Template.CinescriptCameraType = "StandardGrenadeFiring";
 
+	Template.PostActivationEvents.AddItem('GrenadeUsed');
+
 	// This action is considered 'hostile' and can be interrupted!
 	Template.Hostility = eHostility_Offensive;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
@@ -116,7 +120,7 @@ static function X2AbilityTemplate ThrowGrenade()
 	return Template;	
 }
 
-// Modified for Utility Belt. TODO: Incomplete.
+// Modified for Smoke and Mirrors, and Fastball.
 static function X2DataTemplate LaunchGrenade()
 {
 	local X2AbilityTemplate                 Template;
@@ -143,6 +147,8 @@ static function X2DataTemplate LaunchGrenade()
 	ActionPointCost.bConsumeAllPoints = true;
 	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('Salvo');
 	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('SmokeAndMirrors');
+	ActionPointCost.DoNotConsumeAllEffects.AddItem('Fastball');
+	ActionPointCost.AllowedTypes.AddItem('grenade');
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
@@ -207,6 +213,8 @@ static function X2DataTemplate LaunchGrenade()
 	Template.DamagePreviewFn = class'X2Ability_Grenades'.static.GrenadeDamagePreview;
 	Template.TargetingMethod = class'X2TargetingMethod_Grenade';
 	Template.CinescriptCameraType = "Grenadier_GrenadeLauncher";
+
+	Template.PostActivationEvents.AddItem('GrenadeUsed');
 
 	// This action is considered 'hostile' and can be interrupted!
 	Template.Hostility = eHostility_Offensive;
