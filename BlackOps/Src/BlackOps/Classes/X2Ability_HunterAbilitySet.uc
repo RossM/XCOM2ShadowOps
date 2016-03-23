@@ -124,6 +124,8 @@ static function X2AbilityTemplate SnapShot()
 
 	Template.AdditionalAbilities.AddItem('SnapShotOverwatch');
 
+	Template.bCrossClassEligible = false;
+
 	return Template;
 }
 
@@ -303,6 +305,8 @@ static function X2DataTemplate HunterMark()
 	Template.BuildVisualizationFn = class'X2Ability_AdventCaptain'.static.TargetGettingMarked_BuildVisualization;
 	Template.CinescriptCameraType = "Mark_Target";
 	
+	Template.bCrossClassEligible = true;
+
 	return Template;
 }
 
@@ -431,6 +435,9 @@ static function X2AbilityTemplate HipFire()
 	// MAKE IT LIVE!
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	Template.bCrossClassEligible = true;
+
 	return Template;
 }
 
@@ -467,7 +474,7 @@ static function X2AbilityTemplate Precision()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
 
-	Template.bCrossClassEligible = false;
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
@@ -505,7 +512,7 @@ static function X2AbilityTemplate LowProfile()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
 
-	Template.bCrossClassEligible = false;
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
@@ -544,9 +551,9 @@ static function X2AbilityTemplate Sprinter()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
 
-	Template.bCrossClassEligible = true;
-
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_Mobility, default.SprinterMobilityBonus);
+
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
@@ -681,6 +688,8 @@ static function X2AbilityTemplate Fade()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.bSkipFireAction = true;
 
+	Template.bCrossClassEligible = true;
+
 	return Template;
 }
 
@@ -754,6 +763,8 @@ static function X2AbilityTemplate SliceAndDice()
 	Template.BuildInterruptGameStateFn = TypicalMoveEndAbility_BuildInterruptGameState;
 
 	Template.DamagePreviewFn = SliceAndDiceDamagePreview;
+
+	Template.bCrossClassEligible = false;
 
 	return Template;
 }

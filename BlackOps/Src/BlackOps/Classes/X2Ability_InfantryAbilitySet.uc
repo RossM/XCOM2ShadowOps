@@ -227,9 +227,10 @@ static function X2AbilityTemplate FullAuto()
 	Template.CinescriptCameraType = "StandardGunFiring";
 
 	//Template.DamagePreviewFn = FullAutoDamagePreview;
-	Template.bCrossClassEligible = true;
 
 	Template.bPreventsTargetTeleport = true;
+
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
@@ -350,7 +351,7 @@ static function X2AbilityTemplate ZoneOfControl()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 
-	Template.bCrossClassEligible = false;
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
@@ -436,8 +437,6 @@ static function X2AbilityTemplate ZoneOfControlShot()
 
 	return Template;
 }
-
-
 
 DefaultProperties
 {

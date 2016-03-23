@@ -89,6 +89,8 @@ static function X2AbilityTemplate ShieldProtocol()
 
 	Template.CustomSelfFireAnim = 'NO_DefenseProtocolA';
 
+	Template.bCrossClassEligible = false;
+
 	return Template;
 }
 
@@ -140,9 +142,9 @@ static function X2AbilityTemplate HeavyArmor()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
 
-	Template.bCrossClassEligible = true;
-
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, default.HeavyArmorBase);
+
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
@@ -308,6 +310,8 @@ static function X2AbilityTemplate StealthProtocol()
 	Template.PostActivationEvents.AddItem('ItemRecalled');
 
 	Template.CustomSelfFireAnim = 'NO_DefenseProtocolA';
+
+	Template.bCrossClassEligible = false;
 
 	return Template;
 }

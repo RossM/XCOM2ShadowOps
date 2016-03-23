@@ -12,7 +12,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(DeepPockets());
 	Templates.AddItem(PurePassive('DenseSmoke', "img:///UILibrary_PerkIcons.UIPerk_densesmoke", true));
-	Templates.AddItem(PurePassive('SmokeAndMirrors', "img:///UILibrary_PerkIcons.UIPerk_smokeandmirrors", true));
+	Templates.AddItem(PurePassive('SmokeAndMirrors', "img:///UILibrary_PerkIcons.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(Breach());
 	Templates.AddItem(Fastball());
 	Templates.AddItem(FastballRemovalTrigger());
@@ -115,6 +115,8 @@ static function X2AbilityTemplate Breach()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 
+	Template.bCrossClassEligible = true;
+
 	return Template;	
 }
 
@@ -169,6 +171,8 @@ static function X2AbilityTemplate Fastball()
 
 	Template.AdditionalAbilities.AddItem('FastballRemovalTrigger');
 	
+	Template.bCrossClassEligible = true;
+
 	return Template;	
 }
 
@@ -330,6 +334,8 @@ static function X2AbilityTemplate Aggression()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
 
+	Template.bCrossClassEligible = true;
+
 	return Template;
 }
 
@@ -358,6 +364,8 @@ static function X2AbilityTemplate Resilience()
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
@@ -406,10 +414,10 @@ static function X2AbilityTemplate SlamFire()
 	Template.bShowActivation = true;
 	Template.bSkipFireAction = true;
 
-	Template.bCrossClassEligible = true;
-		
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
