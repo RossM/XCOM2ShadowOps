@@ -11,6 +11,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Breach());
 	Templates.AddItem(Fastball());
 	Templates.AddItem(FastballRemovalTrigger());
+	Templates.AddItem(FractureAbility());
+	Templates.AddItem(FractureDamage());
 
 	return Templates;
 }
@@ -88,7 +90,7 @@ static function X2AbilityTemplate Breach()
 	
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_damagecover";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_deathblossom";
 	Template.TargetingMethod = class'X2TargetingMethod_RocketLauncher';
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -186,3 +188,98 @@ static function X2AbilityTemplate FastballRemovalTrigger()
 	
 	return Template;	
 }
+
+static function X2AbilityTemplate FractureAbility()
+{
+	local X2AbilityTemplate                 Template;
+	local X2AbilityCooldown                 Cooldown;
+	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
+	local X2Condition_Visibility            TargetVisibilityCondition;
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Fracture');
+
+	Template.AdditionalAbilities.AddItem('FractureDamage');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_damagecover";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.Hostility = eHostility_Offensive;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+
+	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
+	Template.bUsesFiringCamera = true;
+	Template.CinescriptCameraType = "StandardGunFiring";
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 3;
+	Template.AbilityCooldown = Cooldown;
+
+	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
+	Template.AbilityToHitCalc = ToHitCalc;
+
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	TargetVisibilityCondition = new class'X2Condition_Visibility';
+	TargetVisibilityCondition.bRequireGameplayVisible = true;
+	TargetVisibilityCondition.bAllowSquadsight = true;
+	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+
+	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+
+	Template.bAllowAmmoEffects = true;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate FractureDamage()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_FractureDamage                DamageEffect;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'FractureDamage');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_momentum";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	DamageEffect = new class'X2Effect_FractureDamage';
+	DamageEffect.BuildPersistentEffect(1, true, false, false);
+	DamageEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, false,,Template.AbilitySourceName);
+	Template.AddTargetEffect(DamageEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	return Template;
+}
+
