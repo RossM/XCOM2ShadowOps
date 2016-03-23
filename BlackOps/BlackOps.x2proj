@@ -96,6 +96,9 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_HeavyArmor.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_HunkerDown.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_HunterLowProfile.uc">
       <SubType>Content</SubType>
     </Content>
