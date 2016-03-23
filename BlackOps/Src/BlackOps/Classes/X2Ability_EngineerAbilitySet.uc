@@ -61,6 +61,15 @@ static function X2AbilityTemplate Breach()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Breach');
 	
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_deathblossom";
+	Template.Hostility = eHostility_Offensive;
+	Template.DisplayTargetHitChance = false;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CORPORAL_PRIORITY;
+
+	Template.TargetingMethod = class'X2TargetingMethod_RocketLauncher';
+
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 3;
 	Template.AbilityCosts.AddItem(AmmoCost);
@@ -103,11 +112,6 @@ static function X2AbilityTemplate Breach()
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 	
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_deathblossom";
-	Template.TargetingMethod = class'X2TargetingMethod_RocketLauncher';
-
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 
@@ -126,10 +130,10 @@ static function X2AbilityTemplate Fastball()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Fastball');
 	
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bombard";
-
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
 	Template.Hostility = eHostility_Neutral;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 1;

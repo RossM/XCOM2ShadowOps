@@ -171,6 +171,12 @@ static function X2AbilityTemplate FullAuto()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'FullAuto');
 
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fanfire";
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
 	ActionPointCost.bAddWeaponTypicalCost = true;
@@ -211,12 +217,6 @@ static function X2AbilityTemplate FullAuto()
 	Template.bAllowAmmoEffects = true;
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fanfire";
-	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
@@ -300,6 +300,15 @@ static function X2AbilityTemplate ZoneOfControl()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ZoneOfControl');
 
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_rapidreaction";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+	Template.Hostility = eHostility_Defensive;
+	Template.AbilityConfirmSound = "Unreal2DSounds_OverWatch";
+
 	AmmoCost = new class'X2AbilityCost_Ammo';
 	AmmoCost.iAmmo = 1;
 	AmmoCost.bFreeCost = true;
@@ -335,15 +344,6 @@ static function X2AbilityTemplate ZoneOfControl()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.bSkipFireAction = true;
 	Template.bShowActivation = true;
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_rapidreaction";
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
-	Template.bDisplayInUITooltip = false;
-	Template.bDisplayInUITacticalText = false;
-	Template.Hostility = eHostility_Defensive;
-	Template.AbilityConfirmSound = "Unreal2DSounds_OverWatch";
 
 	Template.ActivationSpeech = 'KillZone';
 
