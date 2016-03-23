@@ -1,7 +1,6 @@
 class X2Effect_ShieldProtocol extends X2Effect_ModifyStats;
 
-var int BaseShield;
-var int BonusShield;
+var int ConventionalAmount, MagneticAmount, BeamAmount;
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
@@ -28,7 +27,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	local StatChange Change;
 
 	Change.StatType = eStat_ShieldHP;
-	Change.StatAmount = BaseShield;
+	Change.StatAmount = default.ConventionalAmount;
 
 	SourceItem = XComGameState_Item(NewGameState.GetGameStateForObjectID(ApplyEffectParameters.ItemStateObjectRef.ObjectID));
 	if (SourceItem == none)
@@ -39,7 +38,10 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 		GremlinTemplate = X2GremlinTemplate(SourceItem.GetMyTemplate());
 		if (GremlinTemplate != none)
 		{
-			Change.StatAmount += BonusShield * GremlinTemplate.Tier / 2;
+			if (GremlinTemplate.WeaponTech == 'magnetic')
+				Change.StatAmount = default.MagneticAmount;
+			else if (GremlinTemplate.WeaponTech == 'beam')
+				Change.StatAmount = default.BeamAmount;
 		}
 	}
 	NewEffectState.StatChanges.AddItem(Change);

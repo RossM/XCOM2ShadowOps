@@ -1,6 +1,13 @@
 class X2Ability_DragoonAbilitySet extends X2Ability
 	config(GameData_SoldierSkills);
 
+var config int ConventionalShieldProtocol, MagneticShieldProtocol, BeamShieldProtocol;
+var config int ConventionalShieldsUp, MagneticShieldsUp, BeamShieldsUp;
+var config int HeavyArmorBase, HeavyArmorBonus;
+var config int FinesseMobilityBonus, FinesseOffenseBonus;
+var config int BurstFireHitMod, BurstFireEnvironmentalDamage;
+var config float ECMDetectionModifier;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -91,8 +98,9 @@ static function X2Effect ShieldProtocolEffect(string FriendlyName, string LongDe
 
 	ShieldedEffect = new class'X2Effect_ShieldProtocol';
 	ShieldedEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
-	ShieldedEffect.BaseShield = 3;
-	ShieldedEffect.BonusShield = 2;
+	ShieldedEffect.ConventionalAmount = default.ConventionalShieldProtocol;
+	ShieldedEffect.MagneticAmount = default.MagneticShieldProtocol;
+	ShieldedEffect.BeamAmount = default.BeamShieldProtocol;
 	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", true);
 
 	return ShieldedEffect;
@@ -123,6 +131,8 @@ static function X2AbilityTemplate HeavyArmor()
 	Template.AbilityTriggers.AddItem(Trigger);
 
 	HeavyArmorEffect = new class'X2Effect_HeavyArmor';
+	HeavyArmorEffect.Base = default.HeavyArmorBase;
+	HeavyArmorEffect.Bonus = default.HeavyArmorBonus;
 	HeavyArmorEffect.BuildPersistentEffect(1, true, true, true);
 	HeavyArmorEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(HeavyArmorEffect);
@@ -132,7 +142,7 @@ static function X2AbilityTemplate HeavyArmor()
 
 	Template.bCrossClassEligible = true;
 
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, 1);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, default.HeavyArmorBase);
 
 	return Template;
 }
@@ -166,8 +176,8 @@ static function X2AbilityTemplate Finesse()
 	FinesseEffect.EffectName = 'Finesse';
 	FinesseEffect.BuildPersistentEffect(1, true, true, true);
 	FinesseEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	FinesseEffect.AddPersistentStatChange(eStat_Offense, 10);
-	FinesseEffect.AddPersistentStatChange(eStat_Mobility, 3);
+	FinesseEffect.AddPersistentStatChange(eStat_Offense, default.FinesseOffenseBonus);
+	FinesseEffect.AddPersistentStatChange(eStat_Mobility, default.FinesseMobilityBonus);
 	Template.AddTargetEffect(FinesseEffect);
 
 	Condition = new class'X2Condition_UnitInventory';
@@ -346,7 +356,7 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilityCosts.AddItem(AmmoCost);
 
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
-	ToHitCalc.BuiltInHitMod = 20;
+	ToHitCalc.BuiltInHitMod = default.BurstFireHitMod;
 	Template.AbilityToHitCalc = ToHitCalc;
 	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 
@@ -361,7 +371,7 @@ static function X2AbilityTemplate BurstFire()
 
 	WorldDamage = new class'X2Effect_ApplyDirectionalWorldDamage';
 	WorldDamage.bUseWeaponDamageType = true;
-	WorldDamage.EnvironmentalDamageAmount = 10;
+	WorldDamage.EnvironmentalDamageAmount = default.BurstFireEnvironmentalDamage;
 	WorldDamage.bApplyOnHit = true;
 	WorldDamage.bApplyOnMiss = true;
 	WorldDamage.bApplyToWorldOnHit = true;
@@ -435,8 +445,9 @@ static function X2Effect ShieldsUpEffect(string FriendlyName, string LongDescrip
 	ShieldedEffect = new class'X2Effect_ShieldProtocol';
 	ShieldedEffect.EffectName = 'ShieldsUpEffect';
 	ShieldedEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
-	ShieldedEffect.BaseShield = 2;
-	ShieldedEffect.BonusShield = 1;
+	ShieldedEffect.ConventionalAmount = default.ConventionalShieldsUp;
+	ShieldedEffect.MagneticAmount = default.MagneticShieldsUp;
+	ShieldedEffect.BeamAmount = default.BeamShieldsUp;
 	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", true);
 
 	return ShieldedEffect;
@@ -491,7 +502,7 @@ static function X2Effect ECMEffect(string FriendlyName, string LongDescription)
 	Effect = new class'X2Effect_PersistentStatChange';
 	Effect.EffectName = 'ECMEffect';
 	Effect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
-	Effect.AddPersistentStatChange(eStat_DetectionModifier, 0.2);
+	Effect.AddPersistentStatChange(eStat_DetectionModifier, default.ECMDetectionModifier);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_jamthesignal", true);
 
 	return Effect;
