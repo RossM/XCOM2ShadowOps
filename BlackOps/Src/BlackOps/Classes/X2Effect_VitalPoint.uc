@@ -1,11 +1,9 @@
-class X2Effect_VitalPoint extends X2Effect_Persistent;
+class X2Effect_VitalPoint extends X2Effect_Persistent config(GameData_SoldierSkills);
 
-var int BonusArmorPiercing;
-var int BonusCritChance;
-var int BonusDamage;
-var int BonusDamagePerTier;
-var int BonusShred;
-var int BonusShredPerTier;
+var config int BonusArmorPiercing;
+var config int BonusCritChance;
+var config int ConventionalBonusDamage, MagneticBonusDamage, BeamBonusDamage;
+var config int ConventionalBonusShred, MagneticBonusShred, BeamBonusShred;
 
 function int GetExtraArmorPiercing(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData)
 {
@@ -35,8 +33,6 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 
 	if (AbilityState.SourceWeapon == EffectState.ApplyEffectParameters.ItemStateObjectRef)
 	{
-		Result += BonusDamage;
-
 		SourceWeapon = AbilityState.GetSourceWeapon();
 
 		if (SourceWeapon != none)
@@ -44,7 +40,12 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 			WeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
 			if (WeaponTemplate != none)
 			{
-				Result += BonusDamagePerTier * WeaponTemplate.Tier / 2;
+				Result = ConventionalBonusDamage;
+					
+				if (WeaponTemplate.WeaponTech == 'magnetic')
+					Result = MagneticBonusDamage;
+				else if (WeaponTemplate.WeaponTech == 'beam')
+					Result = BeamBonusDamage;
 			}
 		}
 	}
@@ -60,8 +61,6 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 
 	if (AbilityState.SourceWeapon == EffectState.ApplyEffectParameters.ItemStateObjectRef)
 	{
-		Result += BonusShred;
-
 		SourceWeapon = AbilityState.GetSourceWeapon();
 
 		if (SourceWeapon != none)
@@ -69,7 +68,12 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 			WeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
 			if (WeaponTemplate != none)
 			{
-				Result += BonusShredPerTier * WeaponTemplate.Tier / 2;
+				Result = ConventionalBonusShred;
+					
+				if (WeaponTemplate.WeaponTech == 'magnetic')
+					Result = MagneticBonusShred;
+				else if (WeaponTemplate.WeaponTech == 'beam')
+					Result = BeamBonusShred;
 			}
 		}
 	}

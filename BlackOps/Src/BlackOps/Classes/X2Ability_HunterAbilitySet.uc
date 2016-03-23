@@ -1,6 +1,14 @@
 class X2Ability_HunterAbilitySet extends X2Ability
 	config(GameData_SoldierSkills);
 
+var config int SnapShotHitModifier;
+var config int HunterMarkHitModifier;
+var config int HipFireHitModifier;
+var config int PrecisionOffenseBonus;
+var config int LowProfileDefenseBonus;
+var config int SprinterMobilityBonus;
+var config int SliceAndDiceHitModifier;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -95,7 +103,7 @@ static function X2AbilityTemplate SnapShot()
 
 	// Hit Calculation (Different weapons now have different calculations for range)
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
-	ToHitCalc.BuiltInHitMod = -10;
+	ToHitCalc.BuiltInHitMod = default.SnapShotHitModifier;
 	Template.AbilityToHitCalc = ToHitCalc;
 	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 
@@ -164,7 +172,7 @@ static function X2AbilityTemplate SnapShotOverwatch()
 
 	LowerAimEffect = new class'X2Effect_PersistentStatChange';
 	LowerAimEffect.BuildPersistentEffect(1,,,,eGameRule_PlayerTurnBegin);
-	LowerAimEffect.AddPersistentStatChange(eStat_Offense, -10);
+	LowerAimEffect.AddPersistentStatChange(eStat_Offense, default.SnapShotHitModifier);
 	LowerAimEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, Template.GetMyLongDescription(), "img:///UILibrary_PerkIcons.UIPerk_snapshot", true);
 	Template.AddShooterEffect(LowerAimEffect);
 
@@ -311,7 +319,7 @@ static function X2Effect_HunterMarked CreateMarkedEffect(int NumTurns, bool bIsI
 	MarkedEffect.EffectTickedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationTicked;
 	MarkedEffect.EffectRemovedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationRemoved;
 	MarkedEffect.bRemoveWhenTargetDies = true;
-	MarkedEffect.AccuracyBonus = 15;
+	MarkedEffect.AccuracyBonus = default.HunterMarkHitModifier;
 
 	return MarkedEffect;
 }
@@ -343,11 +351,6 @@ static function X2AbilityTemplate VitalPoint()
 	VitalPointEffect = new class'X2Effect_VitalPoint';
 	VitalPointEffect.BuildPersistentEffect(1, true, true, true);
 	VitalPointEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	//VitalPointEffect.BonusArmorPiercing = 10;
-	VitalPointEffect.BonusDamage = 1;
-	VitalPointEffect.BonusDamagePerTier = 1;
-	VitalPointEffect.BonusShred = 2;
-	VitalPointEffect.BonusShredPerTier = 1;
 	Template.AddTargetEffect(VitalPointEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -416,7 +419,7 @@ static function X2AbilityTemplate HipFire()
 
 	// Hit Calculation (Different weapons now have different calculations for range)
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
-	ToHitCalc.BuiltInHitMod = -20;
+	ToHitCalc.BuiltInHitMod = default.HipFireHitModifier;
 	Template.AbilityToHitCalc = ToHitCalc;
 	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 
@@ -458,7 +461,7 @@ static function X2AbilityTemplate Precision()
 	PrecisionEffect = new class'X2Effect_Precision';
 	PrecisionEffect.BuildPersistentEffect(1, true, true, true);
 	PrecisionEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	PrecisionEffect.Aim = 20;
+	PrecisionEffect.Aim = default.PrecisionOffenseBonus;
 	Template.AddTargetEffect(PrecisionEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -496,7 +499,7 @@ static function X2AbilityTemplate LowProfile()
 	LowProfileEffect = new class'X2Effect_HunterLowProfile';
 	LowProfileEffect.BuildPersistentEffect(1, true, true, true);
 	LowProfileEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	LowProfileEffect.Defense = 20;
+	LowProfileEffect.Defense = default.LowProfileDefenseBonus;
 	Template.AddTargetEffect(LowProfileEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -535,7 +538,7 @@ static function X2AbilityTemplate Sprinter()
 	PersistentEffect.EffectName = 'Sprinter';
 	PersistentEffect.BuildPersistentEffect(1, true, true, true);
 	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	PersistentEffect.AddPersistentStatChange(eStat_Mobility, 4);
+	PersistentEffect.AddPersistentStatChange(eStat_Mobility, default.SprinterMobilityBonus);
 	Template.AddTargetEffect(PersistentEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -543,7 +546,7 @@ static function X2AbilityTemplate Sprinter()
 
 	Template.bCrossClassEligible = true;
 
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_Mobility, 4);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_Mobility, default.SprinterMobilityBonus);
 
 	return Template;
 }
@@ -712,6 +715,7 @@ static function X2AbilityTemplate SliceAndDice()
 	Template.AbilityCooldown = Cooldown;
 
 	StandardMelee = new class'X2AbilityToHitCalc_StandardMelee';
+	StandardMelee.BuiltInHitMod = default.SliceAndDiceHitModifier;
 	Template.AbilityToHitCalc = StandardMelee;
 
 	Template.AbilityTargetStyle = new class'X2AbilityTarget_MovingMelee';
@@ -803,6 +807,7 @@ static function X2AbilityTemplate SliceAndDice2()
 	Template.AbilityTriggers.AddItem(Trigger);
 
 	StandardMelee = new class'X2AbilityToHitCalc_StandardMelee';
+	StandardMelee.BuiltInHitMod = default.SliceAndDiceHitModifier;
 	Template.AbilityToHitCalc = StandardMelee;
 
 	Template.AbilityTargetStyle = new class'X2AbilityTarget_MovingMelee';
