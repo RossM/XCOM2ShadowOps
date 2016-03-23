@@ -4,6 +4,7 @@ class X2Ability_EngineerAbilitySet extends X2Ability
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
 var config WeaponDamageValue BreachDamageModifier;
 var config int BreachEnvironmentalDamage;
+var config float DangerZoneBonusRadius;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -23,6 +24,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Resilience());
 	Templates.AddItem(PurePassive('CombatDrugs', "img:///UILibrary_PerkIcons.UIPerk_combatdrugs", true));
 	Templates.AddItem(SlamFire());
+	Templates.AddItem(PurePassive('DangerZone', "img:///UILibrary_PerkIcons.UIPerk_dangerzone", true));
 
 	return Templates;
 }
@@ -52,7 +54,7 @@ static function X2AbilityTemplate Breach()
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityTarget_Cursor            CursorTarget;
-	local X2AbilityMultiTarget_Radius       RadiusMultiTarget;
+	local X2AbilityMultiTarget_SoldierBonusRadius_BO       RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
@@ -86,8 +88,11 @@ static function X2AbilityTemplate Breach()
 	CursorTarget.bRestrictToWeaponRange = true;
 	Template.AbilityTargetStyle = CursorTarget;
 
-	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
+	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
+	// but zero out BonusRadius so it isn't affected by Volatile Mix.
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_SoldierBonusRadius_BO';
 	RadiusMultiTarget.fTargetRadius = 3;
+	RadiusMultiTarget.BonusRadius = 0;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
