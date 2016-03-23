@@ -15,6 +15,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FractureDamage());
 	Templates.AddItem(PurePassive('Packmaster', "img:///UILibrary_PerkIcons.UIPerk_expanded_storage", true));
 	Templates.AddItem(PurePassive('Entrench', "img:///UILibrary_PerkIcons.UIPerk_one_for_all", true));
+	Templates.AddItem(Aggression());
 
 	return Templates;
 }
@@ -278,6 +279,34 @@ static function X2AbilityTemplate FractureDamage()
 	DamageEffect.BuildPersistentEffect(1, true, false, false);
 	DamageEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, false,,Template.AbilitySourceName);
 	Template.AddTargetEffect(DamageEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	return Template;
+}
+
+static function X2AbilityTemplate Aggression()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_Aggression                   Effect;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Aggression');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_aggression";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	Effect = new class'X2Effect_Aggression';
+	Effect.BuildPersistentEffect(1, true, false, false);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
