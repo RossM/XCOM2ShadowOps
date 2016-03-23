@@ -1,4 +1,9 @@
-class X2Effect_SmokeGrenade_BO extends X2Effect_SmokeGrenade;
+class X2Effect_SmokeGrenade_BO extends X2Effect_SmokeGrenade config(GameData_SoldierSkills);
+
+var config int DenseSmokeBonusDefense;
+var config float DenseSmokeBonusRadius;
+var config int CombatDrugsBonusOffense;
+var config int CombatDrugsBonusCrit;
 
 function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {
@@ -22,7 +27,7 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 			AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('DenseSmoke');
 
 			ShotMod.ModType = eHit_Success;
-			ShotMod.Value = -20;
+			ShotMod.Value = -default.DenseSmokeBonusDefense;
 			ShotMod.Reason = AbilityTemplate.LocFriendlyName;
 			ShotModifiers.AddItem(ShotMod);
 		}
@@ -46,12 +51,12 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 			AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('CombatDrugs');
 
 			ModInfo.ModType = eHit_Crit;
-			ModInfo.Value = 10;
+			ModInfo.Value = default.CombatDrugsBonusCrit;
 			ModInfo.Reason = AbilityTemplate.LocFriendlyName;
 			ShotModifiers.AddItem(ModInfo);
 
 			ModInfo.ModType = eHit_Success;
-			ModInfo.Value = 10;
+			ModInfo.Value = default.CombatDrugsBonusOffense;
 			ModInfo.Reason = AbilityTemplate.LocFriendlyName;
 			ShotModifiers.AddItem(ModInfo);
 		}

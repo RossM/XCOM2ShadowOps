@@ -1,4 +1,7 @@
-class X2Effect_Aggression extends X2Effect_Persistent;
+class X2Effect_Aggression extends X2Effect_Persistent config(GameData_SoldierSkills);
+
+var int CritModifier, MaxCritModifier;
+var int GrenadeCritDamage;
 
 function bool AllowCritOverride() { return true; }
 
@@ -11,7 +14,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 		StandardHit = X2AbilityToHitCalc_StandardAim(AbilityState.GetMyTemplate().AbilityToHitCalc);
 		if (StandardHit != none && StandardHit.bIndirectFire)
 		{
-			return 2;
+			return GrenadeCritDamage;
 		}
 	}
 }
@@ -25,7 +28,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 
 	ModInfo.ModType = eHit_Crit;
 	ModInfo.Reason = FriendlyName;
-	ModInfo.Value = 10 * min(VisibleEnemies, 3);
+	ModInfo.Value = min(CritModifier * VisibleEnemies, MaxCritModifier);
 	ShotModifiers.AddItem(ModInfo);
 }
 

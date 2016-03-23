@@ -33,7 +33,7 @@ simulated function CalculateRadiusModifier(const XComGameState_Ability Ability)
 
 		if (SourceUnit != none && SourceUnit.HasSoldierAbility('DenseSmoke'))
 		{
-			fRadiusModifier += 2;
+			fRadiusModifier += class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
 		}
 	}
 }

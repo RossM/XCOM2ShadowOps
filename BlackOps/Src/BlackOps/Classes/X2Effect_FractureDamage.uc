@@ -1,5 +1,8 @@
 class X2Effect_FractureDamage extends X2Effect_Persistent config(GameData_SoldierSkills);
 
+var config int ConventionalCritDamage, MagneticCritDamage, BeamCritDamage;
+var config int ConventionalBonusShred, MagneticBonusShred, BeamBonusShred;
+
 function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage)
 {
 	local X2WeaponTemplate WeaponTemplate;
@@ -13,12 +16,12 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 			WeaponTemplate = X2WeaponTemplate(AbilityState.GetSourceWeapon().GetMyTemplate());
 			if (WeaponTemplate != none)
 			{
-				ExtraDamage = 2;
+				ExtraDamage = default.ConventionalCritDamage;
 
 				if (WeaponTemplate.WeaponTech == 'magnetic')
-					ExtraDamage = 4;
+					ExtraDamage = default.MagneticCritDamage;
 				else if (WeaponTemplate.WeaponTech == 'beam')
-					ExtraDamage = 6;
+					ExtraDamage = default.BeamCritDamage;
 			}
 		}
 	}
@@ -36,12 +39,12 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 		WeaponTemplate = X2WeaponTemplate(AbilityState.GetSourceWeapon().GetMyTemplate());
 		if (WeaponTemplate != none)
 		{
-			ExtraShred = 2;
+			ExtraShred = default.ConventionalBonusShred;
 
 			if (WeaponTemplate.WeaponTech == 'magnetic')
-				ExtraShred = 3;
+				ExtraShred = default.MagneticBonusShred;
 			else if (WeaponTemplate.WeaponTech == 'beam')
-				ExtraShred = 4;
+				ExtraShred = default.BeamBonusShred;
 		}
 	}
 	return int(ExtraShred);

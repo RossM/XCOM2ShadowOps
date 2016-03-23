@@ -1,6 +1,10 @@
 class X2Ability_EngineerAbilitySet extends X2Ability
 	config(GameData_SoldierSkills);
 
+var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
+var config WeaponDamageValue BreachDamageModifier;
+var config int BreachEnvironmentalDamage;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -73,8 +77,8 @@ static function X2AbilityTemplate Breach()
 	Template.AbilityToHitCalc = StandardAim;
 	
 	WeaponDamageEffect = new class'X2Effect_ApplyWeaponDamage';
-	WeaponDamageEffect.EffectDamageValue.Damage = -3;
-	WeaponDamageEffect.EnvironmentalDamageAmount = 30;
+	WeaponDamageEffect.EffectDamageValue = default.BreachDamageModifier;
+	WeaponDamageEffect.EnvironmentalDamageAmount = default.BreachEnvironmentalDamage;
 	Template.AddMultiTargetEffect(WeaponDamageEffect);
 
 	CursorTarget = new class'X2AbilityTarget_Cursor';
@@ -306,6 +310,9 @@ static function X2AbilityTemplate Aggression()
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
 	Effect = new class'X2Effect_Aggression';
+	Effect.CritModifier = default.AggressionCritModifier;
+	Effect.MaxCritModifier = default.AggressionMaxCritModifier;
+	Effect.GrenadeCritDamage = default.AggressionGrenadeCritDamage;
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
 	Template.AddTargetEffect(Effect);
