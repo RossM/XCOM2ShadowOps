@@ -14,6 +14,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FractureAbility());
 	Templates.AddItem(FractureDamage());
 	Templates.AddItem(PurePassive('Packmaster', "img:///UILibrary_PerkIcons.UIPerk_expanded_storage", true));
+	Templates.AddItem(PurePassive('Entrench', "img:///UILibrary_PerkIcons.UIPerk_one_for_all", true));
 
 	return Templates;
 }

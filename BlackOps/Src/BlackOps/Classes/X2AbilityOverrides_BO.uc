@@ -9,6 +9,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ThrowGrenade());
 	Templates.AddItem(LaunchGrenade());
 	Templates.AddItem(Add_StandardShot());
+	Templates.AddItem(AddHunkerDownAbility());
 
 	return Templates;
 }
@@ -353,3 +354,62 @@ static event array<X2DataTemplate> CreateTemplatesEvent()
 	return EmptyTemplates;
 }
 
+// Modified for Entrench
+static function X2AbilityTemplate AddHunkerDownAbility()
+{
+	local X2AbilityTemplate                 Template;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2Condition_UnitProperty          PropertyCondition;
+//	local X2Condition_AbilityProperty       DefenseIncreaseEffectCondition;
+	local X2Effect_PersistentStatChange     PersistentStatChangeEffect;
+	local X2AbilityTrigger_PlayerInput      InputTrigger;
+	local array<name>                       SkipExclusions;
+	
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'HunkerDown');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_takecover";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.HUNKER_DOWN_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+
+	Template.AbilitySourceName = 'eAbilitySource_Standard';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_ShowIfAvailable;
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = class'X2Ability_DefaultAbilitySet'.static.HunkerDownAbility_BuildVisualization;
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.bConsumeAllPoints = true;
+	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('Entrench');
+	ActionPointCost.AllowedTypes.AddItem(class'X2CharacterTemplateManager'.default.DeepCoverActionPoint);
+	Template.AbilityCosts.AddItem(ActionPointCost);
+	
+	PropertyCondition = new class'X2Condition_UnitProperty';	
+	PropertyCondition.ExcludeDead = true;                           // Can't hunkerdown while dead
+	PropertyCondition.ExcludeFriendlyToSource = false;              // Self targeted
+	PropertyCondition.ExcludeNoCover = true;                        // Unit must be in cover.
+	Template.AbilityShooterConditions.AddItem(PropertyCondition);
+
+	SkipExclusions.AddItem(class'X2StatusEffects'.default.BurningName);
+	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+	
+	Template.AbilityToHitCalc = default.DeadEye;
+	
+	Template.AbilityTargetStyle = default.SelfTarget;
+
+	InputTrigger = new class'X2AbilityTrigger_PlayerInput';
+	Template.AbilityTriggers.AddItem(InputTrigger);
+
+	PersistentStatChangeEffect = new class'X2Effect_PersistentStatChange';
+	PersistentStatChangeEffect.EffectName = 'HunkerDown';
+	PersistentStatChangeEffect.BuildPersistentEffect(1 /* Turns */,,,,eGameRule_PlayerTurnBegin);
+	PersistentStatChangeEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage);
+	PersistentStatChangeEffect.AddPersistentStatChange(eStat_Dodge, class'X2Ability_DefaultAbilitySet'.default.HUNKERDOWN_DODGE);
+	PersistentStatChangeEffect.AddPersistentStatChange(eStat_Defense, class'X2Ability_DefaultAbilitySet'.default.HUNKERDOWN_DEFENSE);
+	PersistentStatChangeEffect.DuplicateResponse = eDupe_Refresh;
+	Template.AddTargetEffect(PersistentStatChangeEffect);
+
+	Template.AddTargetEffect(class'X2Ability_SharpshooterAbilitySet'.static.SharpshooterAimEffect());
+
+	Template.Hostility = eHostility_Defensive;
+
+	return Template;
+}
