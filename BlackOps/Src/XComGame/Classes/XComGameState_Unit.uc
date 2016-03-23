@@ -2801,17 +2801,18 @@ function int GetUnitPointValue()
 	return Points;
 }
 
-// Modified for Rocketeer ability
+// Modified for Rocketeer and Packmaster abilities
 function protected MergeAmmoAsNeeded(XComGameState StartState)
 {
 	local XComGameState_Item ItemIter, ItemInnerIter;
 	local X2WeaponTemplate MergeTemplate;
 	local int Idx, InnerIdx, BonusAmmo;
-	local bool bFieldMedic, bHeavyOrdnance, bRocketeer;
+	local bool bFieldMedic, bHeavyOrdnance, bRocketeer, bPackmaster;
 
 	bFieldMedic = HasSoldierAbility('FieldMedic');
 	bHeavyOrdnance = HasSoldierAbility('HeavyOrdnance');
 	bRocketeer = HasSoldierAbility('Rocketeer');
+	bPackmaster = HasSoldierAbility('Packmaster');
 
 	for (Idx = 0; Idx < InventoryItems.Length; ++Idx)
 	{
@@ -2829,6 +2830,8 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 					BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
 				if (bRocketeer && ItemIter.InventorySlot == eInvSlot_HeavyWeapon)
 					BonusAmmo += 1;
+				if (bPackmaster && (ItemIter.InventorySlot == eInvSlot_Utility || ItemIter.InventorySlot == eInvSlot_GrenadePocket))
+					BonusAmmo += 1;
 
 				ItemIter.MergedItemCount = 1;
 				for (InnerIdx = Idx + 1; InnerIdx < InventoryItems.Length; ++InnerIdx)
@@ -2841,6 +2844,8 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 						if (bHeavyOrdnance && ItemInnerIter.InventorySlot == eInvSlot_GrenadePocket)
 							BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
 						if (bRocketeer && ItemInnerIter.InventorySlot == eInvSlot_HeavyWeapon)
+							BonusAmmo += 1;
+						if (bPackmaster && (ItemInnerIter.InventorySlot == eInvSlot_Utility || ItemInnerIter.InventorySlot == eInvSlot_GrenadePocket))
 							BonusAmmo += 1;
 						ItemInnerIter.bMergedOut = true;
 						ItemInnerIter.Ammo = 0;

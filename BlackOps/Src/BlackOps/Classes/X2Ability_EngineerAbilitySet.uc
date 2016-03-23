@@ -13,6 +13,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FastballRemovalTrigger());
 	Templates.AddItem(FractureAbility());
 	Templates.AddItem(FractureDamage());
+	Templates.AddItem(PurePassive('Packmaster', "img:///UILibrary_PerkIcons.UIPerk_expanded_storage", true));
 
 	return Templates;
 }
