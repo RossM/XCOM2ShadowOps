@@ -105,9 +105,6 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_Precision.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Resilience.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_ShieldProtocol.uc">
       <SubType>Content</SubType>
     </Content>

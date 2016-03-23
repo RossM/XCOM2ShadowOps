@@ -319,7 +319,7 @@ static function X2AbilityTemplate Aggression()
 static function X2AbilityTemplate Resilience()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_Resilience                   Effect;
+	local X2Effect_Persistent                   Effect;
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Resilience');
@@ -333,7 +333,8 @@ static function X2AbilityTemplate Resilience()
 	Template.AbilityTargetStyle = default.SelfTarget;
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
-	Effect = new class'X2Effect_Resilience';
+	Effect = new class'X2Effect_Persistent';
+	Effect.EffectName = 'Resilience';
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
 	Template.AddTargetEffect(Effect);
