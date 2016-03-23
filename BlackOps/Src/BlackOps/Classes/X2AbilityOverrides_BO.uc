@@ -14,6 +14,25 @@ static function array<X2DataTemplate> CreateTemplates()
 	return Templates;
 }
 
+// This function causes templates defined in this file to replace the base game templates with the same name.
+static event array<X2DataTemplate> CreateTemplatesEvent()
+{
+	local array<X2DataTemplate> NewTemplates;
+	local int Index;
+	local X2AbilityTemplateManager AbilityManager;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	NewTemplates = super.CreateTemplatesEvent();
+
+	for( Index = 0; Index < NewTemplates.Length; ++Index )
+	{
+		AbilityManager.AddAbilityTemplate(X2AbilityTemplate(NewTemplates[Index]), true);
+	}
+
+	NewTemplates.Length = 0;
+	return NewTemplates;
+}
+
 // Modified for Smoke and Mirrors, and Fastball.
 static function X2AbilityTemplate ThrowGrenade()
 {
@@ -313,45 +332,6 @@ static function X2AbilityTemplate Add_StandardShot( Name AbilityName='StandardSh
 	Template.AddTargetEffect(KnockbackEffect);
 
 	return Template;	
-}
-
-// This function creates difficulty variants and then replaces the base game templates
-// with the same name.
-static event array<X2DataTemplate> CreateTemplatesEvent()
-{
-	local array<X2DataTemplate> BaseTemplates, NewTemplates, EmptyTemplates;
-	local X2DataTemplate CurrentBaseTemplate;
-	local int Index;
-	local X2AbilityTemplateManager AbilityManager;
-
-	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
-	BaseTemplates = CreateTemplates();
-
-	for( Index = 0; Index < BaseTemplates.Length; ++Index )
-	{
-		CurrentBaseTemplate = BaseTemplates[Index];
-
-		if( default.bShouldCreateDifficultyVariants )
-		{
-			CurrentBaseTemplate.bShouldCreateDifficultyVariants = true;
-		}
-
-		if( CurrentBaseTemplate.bShouldCreateDifficultyVariants )
-		{
-			CreateDifficultyVariantsForTemplate(CurrentBaseTemplate, NewTemplates);
-		}
-		else
-		{
-			NewTemplates.AddItem(CurrentBaseTemplate);
-		}
-	}
-
-	for( Index = 0; Index < NewTemplates.Length; ++Index )
-	{
-		AbilityManager.AddAbilityTemplate(X2AbilityTemplate(NewTemplates[Index]), true);
-	}
-
-	return EmptyTemplates;
 }
 
 // Modified for Entrench
