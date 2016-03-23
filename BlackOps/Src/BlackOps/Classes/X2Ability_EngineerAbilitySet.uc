@@ -17,6 +17,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('Entrench', "img:///UILibrary_PerkIcons.UIPerk_one_for_all", true));
 	Templates.AddItem(Aggression());
 	Templates.AddItem(Resilience());
+	Templates.AddItem(PurePassive('CombatDrugs', "img:///UILibrary_PerkIcons.UIPerk_combatdrugs", true));
 
 	return Templates;
 }
