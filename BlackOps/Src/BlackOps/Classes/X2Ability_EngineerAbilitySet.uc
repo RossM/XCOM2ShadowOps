@@ -22,6 +22,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Aggression());
 	Templates.AddItem(Resilience());
 	Templates.AddItem(PurePassive('CombatDrugs', "img:///UILibrary_PerkIcons.UIPerk_combatdrugs", true));
+	Templates.AddItem(SlamFire());
 
 	return Templates;
 }
@@ -348,6 +349,58 @@ static function X2AbilityTemplate Resilience()
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
+
+	return Template;
+}
+
+static function X2AbilityTemplate SlamFire()
+{
+	local X2AbilityTemplate				Template;
+	local X2AbilityCooldown				Cooldown;
+	local X2Effect_SlamFire             SlamFireEffect;
+	local X2AbilityCost_ActionPoints    ActionPointCost;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'SlamFire');
+
+	// Icon Properties
+	Template.DisplayTargetHitChance = false;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';                                       // color of the icon
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bringemon";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
+	Template.Hostility = eHostility_Neutral;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 4;
+	Template.AbilityCooldown = Cooldown;
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bFreeCost = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	class'X2Ability_RangerAbilitySet'.static.SuperKillRestrictions(Template, 'Serial_SuperKillCheck');
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	SlamFireEffect = new class'X2Effect_SlamFire';
+	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
+	SlamFireEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true, , Template.AbilitySourceName);
+	Template.AddTargetEffect(SlamFireEffect);
+
+	Template.AbilityTargetStyle = default.SelfTarget;	
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+	
+	Template.bShowActivation = true;
+	Template.bSkipFireAction = true;
+
+	Template.bCrossClassEligible = true;
+		
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 
 	return Template;
 }

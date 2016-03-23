@@ -114,6 +114,9 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_Magnum.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_SlamFire.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_SmokeGrenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
