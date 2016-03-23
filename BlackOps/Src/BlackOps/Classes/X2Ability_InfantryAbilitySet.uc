@@ -3,6 +3,9 @@ class X2Ability_InfantryAbilitySet extends X2Ability
 
 var name AlwaysReadyEffectName;
 
+var config int MagnumDamageBonus, MagnumOffenseBonus;
+var config int FullAutoHitModifier;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -66,8 +69,8 @@ static function X2AbilityTemplate Magnum()
 	MagnumEffect = new class'X2Effect_Magnum';
 	MagnumEffect.BuildPersistentEffect(1, true, true, true);
 	MagnumEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	MagnumEffect.BonusDamage = 1;
-	MagnumEffect.BonusAim = 10;
+	MagnumEffect.BonusDamage = default.MagnumDamageBonus;
+	MagnumEffect.BonusAim = default.MagnumOffenseBonus;
 	Template.AddTargetEffect(MagnumEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -189,7 +192,7 @@ static function X2AbilityTemplate FullAuto()
 	Template.AbilityCosts.AddItem(AmmoCost);
 
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
-	ToHitCalc.BuiltInHitMod = -20;
+	ToHitCalc.BuiltInHitMod = default.FullAutoHitModifier;
 	Template.AbilityToHitCalc = ToHitCalc;
 	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 
@@ -245,7 +248,7 @@ static function X2AbilityTemplate FullAuto2()
 	Template.AbilityCosts.AddItem(AmmoCost);
 
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
-	ToHitCalc.BuiltInHitMod = -20;
+	ToHitCalc.BuiltInHitMod = default.FullAutoHitModifier;
 	Template.AbilityToHitCalc = ToHitCalc;
 	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 
