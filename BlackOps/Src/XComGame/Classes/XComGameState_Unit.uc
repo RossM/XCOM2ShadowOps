@@ -597,6 +597,35 @@ function name GetSoldierClassTemplateName()
 	return m_SoldierClassTemplateName;
 }
 
+function string GetSoldierClassDisplayName()
+{
+	local X2SoldierClassTemplate SoldierClassTemplate;
+	local int iLeftCount, iRightCount, i;
+
+	SoldierClassTemplate = GetSoldierClassTemplate();
+
+	for (i = 0; i < m_SoldierProgressionAbilties.Length; i++)
+	{
+		if (m_SoldierProgressionAbilties[i].iRank <= 0)
+			continue;
+
+		if (m_SoldierProgressionAbilties[i].iBranch == 0)
+		{
+			iLeftCount++;
+			if (iLeftCount >= 2)
+				return SoldierClassTemplate.LeftAbilityTreeTitle;
+		}
+		else
+		{
+			iRightCount++;
+			if (iRightCount >= 2)
+				return SoldierClassTemplate.RightAbilityTreeTitle;
+		}
+	}
+
+	return GetSoldierClassTemplate().DisplayName;
+}
+
 simulated function bool HasHeightAdvantageOver(XComGameState_Unit OtherUnit, bool bAsAttacker)
 {
 	local int BonusZ;

@@ -47,10 +47,22 @@
     <Content Include="Config\XComEngine.ini" />
     <Content Include="Config\XComGame.ini" />
     <Content Include="Localization\XComGame.int" />
+    <Content Include="Src\BlackOps\Classes\UIAfterAction_ListItem_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\UIArmory_Promotion_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\UIPersonnel_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\UIPersonnel_SoldierListItem_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\UISoldierHeader_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\UISquadSelect_ListItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">

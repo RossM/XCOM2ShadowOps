@@ -14,5 +14,5 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 
 defaultproperties
 {
-	EffectName = 'HunkerDown'
+	EffectName = "HunkerDown"
 }
