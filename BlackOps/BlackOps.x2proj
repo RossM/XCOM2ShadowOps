@@ -89,6 +89,9 @@
     <Content Include="Src\BlackOps\Classes\X2Ability_InfantryAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Ability_ItemGranted_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Condition_NotVisibleToEnemies.uc">
       <SubType>Content</SubType>
     </Content>
@@ -136,6 +139,12 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_VitalPoint.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2ItemOverrides_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2Item_Ammo_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2TargetingMethod_Grenade_BO.uc">
