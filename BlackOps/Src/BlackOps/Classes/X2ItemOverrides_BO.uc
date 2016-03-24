@@ -9,6 +9,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(CreateFlashbangGrenade());
 	Templates.AddItem(CreateSmokeGrenade());
 	Templates.AddItem(SmokeGrenadeMk2());
+	Templates.AddItem(CreateNanoScaleVest());
+	Templates.AddItem(CreatePlatedVest());
 
 	return Templates;
 }
@@ -231,9 +233,8 @@ static function X2DataTemplate CreatePlatedVest()
 	Template.CanBeBuilt = true;
 	Template.TradingPostValue = 15;
 	Template.PointsToComplete = 0;
-	Template.Tier = 2;
+	Template.Tier = 1;
 
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.HealthLabel, eStat_HP, class'X2Ability_ItemGrantedAbilitySet'.default.PLATED_VEST_HP_BONUS);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, class'X2Ability_ItemGrantedAbilitySet'.default.PLATED_VEST_MITIGATION_AMOUNT);
 	
 	// Requirements

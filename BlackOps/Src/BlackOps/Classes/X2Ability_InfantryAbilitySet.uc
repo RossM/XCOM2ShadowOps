@@ -6,6 +6,8 @@ var name AlwaysReadyEffectName;
 var config int MagnumDamageBonus, MagnumOffenseBonus;
 var config int FullAutoHitModifier;
 
+var config name FreeAmmoForPocket;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -39,7 +41,27 @@ static function X2AbilityTemplate Bandolier()
 
 static function BandolierPurchased(XComGameState NewGameState, XComGameState_Unit UnitState)
 {
-	UnitState.ValidateLoadout(NewGameState);
+	local X2ItemTemplate FreeItem;
+	local XComGameState_Item ItemState;
+
+	if (!UnitState.HasAmmoPocket())
+	{
+		`RedScreen("AmmoPocketPurchased called but the unit doesn't have one? -jbouscher / @gameplay" @ UnitState.ToString());
+		return;
+	}
+	FreeItem = class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate(default.FreeAmmoForPocket);
+	if (FreeItem == none)
+	{
+		`RedScreen("Free ammo '" $ default.FreeAmmoForPocket $ "' is not a valid item template.");
+		return;
+	}
+	ItemState = FreeItem.CreateInstanceFromTemplate(NewGameState);
+	NewGameState.AddStateObject(ItemState);
+	if (!UnitState.AddItemToInventory(ItemState, eInvSlot_AmmoPocket, NewGameState))
+	{
+		`RedScreen("Unable to add free ammo to unit's inventory. Sadness." @ UnitState.ToString());
+		return;
+	}
 }
 
 static function X2AbilityTemplate Magnum()
