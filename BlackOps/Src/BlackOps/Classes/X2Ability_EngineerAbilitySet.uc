@@ -4,6 +4,7 @@ class X2Ability_EngineerAbilitySet extends X2Ability
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
 var config WeaponDamageValue BreachDamageModifier;
 var config int BreachEnvironmentalDamage;
+var config float BreachRange;
 var config float DangerZoneBonusRadius;
 
 static function array<X2DataTemplate> CreateTemplates()
@@ -94,7 +95,7 @@ static function X2AbilityTemplate Breach()
 	Template.AddMultiTargetEffect(WeaponDamageEffect);
 
 	CursorTarget = new class'X2AbilityTarget_Cursor';
-	CursorTarget.bRestrictToWeaponRange = true;
+	CursorTarget.FixedAbilityRange = default.BreachRange;
 	Template.AbilityTargetStyle = CursorTarget;
 
 	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
