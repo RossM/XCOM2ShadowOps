@@ -80,7 +80,7 @@ static function X2AbilityTemplate Breach()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 3;
+	Cooldown.iNumTurns = 4;
 	Template.AbilityCooldown = Cooldown;
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
