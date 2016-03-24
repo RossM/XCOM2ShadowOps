@@ -27,7 +27,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	local StatChange Change;
 
 	Change.StatType = eStat_ShieldHP;
-	Change.StatAmount = default.ConventionalAmount;
+	Change.StatAmount = ConventionalAmount;
 
 	SourceItem = XComGameState_Item(NewGameState.GetGameStateForObjectID(ApplyEffectParameters.ItemStateObjectRef.ObjectID));
 	if (SourceItem == none)
@@ -39,9 +39,9 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 		if (GremlinTemplate != none)
 		{
 			if (GremlinTemplate.WeaponTech == 'magnetic')
-				Change.StatAmount = default.MagneticAmount;
+				Change.StatAmount = MagneticAmount;
 			else if (GremlinTemplate.WeaponTech == 'beam')
-				Change.StatAmount = default.BeamAmount;
+				Change.StatAmount = BeamAmount;
 		}
 	}
 	NewEffectState.StatChanges.AddItem(Change);
