@@ -30,6 +30,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	local TTile UnitTileLocation, TargetTileLocation;
 	local ECoverType NextTileOverCoverType;
 	local int TileDistance;
+	local ShotModifierInfo Mod;
 
 	`log("=" $ GetFuncName() $ "=", bDebugLog, 'XCom_HitRolls');
 	m_bDebugModifiers = bDebugLog;
@@ -49,8 +50,12 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	//  add all of the built-in modifiers
 	if (bGuaranteedHit)
 	{
-		//  call the super version to bypass our check to ignore success mods for guaranteed hits
-		super.AddModifier(100, AbilityTemplate.LocFriendlyName, eHit_Success);
+		Mod.Value = 100;
+		Mod.Reason = AbilityTemplate.LocFriendlyName;
+		Mod.ModType = eHit_Success;
+		m_ShotBreakdown.Modifiers.AddItem(Mod);
+		m_ShotBreakdown.ResultTable[Mod.ModType] += Mod.Value;
+		m_ShotBreakdown.FinalHitChance = m_ShotBreakdown.ResultTable[eHit_Success];
 	}
 	AddModifier(BuiltInHitMod, AbilityTemplate.LocFriendlyName, eHit_Success);
 	AddModifier(BuiltInCritMod, AbilityTemplate.LocFriendlyName, eHit_Crit);
