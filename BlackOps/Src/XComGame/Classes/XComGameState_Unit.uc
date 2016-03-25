@@ -7241,11 +7241,11 @@ function ApplyInventoryLoadout(XComGameState ModifyGameState, optional name NonD
 	local X2ItemTemplateManager ItemTemplateManager;
 	local InventoryLoadout Loadout;
 	local InventoryLoadoutItem LoadoutItem;
-	local bool bFoundLoadout;
 	local X2EquipmentTemplate EquipmentTemplate;
 	local XComGameState_Item NewItem;
 	local name UseLoadoutName, RequiredLoadout;
 	local X2SoldierClassTemplate SoldierClassTemplate;
+	local array<InventoryLoadout> FoundLoadouts;
 
 	if (NonDefaultLoadout != '')      
 	{
@@ -7266,12 +7266,12 @@ function ApplyInventoryLoadout(XComGameState ModifyGameState, optional name NonD
 	{
 		if (Loadout.LoadoutName == UseLoadoutName)
 		{
-			bFoundLoadout = true;
-			break;
+			FoundLoadouts.AddItem(Loadout);
 		}
 	}
-	if (bFoundLoadout)
+	if (FoundLoadouts.Length >= 1)
 	{
+		Loadout = FoundLoadouts[`SYNC_RAND(FoundLoadouts.Length)];
 		foreach Loadout.Items(LoadoutItem)
 		{
 			EquipmentTemplate = X2EquipmentTemplate(ItemTemplateManager.FindItemTemplate(LoadoutItem.Item));
@@ -7385,7 +7385,7 @@ function ApplySquaddieLoadout(XComGameState GameState, optional XComGameState_He
 
 				//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
 				//where we are handing out generic weapons.
-				if(ItemState.InventorySlot == eInvSlot_PrimaryWeapon || ItemState.InventorySlot == eInvSlot_SecondaryWeapon)
+				if(ItemTemplate.InventorySlot == eInvSlot_PrimaryWeapon || ItemTemplate.InventorySlot == eInvSlot_SecondaryWeapon)
 				{
 					ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
 					ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
@@ -7770,6 +7770,12 @@ function XComGameState_Item GetBestPrimaryWeapon(XComGameState NewGameState)
 	}
 	
 	ItemState = PrimaryWeaponTemplates[`SYNC_RAND(PrimaryWeaponTemplates.Length)].CreateInstanceFromTemplate(NewGameState);
+
+	//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+	//where we are handing out generic weapons.
+	ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+	ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+
 	NewGameState.AddStateObject(ItemState);
 	
 	return ItemState;
@@ -7789,6 +7795,12 @@ function XComGameState_Item GetBestSecondaryWeapon(XComGameState NewGameState)
 	}
 
 	ItemState = SecondaryWeaponTemplates[`SYNC_RAND(SecondaryWeaponTemplates.Length)].CreateInstanceFromTemplate(NewGameState);
+
+	//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+	//where we are handing out generic weapons.
+	ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+	ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+
 	NewGameState.AddStateObject(ItemState);
 	
 	return ItemState;

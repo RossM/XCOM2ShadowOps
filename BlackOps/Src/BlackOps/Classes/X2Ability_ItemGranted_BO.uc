@@ -13,10 +13,11 @@ static function array<X2DataTemplate> CreateTemplates()
 static function X2AbilityTemplate FlechetteRounds()
 {
 	local X2AbilityTemplate             Template;
-	local X2Effect_TracerRounds         Effect;
+	local X2Effect_FlechetteRounds      Effect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'FlechetteRounds');
 
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_ammo_fletchette";
 	Template.AbilitySourceName = 'eAbilitySource_Item';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
@@ -26,7 +27,7 @@ static function X2AbilityTemplate FlechetteRounds()
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
-	Effect = new class'X2Effect_TracerRounds';
+	Effect = new class'X2Effect_FlechetteRounds';
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, false);
 	Effect.AimMod = class 'X2Item_Ammo_BO'.default.FlechetteHitModifier;
@@ -44,6 +45,7 @@ static function X2AbilityTemplate HollowPointRounds()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'HollowPointRounds');
 
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_ammo_needle";
 	Template.AbilitySourceName = 'eAbilitySource_Item';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;

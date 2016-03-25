@@ -420,3 +420,229 @@ function string GetSoldierClassDisplayName()
 
 	return GetSoldierClassTemplate().DisplayName;
 }
+
+// Modified to choose a loadout randomly if there are multiple options
+function ApplyInventoryLoadout(XComGameState ModifyGameState, optional name NonDefaultLoadout)
+{
+	local X2ItemTemplateManager ItemTemplateManager;
+	local InventoryLoadout Loadout;
+	local InventoryLoadoutItem LoadoutItem;
+	local X2EquipmentTemplate EquipmentTemplate;
+	local XComGameState_Item NewItem;
+	local name UseLoadoutName, RequiredLoadout;
+	local X2SoldierClassTemplate SoldierClassTemplate;
+	local array<InventoryLoadout> FoundLoadouts;
+
+	if (NonDefaultLoadout != '')      
+	{
+		//  If loadout is specified, always use that.
+		UseLoadoutName = NonDefaultLoadout;
+	}
+	else
+	{
+		//  If loadout was not specified, use the character template's default loadout, or the squaddie loadout for the soldier class (if any).
+		UseLoadoutName = GetMyTemplate().DefaultLoadout;
+		SoldierClassTemplate = GetSoldierClassTemplate();
+		if (SoldierClassTemplate != none && SoldierClassTemplate.SquaddieLoadout != '')
+			UseLoadoutName = SoldierClassTemplate.SquaddieLoadout;
+	}
+
+	ItemTemplateManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	foreach ItemTemplateManager.Loadouts(Loadout)
+	{
+		if (Loadout.LoadoutName == UseLoadoutName)
+		{
+			FoundLoadouts.AddItem(Loadout);
+		}
+	}
+	if (FoundLoadouts.Length >= 1)
+	{
+		Loadout = FoundLoadouts[`SYNC_RAND(FoundLoadouts.Length)];
+		foreach Loadout.Items(LoadoutItem)
+		{
+			EquipmentTemplate = X2EquipmentTemplate(ItemTemplateManager.FindItemTemplate(LoadoutItem.Item));
+			if (EquipmentTemplate != none)
+			{
+				NewItem = EquipmentTemplate.CreateInstanceFromTemplate(ModifyGameState);
+
+				//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+				//where we are handing out generic weapons.
+				if(EquipmentTemplate.InventorySlot == eInvSlot_PrimaryWeapon || EquipmentTemplate.InventorySlot == eInvSlot_SecondaryWeapon)
+				{
+					NewItem.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+					NewItem.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+				}
+
+				AddItemToInventory(NewItem, EquipmentTemplate.InventorySlot, ModifyGameState);
+				ModifyGameState.AddStateObject(NewItem);
+			}
+		}
+	}
+	//  Always apply the template's required loadout.
+	RequiredLoadout = GetMyTemplate().RequiredLoadout;
+	if (RequiredLoadout != '' && RequiredLoadout != UseLoadoutName && !HasLoadout(RequiredLoadout, ModifyGameState))
+		ApplyInventoryLoadout(ModifyGameState, RequiredLoadout);
+
+	// Give Kevlar armor if Unit's armor slot is empty
+	if(IsASoldier() && GetItemInSlot(eInvSlot_Armor, ModifyGameState) == none)
+	{
+		EquipmentTemplate = X2EquipmentTemplate(ItemTemplateManager.FindItemTemplate('KevlarArmor'));
+		NewItem = EquipmentTemplate.CreateInstanceFromTemplate(ModifyGameState);
+		AddItemToInventory(NewItem, eInvSlot_Armor, ModifyGameState);
+		ModifyGameState.AddStateObject(NewItem);
+	}
+}
+
+//------------------------------------------------------
+function XComGameState_Item GetBestPrimaryWeapon(XComGameState NewGameState)
+{
+	local array<X2WeaponTemplate> PrimaryWeaponTemplates;
+	local XComGameState_Item ItemState;
+
+	PrimaryWeaponTemplates = GetBestPrimaryWeaponTemplates();
+
+	if (PrimaryWeaponTemplates.Length == 0)
+	{
+		return none;
+	}
+	
+	ItemState = PrimaryWeaponTemplates[`SYNC_RAND(PrimaryWeaponTemplates.Length)].CreateInstanceFromTemplate(NewGameState);
+
+	//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+	//where we are handing out generic weapons.
+	ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+	ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+
+	NewGameState.AddStateObject(ItemState);
+	
+	return ItemState;
+}
+
+//------------------------------------------------------
+function XComGameState_Item GetBestSecondaryWeapon(XComGameState NewGameState)
+{
+	local array<X2WeaponTemplate> SecondaryWeaponTemplates;
+	local XComGameState_Item ItemState;
+
+	SecondaryWeaponTemplates = GetBestSecondaryWeaponTemplates();
+
+	if (SecondaryWeaponTemplates.Length == 0)
+	{
+		return none;
+	}
+
+	ItemState = SecondaryWeaponTemplates[`SYNC_RAND(SecondaryWeaponTemplates.Length)].CreateInstanceFromTemplate(NewGameState);
+
+	//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+	//where we are handing out generic weapons.
+	ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+	ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+
+	NewGameState.AddStateObject(ItemState);
+	
+	return ItemState;
+}
+
+//  Called only when ranking up from rookie to squaddie. Applies items per configured loadout, safely removing
+//  items and placing them back into HQ's inventory.
+function ApplySquaddieLoadout(XComGameState GameState, optional XComGameState_HeadquartersXCom XHQ = none)
+{
+	local X2ItemTemplateManager ItemTemplateMan;
+	local X2EquipmentTemplate ItemTemplate;
+	local InventoryLoadout Loadout;
+	local name SquaddieLoadout;
+	local bool bFoundLoadout;
+	local XComGameState_Item ItemState;
+	local array<XComGameState_Item> UtilityItems;
+	local int i;
+
+	`assert(GameState != none);
+
+	SquaddieLoadout = GetSoldierClassTemplate().SquaddieLoadout;
+	ItemTemplateMan = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	foreach ItemTemplateMan.Loadouts(Loadout)
+	{
+		if (Loadout.LoadoutName == SquaddieLoadout)
+		{
+			bFoundLoadout = true;
+			break;
+		}
+	}
+	if (bFoundLoadout)
+	{
+		for (i = 0; i < Loadout.Items.Length; ++i)
+		{
+			ItemTemplate = X2EquipmentTemplate(ItemTemplateMan.FindItemTemplate(Loadout.Items[i].Item));
+			if (ItemTemplate != none)
+			{
+				ItemState = none;
+				if (ItemTemplate.InventorySlot == eInvSlot_Utility)
+				{
+					//  If we can't add a utility item, remove the first one. That should fix it. If not, we may need more logic later.
+					if (!CanAddItemToInventory(ItemTemplate, ItemTemplate.InventorySlot, GameState))
+					{
+						UtilityItems = GetAllItemsInSlot(ItemTemplate.InventorySlot, GameState);
+						if (UtilityItems.Length > 0)
+						{
+							ItemState = UtilityItems[0];
+						}
+					}
+				}
+				else
+				{
+					//  If we can't add an item, there's probably one occupying the slot already, so remove it.
+					if (!CanAddItemToInventory(ItemTemplate, ItemTemplate.InventorySlot, GameState))
+					{
+						ItemState = GetItemInSlot(ItemTemplate.InventorySlot, GameState);
+					}
+				}
+				//  ItemState will be populated with an item we need to remove in order to place the new item in (if any).
+				if (ItemState != none)
+				{
+					if (ItemState.GetMyTemplateName() == ItemTemplate.DataName)
+						continue;
+					if (!RemoveItemFromInventory(ItemState, GameState))
+					{
+						`RedScreen("Unable to remove item from inventory. Squaddie loadout will be affected." @ ItemState.ToString());
+						continue;
+					}
+
+					if(XHQ != none)
+					{
+						XHQ.PutItemInInventory(GameState, ItemState);
+					}
+				}
+				if (!CanAddItemToInventory(ItemTemplate, ItemTemplate.InventorySlot, GameState))
+				{
+					`RedScreen("Unable to add new item to inventory. Squaddie loadout will be affected." @ ItemTemplate.DataName);
+					continue;
+				}
+				ItemState = ItemTemplate.CreateInstanceFromTemplate(GameState);
+
+				//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
+				//where we are handing out generic weapons.
+				if(ItemTemplate.InventorySlot == eInvSlot_PrimaryWeapon || ItemTemplate.InventorySlot == eInvSlot_SecondaryWeapon)
+				{
+					ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
+					ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
+				}
+
+				AddItemToInventory(ItemState, ItemTemplate.InventorySlot, GameState);
+				GameState.AddStateObject(ItemState);
+			}
+			else
+			{
+				`RedScreen("Unknown item template" @ Loadout.Items[i].Item @ "specified in loadout" @ SquaddieLoadout);
+			}
+		}
+	}
+
+	// Give Kevlar armor if Unit's armor slot is empty
+	if(IsASoldier() && GetItemInSlot(eInvSlot_Armor, GameState) == none)
+	{
+		ItemTemplate = X2EquipmentTemplate(ItemTemplateMan.FindItemTemplate('KevlarArmor'));
+		ItemState = ItemTemplate.CreateInstanceFromTemplate(GameState);
+		AddItemToInventory(ItemState, eInvSlot_Armor, GameState);
+		GameState.AddStateObject(ItemState);
+	}
+}

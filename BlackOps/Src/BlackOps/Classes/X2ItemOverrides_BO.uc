@@ -6,6 +6,7 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 
+	Templates.AddItem(CreateKevlarArmor());
 	Templates.AddItem(CreateFlashbangGrenade());
 	Templates.AddItem(CreateSmokeGrenade());
 	Templates.AddItem(SmokeGrenadeMk2());
@@ -32,6 +33,24 @@ static event array<X2DataTemplate> CreateTemplatesEvent()
 
 	NewTemplates.Length = 0;
 	return NewTemplates;
+}
+
+static function X2DataTemplate CreateKevlarArmor()
+{
+	local X2ArmorTemplate Template;
+
+	`CREATE_X2TEMPLATE(class'X2ArmorTemplate', Template, 'KevlarArmor');
+	Template.strImage = "img:///UILibrary_StrategyImages.X2InventoryIcons.Inv_Kevlar_Armor";
+	Template.StartingItem = true;
+	Template.CanBeBuilt = false;
+	Template.ArmorTechCat = 'conventional';
+	Template.Tier = 0;
+	Template.AkAudioSoldierArmorSwitch = 'Conventional';
+	Template.EquipSound = "StrategyUI_Armor_Equip_Conventional";
+
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.HealthLabel, eStat_HP, 0, true);
+
+	return Template;
 }
 
 static function X2DataTemplate CreateFlashbangGrenade()
