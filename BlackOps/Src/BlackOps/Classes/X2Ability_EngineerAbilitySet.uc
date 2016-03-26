@@ -144,7 +144,7 @@ static function X2AbilityTemplate Fastball()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = 5;
 	Template.AbilityCooldown = Cooldown;
 	
 	Template.AbilityToHitCalc = default.DeadEye;
