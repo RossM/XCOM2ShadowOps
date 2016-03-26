@@ -65,6 +65,9 @@
     <Content Include="Src\BlackOps\Classes\UISquadSelect_ListItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\UISquadSelect_UtilityItem_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
       <SubType>Content</SubType>
     </Content>
