@@ -25,6 +25,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Vanish());
 	Templates.AddItem(VanishTrigger());
 	Templates.AddItem(RestorationProtocol());
+	Templates.AddItem(StasisField());
 
 	return Templates;
 }
@@ -663,7 +664,6 @@ static function X2AbilityTemplate RestorationProtocol()
 static function UnconsciousVisualizationRemoved(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
 {
 	local XComGameState_Unit UnitState;
-	local X2Action temp;
 
 	UnitState = XComGameState_Unit(BuildTrack.StateObject_NewState);
 
@@ -675,3 +675,60 @@ static function UnconsciousVisualizationRemoved(XComGameState VisualizeGameState
 
 	class 'X2StatusEffects'.static.UnconsciousVisualizationRemoved(VisualizeGameState, BuildTrack, EffectApplyResult);
 }
+
+static function X2AbilityTemplate StasisField()
+{
+	local X2AbilityTemplate                     Template;
+	local X2AbilityCost_ActionPoints            ActionPointCost;
+	local X2AbilityCooldown                     Cooldown;
+	local X2Effect_Stasis						StasisEffect;
+	local X2AbilityMultiTarget_Radius			RadiusMultiTarget;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'StasisField');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stasis";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.Hostility = eHostility_Offensive;
+	Template.bLimitTargetIcons = true;
+	Template.DisplayTargetHitChance = false;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = false;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 5;
+	Template.AbilityCooldown = Cooldown;
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
+	RadiusMultiTarget.fTargetRadius = 6;
+	RadiusMultiTarget.bIgnoreBlockingCover = true;
+	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
+
+	StasisEffect = new class'X2Effect_Stasis';
+	StasisEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
+	StasisEffect.bUseSourcePlayerState = true;
+	StasisEffect.bRemoveWhenTargetDies = true;          //  probably shouldn't be possible for them to die while in stasis, but just in case
+	StasisEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage);
+	Template.AddMultiTargetEffect(StasisEffect);
+	Template.AddTargetEffect(StasisEffect);
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bSkipFireAction = true;
+
+	Template.bCrossClassEligible = false;
+
+	return Template;
+}
+
