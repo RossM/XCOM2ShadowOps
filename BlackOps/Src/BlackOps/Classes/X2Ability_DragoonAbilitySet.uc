@@ -26,6 +26,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(VanishTrigger());
 	Templates.AddItem(RestorationProtocol());
 	Templates.AddItem(StasisField());
+	Templates.AddItem(PuppetProtocol());
 
 	return Templates;
 }
@@ -691,7 +692,7 @@ static function X2AbilityTemplate StasisField()
 	Template.Hostility = eHostility_Offensive;
 	Template.bLimitTargetIcons = true;
 	Template.DisplayTargetHitChance = false;
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SelfTarget;
@@ -729,6 +730,80 @@ static function X2AbilityTemplate StasisField()
 
 	Template.bCrossClassEligible = false;
 
+	return Template;
+}
+
+static function X2AbilityTemplate PuppetProtocol()
+{
+	local X2AbilityTemplate             Template;
+	local X2AbilityCost_ActionPoints    ActionPointCost;
+	local X2Condition_UnitProperty      UnitPropertyCondition;
+	local X2Effect_MindControl          MindControlEffect;
+	local X2Effect_StunRecover			StunRecoverEffect;
+	local X2Condition_UnitEffects       EffectCondition;
+	local X2AbilityCharges              Charges;
+	local X2AbilityCost_Charges         ChargeCost;
+	local X2AbilityCooldown             Cooldown;
+	local X2Condition_UnitImmunities	UnitImmunityCondition;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'PuppetProtocol');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_domination";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
+	Template.Hostility = eHostility_Offensive;
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Charges = new class'X2AbilityCharges';
+	Charges.InitialCharges = 1;
+	Template.AbilityCharges = Charges;
+
+	ChargeCost = new class'X2AbilityCost_Charges';
+	ChargeCost.NumCharges = 1;
+	ChargeCost.bOnlyOnHit = true;
+	Template.AbilityCosts.AddItem(ChargeCost);
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 4;
+	Cooldown.bDoNotApplyOnHit = true;
+	Template.AbilityCooldown = Cooldown;
+	
+	Template.AbilityToHitCalc = new class'X2AbilityToHitCalc_FastHacking';
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	UnitPropertyCondition = new class'X2Condition_UnitProperty';
+	UnitPropertyCondition.ExcludeDead = true;
+	UnitPropertyCondition.ExcludeFriendlyToSource = true;
+	UnitPropertyCondition.ExcludeOrganic = true;
+	UnitPropertyCondition.FailOnNonUnits = true;
+	Template.AbilityTargetConditions.AddItem(UnitPropertyCondition);	
+	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
+
+	EffectCondition = new class'X2Condition_UnitEffects';
+	EffectCondition.AddExcludeEffect(class'X2Effect_MindControl'.default.EffectName, 'AA_UnitIsMindControlled');
+	Template.AbilityTargetConditions.AddItem(EffectCondition);
+
+	//  mind control target
+	MindControlEffect = class'X2StatusEffects'.static.CreateMindControlStatusEffect(1, true, true);
+	Template.AddTargetEffect(MindControlEffect);
+
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.ActivationSpeech = 'Domination';
+	Template.SourceMissSpeech = 'SoldierFailsControl';
+
+	Template.bStationaryWeapon = true;
+	Template.PostActivationEvents.AddItem('ItemRecalled');
+	Template.BuildNewGameStateFn = class'X2Ability_SpecialistAbilitySet'.static.AttachGremlinToTarget_BuildGameState;
+	Template.BuildVisualizationFn = class'X2Ability_SpecialistAbilitySet'.static.GremlinSingleTarget_BuildVisualization;
+	
 	return Template;
 }
 

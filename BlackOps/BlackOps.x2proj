@@ -74,6 +74,9 @@
     <Content Include="Src\BlackOps\Classes\X2AbilityMultiTarget_SoldierBonusRadius_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2AbilityToHitCalc_StandardAim_BO.uc">
       <SubType>Content</SubType>
     </Content>
