@@ -24,6 +24,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('Rocketeer', "img:///UILibrary_PerkIcons.UIPerk_rocketeer", true));
 	Templates.AddItem(Vanish());
 	Templates.AddItem(VanishTrigger());
+	Templates.AddItem(RestorationProtocol());
 
 	return Templates;
 }
@@ -565,4 +566,112 @@ static function X2AbilityTemplate VanishTrigger()
 	Template.bSkipFireAction = true;
 
 	return Template;
+}
+
+static function X2AbilityTemplate RestorationProtocol()
+{
+	local X2AbilityTemplate                     Template;
+	local X2AbilityCost_ActionPoints            ActionPointCost;
+	local X2Condition_UnitProperty              TargetProperty;
+	local X2Condition_UnitStatCheck             UnitStatCheckCondition;
+	local X2AbilityCharges                      Charges;
+	local X2AbilityCost_Charges                 ChargeCost;
+	local X2Effect_RestorationProtocol			RestorationEffect;			
+	local X2Effect_RemoveEffects				RemoveEffects;
+	local X2Effect_Persistent					StandUpEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'RestorationProtocol');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_regeneration";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.Hostility = eHostility_Defensive;
+	Template.bLimitTargetIcons = true;
+	Template.DisplayTargetHitChance = false;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SingleTargetWithSelf;
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = false;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Charges = new class 'X2AbilityCharges';
+	Charges.InitialCharges = 1;
+	Template.AbilityCharges = Charges;
+
+	ChargeCost = new class'X2AbilityCost_Charges';
+	ChargeCost.NumCharges = 1;
+	Template.AbilityCosts.AddItem(ChargeCost);
+	
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	TargetProperty = new class'X2Condition_UnitProperty';
+	TargetProperty.ExcludeDead = false;
+	TargetProperty.ExcludeHostileToSource = true;
+	TargetProperty.ExcludeFriendlyToSource = false;
+	TargetProperty.RequireSquadmates = true;
+	Template.AbilityTargetConditions.AddItem(TargetProperty);
+
+	//Hack: Do this instead of ExcludeDead, to only exclude properly-dead or bleeding-out units.
+	UnitStatCheckCondition = new class'X2Condition_UnitStatCheck';
+	UnitStatCheckCondition.AddCheckStat(eStat_HP, 0, eCheck_GreaterThan);
+	Template.AbilityTargetConditions.AddItem(UnitStatCheckCondition);
+
+	Template.AbilityTargetConditions.AddItem(new class'X2Condition_RestorationProtocol');
+
+	RestorationEffect = new class'X2Effect_RestorationProtocol';
+	RestorationEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
+	RestorationEffect.HealAmount = 2;
+	RestorationEffect.MaxHealAmount = 8;
+	RestorationEffect.IncreasedHealProject = 'BattlefieldMedicine';
+	RestorationEffect.IncreasedAmountToHeal = 3;
+	RestorationEffect.HealingBonusMultiplier = 2;
+	RestorationEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true);
+	Template.AddTargetEffect(RestorationEffect);
+
+	Template.AddTargetEffect(class'X2Ability_SpecialistAbilitySet'.static.RemoveAllEffectsByDamageType());
+
+	RemoveEffects = new class'X2Effect_RemoveEffects';
+	RemoveEffects.EffectNamesToRemove.AddItem(class'X2StatusEffects'.default.BleedingOutName);
+	RemoveEffects.EffectNamesToRemove.AddItem(class'X2StatusEffects'.default.UnconsciousName);
+	Template.AddTargetEffect(RemoveEffects);
+
+	StandUpEffect = new class'X2Effect_Persistent';
+	StandUpEffect.BuildPersistentEffect(1);
+	StandUpEffect.VisualizationFn = UnconsciousVisualizationRemoved;
+	Template.AddTargetEffect(StandUpEffect);
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.bStationaryWeapon = true;
+	Template.BuildNewGameStateFn = class'X2Ability_SpecialistAbilitySet'.static.AttachGremlinToTarget_BuildGameState;
+	Template.BuildVisualizationFn = class'X2Ability_SpecialistAbilitySet'.static.GremlinSingleTarget_BuildVisualization;
+	Template.bSkipPerkActivationActions = true;
+	Template.bShowActivation = true;
+	Template.PostActivationEvents.AddItem('ItemRecalled');
+
+	Template.CustomSelfFireAnim = 'NO_RevivalProtocol';
+
+	Template.bCrossClassEligible = false;
+
+	return Template;
+}
+
+static function UnconsciousVisualizationRemoved(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+{
+	local XComGameState_Unit UnitState;
+	local X2Action temp;
+
+	UnitState = XComGameState_Unit(BuildTrack.StateObject_NewState);
+
+	if( UnitState == none)
+		return;
+
+	if (!XGUnit(UnitState.GetVisualizer()).GetPawn().bFinalRagdoll)
+		return;
+
+	class 'X2StatusEffects'.static.UnconsciousVisualizationRemoved(VisualizeGameState, BuildTrack, EffectApplyResult);
 }

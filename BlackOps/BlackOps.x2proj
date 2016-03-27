@@ -98,6 +98,9 @@
     <Content Include="Src\BlackOps\Classes\X2Condition_NotVisibleToEnemies.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Condition_RestorationProtocol.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
     <Content Include="Src\BlackOps\Classes\X2Effect_Aggression.uc">
       <SubType>Content</SubType>
@@ -127,6 +130,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_Precision.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_ShieldProtocol.uc">
