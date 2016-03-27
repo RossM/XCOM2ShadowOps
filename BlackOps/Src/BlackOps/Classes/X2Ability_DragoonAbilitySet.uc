@@ -292,6 +292,7 @@ static function X2AbilityTemplate StealthProtocol()
 	TargetProperty.ExcludeHostileToSource = true;
 	TargetProperty.ExcludeFriendlyToSource = false;
 	TargetProperty.RequireSquadmates = true;
+	TargetProperty.ExcludeCivilian = true;
 	Template.AbilityTargetConditions.AddItem(TargetProperty);
 
 	EffectsCondition = new class'X2Condition_UnitEffects';
