@@ -740,12 +740,10 @@ static function X2AbilityTemplate PuppetProtocol()
 	local X2AbilityCost_ActionPoints    ActionPointCost;
 	local X2Condition_UnitProperty      UnitPropertyCondition;
 	local X2Effect_MindControl          MindControlEffect;
-	local X2Effect_StunRecover			StunRecoverEffect;
 	local X2Condition_UnitEffects       EffectCondition;
 	local X2AbilityCharges              Charges;
 	local X2AbilityCost_Charges         ChargeCost;
 	local X2AbilityCooldown             Cooldown;
-	local X2Condition_UnitImmunities	UnitImmunityCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'PuppetProtocol');
 
