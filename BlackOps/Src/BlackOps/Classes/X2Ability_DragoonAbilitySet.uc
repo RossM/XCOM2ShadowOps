@@ -744,13 +744,14 @@ static function X2AbilityTemplate PuppetProtocol()
 	local X2AbilityCharges              Charges;
 	local X2AbilityCost_Charges         ChargeCost;
 	local X2AbilityCooldown             Cooldown;
+	local X2Effect_BreakUnitConcealment	BreakConcealmentEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'PuppetProtocol');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_domination";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
-	Template.Hostility = eHostility_Offensive;
+	Template.Hostility = eHostility_Neutral;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 1;
@@ -791,6 +792,12 @@ static function X2AbilityTemplate PuppetProtocol()
 	//  mind control target
 	MindControlEffect = class'X2StatusEffects'.static.CreateMindControlStatusEffect(1, true, true);
 	Template.AddTargetEffect(MindControlEffect);
+
+	// On failure, break concealment
+	BreakConcealmentEffect = new class'X2Effect_BreakUnitConcealment';
+	BreakConcealmentEffect.bApplyOnHit = false;
+	BreakConcealmentEffect.bApplyOnMiss = true;
+	Template.AddShooterEffect(BreakConcealmentEffect);
 
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
