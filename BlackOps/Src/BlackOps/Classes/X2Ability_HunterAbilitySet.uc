@@ -26,6 +26,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Fade());
 	Templates.AddItem(SliceAndDice());
 	Templates.AddItem(SliceAndDice2());
+	Templates.AddItem(Tracking());
+	Templates.AddItem(TrackingTrigger());
 
 	return Templates;
 }
@@ -853,3 +855,80 @@ static function X2AbilityTemplate SliceAndDice2()
 	return Template;
 }
 
+static function X2AbilityTemplate Tracking()
+{
+	local X2AbilityTemplate						Template;
+	Template = PurePassive('Tracking', "img:///UILibrary_PerkIcons.UIPerk_sensorsweep", true);
+	Template.AdditionalAbilities.AddItem('TrackingTrigger');
+
+	return Template;
+}
+
+static function X2AbilityTemplate TrackingTrigger()
+{
+	local X2AbilityTemplate             Template;
+	local X2AbilityMultiTarget_Radius   RadiusMultiTarget;
+	local X2Effect_Tracking     TrackingEffect;
+	local X2Condition_UnitProperty      TargetProperty;
+	local X2AbilityTrigger_EventListener	EventListener;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'TrackingTrigger');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sensorsweep";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+	Template.bDisplayInUITacticalText = false;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	Template.AbilityTargetStyle = default.SelfTarget;
+
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
+	RadiusMultiTarget.fTargetRadius = 27;
+	RadiusMultiTarget.bIgnoreBlockingCover = true; // skip the cover checks, the squad viewer will handle this once selected
+	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
+
+	TargetProperty = new class'X2Condition_UnitProperty';
+	TargetProperty.ExcludeDead = true;
+	TargetProperty.FailOnNonUnits = true;
+	Template.AbilityMultiTargetConditions.AddItem(TargetProperty);
+
+	TrackingEffect = new class'X2Effect_Tracking';
+	TrackingEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
+	TrackingEffect.TargetConditions.AddItem(default.LivingHostileUnitOnlyProperty);
+	Template.AddMultiTargetEffect(TrackingEffect);
+
+	TrackingEffect = new class'X2Effect_Tracking';
+	TrackingEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
+	TargetProperty = new class'X2Condition_UnitProperty';
+	TargetProperty.ExcludeNonCivilian = true;
+	TargetProperty.ExcludeHostileToSource = false;
+	TargetProperty.ExcludeFriendlyToSource = false;
+	TrackingEffect.TargetConditions.AddItem(TargetProperty);
+	Template.AddMultiTargetEffect(TrackingEffect);
+
+	TrackingEffect = new class'X2Effect_Tracking';
+	TrackingEffect.bFlyover = true;
+	TrackingEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
+	TrackingEffect.TargetConditions.AddItem(default.LivingHostileUnitOnlyProperty);
+	TrackingEffect.TargetConditions.AddItem(new class'X2Condition_NotVisibleToEnemies');
+	Template.AddMultiTargetEffect(TrackingEffect);
+
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'UnitMoveFinished';
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	Template.bSkipFireAction = true;
+	Template.bSkipPerkActivationActions = true;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;
+}

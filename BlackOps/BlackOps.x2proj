@@ -153,6 +153,9 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_SmokeGrenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_Tracking.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_VitalPoint.uc">
       <SubType>Content</SubType>
     </Content>
