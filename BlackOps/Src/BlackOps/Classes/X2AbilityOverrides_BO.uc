@@ -1,6 +1,8 @@
-class X2AbilityOverrides_BO extends X2Ability;
+class X2AbilityOverrides_BO extends X2Ability config(GameData_SoldierSkills);
 
 // This class replaces some abilities from the base game with modified versions.
+
+var config int SuppressionHitModifier;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -14,6 +16,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Add_SniperStandardFire());
 	Templates.AddItem(CreateAnimaGateAbility());
 	Templates.AddItem(LightningHands());
+	Templates.AddItem(SuppressionShot());
 
 	return Templates;
 }
@@ -49,6 +52,7 @@ static function X2AbilityTemplate ThrowGrenade()
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2Condition_UnitInventory         UnitInventoryCondition;
 	local X2Condition_AbilitySourceWeapon   GrenadeCondition, ProximityMineCondition;
+	local X2Condition_UnitEffects			ExcludeEffects;
 	local X2Effect_ProximityMine            ProximityMineEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ThrowGrenade');	
@@ -88,6 +92,10 @@ static function X2AbilityTemplate ThrowGrenade()
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
 	UnitPropertyCondition.ExcludeDead = true;
 	Template.AbilityShooterConditions.AddItem(UnitPropertyCondition);
+
+	ExcludeEffects = new class'X2Condition_UnitEffects';
+	ExcludeEffects.AddExcludeEffect(class'X2Effect_Suppression'.default.EffectName, 'AA_UnitIsSuppressed');
+	Template.AbilityShooterConditions.AddItem(ExcludeEffects);
 
 	UnitInventoryCondition = new class'X2Condition_UnitInventory';
 	UnitInventoryCondition.RelevantSlot = eInvSlot_SecondaryWeapon;
@@ -155,6 +163,7 @@ static function X2DataTemplate LaunchGrenade()
 	local X2AbilityMultiTarget_SoldierBonusRadius RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2Condition_AbilitySourceWeapon   GrenadeCondition, ProximityMineCondition;
+	local X2Condition_UnitEffects			ExcludeEffects;
 	local X2Effect_ProximityMine            ProximityMineEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'LaunchGrenade');
@@ -196,6 +205,10 @@ static function X2DataTemplate LaunchGrenade()
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
 	UnitPropertyCondition.ExcludeDead = true;
 	Template.AbilityShooterConditions.AddItem(UnitPropertyCondition);
+
+	ExcludeEffects = new class'X2Condition_UnitEffects';
+	ExcludeEffects.AddExcludeEffect(class'X2Effect_Suppression'.default.EffectName, 'AA_UnitIsSuppressed');
+	Template.AbilityShooterConditions.AddItem(ExcludeEffects);
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
 	UnitPropertyCondition.ExcludeDead = false;
@@ -718,6 +731,90 @@ static function X2AbilityTemplate LightningHands()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	return Template;
 }
+
+// Given an Aim bonus
+static function X2AbilityTemplate SuppressionShot()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
+	local X2AbilityToHitCalc_StandardAim    StandardAim;
+	local X2Condition_Visibility            TargetVisibilityCondition;
+	local X2AbilityTrigger_Event	        Trigger;
+	local array<name>                       SkipExclusions;
+	local X2Condition_UnitEffectsWithAbilitySource TargetEffectCondition;
+	local X2Effect_RemoveEffects            RemoveSuppression;
+	local X2Effect                          ShotEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'SuppressionShot');
+
+	Template.bDontDisplayInAbilitySummary = true;
+	ReserveActionPointCost = new class'X2AbilityCost_ReserveActionPoints';
+	ReserveActionPointCost.iNumPoints = 1;
+	ReserveActionPointCost.AllowedTypes.AddItem('Suppression');
+	Template.AbilityCosts.AddItem(ReserveActionPointCost);
+	
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bReactionFire = true;
+	StandardAim.BuiltInHitMod = default.SuppressionHitModifier;
+	Template.AbilityToHitCalc = StandardAim;
+	Template.AbilityToHitOwnerOnMissCalc = StandardAim;
+
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+
+	TargetEffectCondition = new class'X2Condition_UnitEffectsWithAbilitySource';
+	TargetEffectCondition.AddRequireEffect(class'X2Effect_Suppression'.default.EffectName, 'AA_UnitIsNotSuppressed');
+	Template.AbilityTargetConditions.AddItem(TargetEffectCondition);
+
+	TargetVisibilityCondition = new class'X2Condition_Visibility';	
+	TargetVisibilityCondition.bRequireGameplayVisible = true;
+	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
+	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+	Template.bAllowAmmoEffects = true;
+
+	RemoveSuppression = new class'X2Effect_RemoveEffects';
+	RemoveSuppression.EffectNamesToRemove.AddItem(class'X2Effect_Suppression'.default.EffectName);
+	RemoveSuppression.bCheckSource = true;
+	RemoveSuppression.SetupEffectOnShotContextResult(true, true);
+	Template.AddShooterEffect(RemoveSuppression);
+	
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+
+	//Trigger on movement - interrupt the move
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_MovementObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+	
+	Template.AbilitySourceName = 'eAbilitySource_Standard';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_supression";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+
+	//don't want to exit cover, we are already in suppression/alert mode.
+	Template.bSkipExitCoverWhenFiring = true;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bAllowFreeFireWeaponUpgrade = true;	
+
+	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
+	ShotEffect = class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect();
+	ShotEffect.TargetConditions.AddItem(class'X2Ability_DefaultAbilitySet'.static.OverwatchTargetEffectsCondition());
+	Template.AddTargetEffect(ShotEffect);
+	//  Various Soldier ability specific effects - effects check for the ability before applying	
+	ShotEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
+	ShotEffect.TargetConditions.AddItem(class'X2Ability_DefaultAbilitySet'.static.OverwatchTargetEffectsCondition());
+	Template.AddTargetEffect(ShotEffect);
+	
+	return Template;	
+}
+
 
 defaultproperties
 {
