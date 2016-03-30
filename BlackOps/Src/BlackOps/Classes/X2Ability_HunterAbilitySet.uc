@@ -8,6 +8,7 @@ var config int PrecisionOffenseBonus;
 var config int LowProfileDefenseBonus;
 var config int SprinterMobilityBonus;
 var config int SliceAndDiceHitModifier;
+var config int BullseyeOffensePenalty, BullseyeDefensePenalty, BullseyeWillPenalty;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -28,6 +29,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SliceAndDice2());
 	Templates.AddItem(Tracking());
 	Templates.AddItem(TrackingTrigger());
+	Templates.AddItem(Bullseye());
 
 	return Templates;
 }
@@ -603,7 +605,6 @@ static function X2AbilityTemplate AssassinTrigger()
 {
 	local X2AbilityTemplate						Template;
 	local X2Effect_RangerStealth                StealthEffect;
-	local X2Condition_UnitValue					ValueCondition;
 	local X2AbilityTrigger_EventListener		EventListener;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'AssassinTrigger');
@@ -854,7 +855,7 @@ static function X2AbilityTemplate SliceAndDice2()
 static function X2AbilityTemplate Tracking()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('Tracking', "img:///UILibrary_PerkIcons.UIPerk_sensorsweep", true);
+	Template = PurePassive('Tracking', "img:///UILibrary_PerkIcons.UIPerk_observer", true);
 	Template.AdditionalAbilities.AddItem('TrackingTrigger');
 
 	return Template;
@@ -870,7 +871,7 @@ static function X2AbilityTemplate TrackingTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'TrackingTrigger');
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sensorsweep";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_observer";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
@@ -927,4 +928,97 @@ static function X2AbilityTemplate TrackingTrigger()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 
 	return Template;
+}
+
+static function X2AbilityTemplate Bullseye()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local array<name>                       SkipExclusions;
+	local X2AbilityToHitCalc_StandardAim    StandardAim;
+	local X2AbilityCooldown                 Cooldown;
+	local X2Effect_PersistentStatChange		StatChangeEffect;
+	local X2Condition_Visibility			TargetVisibilityCondition;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Bullseye');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_precisionshot";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.DisplayTargetHitChance = true;
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+
+	// Activated by a button press; additionally, tells the AI this is an activatable
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	// *** VALIDITY CHECKS *** //
+	//  Normal effect restrictions (except disoriented)
+	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+
+	// Targeting Details
+	// Can only shoot visible enemies
+	TargetVisibilityCondition = new class'X2Condition_Visibility';
+	TargetVisibilityCondition.bRequireGameplayVisible = true;
+	TargetVisibilityCondition.bAllowSquadsight = true;
+	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
+	// Can't target dead; Can't target friendlies
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+	// Can't shoot while dead
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	// Only at single targets that are in range.
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+
+	// Action Point
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 2;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);	
+
+	// Ammo
+	AmmoCost = new class'X2AbilityCost_Ammo';	
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+	Template.bAllowAmmoEffects = true;
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 5;
+	Template.AbilityCooldown = Cooldown;
+
+	StatChangeEffect = new class'X2Effect_PersistentStatChange';
+	StatChangeEffect.EffectName = 'Bullseye';
+	StatChangeEffect.BuildPersistentEffect(1, true, true, true);
+	StatChangeEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	StatChangeEffect.AddPersistentStatChange(eStat_Offense, default.BullseyeOffensePenalty);
+	StatChangeEffect.AddPersistentStatChange(eStat_Defense, default.BullseyeDefensePenalty);
+	StatChangeEffect.AddPersistentStatChange(eStat_Will, default.BullseyeWillPenalty);
+	Template.AddTargetEffect(StatChangeEffect);
+
+	// Weapon Upgrade Compatibility
+	Template.bAllowFreeFireWeaponUpgrade = true;                                            // Flag that permits action to become 'free action' via 'Hair Trigger' or similar upgrade / effects
+
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	Template.AssociatedPassives.AddItem('HoloTargeting');
+
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bHitsAreCrits = true;
+	Template.AbilityToHitCalc = StandardAim;
+	Template.AbilityToHitOwnerOnMissCalc = StandardAim;
+		
+	// Targeting Method
+	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
+	Template.bUsesFiringCamera = true;
+	Template.CinescriptCameraType = "StandardGunFiring";
+
+	// MAKE IT LIVE!
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;	
+
+	Template.bCrossClassEligible = false;
+
+	return Template;	
 }
