@@ -27,6 +27,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZeroIn());
 	Templates.AddItem(BulletSweep());
 	Templates.AddItem(Flush());
+	Templates.AddItem(RifleSuppression());
 
 	return Templates;
 }
@@ -667,6 +668,72 @@ static function X2AbilityTemplate BulletSweep()
 	Template.CinescriptCameraType = "Grenadier_SaturationFire";
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;	
+}
+
+static function X2AbilityTemplate RifleSuppression()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2Effect_ReserveActionPoints      ReserveActionPointsEffect;
+	local X2Effect_Suppression              SuppressionEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'RifleSuppression');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_riflesupression";
+	
+	AmmoCost = new class'X2AbilityCost_Ammo';	
+	AmmoCost.iAmmo = 2;
+	Template.AbilityCosts.AddItem(AmmoCost);
+	
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.bConsumeAllPoints = true;   //  this will guarantee the unit has at least 1 action point
+	ActionPointCost.bFreeCost = true;           //  ReserveActionPoints effect will take all action points away
+	Template.AbilityCosts.AddItem(ActionPointCost);
+	
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	
+	Template.AddShooterEffectExclusions();
+	
+	ReserveActionPointsEffect = new class'X2Effect_ReserveActionPoints';
+	ReserveActionPointsEffect.ReserveType = 'Suppression';
+	Template.AddShooterEffect(ReserveActionPointsEffect);
+
+	Template.AbilityToHitCalc = default.DeadEye;	
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileUnitDisallowMindControlProperty);
+	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	SuppressionEffect = new class'X2Effect_Suppression';
+	SuppressionEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
+	SuppressionEffect.bRemoveWhenTargetDies = true;
+	SuppressionEffect.bRemoveWhenSourceDamaged = true;
+	SuppressionEffect.bBringRemoveVisualizationForward = true;
+	SuppressionEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, class'X2Ability_GrenadierAbilitySet'.default.SuppressionTargetEffectDesc, Template.IconImage);
+	SuppressionEffect.SetSourceDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, class'X2Ability_GrenadierAbilitySet'.default.SuppressionSourceEffectDesc, Template.IconImage);
+	Template.AddTargetEffect(SuppressionEffect);
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CORPORAL_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.AdditionalAbilities.AddItem('SuppressionShot');
+	Template.bIsASuppressionEffect = true;
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+
+	Template.AssociatedPassives.AddItem('HoloTargeting');
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	// Template.BuildVisualizationFn = class'X2Ability_GrenadierAbilitySet'.static.SuppressionBuildVisualization;
+	// Template.BuildAppliedVisualizationSyncFn = SuppressionBuildVisualizationSync;
+	Template.CinescriptCameraType = "StandardSuppression";
+
+	Template.Hostility = eHostility_Offensive;
 
 	return Template;	
 }
