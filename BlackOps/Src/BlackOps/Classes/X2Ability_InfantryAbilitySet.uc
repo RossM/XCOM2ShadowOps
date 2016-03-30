@@ -6,6 +6,7 @@ var name AlwaysReadyEffectName;
 var config int MagnumDamageBonus, MagnumOffenseBonus;
 var config int FullAutoHitModifier;
 var config int ZeroInOffenseBonus;
+var config int FlushHitModifier;
 
 var config name FreeAmmoForPocket;
 
@@ -24,6 +25,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZoneOfControl());
 	Templates.AddItem(ZoneOfControlShot());
 	Templates.AddItem(ZeroIn());
+	Templates.AddItem(BulletSweep());
+	Templates.AddItem(Flush());
 
 	return Templates;
 }
@@ -490,6 +493,182 @@ static function X2AbilityTemplate ZeroIn()
 	Template.bCrossClassEligible = true;
 
 	return Template;
+}
+
+static function X2AbilityTemplate Flush()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local array<name>                       SkipExclusions;
+	local X2Effect_Knockback				KnockbackEffect;
+	local X2Condition_Visibility            VisibilityCondition;
+	local X2Effect_Flush					FlushEffect;
+	local X2AbilityToHitCalc_StandardAim    StandardAim;
+	local X2AbilityCooldown                 Cooldown;
+
+	// Macro to do localisation and stuffs
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Flush');
+
+	// Icon Properties
+	Template.bDontDisplayInAbilitySummary = true;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_flush";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.DisplayTargetHitChance = true;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	// Activated by a button press; additionally, tells the AI this is an activatable
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
+	SkipExclusions.AddItem(class'X2StatusEffects'.default.BurningName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+
+	// Targeting Details
+	// Can only shoot visible enemies
+	VisibilityCondition = new class'X2Condition_Visibility';
+	VisibilityCondition.bRequireGameplayVisible = true;
+	VisibilityCondition.bAllowSquadsight = true;
+	Template.AbilityTargetConditions.AddItem(VisibilityCondition);
+	// Can't target dead; Can't target friendlies
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+	// Can't shoot while dead
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	// Only at single targets that are in range.
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+
+	// Action Point
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);	
+
+	// Ammo
+	AmmoCost = new class'X2AbilityCost_Ammo';	
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+	Template.bAllowAmmoEffects = true; // 	
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 5;
+	Template.AbilityCooldown = Cooldown;
+	
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.BuiltInHitMod = default.FlushHitModifier;
+	Template.AbilityToHitCalc = StandardAim;
+		
+	// Weapon Upgrade Compatibility
+	Template.bAllowFreeFireWeaponUpgrade = true;                        // Flag that permits action to become 'free action' via 'Hair Trigger' or similar upgrade / effects
+
+	FlushEffect = new class'X2Effect_Flush';
+	Template.AddTargetEffect(FlushEffect);
+
+	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	//  Various Soldier ability specific effects - effects check for the ability before applying	
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+	
+	// Damage Effect
+	Template.AddTargetEffect(default.WeaponUpgradeMissDamage);
+
+	// Targeting Method
+	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
+	Template.bUsesFiringCamera = true;
+	Template.CinescriptCameraType = "StandardGunFiring";	
+
+	Template.AssociatedPassives.AddItem('HoloTargeting');
+
+	// MAKE IT LIVE!
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;	
+	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
+
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+
+	KnockbackEffect = new class'X2Effect_Knockback';
+	KnockbackEffect.KnockbackDistance = 2;
+	KnockbackEffect.bUseTargetLocation = true;
+	Template.AddTargetEffect(KnockbackEffect);
+
+	Template.bCrossClassEligible = true;
+
+	return Template;	
+}
+
+static function X2AbilityTemplate BulletSweep()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2AbilityTarget_Cursor            CursorTarget;
+	local X2AbilityMultiTarget_Cone         ConeMultiTarget;
+	local X2Condition_UnitProperty          UnitPropertyCondition;
+	local X2AbilityToHitCalc_StandardAim    StandardAim;
+	local X2AbilityCooldown                 Cooldown;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'BulletSweep');
+	
+	AmmoCost = new class'X2AbilityCost_Ammo';	
+	AmmoCost.iAmmo = 3;
+	Template.AbilityCosts.AddItem(AmmoCost);
+	
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 5;
+	Template.AbilityCooldown = Cooldown;
+	
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bMultiTargetOnly = true;
+	Template.AbilityToHitCalc = StandardAim;
+	
+	Template.AddMultiTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+	Template.bOverrideAim = true;
+
+	CursorTarget = new class'X2AbilityTarget_Cursor';
+	Template.AbilityTargetStyle = CursorTarget;	
+
+	ConeMultiTarget = new class'X2AbilityMultiTarget_Cone';
+	ConeMultiTarget.bExcludeSelfAsTargetIfWithinRadius = true;
+	ConeMultiTarget.ConeEndDiameter = class'X2Ability_GrenadierAbilitySet'.default.SATURATION_TILE_WIDTH * class'XComWorldData'.const.WORLD_StepSize;
+	ConeMultiTarget.bUseWeaponRangeForLength = true;
+	ConeMultiTarget.fTargetRadius = 99;     //  large number to handle weapon range - targets will get filtered according to cone constraints
+	ConeMultiTarget.bIgnoreBlockingCover = false;
+	Template.AbilityMultiTargetStyle = ConeMultiTarget;
+
+	UnitPropertyCondition = new class'X2Condition_UnitProperty';
+	UnitPropertyCondition.ExcludeDead = true;
+	Template.AbilityShooterConditions.AddItem(UnitPropertyCondition);
+
+	UnitPropertyCondition = new class'X2Condition_UnitProperty';
+	UnitPropertyCondition.ExcludeDead = true;
+	UnitPropertyCondition.ExcludeFriendlyToSource = true;
+	Template.AbilityTargetConditions.AddItem(UnitPropertyCondition);
+
+	Template.AddShooterEffectExclusions();
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+	
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_saturationfire";
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+
+	Template.ActionFireClass = class'X2Action_Fire_SaturationFire';
+
+	Template.TargetingMethod = class'X2TargetingMethod_Cone';
+
+	Template.ActivationSpeech = 'SaturationFire';
+	Template.CinescriptCameraType = "Grenadier_SaturationFire";
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;	
 }
 
 DefaultProperties

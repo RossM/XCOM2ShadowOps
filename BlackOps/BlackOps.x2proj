@@ -117,6 +117,9 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_FlechetteRounds.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_Flush.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_FractureDamage.uc">
       <SubType>Content</SubType>
     </Content>
