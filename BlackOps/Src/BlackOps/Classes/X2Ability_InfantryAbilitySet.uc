@@ -5,6 +5,7 @@ var name AlwaysReadyEffectName;
 
 var config int MagnumDamageBonus, MagnumOffenseBonus;
 var config int FullAutoHitModifier;
+var config int ZeroInOffenseBonus;
 
 var config name FreeAmmoForPocket;
 
@@ -22,6 +23,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FullAuto2());
 	Templates.AddItem(ZoneOfControl());
 	Templates.AddItem(ZoneOfControlShot());
+	Templates.AddItem(ZeroIn());
 
 	return Templates;
 }
@@ -456,6 +458,36 @@ static function X2AbilityTemplate ZoneOfControlShot()
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;
+}
+
+static function X2AbilityTemplate ZeroIn()
+{
+	local X2AbilityTemplate             Template;
+	local X2Effect_ZeroIn               ZeroInEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ZeroIn');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_hyperactivepupils";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	ZeroInEffect = new class'X2Effect_ZeroIn';
+	ZeroInEffect.AccuracyBonus = default.ZeroInOffenseBonus;
+	ZeroInEffect.BuildPersistentEffect(1, true, true);
+	ZeroInEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, ,,Template.AbilitySourceName);
+	Template.AddTargetEffect(ZeroInEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	// Note: no visualization on purpose!
+
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }

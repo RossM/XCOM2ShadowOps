@@ -159,6 +159,9 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_VitalPoint.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_ZeroIn.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2ItemOverrides_BO.uc">
       <SubType>Content</SubType>
     </Content>
