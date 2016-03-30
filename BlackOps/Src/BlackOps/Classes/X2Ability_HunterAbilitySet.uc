@@ -618,17 +618,13 @@ static function X2AbilityTemplate AssassinTrigger()
 
 	EventListener = new class'X2AbilityTrigger_EventListener';
 	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
-	EventListener.ListenerData.EventID = 'PlayerTurnEnded';
+	EventListener.ListenerData.EventID = 'Assassin';
 	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
-	EventListener.ListenerData.Filter = eFilter_Player;
+	EventListener.ListenerData.Filter = eFilter_Unit;
 	Template.AbilityTriggers.AddItem(EventListener);
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
-
-	ValueCondition = new class'X2Condition_UnitValue';
-	ValueCondition.AddCheckValue('Assassin', 1, eCheck_GreaterThanOrEqual);
-	Template.AbilityShooterConditions.AddItem(ValueCondition);
 
 	StealthEffect = new class'X2Effect_RangerStealth';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);

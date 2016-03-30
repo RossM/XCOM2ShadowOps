@@ -5,51 +5,63 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	local X2EventManager EventMgr;
 	local XComGameState_Unit UnitState;
 	local Object EffectObj;
+	local Object ListenerObj;
 
 	EventMgr = `XEVENTMGR;
 
 	EffectObj = EffectGameState;
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
-
 	EventMgr.RegisterForEvent(EffectObj, 'Assassin', EffectGameState.TriggerAbilityFlyover, ELD_OnStateSubmitted, , UnitState);
+
+	ListenerObj = self;
+	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AssassinListener, ELD_OnStateSubmitted, , UnitState);	
 }
 
-// TODO: This is not an ideal place to do this because it can be blocked by Serial, which can be picked up as an AWC ability. It
-// would be better to use an event listener.
-function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStateContext_Ability AbilityContext, XComGameState_Ability kAbility, XComGameState_Unit SourceUnit, XComGameState_Item AffectWeapon, XComGameState NewGameState, const array<name> PreCostActionPoints, const array<name> PreCostReservePoints)
+function EventListenerReturn AssassinListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
-	local XComGameState_Unit TargetUnit;
-	local X2EventManager EventMgr;
 	local XComGameState_Ability AbilityState;
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameState_Unit SourceUnit, TargetUnit;
+	local XComGameState_Effect EffectState;
+	local X2EventManager EventMgr;
 	local GameRulesCache_VisibilityInfo VisInfo;
 
-	//  match the weapon associated with Serial to the attacking weapon
-	if (kAbility.SourceWeapon == EffectState.ApplyEffectParameters.ItemStateObjectRef)
+	SourceUnit = XComGameState_Unit(EventSource);
+	if (SourceUnit == none)
+		return ELR_NoInterrupt;
+
+	EffectState = SourceUnit.GetUnitAffectedByEffectState(EffectName);
+	if (EffectState == none)
+		return ELR_NoInterrupt;
+
+	AbilityState = XComGameState_Ability(EventData);
+	if (AbilityState == none)
+		return ELR_NoInterrupt;
+
+	AbilityContext = XComGameStateContext_Ability(GameState.GetContext());
+	if (AbilityContext == none)
+		return ELR_NoInterrupt;
+
+	// Match the weapon associated with Assassin to the attacking weapon
+	if (AbilityState.SourceWeapon == EffectState.ApplyEffectParameters.ItemStateObjectRef)
 	{
 		//  check for a direct kill shot
-		TargetUnit = XComGameState_Unit(NewGameState.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
+		TargetUnit = XComGameState_Unit(GameState.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
+
 		if (TargetUnit != none && TargetUnit.IsDead())
 		{
 			if (`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(SourceUnit.ObjectID, TargetUnit.ObjectID, VisInfo))
 			{
 				if (VisInfo.TargetCover == CT_None)
 				{
-					AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.AbilityStateObjectRef.ObjectID));
-					if (AbilityState != none)
-					{
-						SourceUnit.SetUnitFloatValue('Assassin', 1, eCleanup_BeginTurn);
-
-						EventMgr = `XEVENTMGR;
-						EventMgr.TriggerEvent('Assassin', AbilityState, SourceUnit, NewGameState);
-
-						return false;
-					}
+					EventMgr = `XEVENTMGR;
+					EventMgr.TriggerEvent('Assassin', AbilityState, SourceUnit, GameState);
 				}
 			}
-
 		}
 	}
-	return false;
+
+	return ELR_NoInterrupt;
 }
 
 DefaultProperties

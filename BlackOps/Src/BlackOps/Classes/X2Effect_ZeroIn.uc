@@ -20,7 +20,6 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 {
 	local UnitValue AccuracyUnitValue;
 	local ShotModifierInfo AccuracyInfo;
-	local XComGameState_Unit SourceUnit;
 	
 	Attacker.GetUnitValue(ZeroInUnitValueName, AccuracyUnitValue);
 
@@ -37,11 +36,8 @@ function EventListenerReturn ZeroInListener(Object EventData, Object EventSource
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameStateContext_Ability AbilityContext;
-	local XComGameStateContext_EffectRemoved RemoveContext;
-	local XComGameState NewGameState;
 	local XComGameState_Unit UnitState;
 	local XComGameState_Effect EffectState;
-	local int i;
 
 	UnitState = XComGameState_Unit(EventSource);
 	if (UnitState == none)
@@ -74,6 +70,6 @@ function EventListenerReturn ZeroInListener(Object EventData, Object EventSource
 DefaultProperties
 {
 	EffectName = "ZeroIn";
-	ZeroInUnitValueName = 'ZeroInBonus';
+	ZeroInUnitValueName = "ZeroInBonus";
 }
 
