@@ -9,64 +9,6 @@ function bool HasAmmoPocket()
 	return (!IsMPCharacter() && HasSoldierAbility('Bandolier'));
 }
 
-// Modified for Rocketeer and Packmaster abilities
-// NOTE: This could also be done by overriding X2TacticalGameRuleset.InitializeUnitAbilities.
-function protected MergeAmmoAsNeeded(XComGameState StartState)
-{
-	local XComGameState_Item ItemIter, ItemInnerIter;
-	local X2WeaponTemplate MergeTemplate;
-	local int Idx, InnerIdx, BonusAmmo;
-	local bool bFieldMedic, bHeavyOrdnance, bRocketeer, bPackmaster;
-
-	bFieldMedic = HasSoldierAbility('FieldMedic');
-	bHeavyOrdnance = HasSoldierAbility('HeavyOrdnance');
-	bRocketeer = HasSoldierAbility('Rocketeer');
-	bPackmaster = HasSoldierAbility('Packmaster');
-
-	for (Idx = 0; Idx < InventoryItems.Length; ++Idx)
-	{
-		ItemIter = XComGameState_Item(StartState.GetGameStateForObjectID(InventoryItems[Idx].ObjectID));
-		if (ItemIter != none && !ItemIter.bMergedOut)
-		{
-			MergeTemplate = X2WeaponTemplate(ItemIter.GetMyTemplate());
-			if (MergeTemplate != none && MergeTemplate.bMergeAmmo)
-			{
-				BonusAmmo = 0;
-
-				if (bFieldMedic && ItemIter.GetWeaponCategory() == class'X2Item_DefaultUtilityItems'.default.MedikitCat)
-					BonusAmmo += class'X2Ability_SpecialistAbilitySet'.default.FIELD_MEDIC_BONUS;
-				if (bHeavyOrdnance && ItemIter.InventorySlot == eInvSlot_GrenadePocket)
-					BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
-				if (bRocketeer && ItemIter.InventorySlot == eInvSlot_HeavyWeapon)
-					BonusAmmo += 1;
-				if (bPackmaster && (ItemIter.InventorySlot == eInvSlot_Utility || ItemIter.InventorySlot == eInvSlot_GrenadePocket))
-					BonusAmmo += 1;
-
-				ItemIter.MergedItemCount = 1;
-				for (InnerIdx = Idx + 1; InnerIdx < InventoryItems.Length; ++InnerIdx)
-				{
-					ItemInnerIter = XComGameState_Item(StartState.GetGameStateForObjectID(InventoryItems[InnerIdx].ObjectID));
-					if (ItemInnerIter != none && ItemInnerIter.GetMyTemplate() == MergeTemplate)
-					{
-						if (bFieldMedic && ItemInnerIter.GetWeaponCategory() == class'X2Item_DefaultUtilityItems'.default.MedikitCat)
-							BonusAmmo += class'X2Ability_SpecialistAbilitySet'.default.FIELD_MEDIC_BONUS;
-						if (bHeavyOrdnance && ItemInnerIter.InventorySlot == eInvSlot_GrenadePocket)
-							BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
-						if (bRocketeer && ItemInnerIter.InventorySlot == eInvSlot_HeavyWeapon)
-							BonusAmmo += 1;
-						if (bPackmaster && (ItemInnerIter.InventorySlot == eInvSlot_Utility || ItemInnerIter.InventorySlot == eInvSlot_GrenadePocket))
-							BonusAmmo += 1;
-						ItemInnerIter.bMergedOut = true;
-						ItemInnerIter.Ammo = 0;
-						ItemIter.MergedItemCount++;
-					}
-				}
-				ItemIter.Ammo = ItemIter.GetClipSize() * ItemIter.MergedItemCount + BonusAmmo;
-			}
-		}
-	}
-}
-
 // Modified for Deep Pockets ability
 simulated function bool RemoveItemFromInventory(XComGameState_Item Item, optional XComGameState CheckGameState)
 {

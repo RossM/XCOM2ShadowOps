@@ -171,6 +171,9 @@
     <Content Include="Src\BlackOps\Classes\X2Item_Ammo_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2TacticalGameRuleset_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2TargetingMethod_Grenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
