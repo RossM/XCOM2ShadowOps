@@ -29,10 +29,16 @@
     <Content Include="Config\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\XComGameData_CharacterStats.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\XComGameData_SoldierSkills.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\XComGameData_WeaponData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComMissions.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Content\UILibrary_BlackOps.upk">
