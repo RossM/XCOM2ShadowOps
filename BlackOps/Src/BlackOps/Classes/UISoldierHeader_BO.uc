@@ -79,18 +79,18 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 	}
 
 	// Get bonus stats for the Unit from items
-	WillBonus = Unit.GetUIStatFromInventory(eStat_Will, CheckGameState);
-	AimBonus = Unit.GetUIStatFromInventory(eStat_Offense, CheckGameState);
-	HealthBonus = Unit.GetUIStatFromInventory(eStat_HP, CheckGameState);
-	MobilityBonus = Unit.GetUIStatFromInventory(eStat_Mobility, CheckGameState);
-	TechBonus = Unit.GetUIStatFromInventory(eStat_Hacking, CheckGameState);
-	ArmorBonus = Unit.GetUIStatFromInventory(eStat_ArmorMitigation, CheckGameState);
-	DodgeBonus = Unit.GetUIStatFromInventory(eStat_Dodge, CheckGameState);
+	WillBonus = GetUIStatFromInventory(Unit, eStat_Will);
+	AimBonus = GetUIStatFromInventory(Unit, eStat_Offense);
+	HealthBonus = GetUIStatFromInventory(Unit, eStat_HP);
+	MobilityBonus = GetUIStatFromInventory(Unit, eStat_Mobility);
+	TechBonus = GetUIStatFromInventory(Unit, eStat_Hacking);
+	ArmorBonus = GetUIStatFromInventory(Unit, eStat_ArmorMitigation);
+	DodgeBonus = GetUIStatFromInventory(Unit, eStat_Dodge);
 
 	if(Unit.IsPsiOperative())
 	{
 		Psi = string(int(Unit.GetCurrentStat(eStat_PsiOffense)) + Unit.GetUIStatFromAbilities(eStat_PsiOffense));
-		PsiBonus = Unit.GetUIStatFromInventory(eStat_PsiOffense, CheckGameState);
+		PsiBonus = GetUIStatFromInventory(Unit, eStat_PsiOffense);
 	}
 
 	// Add bonus stats from an item that is about to be equipped
@@ -103,16 +103,16 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 		EquipmentTemplate = X2EquipmentTemplate(TmpItem.GetMyTemplate());
 		if (EquipmentTemplate != none)
 		{
-			WillBonus += Unit.GetUIStatFromItem(eStat_Will, TmpItem);
-			AimBonus += Unit.GetUIStatFromItem(eStat_Offense, TmpItem);
-			HealthBonus += Unit.GetUIStatFromItem(eStat_HP, TmpItem);
-			MobilityBonus += Unit.GetUIStatFromItem(eStat_Mobility, TmpItem);
-			TechBonus += Unit.GetUIStatFromItem(eStat_Hacking, TmpItem);
-			ArmorBonus += Unit.GetUIStatFromItem(eStat_ArmorMitigation, TmpItem);
-			DodgeBonus += Unit.GetUIStatFromItem(eStat_Dodge, TmpItem);
+			WillBonus += GetUIStatFromItem(Unit, eStat_Will, TmpItem);
+			AimBonus += GetUIStatFromItem(Unit, eStat_Offense, TmpItem);
+			HealthBonus += GetUIStatFromItem(Unit, eStat_HP, TmpItem);
+			MobilityBonus += GetUIStatFromItem(Unit, eStat_Mobility, TmpItem);
+			TechBonus += GetUIStatFromItem(Unit, eStat_Hacking, TmpItem);
+			ArmorBonus += GetUIStatFromItem(Unit, eStat_ArmorMitigation, TmpItem);
+			DodgeBonus += GetUIStatFromItem(Unit, eStat_Dodge, TmpItem);
 					
 			if(Unit.IsPsiOperative())
-				PsiBonus += Unit.GetUIStatFromItem(eStat_PsiOffense, TmpItem);
+				PsiBonus += GetUIStatFromItem(Unit, eStat_PsiOffense, TmpItem);
 		}
 	}
 
@@ -126,16 +126,16 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 		EquipmentTemplate = X2EquipmentTemplate(TmpItem.GetMyTemplate());
 		if (EquipmentTemplate != none)
 		{
-			WillBonus -= Unit.GetUIStatFromItem(eStat_Will, TmpItem);
-			AimBonus -= Unit.GetUIStatFromItem(eStat_Offense, TmpItem);
-			HealthBonus -= Unit.GetUIStatFromItem(eStat_HP, TmpItem);
-			MobilityBonus -= Unit.GetUIStatFromItem(eStat_Mobility, TmpItem);
-			TechBonus -= Unit.GetUIStatFromItem(eStat_Hacking, TmpItem);
-			ArmorBonus -= Unit.GetUIStatFromItem(eStat_ArmorMitigation, TmpItem);
-			DodgeBonus -= Unit.GetUIStatFromItem(eStat_Dodge, TmpItem);
+			WillBonus -= GetUIStatFromItem(Unit, eStat_Will, TmpItem);
+			AimBonus -= GetUIStatFromItem(Unit, eStat_Offense, TmpItem);
+			HealthBonus -= GetUIStatFromItem(Unit, eStat_HP, TmpItem);
+			MobilityBonus -= GetUIStatFromItem(Unit, eStat_Mobility, TmpItem);
+			TechBonus -= GetUIStatFromItem(Unit, eStat_Hacking, TmpItem);
+			ArmorBonus -= GetUIStatFromItem(Unit, eStat_ArmorMitigation, TmpItem);
+			DodgeBonus -= GetUIStatFromItem(Unit, eStat_Dodge, TmpItem);
 					
 			if(Unit.IsPsiOperative())
-				PsiBonus -= Unit.GetUIStatFromItem(eStat_PsiOffense, TmpItem);
+				PsiBonus -= GetUIStatFromItem(Unit, eStat_PsiOffense, TmpItem);
 		}
 	}
 
@@ -191,4 +191,54 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 	}
 
 	Show();
+}
+
+simulated function int GetUIStatFromInventory(XComGameState_Unit Unit, ECharStatType Stat)
+{
+	local int Result;
+	local XComGameState_Item InventoryItem;
+	local array<XComGameState_Item> CurrentInventory;
+
+	Result += Unit.GetUIStatFromInventory(Stat);
+
+	//  Gather abilities from the unit's inventory
+	CurrentInventory = Unit.GetAllInventoryItems(CheckGameState);
+	foreach CurrentInventory(InventoryItem)
+	{
+		Result += GetUIStatBonusFromItem(Unit, Stat, InventoryItem);
+	}	
+
+	return Result;
+}
+
+static simulated function int GetUIStatFromItem(XComGameState_Unit Unit, ECharStatType Stat, XComGameState_Item InventoryItem)
+{
+	local X2EquipmentTemplate EquipmentTemplate;
+	EquipmentTemplate = X2EquipmentTemplate(InventoryItem.GetMyTemplate());
+	return EquipmentTemplate.GetUIStatMarkup(Stat, InventoryItem) + GetUIStatBonusFromItem(Unit, Stat, InventoryItem);
+}
+
+static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, ECharStatType Stat, XComGameState_Item InventoryItem)
+{
+	local int Result;
+	local X2ArmorTemplate ArmorTemplate;
+	local X2WeaponTemplate WeaponTemplate;
+
+	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
+	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && Unit.HasSoldierAbility('Finesse'))
+	{
+		if (Stat == eStat_Mobility)
+			Result += 3;
+		else if (Stat == eStat_Offense)
+			Result += 10;
+	}
+
+	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
+	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && Unit.HasSoldierAbility('HeavyArmor'))
+	{
+		if (Stat == eStat_ArmorMitigation)
+			Result += 1;
+	}
+
+	return Result;
 }

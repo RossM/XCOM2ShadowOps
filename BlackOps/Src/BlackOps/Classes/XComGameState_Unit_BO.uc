@@ -10,6 +10,7 @@ function bool HasAmmoPocket()
 }
 
 // Modified for Rocketeer and Packmaster abilities
+// NOTE: This could also be done by overriding X2TacticalGameRuleset.InitializeUnitAbilities.
 function protected MergeAmmoAsNeeded(XComGameState StartState)
 {
 	local XComGameState_Item ItemIter, ItemInnerIter;
@@ -338,58 +339,6 @@ function ValidateLoadout(XComGameState NewGameState)
 		AddItemToInventory(UtilityItem, eInvSlot_Utility, NewGameState);
 		EquippedUtilityItems.AddItem(UtilityItem);
 	}
-}
-
-// New function, added to make Finesse and Heavy Armor work correctly
-simulated function int GetUIStatFromItem(ECharStatType Stat, XComGameState_Item InventoryItem)
-{
-	local int Result;
-	local X2EquipmentTemplate EquipmentTemplate;
-	local X2ArmorTemplate ArmorTemplate;
-	local X2WeaponTemplate WeaponTemplate;
-
-	EquipmentTemplate = X2EquipmentTemplate(InventoryItem.GetMyTemplate());
-	if (EquipmentTemplate != none)
-	{
-		// Don't include sword boosts or any other equipment in the EquipmentExcludedFromStatBoosts array
-		if(class'UISoldierHeader'.default.EquipmentExcludedFromStatBoosts.Find(EquipmentTemplate.DataName) == INDEX_NONE)
-			Result += EquipmentTemplate.GetUIStatMarkup(Stat, InventoryItem);
-	}
-
-	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
-	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && HasSoldierAbility('Finesse'))
-	{
-		if (Stat == eStat_Mobility)
-			Result += 3;
-		else if (Stat == eStat_Offense)
-			Result += 10;
-	}
-
-	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
-	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && HasSoldierAbility('HeavyArmor'))
-	{
-		if (Stat == eStat_ArmorMitigation)
-			Result += 1;
-	}
-
-	return Result;
-}
-
-// Modified for Finesse and Heavy Armor
-simulated function int GetUIStatFromInventory(ECharStatType Stat, optional XComGameState CheckGameState)
-{
-	local int Result;
-	local XComGameState_Item InventoryItem;
-	local array<XComGameState_Item> CurrentInventory;
-
-	//  Gather abilities from the unit's inventory
-	CurrentInventory = GetAllInventoryItems(CheckGameState);
-	foreach CurrentInventory(InventoryItem)
-	{
-		Result += GetUIStatFromItem(Stat, InventoryItem);
-	}	
-
-	return Result;
 }
 
 function string GetSoldierClassDisplayName()
