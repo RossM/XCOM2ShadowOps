@@ -2,7 +2,6 @@ class X2Ability_EngineerAbilitySet extends X2Ability
 	config(GameData_SoldierSkills);
 
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
-var config WeaponDamageValue BreachDamageModifier;
 var config int BreachEnvironmentalDamage;
 var config float BreachRange;
 var config float DangerZoneBonusRadius;
@@ -89,8 +88,7 @@ static function X2AbilityTemplate Breach()
 	StandardAim.bAllowCrit = false;
 	Template.AbilityToHitCalc = StandardAim;
 	
-	WeaponDamageEffect = new class'X2Effect_ApplyWeaponDamage';
-	WeaponDamageEffect.EffectDamageValue = default.BreachDamageModifier;
+	WeaponDamageEffect = new class'X2Effect_Breach';
 	WeaponDamageEffect.EnvironmentalDamageAmount = default.BreachEnvironmentalDamage;
 	Template.AddMultiTargetEffect(WeaponDamageEffect);
 

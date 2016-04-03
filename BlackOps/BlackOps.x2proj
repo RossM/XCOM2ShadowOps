@@ -120,6 +120,9 @@
     <Content Include="Src\BlackOps\Classes\X2Effect_Assassin.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\BlackOps\Classes\X2Effect_Breach.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\BlackOps\Classes\X2Effect_Fade.uc">
       <SubType>Content</SubType>
     </Content>
