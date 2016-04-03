@@ -228,16 +228,16 @@ static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, EC
 	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && Unit.HasSoldierAbility('Finesse'))
 	{
 		if (Stat == eStat_Mobility)
-			Result += 3;
+			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseMobilityBonus;
 		else if (Stat == eStat_Offense)
-			Result += 10;
+			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseOffenseBonus;
 	}
 
 	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
 	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && Unit.HasSoldierAbility('HeavyArmor'))
 	{
 		if (Stat == eStat_ArmorMitigation)
-			Result += 1;
+			Result += class'X2Ability_DragoonAbilitySet'.default.HeavyArmorBonus;
 	}
 
 	return Result;
