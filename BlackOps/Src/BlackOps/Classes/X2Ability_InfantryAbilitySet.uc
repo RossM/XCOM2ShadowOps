@@ -160,32 +160,75 @@ static function X2AbilityTemplate AlwaysReady()
 
 static function X2AbilityTemplate AlwaysReadyTrigger()
 {
-	local X2AbilityTemplate                 Template;
-	local X2AbilityTrigger_EventListener    Trigger;
-	local X2Effect_Persistent               AlwaysReadyEffect;
+	local X2AbilityTemplate                 Template;	
+	local X2Effect_ReserveActionPoints      ReserveActionPointsEffect;
+	local array<name>                       SkipExclusions;
+	local X2Effect_CoveringFire             CoveringFireEffect;
+	local X2Condition_AbilityProperty       CoveringFireCondition;
+	local X2Condition_UnitProperty          ConcealedCondition;
+	local X2Effect_SetUnitValue             UnitValueEffect;
+	local X2Condition_UnitEffects           SuppressedCondition;
+	local X2AbilityTrigger_EventListener	EventListener;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'AlwaysReadyTrigger');
+	
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
+	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+
+	SuppressedCondition = new class'X2Condition_UnitEffects';
+	SuppressedCondition.AddExcludeEffect(class'X2Effect_Suppression'.default.EffectName, 'AA_UnitIsSuppressed');
+	Template.AbilityShooterConditions.AddItem(SuppressedCondition);
+
+	Template.AbilityShooterConditions.AddItem(new class'X2Condition_AlwaysReady');
+	
+	ReserveActionPointsEffect = new class'X2Effect_ReserveActionPoints';
+	ReserveActionPointsEffect.ReserveType = class'X2CharacterTemplateManager'.default.PistolOverwatchReserveActionPoint;
+	Template.AddTargetEffect(ReserveActionPointsEffect);
+
+	CoveringFireEffect = new class'X2Effect_CoveringFire';
+	CoveringFireEffect.AbilityToActivate = 'PistolOverwatchShot';
+	CoveringFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
+	CoveringFireCondition = new class'X2Condition_AbilityProperty';
+	CoveringFireCondition.OwnerHasSoldierAbilities.AddItem('CoveringFire');
+	CoveringFireEffect.TargetConditions.AddItem(CoveringFireCondition);
+	Template.AddTargetEffect(CoveringFireEffect);
+
+	ConcealedCondition = new class'X2Condition_UnitProperty';
+	ConcealedCondition.ExcludeFriendlyToSource = false;
+	ConcealedCondition.IsConcealed = true;
+	UnitValueEffect = new class'X2Effect_SetUnitValue';
+	UnitValueEffect.UnitName = class 'X2Ability_DefaultAbilitySet'.default.ConcealedOverwatchTurn;
+	UnitValueEffect.CleanupType = eCleanup_BeginTurn;
+	UnitValueEffect.NewValueToSet = 1;
+	UnitValueEffect.TargetConditions.AddItem(ConcealedCondition);
+	Template.AddTargetEffect(UnitValueEffect);
 
 	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AbilityTargetStyle = default.SelfTarget;
+	
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'PlayerTurnEnded';
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	EventListener.ListenerData.Filter = eFilter_Player;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Trigger = new class'X2AbilityTrigger_EventListener';
-	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
-	Trigger.ListenerData.EventID = 'PlayerTurnEnded';
-	Trigger.ListenerData.Filter = eFilter_Player;
-	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.AlwaysReadyTurnEndListener;
-	Template.AbilityTriggers.AddItem(Trigger);
-
-	AlwaysReadyEffect = new class'X2Effect_Persistent';
-	AlwaysReadyEffect.EffectName = default.AlwaysReadyEffectName;
-	AlwaysReadyEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
-	Template.AddShooterEffect(AlwaysReadyEffect);
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_pistoloverwatch";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.PISTOL_OVERWATCH_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+	Template.AbilityConfirmSound = "Unreal2DSounds_OverWatch";
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	
+	Template.BuildVisualizationFn = class 'X2Ability_DefaultAbilitySet'.static.OverwatchAbility_BuildVisualization;
+	Template.CinescriptCameraType = "Overwatch";
+
+	Template.Hostility = eHostility_Defensive;
+
 	return Template;
 }
 
