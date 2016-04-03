@@ -58,7 +58,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 
 		NumUtilitySlots = 2;
 		if(Unit.HasGrenadePocket()) NumUtilitySlots++;
-		if(Unit.HasAmmoPocket()) NumUtilitySlots++;
+		if(class'UnitUtilities_BO'.static.HasAmmoPocket(Unit)) NumUtilitySlots++;
 		
 		UtilityItemWidth = (UtilitySlots.GetTotalWidth() - (UtilitySlots.ItemPadding * (NumUtilitySlots - 1))) / NumUtilitySlots;
 		UtilityItemHeight = UtilitySlots.Height;
@@ -105,7 +105,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_GrenadePocket, 0, NumUtilitySlots);
 		}
 
-		if(Unit.HasAmmoPocket())
+		if(class'UnitUtilities_BO'.static.HasAmmoPocket(Unit))
 		{
 			UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
 			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_AmmoPocket);
@@ -114,7 +114,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		
 		// Don't show class label for rookies since their rank is shown which would result in a duplicate string
 		if(Unit.GetRank() > 0)
-			ClassStr = class'UIUtilities_Text'.static.GetColoredText(Caps(Unit.GetSoldierClassDisplayName()), eUIState_Faded, 17);
+			ClassStr = class'UIUtilities_Text'.static.GetColoredText(Caps(class'UnitUtilities_BO'.static.GetSoldierClassDisplayName(Unit)), eUIState_Faded, 17);
 		else
 			ClassStr = "";
 

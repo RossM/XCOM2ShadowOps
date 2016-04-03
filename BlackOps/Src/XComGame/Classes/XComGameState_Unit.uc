@@ -597,35 +597,6 @@ function name GetSoldierClassTemplateName()
 	return m_SoldierClassTemplateName;
 }
 
-function string GetSoldierClassDisplayName()
-{
-	local X2SoldierClassTemplate SoldierClassTemplate;
-	local int iLeftCount, iRightCount, i;
-
-	SoldierClassTemplate = GetSoldierClassTemplate();
-
-	for (i = 0; i < m_SoldierProgressionAbilties.Length; i++)
-	{
-		if (m_SoldierProgressionAbilties[i].iRank <= 0)
-			continue;
-
-		if (m_SoldierProgressionAbilties[i].iBranch == 0)
-		{
-			iLeftCount++;
-			if (iLeftCount >= 2)
-				return SoldierClassTemplate.LeftAbilityTreeTitle;
-		}
-		else
-		{
-			iRightCount++;
-			if (iRightCount >= 2)
-				return SoldierClassTemplate.RightAbilityTreeTitle;
-		}
-	}
-
-	return GetSoldierClassTemplate().DisplayName;
-}
-
 simulated function bool HasHeightAdvantageOver(XComGameState_Unit OtherUnit, bool bAsAttacker)
 {
 	local int BonusZ;
@@ -2634,10 +2605,9 @@ function bool HasGrenadePocket()
 	return (!IsMPCharacter() && HasSoldierAbility('LaunchGrenade'));
 }
 
-// Modified for Bandolier ability
 function bool HasAmmoPocket()
 {
-	return (!IsMPCharacter() && HasSoldierAbility('Bandolier'));
+	return false; // HasSoldierAbility('WholeNineYards');	- deprecated ability
 }
 
 function bool HasExtraUtilitySlot()
@@ -5316,11 +5286,9 @@ simulated function UnapplyCombatSimStats(XComGameState_Item CombatSim, optional 
 	}
 }
 
-// Modified for Deep Pockets ability
 simulated function bool RemoveItemFromInventory(XComGameState_Item Item, optional XComGameState CheckGameState)
 {
 	local int i;
-	local int slots;
 
 	if (CanRemoveItemFromInventory(Item, CheckGameState))
 	{		
@@ -5336,11 +5304,8 @@ simulated function bool RemoveItemFromInventory(XComGameState_Item Item, optiona
 				case eInvSlot_Armor:
 					if(!IsMPCharacter() && X2ArmorTemplate(Item.GetMyTemplate()).bAddsUtilitySlot)
 					{
-						slots = 1;
-						if (HasSoldierAbility('DeepPockets'))
-							slots += 1;
-						SetBaseMaxStat(eStat_UtilityItems, slots);
-						SetCurrentStat(eStat_UtilityItems, slots);
+						SetBaseMaxStat(eStat_UtilityItems, 1.0f);
+						SetCurrentStat(eStat_UtilityItems, 1.0f);
 					}
 					break;
 				case eInvSlot_Backpack:
@@ -7230,11 +7195,11 @@ function ApplyInventoryLoadout(XComGameState ModifyGameState, optional name NonD
 	local X2ItemTemplateManager ItemTemplateManager;
 	local InventoryLoadout Loadout;
 	local InventoryLoadoutItem LoadoutItem;
+	local bool bFoundLoadout;
 	local X2EquipmentTemplate EquipmentTemplate;
 	local XComGameState_Item NewItem;
 	local name UseLoadoutName, RequiredLoadout;
 	local X2SoldierClassTemplate SoldierClassTemplate;
-	local array<InventoryLoadout> FoundLoadouts;
 
 	if (NonDefaultLoadout != '')      
 	{
@@ -7255,12 +7220,12 @@ function ApplyInventoryLoadout(XComGameState ModifyGameState, optional name NonD
 	{
 		if (Loadout.LoadoutName == UseLoadoutName)
 		{
-			FoundLoadouts.AddItem(Loadout);
+			bFoundLoadout = true;
+			break;
 		}
 	}
-	if (FoundLoadouts.Length >= 1)
+	if (bFoundLoadout)
 	{
-		Loadout = FoundLoadouts[`SYNC_RAND(FoundLoadouts.Length)];
 		foreach Loadout.Items(LoadoutItem)
 		{
 			EquipmentTemplate = X2EquipmentTemplate(ItemTemplateManager.FindItemTemplate(LoadoutItem.Item));
@@ -7374,7 +7339,7 @@ function ApplySquaddieLoadout(XComGameState GameState, optional XComGameState_He
 
 				//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
 				//where we are handing out generic weapons.
-				if(ItemTemplate.InventorySlot == eInvSlot_PrimaryWeapon || ItemTemplate.InventorySlot == eInvSlot_SecondaryWeapon)
+				if(ItemState.InventorySlot == eInvSlot_PrimaryWeapon || ItemState.InventorySlot == eInvSlot_SecondaryWeapon)
 				{
 					ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
 					ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
@@ -7493,7 +7458,6 @@ function array<X2EquipmentTemplate> GetBestGearForSlot(EInventorySlot Slot)
 	return EmptyList;
 }
 
-// Bugfix: Keep the weapon color and pattern configured in the character pool when upgrading equipment
 function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item CurrentEquipment, array<X2EquipmentTemplate> UpgradeTemplates, EInventorySlot Slot, optional out XComGameState_Item UpgradeItem)
 {
 	local XComGameStateHistory History;
@@ -7526,15 +7490,6 @@ function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item Cu
 	{
 		// Make an instance of the best equipment we found and equip it
 		UpgradeItem = UpgradeTemplates[0].CreateInstanceFromTemplate(NewGameState);
-
-		//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
-		//where we are handing out generic weapons.
-		if(UpgradeTemplates[0].InventorySlot == eInvSlot_PrimaryWeapon || UpgradeTemplates[0].InventorySlot == eInvSlot_SecondaryWeapon)
-		{
-			UpgradeItem.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
-			UpgradeItem.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
-		}
-
 		NewGameState.AddStateObject(UpgradeItem);
 		
 		return AddItemToInventory(UpgradeItem, Slot, NewGameState, (Slot == eInvSlot_Utility));
@@ -7560,15 +7515,6 @@ function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item Cu
 
 				// Make an instance of the best equipment we found and equip it
 				UpgradeItem = UpgradeTemplate.CreateInstanceFromTemplate(NewGameState);
-
-				//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
-				//where we are handing out generic weapons.
-				if(UpgradeTemplates[0].InventorySlot == eInvSlot_PrimaryWeapon || UpgradeTemplates[0].InventorySlot == eInvSlot_SecondaryWeapon)
-				{
-					UpgradeItem.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
-					UpgradeItem.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
-				}
-
 				NewGameState.AddStateObject(UpgradeItem);
 				return AddItemToInventory(UpgradeItem, Slot, NewGameState);
 			}
@@ -7580,7 +7526,6 @@ function bool UpgradeEquipment(XComGameState NewGameState, XComGameState_Item Cu
 
 //------------------------------------------------------
 // After loadout change verify # of slots/valid items in slots
-// Modified for Deep Pockets ability
 function ValidateLoadout(XComGameState NewGameState)
 {
 	local XComGameStateHistory History;
@@ -7589,7 +7534,6 @@ function ValidateLoadout(XComGameState NewGameState)
 	local XComGameState_Item EquippedHeavyWeapon, EquippedGrenade, EquippedAmmo, UtilityItem; // Special slots
 	local array<XComGameState_Item> EquippedUtilityItems; // Utility Slots
 	local int idx;
-	local int slots;
 
 	// Grab HQ Object
 	History = `XCOMHISTORY;
@@ -7690,14 +7634,16 @@ function ValidateLoadout(XComGameState NewGameState)
 	// UtilitySlots (Already grabbed equipped)
 	if(!IsMPCharacter())
 	{
-		slots = 1;
 		if(X2ArmorTemplate(EquippedArmor.GetMyTemplate()).bAddsUtilitySlot)
-			slots += 1;
-		if (HasSoldierAbility('DeepPockets'))
-			slots += 1;
-
-		SetBaseMaxStat(eStat_UtilityItems, slots);
-		SetCurrentStat(eStat_UtilityItems, slots);
+		{
+			SetBaseMaxStat(eStat_UtilityItems, 2.0f);
+			SetCurrentStat(eStat_UtilityItems, 2.0f);
+		}
+		else
+		{
+			SetBaseMaxStat(eStat_UtilityItems, 1.0f);
+			SetCurrentStat(eStat_UtilityItems, 1.0f);
+		}
 	}
 
 	// Remove Extra Utility Items
@@ -7759,12 +7705,6 @@ function XComGameState_Item GetBestPrimaryWeapon(XComGameState NewGameState)
 	}
 	
 	ItemState = PrimaryWeaponTemplates[`SYNC_RAND(PrimaryWeaponTemplates.Length)].CreateInstanceFromTemplate(NewGameState);
-
-	//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
-	//where we are handing out generic weapons.
-	ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
-	ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
-
 	NewGameState.AddStateObject(ItemState);
 	
 	return ItemState;
@@ -7784,12 +7724,6 @@ function XComGameState_Item GetBestSecondaryWeapon(XComGameState NewGameState)
 	}
 
 	ItemState = SecondaryWeaponTemplates[`SYNC_RAND(SecondaryWeaponTemplates.Length)].CreateInstanceFromTemplate(NewGameState);
-
-	//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
-	//where we are handing out generic weapons.
-	ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
-	ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
-
 	NewGameState.AddStateObject(ItemState);
 	
 	return ItemState;

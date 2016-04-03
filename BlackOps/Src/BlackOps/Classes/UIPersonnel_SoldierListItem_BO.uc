@@ -32,7 +32,7 @@ simulated function UpdateData()
 					Caps(Unit.GetName(eNameType_Nick)),
 					Caps(`GET_RANK_ABBRV(Unit.GetRank(), SoldierClass.DataName)),
 					rankIcon,
-					Caps(SoldierClass != None ? Unit.GetSoldierClassDisplayName() : ""),
+					Caps(SoldierClass != None ? class'UnitUtilities_BO'.static.GetSoldierClassDisplayName(Unit) : ""),
 					classIcon,
 					status,
 					statusTimeValue $"\n" $ Class'UIUtilities_Text'.static.CapsCheckForGermanScharfesS(Class'UIUtilities_Text'.static.GetSizedText( statusTimeLabel, 12)),
