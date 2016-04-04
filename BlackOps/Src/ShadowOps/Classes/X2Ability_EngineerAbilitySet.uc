@@ -430,7 +430,7 @@ static function X2AbilityTemplate ChainReaction()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ChainReaction');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_default";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fuse";
 	Template.AdditionalAbilities.AddItem('ChainReactionFuse');
 	//Template.AdditionalAbilities.AddItem('FusePostActivationConcealmentBreaker');
 
