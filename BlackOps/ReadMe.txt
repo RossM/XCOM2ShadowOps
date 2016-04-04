@@ -2,6 +2,8 @@
 ! This is a beta version and is likely to have bugs and balance problems. I am releasing it so other people can help me improve it. Do not install if you don't want to be a beta tester.
 ! This mod overrides many base game classes, and is likely to conflict with other mods. It has not been tested with any other mods. Combine at your own risk, and keep backup saves.
 
+By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
+
 Beta version v0.1
 * Four new classes with eight distinctive subclasses and 48 new abilities.
   * Dragoon - Cannon/Assault Rifle, GREMLIN
