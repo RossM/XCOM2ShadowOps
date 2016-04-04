@@ -450,7 +450,7 @@ static function X2AbilityTemplate ChainReaction()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
 
-	Template.bCrossClassEligible = true;
+	Template.bCrossClassEligible = false;
 
 	return Template;
 }
