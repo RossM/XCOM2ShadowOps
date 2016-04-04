@@ -73,3 +73,28 @@ static function bool HasAmmoPocket(XComGameState_Unit Unit)
 {
 	return (!Unit.IsMPCharacter() && Unit.HasSoldierAbility('Bandolier'));
 }
+
+static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, ECharStatType Stat, XComGameState_Item InventoryItem)
+{
+	local int Result;
+	local X2ArmorTemplate ArmorTemplate;
+	local X2WeaponTemplate WeaponTemplate;
+
+	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
+	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && Unit.HasSoldierAbility('Finesse'))
+	{
+		if (Stat == eStat_Mobility)
+			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseMobilityBonus;
+		else if (Stat == eStat_Offense)
+			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseOffenseBonus;
+	}
+
+	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
+	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && Unit.HasSoldierAbility('HeavyArmor'))
+	{
+		if (Stat == eStat_ArmorMitigation)
+			Result += class'X2Ability_DragoonAbilitySet'.default.HeavyArmorBonus;
+	}
+
+	return Result;
+}

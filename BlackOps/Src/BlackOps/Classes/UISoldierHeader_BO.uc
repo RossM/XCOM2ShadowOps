@@ -205,7 +205,7 @@ simulated function int GetUIStatFromInventory(XComGameState_Unit Unit, ECharStat
 	CurrentInventory = Unit.GetAllInventoryItems(CheckGameState);
 	foreach CurrentInventory(InventoryItem)
 	{
-		Result += GetUIStatBonusFromItem(Unit, Stat, InventoryItem);
+		Result += class'UnitUtilities_BO'.static.GetUIStatBonusFromItem(Unit, Stat, InventoryItem);
 	}	
 
 	return Result;
@@ -215,30 +215,6 @@ static simulated function int GetUIStatFromItem(XComGameState_Unit Unit, ECharSt
 {
 	local X2EquipmentTemplate EquipmentTemplate;
 	EquipmentTemplate = X2EquipmentTemplate(InventoryItem.GetMyTemplate());
-	return EquipmentTemplate.GetUIStatMarkup(Stat, InventoryItem) + GetUIStatBonusFromItem(Unit, Stat, InventoryItem);
+	return EquipmentTemplate.GetUIStatMarkup(Stat, InventoryItem) + class'UnitUtilities_BO'.static.GetUIStatBonusFromItem(Unit, Stat, InventoryItem);
 }
 
-static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, ECharStatType Stat, XComGameState_Item InventoryItem)
-{
-	local int Result;
-	local X2ArmorTemplate ArmorTemplate;
-	local X2WeaponTemplate WeaponTemplate;
-
-	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
-	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && Unit.HasSoldierAbility('Finesse'))
-	{
-		if (Stat == eStat_Mobility)
-			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseMobilityBonus;
-		else if (Stat == eStat_Offense)
-			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseOffenseBonus;
-	}
-
-	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
-	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && Unit.HasSoldierAbility('HeavyArmor'))
-	{
-		if (Stat == eStat_ArmorMitigation)
-			Result += class'X2Ability_DragoonAbilitySet'.default.HeavyArmorBonus;
-	}
-
-	return Result;
-}
