@@ -25,6 +25,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('CombatDrugs', "img:///UILibrary_PerkIcons.UIPerk_combatdrugs", true));
 	Templates.AddItem(SlamFire());
 	Templates.AddItem(PurePassive('DangerZone', "img:///UILibrary_PerkIcons.UIPerk_dangerzone", true));
+	Templates.AddItem(ChainReaction());
+	Templates.AddItem(ChainReactionFuse());
 
 	return Templates;
 }
@@ -421,3 +423,121 @@ static function X2AbilityTemplate SlamFire()
 	return Template;
 }
 
+static function X2AbilityTemplate ChainReaction()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_ChainReaction                Effect;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ChainReaction');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_default";
+	Template.AdditionalAbilities.AddItem('ChainReactionFuse');
+	//Template.AdditionalAbilities.AddItem('FusePostActivationConcealmentBreaker');
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	Effect = new class'X2Effect_ChainReaction';
+	Effect.BuildPersistentEffect(1, true, false, false);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate ChainReactionFuse()
+{
+	local X2AbilityTemplate					Template;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ChainReactionFuse');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fuse";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Offensive;
+
+	Template.AbilityTriggers.AddItem(new class'X2AbilityTrigger_Placeholder');
+
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);	
+	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
+	Template.AbilityTargetConditions.AddItem(new class'X2Condition_FuseTarget');	
+	Template.AddShooterEffectExclusions();
+
+	Template.PostActivationEvents.AddItem(class'X2ABility_PsiOperativeAbilitySet'.default.FuseEventName);
+	//Template.PostActivationEvents.AddItem(class'X2ABility_PsiOperativeAbilitySet'.default.FusePostEventName);
+
+	//Template.bSkipFireAction = true;
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildVisualizationFn = ChainReactionFuseVisualization;
+
+	return Template;
+}
+
+simulated function ChainReactionFuseVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{
+	local XComGameStateHistory History;
+	local XComGameStateContext_Ability  Context;
+	local StateObjectReference          InteractingUnitRef;
+
+	local VisualizationTrack        EmptyTrack;
+	local VisualizationTrack        BuildTrack;
+
+	local XComGameState_Ability         Ability;
+	local X2Action_PlaySoundAndFlyOver SoundAndFlyOver;
+	local X2Action_SendInterTrackMessage SendMessageAction;
+	local X2Action_Delay			DelayAction;
+
+	History = `XCOMHISTORY;
+
+	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+	InteractingUnitRef = Context.InputContext.SourceObject;
+
+	//Configure the visualization track for the shooter
+	//****************************************************************************************
+	BuildTrack = EmptyTrack;
+	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
+	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
+	BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
+
+	class'X2Action_SyncVisualizer'.static.AddToVisualizationTrack(BuildTrack, Context);
+
+	DelayAction = X2Action_Delay(class 'X2Action_Delay'.static.AddToVisualizationTrack(BuildTrack, Context));
+	DelayAction.Duration = 6.0;
+
+	// Send an intertrack message to trigger the fuse explosion
+	SendMessageAction = X2Action_SendInterTrackMessage(class'X2Action_SendInterTrackMessage'.static.AddToVisualizationTrack(BuildTrack, Context));
+	SendMessageAction.SendTrackMessageToRef = Context.InputContext.PrimaryTarget;
+
+	OutVisualizationTracks.AddItem(BuildTrack);
+
+	//Configure the visualization track for the target
+	//****************************************************************************************
+	InteractingUnitRef = Context.InputContext.PrimaryTarget;
+	Ability = XComGameState_Ability(History.GetGameStateForObjectID(Context.InputContext.AbilityRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1));
+	
+	BuildTrack = EmptyTrack;
+	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
+	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
+	BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
+
+	class'X2Action_SyncVisualizer'.static.AddToVisualizationTrack(BuildTrack, Context);
+
+	SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, Context));
+	SoundAndFlyOver.SetSoundAndFlyOverParameters(None, Ability.GetMyTemplate().LocFlyOverText, '', eColor_Bad);
+	
+	OutVisualizationTracks.AddItem(BuildTrack);
+}
