@@ -2,11 +2,36 @@
 <Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Guid>2794d77c-d369-415b-9bd6-52b8e5f601e6</Guid>
-    <Name>Black Ops</Name>
-    <Description>Description of My XCOM 2 Mod.</Description>
+    <Name>Shadow Ops</Name>
+    <Description>=== IMPORTANT! READ BEFORE INSTALLING! ===
+! This is a beta version and is likely to have bugs and balance problems. I am releasing it so other people can help me improve it. Do not install if you don't want to be a beta tester.
+! This mod overrides many base game classes, and is likely to conflict with other mods. It has not been tested with any other mods. Combine at your own risk, and keep backup saves.
+
+Beta version v0.1
+* Four new classes with eight distinctive subclasses and 48 new abilities.
+  * Dragoon - Cannon/Assault Rifle, GREMLIN
+    * The Paladin protects his allies with energy shields and regeneration, while dealing devastating damage with the heaviest weapons and armor in XCOM's arsenal.
+    * The Ghost moves quickly and quietly, helping her squad to slip past enemies. She's also an expert at hacking enemy robotic units, and can even take permanent control over them.
+  * Engineer - Shotgun/Assault Rifle, Grenade Launcher
+    * The Pioneer covers himself and his allies with clouds of smoke for protection while he closes with the enemy, then deals massive damage at short range with his shotgun.
+    * The Sapper uses grenades and shotgun to demolish cover and shred armor. Her Packmaster ability allows her to carry more grenades than any other  class.
+  * Hunter - Sniper Rifle, Sword
+    * The Marksman delivers long-range tactical support from concealed firing positions. Her ability to weaken enemies from long distance makes her a powerful threat anywhere on the battlefield.
+    * The Tracker combines sniper rifle and sword into a unbelievable whirlwind of destruction. Despite his unorthodox choice of weapons, his combination of high mobility and even higher damage is devastatingly effective.
+  * Infantry - Assault Rifle, Pistol
+    * The Rifleman is good at one thing: dealing damage. Lots of it. With her Bullet Swarm ability, she can fill the battlefield - and the enemies - with as much lead as she can carry.
+    * The Support specializes in denying the enemy the ability to move around the battlefield. Whether with deadly accurate suppression fire or all-seeing overwatch, he makes sure that XCOM has the tactical upper hand.
+* Several early-game items have been made available from the start of the game.
+* Two new ammo types are available from the start of the game.
+* Minor tweaks to some game rules and abilities:
+  * A low hit chance will also lower crit chance.
+  * Suppression prevents throwing or launching grenades, and suppression reaction shots have a +20 bonus.
+  * The advanced grenade launcher has been nerfed to not provide additional grenade radius.
+  * The disoriented status effect's aim penalty is increased.
+  * The AWC has been made retroactive.</Description>
     <SteamPublishID>0</SteamPublishID>
-    <AssemblyName>BlackOps</AssemblyName>
-    <RootNamespace>BlackOps</RootNamespace>
+    <AssemblyName>ShadowOps</AssemblyName>
+    <RootNamespace>ShadowOps</RootNamespace>
     <ProjectGuid>{8e7f8d96-b335-46c3-83a6-9af4051c347c}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
@@ -14,10 +39,11 @@
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
     <Folder Include="Src\" />
+    <Folder Include="Src\ShadowOps\Classes\" />
     <Folder Include="Src\XComGame\" />
     <Folder Include="Src\XComGame\Classes\" />
-    <Folder Include="Src\BlackOps\" />
-    <Folder Include="Src\BlackOps\Classes\" />
+    <Folder Include="Src\ShadowOps" />
+    <Folder Include="Src\ShadowOps\Classes" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\XComClassData.ini">
@@ -47,158 +73,158 @@
     <Content Include="Config\XComEngine.ini" />
     <Content Include="Config\XComGame.ini" />
     <Content Include="Localization\XComGame.int" />
-    <Content Include="Src\BlackOps\Classes\UIAfterAction_ListItem_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UIAfterAction_ListItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\UIArmory_Loadout_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UIArmory_Loadout_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\UIArmory_Promotion_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UIArmory_Promotion_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\UIPersonnel_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UIPersonnel_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\UIPersonnel_SoldierListItem_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UIPersonnel_SoldierListItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\UISoldierHeader_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UISoldierHeader_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\UISquadSelect_ListItem_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UISquadSelect_ListItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\UISquadSelect_UtilityItem_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UISquadSelect_UtilityItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\UnitUtilities_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UnitUtilities_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
+    <Content Include="Src\ShadowOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2AbilityMultiTarget_SoldierBonusRadius_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2AbilityMultiTarget_SoldierBonusRadius_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
+    <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2AbilityToHitCalc_StandardAim_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_StandardAim_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Ability_DragoonAbilitySet.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Ability_DragoonAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Ability_EngineerAbilitySet.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Ability_EngineerAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2AbilityOverrides_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2AbilityOverrides_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Ability_HunterAbilitySet.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Ability_HunterAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Ability_InfantryAbilitySet.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Ability_InfantryAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Ability_ItemGranted_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Ability_ItemGranted_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Condition_AlwaysReady.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Condition_AlwaysReady.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Condition_NotVisibleToEnemies.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Condition_NotVisibleToEnemies.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Condition_RestorationProtocol.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Condition_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
-    <Content Include="Src\BlackOps\Classes\X2Effect_Aggression.uc">
+    <Content Include="Src\ShadowOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Aggression.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Assassin.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Assassin.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Breach.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Breach.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_ChainReaction.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_ChainReaction.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Fade.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Fade.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_FlechetteRounds.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_FlechetteRounds.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Flush.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Flush.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_FractureDamage.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_FractureDamage.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_HeavyArmor.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_HeavyArmor.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_HunkerDown.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_HunkerDown.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_HunterLowProfile.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_HunterLowProfile.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_HunterMarked.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_HunterMarked.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Precision.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Precision.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_RestorationProtocol.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_ShieldProtocol.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_ShieldProtocol.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_GoodEye.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_GoodEye.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Magnum.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Magnum.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_SlamFire.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_SlamFire.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_SmokeGrenade_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_SmokeGrenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Focus.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Focus.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_Tracking.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Tracking.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_VitalPoint.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_VitalPoint.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Effect_ZeroIn.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_ZeroIn.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2ItemOverrides_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2ItemOverrides_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2Item_Ammo_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Item_Ammo_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2TacticalGameRuleset_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2TacticalGameRuleset_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\X2TargetingMethod_Grenade_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\X2TargetingMethod_Grenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\XComGameState_Ability_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\XComGameState_Ability_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\BlackOps\Classes\XComGameState_Unit_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\XComGameState_Unit_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XComGame\Classes\AnimNotify_ApplyPsiEffectsToTarget.uc" />
