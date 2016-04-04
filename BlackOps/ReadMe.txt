@@ -1,38 +1,39 @@
 ﻿Beta version v0.1
 * Four new classes with eight distinctive subclasses and 48 new abilities.
-  * Dragoon
+  * Dragoon - Cannon/Assault Rifle, GREMLIN
     * The Paladin protects his allies with energy shields and regeneration,
-	  while dealing devastating damage with the heaviest weapons and armor
-	  in XCOM's arsenal.
+	  while dealing devastating damage with the heaviest weapons and armor in 
+	  XCOM's arsenal.
 	* The Ghost moves quickly and quietly, helping her squad to slip past
-	  enemies. She's also an expert at hacking enemy robotic units, and
-	  can even take permanent control over them.
-  * Engineer
+	  enemies. She's also an expert at hacking enemy robotic units, and can
+	  even take permanent control over them.
+  * Engineer - Shotgun/Assault Rifle, Grenade Launcher
     * The Pioneer covers himself and his allies with clouds of smoke for
-	  protection while he closes to deal massive damage with his shotgun.
-	* The Sapper uses grenades and shotgun to demolish cover and shred
-	  armor. Her Packmaster ability allows her to carry more grenades than
-	  any other class.
-  * Hunter
+	  protection while he closes with the enemy, then deals massive damage at
+	  short range with his shotgun.
+	* The Sapper uses grenades and shotgun to demolish cover and shred armor. 
+	  Her Packmaster ability allows her to carry more grenades than any other 
+	  class.
+  * Hunter - Sniper Rifle, Sword
 	* The Marksman delivers long-range tactical support from concealed firing
-	  positions. Her ability to weaken enemies from long distance makes her
-	  a powerful threat anywhere on the battlefield.
+	  positions. Her ability to weaken enemies from long distance makes her a 
+	  powerful threat anywhere on the battlefield.
 	* The Tracker combines sniper rifle and sword into a unbelievable
 	  whirlwind of destruction. Despite his unorthodox choice of weapons, his
 	  combination of high mobility and even higher damage is devastatingly
 	  effective.
-  * Infantry
-    * The Rifleman is good at one thing: Dealing damage. Lots of it. With her
+  * Infantry - Assault Rifle, Pistol
+    * The Rifleman is good at one thing: dealing damage. Lots of it. With her
 	  Bullet Swarm ability, she can fill the battlefield - and the enemies -
 	  with as much lead as she can carry.
 	* The Support specializes in denying the enemy the ability to move around
 	  the battlefield. Whether with deadly accurate suppression fire or all-
-	  seeing overwatch, he makes sure that XCOM can take the tactical upper
-	  hand.
+	  seeing overwatch, he makes sure that XCOM has the tactical upper hand.
 * Several early-game items have been made available from the start of the game.
 * Two new ammo types are available from the start of the game.
 * Minor tweaks to some game rules and abilities:
   * A low hit chance will also lower crit chance.
   * Suppression prevents throwing or launching grenades, and suppression reaction shots have a +20 bonus.
   * The advanced grenade launcher has been nerfed to not provide additional grenade radius.
+  * The disoriented status effect's aim penalty is increased.
   * The AWC has been made retroactive.

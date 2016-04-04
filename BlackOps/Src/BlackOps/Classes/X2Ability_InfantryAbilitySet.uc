@@ -50,6 +50,8 @@ static function BandolierPurchased(XComGameState NewGameState, XComGameState_Uni
 	local X2ItemTemplate FreeItem;
 	local XComGameState_Item ItemState;
 
+	// TODO: If the unit already has an ammo item equipped, move it to the pocket.
+
 	if (!class'UnitUtilities_BO'.static.HasAmmoPocket(UnitState))
 	{
 		`RedScreen("AmmoPocketPurchased called but the unit doesn't have one? -jbouscher / @gameplay" @ UnitState.ToString());

@@ -1,6 +1,8 @@
 class X2Ability_HunterAbilitySet extends X2Ability
 	config(GameData_SoldierSkills);
 
+var localized string FadePenaltyText, SnapShotPenaltyText;
+
 var config int SnapShotHitModifier;
 var config int HunterMarkHitModifier;
 var config int HipFireHitModifier;
@@ -179,7 +181,7 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	LowerAimEffect = new class'X2Effect_PersistentStatChange';
 	LowerAimEffect.BuildPersistentEffect(1,,,,eGameRule_PlayerTurnBegin);
 	LowerAimEffect.AddPersistentStatChange(eStat_Offense, default.SnapShotHitModifier);
-	LowerAimEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, Template.GetMyLongDescription(), "img:///UILibrary_PerkIcons.UIPerk_snapshot", true);
+	LowerAimEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.SnapShotPenaltyText, "img:///UILibrary_PerkIcons.UIPerk_snapshot", true);
 	Template.AddShooterEffect(LowerAimEffect);
 
 	CoveringFireEffect = new class'X2Effect_CoveringFire';
@@ -676,7 +678,7 @@ static function X2AbilityTemplate Fade()
 
 	StealthEffect = new class'X2Effect_Fade';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
-	StealthEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true);
+	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 	Template.AddTargetEffect(StealthEffect);
 
