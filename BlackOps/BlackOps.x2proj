@@ -64,7 +64,7 @@ Beta version v0.1
     <Content Include="Content\UILibrary_BlackOps.upk">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Localization\BlackOps.int">
+    <Content Include="Localization\ShadowOps.int">
       <SubType>Content</SubType>
     </Content>
     <Content Include="ReadMe.txt" />
