@@ -11,7 +11,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	local array<X2DataTemplate> Templates;
 	
 	Templates.AddItem(DeepPockets());
-	Templates.AddItem(PurePassive('DenseSmoke', "img:///UILibrary_PerkIcons.UIPerk_densesmoke", true));
+	Templates.AddItem(DenseSmoke());
 	Templates.AddItem(PurePassive('SmokeAndMirrors', "img:///UILibrary_PerkIcons.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(Breach());
 	Templates.AddItem(Fastball());
@@ -24,7 +24,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Resilience());
 	Templates.AddItem(PurePassive('CombatDrugs', "img:///UILibrary_PerkIcons.UIPerk_combatdrugs", true));
 	Templates.AddItem(SlamFire());
-	Templates.AddItem(PurePassive('DangerZone', "img:///UILibrary_PerkIcons.UIPerk_dangerzone", true));
+	Templates.AddItem(DangerZone());
 	Templates.AddItem(ChainReaction());
 	Templates.AddItem(ChainReactionFuse());
 
@@ -573,6 +573,86 @@ static function X2AbilityTemplate Packmaster()
 	ItemChargesEffect.BuildPersistentEffect(1, true, true, true);
 	ItemChargesEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(ItemChargesEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate DangerZone()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_BonusRadius					RadiusEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'DangerZone');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_dangerzone";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	RadiusEffect = new class'X2Effect_BonusRadius';
+	RadiusEffect.EffectName = 'DangerZone';
+	RadiusEffect.fBonusRadius = default.DangerZoneBonusRadius;
+	RadiusEffect.BuildPersistentEffect(1, true, true, true);
+	RadiusEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(RadiusEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate DenseSmoke()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_BonusRadius					RadiusEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'DenseSmoke');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_densesmoke";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	RadiusEffect = new class'X2Effect_BonusRadius';
+	RadiusEffect.EffectName = 'DenseSmokeRadius';
+	RadiusEffect.fBonusRadius = class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
+	RadiusEffect.AllowedTemplateNames.AddItem('SmokeGrenade');
+	RadiusEffect.AllowedTemplateNames.AddItem('SmokeGrenadeMk2');
+	RadiusEffect.BuildPersistentEffect(1, true, true, true);
+	RadiusEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(RadiusEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!

@@ -5,36 +5,24 @@ var float fRadiusModifier;
 // Calculate ability-specific radius modifiers.
 simulated function CalculateRadiusModifier(const XComGameState_Ability Ability)
 {
-	local XComGameState_Item ItemState;
-	local X2GrenadeTemplate GrenadeTemplate;
 	local XComGameState_Unit SourceUnit;
+	local StateObjectReference EffectRef;
+	local XComGameState_Effect EffectState;
+	local X2Effect_BonusRadius BonusRadiusEffect;
+	local XComGameStateHistory History;
 
 	fRadiusModifier = 0;
 
-	SourceUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(Ability.OwnerStateObject.ObjectID));
+	History = `XCOMHISTORY;
+	SourceUnit = XComGameState_Unit(History.GetGameStateForObjectID(Ability.OwnerStateObject.ObjectID));
 
-	if (SourceUnit != none && SourceUnit.HasSoldierAbility('DangerZone'))
+	foreach SourceUnit.AffectedByEffects(EffectRef)
 	{
-		fRadiusModifier += class'X2Ability_EngineerAbilitySet'.default.DangerZoneBonusRadius;
-	}		
-
-	if (SourceUnit != none && SourceUnit.HasSoldierAbility('DenseSmoke'))
-	{
-		ItemState = Ability.GetSourceAmmo();
-		if (ItemState == none)
-			ItemState = Ability.GetSourceWeapon();
-
-		if (ItemState == none)
-			return;
-
-		GrenadeTemplate = X2GrenadeTemplate(ItemState.GetMyTemplate());
-		if (GrenadeTemplate == none)
-			return;
-
-		if (GrenadeTemplate.DataName == 'SmokeGrenade' ||
-			GrenadeTemplate.DataName == 'SmokeGrenadeMk2')
+		EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
+		BonusRadiusEffect = X2Effect_BonusRadius(EffectState.GetX2Effect());
+		if (BonusRadiusEffect != none)
 		{
-			fRadiusModifier += class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
+			fRadiusModifier += BonusRadiusEffect.GetRadiusModifier(Ability, SourceUnit, fTargetRadius);
 		}
 	}
 }
