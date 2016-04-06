@@ -16,7 +16,7 @@ simulated function bool EquipItem(UIArmory_LoadoutItem Item)
 	UpdatedUnit = XComGameState_Unit(UpdatedState.CreateStateObject(class'XComGameState_Unit', GetUnit().ObjectID));
 	UpdatedState.AddStateObject(UpdatedUnit);
 	
-	PrevUtilityItems = class'UIUtilities_Strategy'.static.GetEquippedUtilityItems(UpdatedUnit, UpdatedState);
+	PrevUtilityItems = class'UnitUtilities_BO'.static.GetEquippedUtilityItems(UpdatedUnit, UpdatedState);
 
 	NewItemRef = Item.ItemRef;
 	PrevItemRef = UIArmory_LoadoutItem(EquippedList.GetSelectedItem()).ItemRef;
@@ -158,7 +158,7 @@ simulated function UpdateEquippedList()
 
 	// units can have multiple utility items
 	numUtilityItems = GetNumAllowedUtilityItems();
-	UtilityItems = class'UIUtilities_Strategy'.static.GetEquippedUtilityItems(UpdatedUnit, CheckGameState);
+	UtilityItems = class'UnitUtilities_BO'.static.GetEquippedUtilityItems(UpdatedUnit, CheckGameState);
 	
 	for(i = 0; i < numUtilityItems; ++i)
 	{

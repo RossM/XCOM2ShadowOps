@@ -79,7 +79,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		UtilityItemIndex = 0;
 
 		UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-		EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_Utility);
+		EquippedItems = class'UnitUtilities_BO'.static.GetEquippedItemsInSlot(Unit, eInvSlot_Utility);
 		UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
 
 		if(class'XComGameState_HeadquartersXCom'.static.GetObjectiveStatus('T0_M5_EquipMedikit') == eObjectiveState_InProgress)
@@ -101,14 +101,14 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		if(Unit.HasGrenadePocket())
 		{
 			UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_GrenadePocket);
+			EquippedItems = class'UnitUtilities_BO'.static.GetEquippedItemsInSlot(Unit, eInvSlot_GrenadePocket);
 			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_GrenadePocket, 0, NumUtilitySlots);
 		}
 
 		if(class'UnitUtilities_BO'.static.HasAmmoPocket(Unit))
 		{
 			UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_AmmoPocket);
+			EquippedItems = class'UnitUtilities_BO'.static.GetEquippedItemsInSlot(Unit, eInvSlot_AmmoPocket);
 			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_AmmoPocket, 0, NumUtilitySlots);
 		}
 		
