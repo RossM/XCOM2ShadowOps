@@ -18,7 +18,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FastballRemovalTrigger());
 	Templates.AddItem(FractureAbility());
 	Templates.AddItem(FractureDamage());
-	Templates.AddItem(PurePassive('Packmaster', "img:///UILibrary_PerkIcons.UIPerk_expanded_storage", true));
+	Templates.AddItem(Packmaster());
 	Templates.AddItem(PurePassive('Entrench', "img:///UILibrary_PerkIcons.UIPerk_one_for_all", true));
 	Templates.AddItem(Aggression());
 	Templates.AddItem(Resilience());
@@ -541,3 +541,44 @@ simulated function ChainReactionFuseVisualization(XComGameState VisualizeGameSta
 	
 	OutVisualizationTracks.AddItem(BuildTrack);
 }
+
+static function X2AbilityTemplate Packmaster()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_BonusItemCharges             ItemChargesEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Packmaster');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_expanded_storage";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	ItemChargesEffect = new class'X2Effect_BonusItemCharges';
+	ItemChargesEffect.EffectName = 'Packmaster';
+	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_Utility);
+	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_GrenadePocket);
+	ItemChargesEffect.BuildPersistentEffect(1, true, true, true);
+	ItemChargesEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(ItemChargesEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+

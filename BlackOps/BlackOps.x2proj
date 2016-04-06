@@ -146,6 +146,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_Assassin.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_BonusItemCharges.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Breach.uc">
       <SubType>Content</SubType>
     </Content>

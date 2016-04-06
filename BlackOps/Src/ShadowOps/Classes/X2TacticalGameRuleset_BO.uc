@@ -4,12 +4,13 @@ class X2TacticalGameRuleset_BO extends X2TacticalGameRuleset;
 simulated function InitializeUnitAbilities(XComGameState NewGameState, XComGameState_Unit NewUnit)
 {		
 	local XComGameState_Player kPlayer;
-	local int i;
+	local int i, j;
 	local array<AbilitySetupData> AbilityData;
 	local bool bIsMultiplayer;
 	local X2AbilityTemplate AbilityTemplate;
+	local X2Effect Effect;
+	local X2Effect_BonusItemCharges AmmoEffect;
 	local XComGameState_Item ItemIter;
-	local bool bRocketeer, bPackmaster;
 
 	`assert(NewGameState != none);
 	`assert(NewUnit != None);
@@ -19,19 +20,29 @@ simulated function InitializeUnitAbilities(XComGameState NewGameState, XComGameS
 	kPlayer = XComGameState_Player(CachedHistory.GetGameStateForObjectID(NewUnit.ControllingPlayer.ObjectID));			
 	AbilityData = NewUnit.GatherUnitAbilitiesForInit(NewGameState, kPlayer);
 
-	bRocketeer = NewUnit.HasSoldierAbility('Rocketeer');
-	bPackmaster = NewUnit.HasSoldierAbility('Packmaster');
-
-	for (i = 0; i < NewUnit.InventoryItems.Length; ++i)
+	// Add bonus item charges from any X2Effect_BonusItemCharges
+	for (i = 0; i < AbilityData.Length; ++i)
 	{
-		ItemIter = XComGameState_Item(NewGameState.GetGameStateForObjectID(NewUnit.InventoryItems[i].ObjectID));
-		if (ItemIter != none && !ItemIter.bMergedOut)
+		AbilityTemplate = AbilityData[i].Template;
+		if (!AbilityTemplate.AbilityTargetStyle.IsA('X2AbilityTarget_Self'))
+			continue;
+
+		foreach AbilityTemplate.AbilityTargetEffects(Effect)
 		{
-			if (bRocketeer && ItemIter.InventorySlot == eInvSlot_HeavyWeapon)
-				ItemIter.Ammo += ItemIter.MergedItemCount;
-			if (bPackmaster && (ItemIter.InventorySlot == eInvSlot_Utility || ItemIter.InventorySlot == eInvSlot_GrenadePocket))
-				ItemIter.Ammo += ItemIter.MergedItemCount;
-		}			
+			AmmoEffect = X2Effect_BonusItemCharges(Effect);
+
+			if (AmmoEffect != none)
+			{
+				for (j = 0; j < NewUnit.InventoryItems.Length; ++j)
+				{
+					ItemIter = XComGameState_Item(NewGameState.GetGameStateForObjectID(NewUnit.InventoryItems[j].ObjectID));
+					if (ItemIter != none && !ItemIter.bMergedOut)
+					{
+						ItemIter.Ammo += AmmoEffect.GetItemChargeModifier(NewGameState, NewUnit, ItemIter);
+					}
+				}
+			}
+		}
 	}
 
 	for (i = 0; i < AbilityData.Length; ++i)

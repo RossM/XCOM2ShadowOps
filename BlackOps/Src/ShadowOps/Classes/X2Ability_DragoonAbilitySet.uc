@@ -21,7 +21,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ShieldsUpTrigger());
 	Templates.AddItem(ECM());
 	Templates.AddItem(ECMTrigger());
-	Templates.AddItem(PurePassive('Rocketeer', "img:///UILibrary_PerkIcons.UIPerk_rocketeer", true));
+	Templates.AddItem(Rocketeer());
 	Templates.AddItem(Vanish());
 	Templates.AddItem(VanishTrigger());
 	Templates.AddItem(RestorationProtocol());
@@ -810,6 +810,45 @@ static function X2AbilityTemplate PuppetProtocol()
 	Template.BuildNewGameStateFn = class'X2Ability_SpecialistAbilitySet'.static.AttachGremlinToTarget_BuildGameState;
 	Template.BuildVisualizationFn = class'X2Ability_SpecialistAbilitySet'.static.GremlinSingleTarget_BuildVisualization;
 	
+	return Template;
+}
+
+static function X2AbilityTemplate Rocketeer()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_BonusItemCharges             ItemChargesEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Rocketeer');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_rocketeer";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	ItemChargesEffect = new class'X2Effect_BonusItemCharges';
+	ItemChargesEffect.EffectName = 'Rocketeer';
+	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_HeavyWeapon);
+	ItemChargesEffect.BuildPersistentEffect(1, true, true, true);
+	ItemChargesEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(ItemChargesEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
 	return Template;
 }
 
