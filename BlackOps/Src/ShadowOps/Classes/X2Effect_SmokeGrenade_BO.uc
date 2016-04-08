@@ -12,13 +12,10 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityTemplateManager AbilityTemplateManager;
 
+	super.GetToHitAsTargetModifiers(EffectState, Attacker, Target, AbilityState, ToHitType, bMelee, bFlanking, bIndirectFire, ShotModifiers);
+
 	if (Target.IsInWorldEffectTile(class'X2Effect_ApplySmokeGrenadeToWorld'.default.Class.Name))
 	{
-		ShotMod.ModType = eHit_Success;
-		ShotMod.Value = HitMod;
-		ShotMod.Reason = FriendlyName;
-		ShotModifiers.AddItem(ShotMod);
-
 		SourceUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
 		if (SourceUnit.HasSoldierAbility('DenseSmoke'))
