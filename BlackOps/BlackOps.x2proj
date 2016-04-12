@@ -46,6 +46,9 @@ Beta version v0.1
     <Folder Include="Src\ShadowOps\Classes" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\XComAI.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
