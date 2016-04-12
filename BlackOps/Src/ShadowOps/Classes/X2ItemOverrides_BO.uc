@@ -150,7 +150,7 @@ static function X2DataTemplate CreateSmokeGrenade()
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
 
-	Template.HideIfResearched = 'AdvancedGrenades';
+	// Template.HideIfResearched = 'AdvancedGrenades';
 
 	// Soldier Bark
 	Template.OnThrowBarkSoundCue = 'SmokeGrenade';
