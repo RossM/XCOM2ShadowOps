@@ -1,10 +1,3 @@
-//---------------------------------------------------------------------------------------
-//  FILE:    X2Effect_ScanningProtocol.uc
-//  AUTHOR:  Joshua Bouscher
-//           
-//---------------------------------------------------------------------------------------
-//  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
-//---------------------------------------------------------------------------------------
 class X2Effect_Tracking extends X2Effect_Persistent;
 
 var float LookAtDuration;
