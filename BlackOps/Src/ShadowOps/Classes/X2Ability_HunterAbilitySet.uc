@@ -629,7 +629,7 @@ static function X2AbilityTemplate AssassinTrigger()
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
-	StealthEffect = new class'X2Effect_RangerStealth';
+	StealthEffect = new class'X2Effect_RangerStealth_BO';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;

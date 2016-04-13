@@ -188,6 +188,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_BonusRadius.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_RangerStealth_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>

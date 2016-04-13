@@ -324,7 +324,7 @@ static function X2Effect StealthProtocolEffect(string FriendlyName, string LongD
 {
 	local X2Effect_RangerStealth Effect;
 
-	Effect = new class'X2Effect_RangerStealth';
+	Effect = new class'X2Effect_RangerStealth_BO';
 	Effect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_stealth", true);
 	Effect.bRemoveWhenTargetConcealmentBroken = true;
@@ -555,7 +555,7 @@ static function X2AbilityTemplate VanishTrigger()
 	VisibilityCondition = new class'X2Condition_NotVisibleToEnemies';
 	Template.AbilityShooterConditions.AddItem(VisibilityCondition);
 
-	StealthEffect = new class'X2Effect_RangerStealth';
+	StealthEffect = new class'X2Effect_RangerStealth_BO';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
