@@ -4,6 +4,27 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.2
+Class changes
+  * Dragoon
+    * Puppet Protocol succeeds less often.
+	* Shield Protocol grants poison immunity while the shield lasts.
+  * Engineer
+    * Renamed to Combat Engineer.
+	* Breach now snaps to tiles.
+	* Danger Zone only increases Breach's radius by 1.
+  * Hunter
+    * Mark now has a 1 turn cooldown (down from 2).
+	* Hip Fire is removed.
+	* Fade is moved from Corporal to Lieutenant.
+	* New Corporal ability: First Strike - While concealed, you deal +3 damage with your sniper rifle and take no penalties from using Squadsight.
+	* Sprinter is removed.
+	* New Captain ability: Sprint - Gain a bonus move action this turn. (2 turn cooldown)
+  * Infantry
+    * Full Auto now costs 2 actions to use.
+Bugfixes
+  * Too many to list
+
 Beta version v0.1
 * Four new classes with eight distinctive subclasses and 48 new abilities.
   * Dragoon - Cannon/Assault Rifle, GREMLIN
