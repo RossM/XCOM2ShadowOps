@@ -566,6 +566,8 @@ static function X2AbilityTemplate Flush()
 	// Activated by a button press; additionally, tells the AI this is an activatable
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
+	Template.AddShooterEffectExclusions();
+
 	// Targeting Details
 	// Can only shoot visible enemies
 	VisibilityCondition = new class'X2Condition_Visibility';

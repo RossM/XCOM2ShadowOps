@@ -8,7 +8,6 @@ var config int HunterMarkHitModifier;
 var config int HipFireHitModifier;
 var config int PrecisionOffenseBonus;
 var config int LowProfileDefenseBonus;
-var config int SprinterMobilityBonus;
 var config int SliceAndDiceHitModifier;
 var config int BullseyeOffensePenalty, BullseyeDefensePenalty, BullseyeWillPenalty;
 var config int FirstStrikeDamageBonus;
@@ -24,7 +23,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(HipFire()); // Unused
 	Templates.AddItem(Precision());
 	Templates.AddItem(LowProfile());
-	Templates.AddItem(Sprinter());
+	Templates.AddItem(Sprint());
 	Templates.AddItem(Assassin());
 	Templates.AddItem(AssassinTrigger());
 	Templates.AddItem(Fade());
@@ -525,45 +524,51 @@ static function X2AbilityTemplate LowProfile()
 	return Template;
 }
 
-static function X2AbilityTemplate Sprinter()
+static function X2AbilityTemplate Sprint()
 {
-	local X2AbilityTemplate						Template;
-	local X2AbilityTargetStyle                  TargetStyle;
-	local X2AbilityTrigger						Trigger;
-	local X2Effect_PersistentStatChange         PersistentEffect;
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2AbilityCooldown                 Cooldown;
+	local X2Effect_GrantActionPoints		ActionPointEffect;
+	local X2AbilityTargetStyle              TargetStyle;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Sprinter');
-
-	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Sprint');
+	
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sprinter";
-
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
 	Template.Hostility = eHostility_Neutral;
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
 
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bFreeCost = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+	
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 3;
+	Template.AbilityCooldown = Cooldown;
+	
 	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	TargetStyle = new class'X2AbilityTarget_Self';
 	Template.AbilityTargetStyle = TargetStyle;
 
-	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	Template.AbilityTriggers.AddItem(Trigger);
+	ActionPointEffect = new class'X2Effect_GrantActionPoints';
+	ActionPointEffect.NumActionPoints = 1;
+	ActionPointEffect.PointType = 'move';
+	Template.AddTargetEffect(ActionPointEffect);
 
-	PersistentEffect = new class'X2Effect_PersistentStatChange';
-	PersistentEffect.EffectName = 'Sprinter';
-	PersistentEffect.BuildPersistentEffect(1, true, true, true);
-	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	PersistentEffect.AddPersistentStatChange(eStat_Mobility, default.SprinterMobilityBonus);
-	Template.AddTargetEffect(PersistentEffect);
+	Template.AddShooterEffectExclusions();
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_Mobility, default.SprinterMobilityBonus);
-
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bSkipFireAction = true;
+	
 	Template.bCrossClassEligible = true;
 
-	return Template;
+	return Template;	
 }
 
 static function X2AbilityTemplate Assassin()
@@ -958,6 +963,7 @@ static function X2AbilityTemplate Bullseye()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	// *** VALIDITY CHECKS *** //
+	Template.AddShooterEffectExclusions();
 
 	// Targeting Details
 	// Can only shoot visible enemies
@@ -1056,8 +1062,6 @@ static function X2AbilityTemplate FirstStrike()
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
-
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_Mobility, default.SprinterMobilityBonus);
 
 	Template.bCrossClassEligible = true;
 

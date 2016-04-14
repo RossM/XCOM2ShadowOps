@@ -246,11 +246,12 @@ LocHelpText="You get +20 Defense while in half cover."
 LocFlyOverText="Low Profile"
 LocPromotionPopupText="<Bullet/> The bonus is lost if the attacker is flanking you.<br/>"
 
-[Sprinter X2AbilityTemplate]
-LocFriendlyName="Sprinter"
-LocLongDescription="You get +4 Mobility."
-LocHelpText="You get +4 Mobility."
-LocFlyOverText="Sprinter"
+[Sprint X2AbilityTemplate]
+LocFriendlyName="Sprint"
+LocLongDescription="Gain a bonus move action this turn."
+LocHelpText="Gain a bonus move action this turn."
+LocFlyOverText="Sprint"
+LocPromotionPopupText="<Bullet/> Sprint has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [Assassin X2AbilityTemplate]
 LocFriendlyName="Assassin"
