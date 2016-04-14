@@ -351,7 +351,8 @@ static function X2AbilityTemplate BurstFire()
 	Template.bLimitTargetIcons = true;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
+	ActionPointCost.bAddWeaponTypicalCost = true;
 	ActionPointCost.bConsumeAllPoints = true;
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
