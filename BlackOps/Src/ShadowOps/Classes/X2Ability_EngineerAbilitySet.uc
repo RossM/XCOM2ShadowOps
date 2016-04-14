@@ -69,7 +69,7 @@ static function X2AbilityTemplate Breach()
 	Template.DisplayTargetHitChance = false;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CORPORAL_PRIORITY;
 
-	Template.TargetingMethod = class'X2TargetingMethod_RocketLauncher';
+	Template.TargetingMethod = class'X2TargetingMethod_Breach';
 
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 3;

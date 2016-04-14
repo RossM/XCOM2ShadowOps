@@ -4,5 +4,5 @@ function bool CannotBeCrit() { return true; }
 
 defaultproperties
 {
-	EffectName = 'Resilience';
+	EffectName = "Resilience";
 }

@@ -236,6 +236,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2TacticalGameRuleset_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2TargetingMethod_Breach.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2TargetingMethod_Grenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
