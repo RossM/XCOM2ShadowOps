@@ -548,7 +548,6 @@ static function X2AbilityTemplate Flush()
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2AbilityCost_ActionPoints        ActionPointCost;
-	local array<name>                       SkipExclusions;
 	local X2Effect_Knockback				KnockbackEffect;
 	local X2Condition_Visibility            VisibilityCondition;
 	local X2Effect_Flush					FlushEffect;
@@ -567,10 +566,6 @@ static function X2AbilityTemplate Flush()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	// Activated by a button press; additionally, tells the AI this is an activatable
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-
-	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
-	SkipExclusions.AddItem(class'X2StatusEffects'.default.BurningName);
-	Template.AddShooterEffectExclusions(SkipExclusions);
 
 	// Targeting Details
 	// Can only shoot visible enemies

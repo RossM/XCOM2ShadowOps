@@ -937,7 +937,6 @@ static function X2AbilityTemplate Bullseye()
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2AbilityCost_ActionPoints        ActionPointCost;
-	local array<name>                       SkipExclusions;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
 	local X2Effect_PersistentStatChange		StatChangeEffect;
@@ -957,9 +956,6 @@ static function X2AbilityTemplate Bullseye()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	// *** VALIDITY CHECKS *** //
-	//  Normal effect restrictions (except disoriented)
-	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
-	Template.AddShooterEffectExclusions(SkipExclusions);
 
 	// Targeting Details
 	// Can only shoot visible enemies
