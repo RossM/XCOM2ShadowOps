@@ -249,7 +249,7 @@ static function X2DataTemplate HunterMark()
 	Template.Hostility = eHostility_Offensive;
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 3;
+	Cooldown.iNumTurns = 2;
 	Template.AbilityCooldown = Cooldown;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
