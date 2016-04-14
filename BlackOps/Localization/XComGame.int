@@ -47,9 +47,9 @@ LocFlyOverText="Pistol Overwatch: Ready for Anything"
 [FullAuto X2AbilityTemplate]
 LocFriendlyName="Full Auto"
 LocLongDescription="Take a shot with an aim penalty of -20. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo."
-LocHelpText="Take shots with an aim penalty of -20 until you miss or run out of ammo."
+LocHelpText="Take shots with an aim penalty of -20 until you miss or run out of ammo. Costs both actions."
 LocFlyOverText="Full Auto"
-LocPromotionPopupText="<Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Full Auto costs both actions to use. <br/><Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [FullAuto2 X2AbilityTemplate]
 LocFriendlyName="Full Auto"
