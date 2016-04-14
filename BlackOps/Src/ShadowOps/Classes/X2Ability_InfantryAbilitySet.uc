@@ -29,6 +29,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Flush());
 	Templates.AddItem(RifleSuppression());
 	Templates.AddItem(Focus());
+	Templates.AddItem(Resilience());
 
 	return Templates;
 }
@@ -811,6 +812,36 @@ static function X2AbilityTemplate Focus()
 	Effect = new class'X2Effect_Focus';
 	Effect.BuildPersistentEffect(1, true, true, true);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate Resilience()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_Persistent                   Effect;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'Resilience');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_resilience";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	Effect = new class'X2Effect_Resilience';
+	Effect.BuildPersistentEffect(1, true, false, false);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
 	Template.AddTargetEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;

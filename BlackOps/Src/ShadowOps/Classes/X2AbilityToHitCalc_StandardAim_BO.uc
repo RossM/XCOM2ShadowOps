@@ -18,12 +18,13 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	local StateObjectReference EffectRef;
 	local XComGameState_Effect EffectState;
 	local XComGameStateHistory History;
-	local bool bFlanking, bIgnoreGraze, bSquadsight;
-	local string IgnoreGrazeReason;
+	local bool bFlanking, bIgnoreGraze, bSquadsight, bIgnoreCrit;
+	local string IgnoreGrazeReason, IgnoreCritReason;
 	local X2AbilityTemplate AbilityTemplate;
 	local array<XComGameState_Effect> StatMods;
 	local array<float> StatModValues;
 	local X2Effect_Persistent PersistentEffect;
+	local X2Effect_XModBase XModBaseEffect;
 	local array<X2Effect_Persistent> UniqueToHitEffects;
 	local float FinalAdjust, CoverValue, AngleToCoverModifier, Alpha;
 	local bool bShouldAddAngleToCoverBonus;
@@ -314,12 +315,27 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 						AddModifier(EffectModifiers[i].Value, EffectModifiers[i].Reason, EffectModifiers[i].ModType);
 					}
 				}
+				
+				XModBaseEffect = X2Effect_XModBase(PersistentEffect);
+				if (XModBaseEffect != none)
+				{
+					if (XModBaseEffect.CannotBeCrit())
+					{
+						bIgnoreCrit = true;
+						IgnoreCritReason = PersistentEffect.FriendlyName;
+					}
+				}
 			}
 		}
 		//  Remove graze if shooter ignores graze chance.
 		if (bIgnoreGraze)
 		{
 			AddModifier(-m_ShotBreakdown.ResultTable[eHit_Graze], IgnoreGrazeReason, eHit_Graze);
+		}
+		//  Remove crit if target is immune.
+		if (bIgnoreCrit)
+		{
+			AddModifier(-m_ShotBreakdown.ResultTable[eHit_Crit], IgnoreCritReason, eHit_Crit);
 		}
 		//  Remove crit from reaction fire. Must be done last to remove all crit.
 		if (bReactionFire)
@@ -347,12 +363,6 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 		FinalAdjust = (default.MinimumHitChanceForNoCritPenalty - m_ShotBreakdown.ResultTable[eHit_Success]) * default.HitChanceCritPenaltyScale;
 		FinalAdjust = min(FinalAdjust, m_ShotBreakdown.ResultTable[eHit_Crit]);
 		AddModifier(-int(FinalAdjust), LowHitChanceCritModifier, eHit_Crit);
-	}
-
-	// Apply Resilience at very end
-	if (TargetState != none && TargetState.IsUnitAffectedByEffectName('Resilience'))
-	{
-		AddModifier(-m_ShotBreakdown.ResultTable[eHit_Crit], TargetState.GetUnitAffectedByEffectState('Resilience').GetX2Effect().FriendlyName, eHit_Crit);
 	}
 
 	FinalizeHitChance();

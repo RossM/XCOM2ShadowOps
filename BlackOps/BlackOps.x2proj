@@ -191,6 +191,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_RangerStealth_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Resilience.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>
@@ -216,6 +219,9 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_VitalPoint.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_XModBase.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_ZeroIn.uc">

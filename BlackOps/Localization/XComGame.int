@@ -89,6 +89,12 @@ LocLongDescription="Your first reaction shot each turn is guaranteed to hit."
 LocHelpText="Your first reaction shot each turn is guaranteed to hit."
 LocFlyOverText="Focus"
 
+[Resilience X2AbilityTemplate]
+LocFriendlyName="Resilience"
+LocLongDescription="You can't be critically hit."
+LocHelpText="You can't be critically hit."
+LocFlyOverText="Resilience"
+
 ; === Dragoon abilities ===
 
 [ShieldProtocol X2AbilityTemplate]
@@ -345,12 +351,6 @@ LocLongDescription="All of your attacks get +10 Crit chance for each enemy you c
 LocHelpText="All of your attacks get +10 Crit chance for each enemy you can see, to a max of +30."
 LocFlyOverText="Aggression"
 LocPromotionPopupText="<Bullet/> Aggression even affects attacks that can't normally crit, such as grenades and Breach. <br/>"
-
-[Resilience X2AbilityTemplate]
-LocFriendlyName="Resilience"
-LocLongDescription="You can't be critically hit."
-LocHelpText="You can't be critically hit."
-LocFlyOverText="Resilience"
 
 [CombatDrugs X2AbilityTemplate]
 LocFriendlyName="Combat Drugs"
