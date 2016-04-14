@@ -319,7 +319,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 				XModBaseEffect = X2Effect_XModBase(PersistentEffect);
 				if (XModBaseEffect != none)
 				{
-					if (XModBaseEffect.CannotBeCrit())
+					if (XModBaseEffect.CannotBeCrit(kAbility, UnitState, TargetState))
 					{
 						bIgnoreCrit = true;
 						IgnoreCritReason = PersistentEffect.FriendlyName;
