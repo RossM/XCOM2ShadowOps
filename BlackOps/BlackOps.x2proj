@@ -164,6 +164,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_Fade.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_FirstStrike.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_FlechetteRounds.uc">
       <SubType>Content</SubType>
     </Content>

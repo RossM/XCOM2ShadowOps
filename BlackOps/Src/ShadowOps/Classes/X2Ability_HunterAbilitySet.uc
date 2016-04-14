@@ -11,6 +11,7 @@ var config int LowProfileDefenseBonus;
 var config int SprinterMobilityBonus;
 var config int SliceAndDiceHitModifier;
 var config int BullseyeOffensePenalty, BullseyeDefensePenalty, BullseyeWillPenalty;
+var config int FirstStrikeDamageBonus;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -20,7 +21,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SnapShotOverwatch());
 	Templates.AddItem(HunterMark());
 	Templates.AddItem(VitalPoint());
-	Templates.AddItem(HipFire());
+	Templates.AddItem(HipFire()); // Unused
 	Templates.AddItem(Precision());
 	Templates.AddItem(LowProfile());
 	Templates.AddItem(Sprinter());
@@ -32,6 +33,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Tracking());
 	Templates.AddItem(TrackingTrigger());
 	Templates.AddItem(Bullseye());
+	Templates.AddItem(FirstStrike());
 
 	return Templates;
 }
@@ -1020,4 +1022,44 @@ static function X2AbilityTemplate Bullseye()
 	Template.bCrossClassEligible = false;
 
 	return Template;	
+}
+
+static function X2AbilityTemplate FirstStrike()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_FirstStrike					FirstStrikeEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'FirstStrike');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_executioner";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	FirstStrikeEffect = new class'X2Effect_FirstStrike';
+	FirstStrikeEffect.BuildPersistentEffect(1, true, true, true);
+	FirstStrikeEffect.BonusDamage = default.FirstStrikeDamageBonus;
+	FirstStrikeEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(FirstStrikeEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_Mobility, default.SprinterMobilityBonus);
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
 }

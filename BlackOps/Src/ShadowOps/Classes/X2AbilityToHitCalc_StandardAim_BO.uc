@@ -86,6 +86,25 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 				if (VisInfo.bClearLOS && !VisInfo.bVisibleGameplay)
 					bSquadsight = true;
 
+				// Check for abilities that negate squadsight penalty
+				if (bSquadsight)
+				{
+					foreach UnitState.AffectedByEffects(EffectRef)
+					{
+						EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
+						PersistentEffect = EffectState.GetX2Effect();
+						XModBaseEffect = X2Effect_XModBase(PersistentEffect);
+						if (XModBaseEffect != none)
+						{
+							if (XModBaseEffect.IgnoreSquadsightPenalty(kAbility, UnitState, TargetState))
+							{
+								bSquadsight = false;
+								break;
+							}
+						}
+					}
+				}
+
 				//  Add basic offense and defense values
 				AddModifier(UnitState.GetBaseStat(eStat_Offense), class'XLocalizedData'.default.OffenseStat);			
 				UnitState.GetStatModifiers(eStat_Offense, StatMods, StatModValues);

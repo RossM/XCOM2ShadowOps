@@ -25,7 +25,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZoneOfControl());
 	Templates.AddItem(ZoneOfControlShot());
 	Templates.AddItem(ZeroIn());
-	Templates.AddItem(BulletSweep());
+	Templates.AddItem(BulletSweep()); // Unused
 	Templates.AddItem(Flush());
 	Templates.AddItem(RifleSuppression());
 	Templates.AddItem(Focus());

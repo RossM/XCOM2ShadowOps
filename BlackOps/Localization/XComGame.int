@@ -289,6 +289,12 @@ LocHelpText="Fire a shot that deals critical damage and gives the target penalti
 LocFlyOverText="Bullseye"
 LocPromotionPopupText="<Bullet/> The penalties last until the end of the battle. <br/><Bullet/> Bullseye has a <Ability:SelfCooldown/> turn cooldown. <br/>"
 
+[FirstStrike X2AbilityTemplate]
+LocFriendlyName="First Strike"
+LocLongDescription="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocHelpText="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocFlyOverText="First Strike"
+
 ; === Engineer abilities ===
 
 [DenseSmoke X2AbilityTemplate]
