@@ -366,8 +366,8 @@ LocFlyOverText="Slam Fire"
 
 [DangerZone X2AbilityTemplate]
 LocFriendlyName="Danger Zone"
-LocLongDescription="The radius of all your grenades and your Breach ability is increased by 2."
-LocHelpText="The radius of all your grenades and your Breach ability is increased by 2."
+LocLongDescription="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
+LocHelpText="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
 LocFlyOverText="Danger Zone"
 
 [ChainReaction X2AbilityTemplate]

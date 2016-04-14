@@ -4,7 +4,7 @@ class X2Ability_EngineerAbilitySet extends X2Ability
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
 var config int BreachEnvironmentalDamage;
 var config float BreachRange;
-var config float DangerZoneBonusRadius;
+var config float DangerZoneBonusRadius, DangerZoneBreachBonusRadius;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -557,7 +557,7 @@ static function X2AbilityTemplate DangerZone()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_BonusRadius					RadiusEffect;
+	local X2Effect_DangerZone					RadiusEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'DangerZone');
 
@@ -576,9 +576,10 @@ static function X2AbilityTemplate DangerZone()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	RadiusEffect = new class'X2Effect_BonusRadius';
+	RadiusEffect = new class'X2Effect_DangerZone';
 	RadiusEffect.EffectName = 'DangerZone';
 	RadiusEffect.fBonusRadius = default.DangerZoneBonusRadius;
+	RadiusEffect.fBreachBonusRadius = default.DangerZoneBreachBonusRadius;
 	RadiusEffect.BuildPersistentEffect(1, true, true, true);
 	RadiusEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(RadiusEffect);
