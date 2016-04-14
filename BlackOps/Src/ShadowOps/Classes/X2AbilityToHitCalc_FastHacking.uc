@@ -1,4 +1,4 @@
-class X2AbilityToHitCalc_FastHacking extends X2AbilityToHitCalc_StatCheck_UnitVsUnit;
+class X2AbilityToHitCalc_FastHacking extends X2AbilityToHitCalc_StatCheck_UnitVsUnit config(GameData);
 
 function int GetAttackValue(XComGameState_Ability kAbility, StateObjectReference TargetRef)
 {
@@ -28,8 +28,11 @@ function int GetAttackValue(XComGameState_Ability kAbility, StateObjectReference
 	return HackAttack;
 }
 
+function string GetDefendString() { return class'XLocalizedData'.default.TechStat; }
+
 defaultproperties
 {
+	basevalue = 20;
 	AttackerStat = eStat_Hacking;
 	DefenderStat = eStat_HackDefense;
 }
