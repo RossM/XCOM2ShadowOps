@@ -106,6 +106,7 @@ static function X2Effect ShieldProtocolEffect(string FriendlyName, string LongDe
 	ShieldedEffect.ConventionalAmount = default.ConventionalShieldProtocol;
 	ShieldedEffect.MagneticAmount = default.MagneticShieldProtocol;
 	ShieldedEffect.BeamAmount = default.BeamShieldProtocol;
+	ShieldedEffect.ImmuneTypes.AddItem('Poison');
 	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", true);
 
 	return ShieldedEffect;

@@ -1,6 +1,7 @@
 class X2Effect_ShieldProtocol extends X2Effect_ModifyStats;
 
 var int ConventionalAmount, MagneticAmount, BeamAmount;
+var array<name> ImmuneTypes;
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
@@ -18,6 +19,11 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	// When the Gremlin is recalled to its owner, if aid protocol is in effect, override and return to the unit receiving aid
 	// (Priority 49, so this happens after the regular ItemRecalled)
 	//EventMgr.RegisterForEvent(EffectObj, 'ItemRecalled', class'X2Effect_ShieldProtocol'.static.OnItemRecalled, ELD_OnStateSubmitted, 49);
+}
+
+function bool ProvidesDamageImmunity(XComGameState_Effect EffectState, name DamageType)
+{
+	return (ImmuneTypes.Find(DamageType) != INDEX_NONE);
 }
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)

@@ -102,7 +102,7 @@ LocFriendlyName="Shield Protocol"
 LocLongDescription="Give a friendly unit an energy shield which will absorb three points of damage. More advanced GREMLINs will increase the damage absorbed."
 LocHelpText="Give a friendly unit an energy shield which absorbs damage."
 LocFlyOverText="Shield Protocol""
-LocPromotionPopupText="<Bullet/> The shield is lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
+LocPromotionPopupText="<Bullet/> The shield is lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
 [HeavyArmor X2AbilityTemplate]
 LocFriendlyName="Tank"
