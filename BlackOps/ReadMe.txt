@@ -1,6 +1,4 @@
-﻿=== IMPORTANT! READ BEFORE INSTALLING! ===
-! This is a beta version and is likely to have bugs and balance problems. I am releasing it so other people can help me improve it. Do not install if you don't want to be a beta tester.
-! This mod overrides many base game classes, and is likely to conflict with other mods. It has not been tested with any other mods. Combine at your own risk, and keep backup saves.
+﻿This mod adds four new classes: Combat Engineer, Dragoon, Hunter, and Infantry. It also changes several game rules and items to support the new classes.
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
