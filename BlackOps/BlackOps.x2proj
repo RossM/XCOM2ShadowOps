@@ -164,6 +164,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_ChainReaction.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_DamnGoodGround.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_DangerZone.uc">
       <SubType>Content</SubType>
     </Content>

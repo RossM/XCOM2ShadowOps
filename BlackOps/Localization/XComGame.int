@@ -296,6 +296,12 @@ LocLongDescription="While concealed, you deal +3 damage with your <Ability:Weapo
 LocHelpText="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
 LocFlyOverText="First Strike"
 
+[DamnGoodGround X2AbilityTemplate]
+LocFriendlyName="Damn Good Ground"
+LocLongDescription="You get an additional +10 Aim and +10 Defense against targets at lower elevation."
+LocHelpText="You get an additional +10 Aim and +10 Defense against targets at lower elevation."
+LocFlyOverText="Damn Good Ground"
+
 ; === Engineer abilities ===
 
 [DenseSmoke X2AbilityTemplate]
@@ -437,4 +443,8 @@ TacticalText="<Bullet/> Hollow-point ammunition expands inside the target, deali
 [PackmasterUnlock X2SoldierAbilityUnlockTemplate]
 DisplayName="Combat Engineer: Packmaster"
 Summary="Limited-use utility items gain a bonus use."
+
+[DamnGoodGroundUnlock X2SoldierAbilityUnlockTemplate]
+DisplayName="Hunter: Damn Good Ground"
+Summary="+10 Aim and Defense against targets at lower elevation."
 

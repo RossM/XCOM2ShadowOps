@@ -22,6 +22,7 @@ Class changes
 	* New Corporal ability: First Strike - While concealed, you deal +3 damage with your sniper rifle and take no penalties from using Squadsight.
 	* Sprinter is removed.
 	* New Captain ability: Sprint - Gain a bonus move action this turn. (2 turn cooldown)
+	* New class GTS abiltiy: Damn Good Ground - +10 Aim and Defense against targets at lower elevation.
   * Infantry
     * Full Auto now costs 2 actions to use.
 Bugfixes
