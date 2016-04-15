@@ -37,6 +37,7 @@ function AddGtsUnlocks()
 	Template = X2FacilityTemplate(StrategyManager.FindStrategyElementTemplate('OfficerTrainingSchool'));
 
 	Template.SoldierUnlockTemplates.AddItem('PackmasterUnlock');
+	Template.SoldierUnlockTemplates.AddItem('DamnGoodGroundUnlock');
 }
 
 defaultproperties
