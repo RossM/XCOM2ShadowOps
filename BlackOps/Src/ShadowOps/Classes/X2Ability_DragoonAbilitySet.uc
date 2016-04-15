@@ -277,7 +277,7 @@ static function X2AbilityTemplate StealthProtocol()
 	ActionPointCost.bConsumeAllPoints = false;
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
-	Charges = new class 'X2AbilityCharges';
+	Charges = new class 'X2AbilityCharges_RevivalProtocol';
 	Charges.InitialCharges = 1;
 	Template.AbilityCharges = Charges;
 
@@ -602,7 +602,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	ActionPointCost.bConsumeAllPoints = false;
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
-	Charges = new class 'X2AbilityCharges';
+	Charges = new class 'X2AbilityCharges_RevivalProtocol';
 	Charges.InitialCharges = 1;
 	Template.AbilityCharges = Charges;
 

@@ -7,6 +7,7 @@ Class changes
   * Dragoon
     * Puppet Protocol succeeds less often.
 	* Shield Protocol grants poison immunity while the shield lasts.
+	* Renewal Protocol and Stealth Protocol gain a second charge when using a GREMLIN Mk III.
   * Engineer
     * Renamed to Combat Engineer.
 	* Breach now snaps to tiles.
