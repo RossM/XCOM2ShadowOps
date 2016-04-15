@@ -7,6 +7,7 @@ var config int MagnumDamageBonus, MagnumOffenseBonus;
 var config int FullAutoHitModifier;
 var config int ZeroInOffenseBonus;
 var config int FlushHitModifier;
+var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, AdrenalineSurgeCooldown;
 
 var config name FreeAmmoForPocket;
 
@@ -30,6 +31,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(RifleSuppression());
 	Templates.AddItem(Focus());
 	Templates.AddItem(Resilience());
+	Templates.AddItem(AdrenalineSurge());
+	Templates.AddItem(AdrenalineSurgeTrigger());
 
 	return Templates;
 }
@@ -846,6 +849,96 @@ static function X2AbilityTemplate Resilience()
 	//  NOTE: No visualization on purpose!
 
 	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate AdrenalineSurge()
+{
+	local X2AbilityTemplate         Template;
+
+	Template = PurePassive('AdrenalineSurge', "img:///UILibrary_PerkIcons.UIPerk_adrenalneurosympathy");
+	Template.AdditionalAbilities.AddItem('AdrenalineSurgeTrigger');
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate AdrenalineSurgeTrigger()
+{
+	local X2AbilityTemplate                 Template;	
+	local array<name>                       SkipExclusions;
+	local X2AbilityTrigger_EventListener	EventListener;
+	local X2Effect_AdrenalineSurge			AdrenalineEffect;
+	local X2Effect_Persistent				CooldownEffect;
+	local X2AbilityMultitarget_Radius		RadiusMultitarget;
+	local X2Condition_UnitProperty			PropertyCondition;
+	local X2Condition_UnitEffects			EffectsCondition;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'AdrenalineSurgeTrigger');
+	
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_adrenalneurosympathy";
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
+	SkipExclusions.AddItem(class'X2StatusEffects'.default.BurningName);
+	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
+	RadiusMultiTarget.fTargetRadius = 12;
+	RadiusMultiTarget.bIgnoreBlockingCover = true;
+	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
+
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'KillMail';
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	PropertyCondition = new class'X2Condition_UnitProperty';
+	PropertyCondition.ExcludeDead = true;
+	PropertyCondition.ExcludeHostileToSource = true;
+	PropertyCondition.ExcludeFriendlyToSource = false;
+	PropertyCondition.RequireSquadmates = true;
+
+	EffectsCondition = new class'X2Condition_UnitEffects';
+	EffectsCondition.AddExcludeEffect('AdrenalineSurgeCooldown', 'AA_UnitIsImmune');
+
+	AdrenalineEffect = new class'X2Effect_AdrenalineSurge';
+	AdrenalineEffect.CritMod = default.AdrenalineSurgeCritBonus;
+	AdrenalineEffect.AddPersistentStatChange(eStat_Mobility, default.AdrenalineSurgeMobilityBonus);
+	AdrenalineEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
+	AdrenalineEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage);
+	AdrenalineEffect.TargetConditions.AddItem(PropertyCondition);
+	AdrenalineEffect.TargetConditions.AddItem(EffectsCondition);
+	Template.AddTargetEffect(AdrenalineEffect);
+	Template.AddMultiTargetEffect(AdrenalineEffect);
+
+	CooldownEffect = new class'X2Effect_Persistent';
+	CooldownEffect.EffectName = 'AdrenalineSurgeCooldown';
+	CooldownEffect.BuildPersistentEffect(default.AdrenalineSurgeCooldown, false, false, false, eGameRule_PlayerTurnEnd);
+	CooldownEffect.TargetConditions.AddItem(PropertyCondition);
+	CooldownEffect.TargetConditions.AddItem(EffectsCondition);
+	Template.AddTargetEffect(CooldownEffect);
+	Template.AddMultiTargetEffect(CooldownEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bShowActivation = false;
+	Template.bSkipFireAction = true;
+	Template.bSkipPerkActivationActions = true;
+
+	Template.Hostility = eHostility_Neutral;
 
 	return Template;
 }

@@ -95,6 +95,18 @@ LocLongDescription="You can't be critically hit."
 LocHelpText="You can't be critically hit."
 LocFlyOverText="Resilience"
 
+[AdrenalineSurge X2AbilityTemplate]
+LocFriendlyName="Adrenaline Surge"
+LocLongDescription="When you get a kill, you and nearby friendly units get +10 Crit chance and +3 Mobility until the end of your turn."
+LocHelpText="+10 Crit chance and +3 Mobility until the end of your turn."
+LocFlyOverText="Adrenaline Surge"
+
+[AdrenalineSurgeTrigger X2AbilityTemplate]
+LocFriendlyName="Adrenaline Surge"
+LocLongDescription="When you get a kill, you and nearby friendly units get +10 Crit chance and +3 Mobility until the end of your turn."
+LocHelpText="+10 Crit chance and +3 Mobility until the end of your turn."
+LocFlyOverText="Adrenaline Surge"
+
 ; === Dragoon abilities ===
 
 [ShieldProtocol X2AbilityTemplate]
@@ -448,3 +460,6 @@ Summary="Limited-use utility items gain a bonus use."
 DisplayName="Hunter: Damn Good Ground"
 Summary="+10 Aim and Defense against targets at lower elevation."
 
+[AdrenalineSurgeUnlock X2SoldierAbilityUnlockTemplate]
+DisplayName="Infantry: Adrenaline Surge"
+Summary="Nearby squadmates get +10 Crit and +3 Mobility when you get a kill."

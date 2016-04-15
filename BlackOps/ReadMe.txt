@@ -22,9 +22,10 @@ Class changes
 	* New Corporal ability: First Strike - While concealed, you deal +3 damage with your sniper rifle and take no penalties from using Squadsight.
 	* Sprinter is removed.
 	* New Captain ability: Sprint - Gain a bonus move action this turn. (2 turn cooldown)
-	* New class GTS abiltiy: Damn Good Ground - +10 Aim and Defense against targets at lower elevation.
+	* New class GTS ability: Damn Good Ground - +10 Aim and Defense against targets at lower elevation.
   * Infantry
     * Full Auto now costs 2 actions to use.
+	* New class GTS ability: Adrenaline Surge - Nearby squadmates get +10 Crit and +3 Mobility when you get a kill. (until end of turn)
 Bugfixes
   * Flush works more reliably
   * GREMLINs enter stealth when their owner does
