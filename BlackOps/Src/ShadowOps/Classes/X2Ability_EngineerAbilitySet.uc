@@ -26,6 +26,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(DangerZone());
 	Templates.AddItem(ChainReaction());
 	Templates.AddItem(ChainReactionFuse());
+	Templates.AddItem(HeatAmmo());
 
 	return Templates;
 }
@@ -624,6 +625,43 @@ static function X2AbilityTemplate DenseSmoke()
 	RadiusEffect.BuildPersistentEffect(1, true, true, true);
 	RadiusEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(RadiusEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate HeatAmmo()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_HeatAmmo						HeatEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'HeatAmmo');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_heatammo";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	HeatEffect = new class'X2Effect_HeatAmmo';
+	HeatEffect.BuildPersistentEffect(1, true, true, true);
+	HeatEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(HeatEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!

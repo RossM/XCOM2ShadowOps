@@ -11,6 +11,9 @@ Class changes
     * Renamed to Combat Engineer.
 	* Breach now snaps to tiles.
 	* Danger Zone only increases Breach's radius by 1.
+	* Packmaster is now the class GTS ability.
+	* Entrench is moved from Captain to Lieutenant.
+	* New Captain ability: HEAT Ammo - Confers +50% damage against robotic enemies.
   * Hunter
     * Mark now has a 1 turn cooldown (down from 2).
 	* Hip Fire is removed.

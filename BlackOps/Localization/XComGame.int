@@ -387,6 +387,12 @@ LocFlyOverText="Chain Reaction"
 LocFriendlyName="Chain Reaction"
 LocFlyOverText="Chain Reaction"
 
+[HeatAmmo X2AbilityTemplate]
+LocFriendlyName="HEAT Ammo"
+LocLongDescription="Confers +50% damage against robotic enemies."
+LocHelpText="Confers +50% damage against robotic enemies."
+LocFlyOverText="HEAT Ammo"
+
 ; === Class templates ===
 
 [Infantry X2SoldierClassTemplate]
@@ -426,3 +432,9 @@ FriendlyName="Hollow-Point Rounds"
 FriendlyNamePlural="Hollow-Point Rounds"
 BriefSummary=""
 TacticalText="<Bullet/> Hollow-point ammunition expands inside the target, dealing greater damage to soft flesh and fragile electronic components. <br/>"
+
+; === GTS ability templates ===
+[PackmasterUnlock X2SoldierAbilityUnlockTemplate]
+DisplayName="Combat Engineer: Packmaster"
+Summary="Limited-use utility items gain a bonus use."
+
