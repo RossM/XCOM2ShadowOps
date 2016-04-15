@@ -1,4 +1,4 @@
-﻿This mod adds four new classes: Combat Engineer, Dragoon, Hunter, and Infantry. It also changes several game rules and items to support the new classes.
+﻿This mod adds four new classes: Combat Engineer, Dragoon, Hunter, and Infantry. It also changes several game rules and items to support the new classes. The new classes together can fill all the roles of the original classes (except psi) and are designed to completely replace the base classes. I suggest not using this together with other gameplay-changing mods on your first playthrough, especially if you are using these instead of the basic classes.
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
@@ -21,7 +21,9 @@ Class changes
   * Infantry
     * Full Auto now costs 2 actions to use.
 Bugfixes
-  * Too many to list
+  * Flush works more reliably
+  * GREMLINs enter stealth when their owner does
+  * Too many others to list
 
 Beta version v0.1
 * Four new classes with eight distinctive subclasses and 48 new abilities.
@@ -30,7 +32,7 @@ Beta version v0.1
     * The Ghost moves quickly and quietly, helping her squad to slip past enemies. She's also an expert at hacking enemy robotic units, and can even take permanent control over them.
   * Engineer - Shotgun/Assault Rifle, Grenade Launcher
     * The Pioneer covers himself and his allies with clouds of smoke for protection while he closes with the enemy, then deals massive damage at short range with his shotgun.
-    * The Sapper uses grenades and shotgun to demolish cover and shred armor. Her Packmaster ability allows her to carry more grenades than any other  class.
+    * The Sapper uses grenades and shotgun to demolish cover and shred armor. Her Packmaster ability allows her to carry more grenades than any other class.
   * Hunter - Sniper Rifle, Sword
     * The Marksman delivers long-range tactical support from concealed firing positions. Her ability to weaken enemies from long distance makes her a powerful threat anywhere on the battlefield.
     * The Tracker combines sniper rifle and sword into a unbelievable whirlwind of destruction. Despite his unorthodox choice of weapons, his combination of high mobility and even higher damage is devastatingly effective.
