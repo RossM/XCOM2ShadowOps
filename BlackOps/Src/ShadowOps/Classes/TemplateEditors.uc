@@ -19,13 +19,25 @@ event OnInit(UIScreen Screen)
 	}
 }
 
+
+// The following template types have per-difficulty variants:
+// X2CharacterTemplate (except civilians and characters who never appear in tactical play)
+// X2FacilityTemplate
+// X2FacilityUpgradeTemplate
+// X2Item (grenades, weapons, and heavy weapons only)
+// X2MissionSourceTemplate
+// X2SchematicTemplate
+// X2SoldierClassTemplate
+// X2SoldierUnlockTemplate
+// X2SpecialRoomFeatureTemplate
+// X2TechTemplate
 function EditTemplatesForDifficulty()
 {
+	AddGtsUnlocks();
 }
 
 function EditTemplates()
 {
-	AddGtsUnlocks();
 }
 
 function AddGtsUnlocks()
