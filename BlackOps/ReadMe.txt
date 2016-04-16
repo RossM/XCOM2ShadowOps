@@ -2,6 +2,10 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.3
+General changes
+  * Improved compatibility with other mods, hopefully
+
 Beta version v0.2
 Class changes
   * Dragoon
