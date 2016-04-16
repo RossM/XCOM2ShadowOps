@@ -38,6 +38,7 @@ function EditTemplates()
 {
 	AddAllDoNotConsumeAllAbilities();
 	FixAllSimpleStandardAims();
+	ChangeAllToGrenadeActionPoints();
 }
 
 function AddDoNotConsumeAllAbility(name AbilityName, name PassiveAbilityName)
@@ -90,8 +91,8 @@ function AddAllDoNotConsumeAllAbilities()
 	AddDoNotConsumeAllAbility('LaunchGrenade', 'SmokeAndMirrors');
 
 	// Fastball
-	AddDoNotConsumeAllAbility('ThrowGrenade', 'Fastball');
-	AddDoNotConsumeAllAbility('LaunchGrenade', 'Fastball');
+	AddDoNotConsumeAllEffect('ThrowGrenade', 'Fastball');
+	AddDoNotConsumeAllEffect('LaunchGrenade', 'Fastball');
 
 	// Entrench
 	AddDoNotConsumeAllAbility('HunkerDown', 'Entrench');
@@ -130,6 +131,42 @@ function FixAllSimpleStandardAims()
 	FixSimpleStandardAim('AnimaGate');
 	FixSimpleStandardAim('LightningHands');
 	
+}
+
+function ChangeToGrenadeActionPoints(name AbilityName)
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local X2AbilityTemplate						Template;
+	local X2AbilityCost							AbilityCost;
+	local X2AbilityCost_ActionPoints			ActionPointCost;
+	local X2AbilityCost_GrenadeActionPoints		GrenadeCost;
+	local int									i;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	Template = AbilityManager.FindAbilityTemplate(AbilityName);
+
+	for (i = 0; i < Template.AbilityCosts.Length; i++)
+	{
+		AbilityCost = Template.AbilityCosts[i];
+		ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
+		if (ActionPointCost != none && !ActionPointCost.IsA('X2AbilityCost_GrenadeActionPoints'))
+		{
+			GrenadeCost = new class 'X2AbilityCost_GrenadeActionPoints';
+			GrenadeCost.iNumPoints = ActionPointCost.iNumPoints;
+			GrenadeCost.bConsumeAllPoints = ActionPointCost.bConsumeAllPoints;
+			GrenadeCost.DoNotConsumeAllSoldierAbilities = ActionPointCost.DoNotConsumeAllSoldierAbilities;
+			GrenadeCost.DoNotConsumeAllEffects = ActionPointCost.DoNotConsumeAllEffects;
+			GrenadeCost.AllowedTypes = ActionPointCost.AllowedTypes;
+
+			Template.AbilityCosts[i] = GrenadeCost;
+		}
+	}
+}
+
+function ChangeAllToGrenadeActionPoints()
+{
+	ChangeToGrenadeActionPoints('ThrowGrenade');
+	ChangeToGrenadeActionPoints('LaunchGrenade');
 }
 
 defaultproperties
