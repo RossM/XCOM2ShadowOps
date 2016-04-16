@@ -25,6 +25,7 @@ Class changes
 	* New Captain ability: Sprint - Gain a bonus move action this turn. (2 turn cooldown)
 	* New class GTS ability: Damn Good Ground - +10 Aim and Defense against targets at lower elevation.
   * Infantry
+    * Rate of experience gain slightly reduced.
     * Full Auto now costs 2 actions to use.
 	* New class GTS ability: Adrenaline Surge - Nearby squadmates get +10 Crit and +3 Mobility when you get a kill. (until end of turn)
 Bugfixes
