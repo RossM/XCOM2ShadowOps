@@ -1,0 +1,210 @@
+In this tutorial I'm going to go through the process of adding an ability that requires a new X2Effect subclass, step by step. You will need a bit of familiarity with coding, and with XCOM ModBuddy - at least the ability to create a mod and compile it. You'll also need to create an AbilitySet if you don't have one.
+
+For my example, I'm going to reimplement the old XCOM 1 ability Damn Good Ground. This ability gives +10 Defense and +10 Aim against enemies at lower elevation. It's fairly simple so this tutorial shouldn't be too hard.
+
+First, we're going to need to add a new UnrealScript file to our mod. Name it X2Effect_DamnGoodGround.uc. You can delete the useless comment that the new file starts out with. Next we need to declare what class this file is for:
+
+    class X2Effect_DamnGoodGround extends X2Effect_Persistent;
+
+This line says that our new class is a type of X2Effect_Persistent, which is the base class of all X2Effects that hang around beyond the action that created them. Note that the name of the effect has to match the name of the file, or you'll get a warning.
+
+If you look at X2Effect_Persistent.uc, near the bottom (lines 521-547), you'll see a bunch of one-line functions with trivial bodies. These are all things that a persistent effect can modify. (There are more things, but they get a bit trickier.) We want GetToHitModifiers - you'll be seeing this one a lot.
+
+    function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers);
+
+Notice that the function ends with a ";", which means it doesn't do anything. We're going to write our own version that does do something. Copy that line into X2Effect_DamnGoodGround.uc, and replace the ";" with some nice curly braces, like this:
+
+    function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
+    {
+    }
+
+Now it still doesn't do anything, but at least we have a space where it can do something. GetToHitModifiers gives our effect the ability to add modifiers to the various to-hit chances of a shot. We only care about the overall hit chance. To modify that, though, we'll first need to declare a variable. You'll see why soon.
+
+    function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
+    {
+        local ShotModifierInfo ModInfo;	
+    }
+
+A ShotModifierInfo contains one modifier to a shot's chances - one line in the To Hit or Critical breakdowns. You'll be seeing a lot of these, so get used to filling them out. For now, add these four lines under the "local" we declared above:
+
+        ModInfo.ModType = eHit_Success;
+        ModInfo.Value = AimMod;
+        ModInfo.Reason = FriendlyName;
+        ShotModifiers.AddItem(ModInfo);
+
+The ModType says that this is a modifier to eHit_Success, the over hit chance. The Value says that we're adding AimMod... wait, what's AimMod?
+
+Looks like I forgot to declare a variable. Go back up to the top of the file, between the "class" line and the "function" line, and add this:
+
+    var int AimMod, DefenseMod;
+
+Why two? Well, Damn Good Ground gives both an Aim bonus and Defense bonus, so we might as well declare them both now. We'll figure out how those variables get their values later. Back to our ModInfo.
+
+The Reason doesn't affect the gameplay effect of this modifier, but it does tell the game what to display this modifier as in the shot breakdown. If you leave it out you'll get an ugly modifier number next to a blank line. FriendlyName is a variable that is declared in X2Effect_Persistent, so we don't need to declare it ourselves. You'll see where its value comes from later, too.
+
+The last line merely adds this modifier to ShotModifiers, which is one of the parameters of GetToHitModifiers. At this point X2Effect_DamnGoodGround.uc should look like this:
+
+    class X2Effect_DamnGoodGround extends X2Effect_Persistent;
+    
+    var int AimMod, DefenseMod;
+
+    function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
+    {
+        local ShotModifierInfo ModInfo;	
+
+        ModInfo.ModType = eHit_Success;
+        ModInfo.Value = AimMod;
+        ModInfo.Reason = FriendlyName;
+        ShotModifiers.AddItem(ModInfo);
+    }
+
+Now we'll jump over to our ability file. It's probably named something like X2Ability_MyClassAbilitySet.uc. We're going to add a function to create the Damn Good Ground ability. Luckily, it's simple. Okay, I lied. But you're going to be writing abilities like this one a lot as you create custom effects.
+
+Let's start out by going to the bottom of the file (right above the "defaultproperties" block if there is one - this isn't required, it's just good style) and adding a new function:
+
+	static function X2AbilityTemplate DamnGoodGround()
+	{
+		local X2AbilityTemplate						Template;
+		local X2AbilityTargetStyle                  TargetStyle;
+		local X2AbilityTrigger						Trigger;
+		local X2Effect_DamnGoodGround				Effect;
+	}
+
+You'll notice that I already declared a bunch of variables I know I'm going to need. Just trust me here.
+
+Now we can start adding real code, below the locals. The first thing we do is create our template and give a name to it.
+
+		`CREATE_X2ABILITY_TEMPLATE(Template, 'DamnGoodGround');
+
+Now we need to set some basic properties that every ability has.
+
+		Template.AbilitySourceName = 'eAbilitySource_Perk';
+		Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+		Template.Hostility = eHostility_Neutral;
+
+The first line there declares that this ability comes from a perk (rather than an item or a psi ability, say). It determines the color of the ability's icon. The second line says that this ability isn't activatable and shouldn't be shown on the HUD with other activatable abilities. The third line says that this ability isn't hostile and won't break the squad's concealment.
+
+I mentioned that ability icon there, let's not forget to set that up. Fortunately the game still has all the XCOM 1 ability icons ready to use, even if they look a bit weird.
+
+		Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_damngoodground";
+
+Now we're going to set up some information about what the ability actually does. The first couple are straightforward: the ability affects the unit it's on, and never misses.
+
+		TargetStyle = new class'X2AbilityTarget_Self';
+		Template.AbilityTargetStyle = TargetStyle;
+
+		Template.AbilityToHitCalc = default.DeadEye;
+
+We also want the ability to take effect at the beginning of every mission.
+
+		Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+		Template.AbilityTriggers.AddItem(Trigger);
+
+Next up is the ability effect, but first, we're going to have to declare some more variables. Go back up to the top of file, right below the "class" line (and any other "var" lines), and declare some variables:
+
+	var config int DamnGoodGroundOffenseBonus, DamnGoodGroundDefenseBonus;
+
+The "config" tells the game to read these from the configuration file. Which configuration file? It should be set up on the "class" line. If it isn't, add a "config" term to your ability class so it looks something like this:
+
+	class X2Ability_MyClassAbilitySet extends X2Ability config(GameData_SoldierSkills);
+
+If you're wondering why I picked such long names for those variables, I'm just weird like that. Anyways, now that we have those, we can actually create the effect we made earlier:
+
+		Effect = new class'X2Effect_DamnGoodGround';
+		Effect.AimMod = default.DamnGoodGroundOffenseBonus;
+		Effect.DefenseMod = default.DamnGoodGroundDefenseBonus;
+		Effect.BuildPersistentEffect(1, true, true, true);
+		Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+		Template.AddTargetEffect(Effect);
+
+That's a bunch of code, let's break it down. We're creating an effect of our new effect type. We're setting the variables we declared in that class, AimMod and Defense Mod, to the values of the variables with long names we just declared. Notice that, because the new variables are "config", we have to access them with "default." Don't ask me why, it's magic.
+
+The next line tells the game that this persistent effect lasts forever. The only really important part is the first "true" - that sets this as a persistent effect with no duration. The rest of them have meanings that aren't important right now so just set them like I say.
+
+The "SetDisplayInfo" line says that this effect should be displayed on the HUD as a passive perk effect in the lower-left corner. The rest of that line is passing various names and descriptions and things to the effect, so that it knows what its own FriendlyName is. Where do all those variables like LocFriendlyName come from? They're loaded from the translation files by magic.
+
+The last line there just says that this effect will affect the target of the ability, which will be the unit itself due to using an X2AbilityTarget_Self as our AbilityTargetStyle.
+
+Almost done! Here's the last few lines we need in this function:
+
+		Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+		//  NOTE: No visualization on purpose!
+
+		Template.bCrossClassEligible = true;
+
+		return Template;
+
+The first line sets up the way this ability will modify the game state. You will almost always want to use TypicalAbility_BuildGameState here. If you leave this line out, your ability will do nothing at all.
+
+On many abilities, we'd set up visualization so the player can see the effect of the ability being used, but this is a passive that triggers at the start of the battle and we don't need (or want) to display anything then.
+
+Setting bCrossClassEligible makes this ability eligible to be picked up by other classes through the AWC. It seems appropriate here. Finally, we return the Template we just created.
+
+Don't forget to actually add the template to your ability set's CreateTemplates:
+
+	static function array<X2DataTemplate> CreateTemplates()
+	{
+		local array<X2DataTemplate> Templates;
+	
+		// ... existing templates go here ...
+		Templates.AddItem(DamnGoodGround());
+
+		return Templates;
+	}
+
+I forget to add my templates to CreateTemplates half the time, and then get a redscreen error message when I launch the game for testing and have to go back and fix my mistake. Don't be like me, remember to add your abilities to CreateTemplates.
+
+Now we're not done, but at least we can compile and run. Add the ability you just created to a class, start the game with F5, and go try your ability out in the tactical quick launch. I'll wait.
+
+Good, you're back. You may have noticed that your ability doesn't do anything. That's because we haven't actually set the aim bonus, so it's zero, and zero bonuses don't even get displayed in the shot breakdown. Open up your mod's Config\XComGameData_SoldierSkills.ini (or create it if you don't have one) and add something like:
+
+	[MyMod.X2Ability_MyClassAbilitySet]
+	; Damn Good Ground
+	DamnGoodGroundOffenseBonus=10
+	DamnGoodGroundDefenseBonus=10
+
+You might also have noticed that if you hovered over the ability icon, there was no text. That's because we didn't create a localization file either. Edit or create Localization\XComGame.int and add this:
+
+	[DamnGoodGround X2AbilityTemplate]
+	LocFriendlyName="Damn Good Ground"
+	LocLongDescription="You get an additional +10 Aim and +10 Defense against targets at lower elevation."
+	LocHelpText="You get an additional +10 Aim and +10 Defense against targets at lower elevation."
+	LocFlyOverText="Damn Good Ground"
+
+You'll notice that the text repeats itself and the text repeats itself. For now, don't worry about it. More complicated abilities will have different text for some of the things that are the same here.
+
+Now that we've fixed those problems, you can go into the game and try out your ability, for real this time. Put your guy on a high building and target a lower-height enemy, and see that the Damn Good Ground bonus appears. Now put your guy on the ground and try targeting an enemy on the same level and ... the bonus still appears?
+
+Oh, right, we didn't actually add a height check to our effect! Let's add one now. I'll just show you the finished code. It's not very interesting.
+
+    function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
+    {
+        local ShotModifierInfo ModInfo;	
+
+		if (Attacker.HasHeightAdvantageOver(Target, true))
+		{
+			ModInfo.ModType = eHit_Success;
+			ModInfo.Reason = FriendlyName;
+			ModInfo.Value = AimMod;
+			ShotModifiers.AddItem(ModInfo);
+		}		
+    }
+
+That finishes up the +10 Aim part of Damn Good Ground. Now that we've done that, the +10 Defense part is easy. Add this right under GetToHitModifiers:
+
+	function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
+	{
+		local ShotModifierInfo ModInfo;
+
+		if (Target.HasHeightAdvantageOver(Attacker, false))
+		{
+			ModInfo.ModType = eHit_Success;
+			ModInfo.Reason = FriendlyName;
+			ModInfo.Value = -DefenseMod;
+			ShotModifiers.AddItem(ModInfo);
+		}		
+	}
+
+GetToHitAsTargetModifiers works just like GetToHitModifiers, but it affects when this unit is being shot at, rather than it's shooting. Since we're the target now, we have to switch Target and Attacker in the height check. Increasing Defense is the same as reducing the attacker's Aim, and you do it the same way, just with a negative modifier.
+
+Now we're done! We have a working Damn Good Ground ability.
