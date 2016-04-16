@@ -88,3 +88,7 @@ function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out
 	return false;
 }
 
+defaultproperties
+{
+	HealthRegeneratedName = "RestorationProtocolHealthRegenerated";
+}
