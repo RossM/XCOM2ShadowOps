@@ -1,6 +1,7 @@
 class X2Ability_DragoonAbilitySet extends X2Ability
 	config(GameData_SoldierSkills);
 
+var config array<name> ShieldProtocolImmunities;
 var config int ConventionalShieldProtocol, MagneticShieldProtocol, BeamShieldProtocol;
 var config int ConventionalShieldsUp, MagneticShieldsUp, BeamShieldsUp;
 var config int HeavyArmorBase, HeavyArmorBonus;
@@ -8,6 +9,12 @@ var config int FinesseMobilityBonus, FinesseOffenseBonus;
 var config int BurstFireHitMod, BurstFireEnvironmentalDamage;
 var config float ECMDetectionModifier;
 var config int TacticalSenseDodgeBonus, TacticalSenseMaxDodgeBonus;
+var config int RestorationHealAmount, RestorationMaxHealAmount, RestorationIncreasedHealAmount, RestorationHealingBonusMultiplier;
+var config name RestorationIncreasedHealProject;
+
+var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges;
+var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
+var config int BurstFireAmmo;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -60,7 +67,7 @@ static function X2AbilityTemplate ShieldProtocol()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Charges = new class 'X2AbilityCharges';
-	Charges.InitialCharges = 2;
+	Charges.InitialCharges = default.ShieldProtocolCharges;
 	Template.AbilityCharges = Charges;
 
 	ChargeCost = new class'X2AbilityCost_Charges';
@@ -108,7 +115,7 @@ static function X2Effect ShieldProtocolEffect(string FriendlyName, string LongDe
 	ShieldedEffect.ConventionalAmount = default.ConventionalShieldProtocol;
 	ShieldedEffect.MagneticAmount = default.MagneticShieldProtocol;
 	ShieldedEffect.BeamAmount = default.BeamShieldProtocol;
-	ShieldedEffect.ImmuneTypes.AddItem('Poison');
+	ShieldedEffect.ImmuneTypes = default.ShieldProtocolImmunities;
 	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", true);
 
 	return ShieldedEffect;
@@ -280,7 +287,7 @@ static function X2AbilityTemplate StealthProtocol()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Charges = new class 'X2AbilityCharges_RevivalProtocol';
-	Charges.InitialCharges = 1;
+	Charges.InitialCharges = default.StealthProtocolCharges;
 	Template.AbilityCharges = Charges;
 
 	ChargeCost = new class'X2AbilityCost_Charges';
@@ -360,11 +367,11 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 5;
+	Cooldown.iNumTurns = default.BurstFireCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	AmmoCost = new class'X2AbilityCost_Ammo';
-	AmmoCost.iAmmo = 2;
+	AmmoCost.iAmmo = default.BurstFireAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
@@ -605,7 +612,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Charges = new class 'X2AbilityCharges_RevivalProtocol';
-	Charges.InitialCharges = 1;
+	Charges.InitialCharges = default.RestoratonProtocolCharges;
 	Template.AbilityCharges = Charges;
 
 	ChargeCost = new class'X2AbilityCost_Charges';
@@ -631,11 +638,11 @@ static function X2AbilityTemplate RestorationProtocol()
 
 	RestorationEffect = new class'X2Effect_RestorationProtocol';
 	RestorationEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
-	RestorationEffect.HealAmount = 2;
-	RestorationEffect.MaxHealAmount = 8;
-	RestorationEffect.IncreasedHealProject = 'BattlefieldMedicine';
-	RestorationEffect.IncreasedAmountToHeal = 3;
-	RestorationEffect.HealingBonusMultiplier = 2;
+	RestorationEffect.HealAmount = default.RestorationHealAmount;
+	RestorationEffect.MaxHealAmount = default.RestorationMaxHealAmount;
+	RestorationEffect.IncreasedHealProject = default.RestorationIncreasedHealProject;
+	RestorationEffect.IncreasedAmountToHeal = default.RestorationIncreasedHealAmount;
+	RestorationEffect.HealingBonusMultiplier = default.RestorationHealingBonusMultiplier;
 	RestorationEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true);
 	Template.AddTargetEffect(RestorationEffect);
 
@@ -708,7 +715,7 @@ static function X2AbilityTemplate StasisField()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 5;
+	Cooldown.iNumTurns = default.StasisFieldCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
@@ -772,7 +779,7 @@ static function X2AbilityTemplate PuppetProtocol()
 	Template.AbilityCosts.AddItem(ChargeCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.PuppetProtocolCooldown;
 	Cooldown.bDoNotApplyOnHit = true;
 	Template.AbilityCooldown = Cooldown;
 	
