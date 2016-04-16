@@ -82,7 +82,7 @@ static function X2AbilityTemplate Magnum()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_Magnum                       MagnumEffect;
+	local X2Effect_PersistentBonus              MagnumEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Magnum');
 
@@ -101,11 +101,12 @@ static function X2AbilityTemplate Magnum()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	MagnumEffect = new class'X2Effect_Magnum';
+	MagnumEffect = new class'X2Effect_PersistentBonus';
 	MagnumEffect.BuildPersistentEffect(1, true, true, true);
 	MagnumEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	MagnumEffect.bRequireAbilityWeapon = true;
 	MagnumEffect.BonusDamage = default.MagnumDamageBonus;
-	MagnumEffect.BonusAim = default.MagnumOffenseBonus;
+	MagnumEffect.AddToHitModifier(default.MagnumOffenseBonus);
 	Template.AddTargetEffect(MagnumEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;

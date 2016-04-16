@@ -206,6 +206,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_HunterMarked.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_PersistentBonus.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Precision.uc">
       <SubType>Content</SubType>
     </Content>
@@ -225,9 +228,6 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_GoodEye.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_Magnum.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_SlamFire.uc">
