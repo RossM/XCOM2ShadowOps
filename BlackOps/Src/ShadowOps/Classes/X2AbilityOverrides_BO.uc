@@ -305,7 +305,6 @@ static function X2AbilityTemplate Add_StandardShot( Name AbilityName='StandardSh
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 1;
 	ActionPointCost.bConsumeAllPoints = true;
-	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('BulletSwarm');
 	Template.AbilityCosts.AddItem(ActionPointCost);	
 
 	// Ammo
@@ -817,13 +816,6 @@ static function X2AbilityTemplate SuppressionShot()
 }
 
 
-defaultproperties
-{
-	Begin Object Class=X2AbilityToHitCalc_StandardAim_BO Name=DefaultSimpleStandardAim
-	End Object
-	SimpleStandardAim = DefaultSimpleStandardAim;
-}
-
 static function X2DataTemplate HotLoadAmmo()
 {
 	local X2AbilityTemplate                 Template;
@@ -908,4 +900,11 @@ simulated function XComGameState HotLoadAmmo_BuildGameState(XComGameStateContext
 	NewGameState.AddStateObject(NewWeaponState);
 
 	return NewGameState;
+}
+
+defaultproperties
+{
+	Begin Object Class=X2AbilityToHitCalc_StandardAim_BO Name=DefaultSimpleStandardAim
+	End Object
+	SimpleStandardAim = DefaultSimpleStandardAim;
 }
