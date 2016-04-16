@@ -455,7 +455,7 @@ static function X2AbilityTemplate Precision()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_Precision                   PrecisionEffect;
+	local X2Effect_PersistentBonus              PrecisionEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Precision');
 
@@ -474,10 +474,11 @@ static function X2AbilityTemplate Precision()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	PrecisionEffect = new class'X2Effect_Precision';
+	PrecisionEffect = new class'X2Effect_PersistentBonus';
 	PrecisionEffect.BuildPersistentEffect(1, true, true, true);
 	PrecisionEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	PrecisionEffect.Aim = default.PrecisionOffenseBonus;
+	PrecisionEffect.AllowedCoverTypes.AddItem(CT_Standing);
+	PrecisionEffect.AddToHitModifier(default.PrecisionOffenseBonus);
 	Template.AddTargetEffect(PrecisionEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -493,7 +494,7 @@ static function X2AbilityTemplate LowProfile()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_HunterLowProfile             LowProfileEffect;
+	local X2Effect_PersistentBonus              LowProfileEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'LowProfile');
 
@@ -512,10 +513,11 @@ static function X2AbilityTemplate LowProfile()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	LowProfileEffect = new class'X2Effect_HunterLowProfile';
+	LowProfileEffect = new class'X2Effect_PersistentBonus';
 	LowProfileEffect.BuildPersistentEffect(1, true, true, true);
 	LowProfileEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	LowProfileEffect.Defense = default.LowProfileDefenseBonus;
+	LowProfileEffect.AllowedCoverTypes.AddItem(CT_MidLevel);
+	LowProfileEffect.AddToHitAsTargetModifier(-default.LowProfileDefenseBonus);
 	Template.AddTargetEffect(LowProfileEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
