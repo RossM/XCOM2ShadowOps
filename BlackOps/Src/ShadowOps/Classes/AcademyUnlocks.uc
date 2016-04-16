@@ -7,6 +7,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PackmasterUnlock());
 	Templates.AddItem(DamnGoodGroundUnlock());
 	Templates.AddItem(AdrenalineSurgeUnlock());
+	Templates.AddItem(TacticalSenseUnlock());
 
 	return Templates;
 }
@@ -75,6 +76,31 @@ static function X2SoldierAbilityUnlockTemplate AdrenalineSurgeUnlock()
 	// Requirements
 	Template.Requirements.RequiredHighestSoldierRank = 5;
 	Template.Requirements.RequiredSoldierClass = 'Infantry';
+	Template.Requirements.RequiredSoldierRankClassCombo = true;
+	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
+
+	// Cost
+	Resources.ItemTemplateName = 'Supplies';
+	Resources.Quantity = 75;
+	Template.Cost.ResourceCosts.AddItem(Resources);
+	
+	return Template;
+}
+
+static function X2SoldierAbilityUnlockTemplate TacticalSenseUnlock()
+{
+	local X2SoldierAbilityUnlockTemplate Template;
+	local ArtifactCost Resources;
+
+	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'TacticalSenseUnlock');
+
+	Template.AllowedClasses.AddItem('Dragoon');
+	Template.AbilityName = 'TacticalSense';
+	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
+
+	// Requirements
+	Template.Requirements.RequiredHighestSoldierRank = 5;
+	Template.Requirements.RequiredSoldierClass = 'Dragoon';
 	Template.Requirements.RequiredSoldierRankClassCombo = true;
 	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
 

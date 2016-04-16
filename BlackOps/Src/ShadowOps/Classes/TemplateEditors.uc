@@ -39,6 +39,7 @@ function AddGtsUnlocks()
 	Template.SoldierUnlockTemplates.AddItem('PackmasterUnlock');
 	Template.SoldierUnlockTemplates.AddItem('DamnGoodGroundUnlock');
 	Template.SoldierUnlockTemplates.AddItem('AdrenalineSurgeUnlock');
+	Template.SoldierUnlockTemplates.AddItem('TacticalSenseUnlock');
 }
 
 defaultproperties

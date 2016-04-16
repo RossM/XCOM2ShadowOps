@@ -7,6 +7,7 @@ var config int HeavyArmorBase, HeavyArmorBonus;
 var config int FinesseMobilityBonus, FinesseOffenseBonus;
 var config int BurstFireHitMod, BurstFireEnvironmentalDamage;
 var config float ECMDetectionModifier;
+var config int TacticalSenseDodgeBonus, TacticalSenseMaxDodgeBonus;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -27,6 +28,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(RestorationProtocol());
 	Templates.AddItem(StasisField());
 	Templates.AddItem(PuppetProtocol());
+	Templates.AddItem(TacticalSense());
 
 	return Templates;
 }
@@ -850,6 +852,45 @@ static function X2AbilityTemplate Rocketeer()
 	//  NOTE: No visualization on purpose!
 
 	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate TacticalSense()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local X2Effect_TacticalSense				Effect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'TacticalSense');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_tacticalsense";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Effect = new class'X2Effect_TacticalSense';
+	Effect.DodgeModifier = default.TacticalSenseDodgeBonus;
+	Effect.MaxDodgeModifier = default.TacticalSenseMaxDodgeBonus;
+	Effect.BuildPersistentEffect(1, true, true, true);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = false;
 
 	return Template;
 }

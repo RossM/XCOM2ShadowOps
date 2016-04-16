@@ -236,6 +236,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_Focus.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_TacticalSense.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Tracking.uc">
       <SubType>Content</SubType>
     </Content>

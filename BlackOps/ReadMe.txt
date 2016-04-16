@@ -1,4 +1,4 @@
-﻿This mod adds four new classes: Combat Engineer, Dragoon, Hunter, and Infantry. It also changes several game rules and items to support the new classes. The new classes together can fill all the roles of the original classes (except psi) and are designed to completely replace the base classes. I suggest not using this together with other gameplay-changing mods on your first playthrough, especially if you are using these instead of the basic classes.
+﻿This mod adds four new classes: Combat Engineer, Dragoon, Hunter, and Infantry. It also changes several game rules and items to support the new classes. The new classes together can fill all the roles of the original classes (except psi) and are designed to completely replace the base classes. I suggest not using other gameplay-changing mods on your first playthrough with this mod, especially if you are using the new classes to replace the basic classes.
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
@@ -8,6 +8,7 @@ Class changes
     * Puppet Protocol succeeds less often.
 	* Shield Protocol grants poison immunity while the shield lasts.
 	* Renewal Protocol and Stealth Protocol gain a second charge when using a GREMLIN Mk III.
+	* New class GTS ability: Tactical Sense - +10 Dodge for each visible enemy, to a max of +50.
   * Engineer
     * Renamed to Combat Engineer.
 	* Breach now snaps to tiles.
@@ -30,6 +31,8 @@ Bugfixes
   * Flush works more reliably
   * GREMLINs enter stealth when their owner does
   * Too many others to list
+Bugs added
+  * Probably too many to list
 
 Beta version v0.1
 * Four new classes with eight distinctive subclasses and 48 new abilities.
