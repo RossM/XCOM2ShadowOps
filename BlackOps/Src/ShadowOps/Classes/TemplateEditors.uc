@@ -21,11 +21,11 @@ event OnInit(UIScreen Screen)
 
 function EditTemplatesForDifficulty()
 {
+	AddGtsUnlocks();
 }
 
 function EditTemplates()
 {
-	AddGtsUnlocks();
 }
 
 function AddGtsUnlocks()
