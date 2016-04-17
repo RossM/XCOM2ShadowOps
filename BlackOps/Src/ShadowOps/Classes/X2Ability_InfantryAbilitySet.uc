@@ -11,6 +11,10 @@ var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, Adrenalin
 
 var config name FreeAmmoForPocket;
 
+var config int FullAutoActions;
+var config int FullAutoCooldown, ZoneOfControlCooldown, FlushCooldown, BulletSweepCooldown;
+var config int BulletSweepAmmo;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -257,12 +261,12 @@ static function X2AbilityTemplate FullAuto()
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 2;
+	ActionPointCost.iNumPoints = default.FullAutoActions;
 	ActionPointCost.bConsumeAllPoints = true;
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.FullAutoCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	//  require 2 ammo to be present so that both shots can be taken
@@ -406,7 +410,7 @@ static function X2AbilityTemplate ZoneOfControl()
 	Template.AbilityShooterConditions.AddItem(SuppressedCondition);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.ZoneOfControlCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	Template.AbilityToHitCalc = default.DeadEye;
@@ -599,7 +603,7 @@ static function X2AbilityTemplate Flush()
 	Template.bAllowAmmoEffects = true; // 	
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 5;
+	Cooldown.iNumTurns = default.FlushCooldown;
 	Template.AbilityCooldown = Cooldown;
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
@@ -659,7 +663,7 @@ static function X2AbilityTemplate BulletSweep()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'BulletSweep');
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
-	AmmoCost.iAmmo = 3;
+	AmmoCost.iAmmo = default.BulletSweepAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -669,7 +673,7 @@ static function X2AbilityTemplate BulletSweep()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 5;
+	Cooldown.iNumTurns = default.BulletSweepCooldown;
 	Template.AbilityCooldown = Cooldown;
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
