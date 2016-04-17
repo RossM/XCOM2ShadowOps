@@ -54,7 +54,7 @@ function AddDoNotConsumeAllAbility(name AbilityName, name PassiveAbilityName)
 	foreach Template.AbilityCosts(AbilityCost)
 	{
 		ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
-		if (ActionPointCost != none && ActionPointCost.DoNotConsumeAllSoldierAbilities.Find(PassiveAbilityName) < 0)
+		if (ActionPointCost != none && ActionPointCost.DoNotConsumeAllSoldierAbilities.Find(PassiveAbilityName) == INDEX_NONE)
 		{
 			ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem(PassiveAbilityName);
 		}

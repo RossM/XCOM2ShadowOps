@@ -1,0 +1,216 @@
+Welcome back to my XCOM 2 ability tutorial series. If you haven't read [Adding a new X2Effect](https://www.reddit.com/r/xcom2mods/comments/4f0i7e/ability_tutorial_adding_a_new_x2effect/), you should go read it first. I won't be covering anything here that I already covered there.
+
+This time, I'm going to be adding Bullet Swarm, an ability that makes it so firing the primary weapon as the first action no longer ends the turn. It turns out that code for this sort of ability is built in to the base game: any ability can be set so that it won't end the turn as the first action if another ability is present. Just what we need! For an example, here's the relevant code for Salvo:
+
+	static function X2AbilityTemplate ThrowGrenade()
+	{
+		// ... snip ...
+		ActionPointCost = new class'X2AbilityCost_ActionPoints';
+		ActionPointCost.iNumPoints = 1;
+		ActionPointCost.bConsumeAllPoints = true;
+		ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('Salvo');
+		Template.AbilityCosts.AddItem(ActionPointCost);
+
+That code sets up the action point cost for throwing a grenade. There's an array, DoNotConsumeAllSoldierAbilities, in the action point cost. If the unit has any of the abilities listed there, it won't end the turn when it uses that action as the first action. So all we need to do is add our Bullet Swarm ability to the action for firing the primary weapon. This should be easy! Wait... how do we do that?
+
+If you play around for a while, you'll discover that simply duplicating the code for the standard shot action into your own code, and adding BulletSwarm to DoNotConsumeAllSoldierAbilities, will work. ***DON'T DO THAT***. The problem is that only one mod can change a given base game ability - if two mods try to change the base game ability, one will win, and the other will lose. Worse, there won't even be a warning to the user! One of the mods will just be slightly broken for no obvious reason. That's Bad with a capital 'b'.
+
+So... how can you change a base game ability? For that, we get to dive into the exciting world of UIScreenListeners.
+
+Create a new unrealscript file. I've called mine TemplateEditors_Tactical.uc, but the name doesn't really matter (remember to match the class name to the filename). Remove the comment and add this:
+
+	class TemplateEditors_Tactical extends UIScreenListener;
+
+	defaultproperties
+	{
+		ScreenClass = "UITacticalHUD";
+	}
+
+This creates a *UI screen listener*. The listener gets a chance to do things whenever the player is on a certain screen, such as in the armory soldier list, in the workshop, etc. In this case our listener will trigger whenever the player is in the main tactical play screen - that's UITacticalHUD.
+
+Now we've got a listener but our listener doesn't do anything. If you look at UIScreenListener.uc you'll see the various places that a listener can hook into. In our case we want to hook into Init, which happens when the screen is entered - that is, when the user enters tactical play. That ensures that our code will run before anything happens in tactical play. Add an Init function after the "class" line but before "defaultproperties":
+
+	event OnInit(UIScreen Screen)
+	{
+	}
+
+Obviously, that doesn't do anything yet. We'll get to writing code that does something in a moment, but first, I'm going to add an extra function call. You'll see why I want a bit of indirection later.
+
+	event OnInit(UIScreen Screen)
+	{
+		EditTemplates();
+	}
+
+	function EditTemplates()
+	{
+	}
+
+Okay, now we're going to actually start writing code that does something. I'm going to use one of the greatest tricks in a software engineer's handbook: pretending I already have the problem solved even though I don't. So I'm going to invent the function that I need to add bullet swarm to the standard shot DoNotConsumeAllSoldierAbilities, and then call it.
+
+	function EditTemplates()
+	{
+		AddDoNotConsumeAllAbility('StandardShot', 'BulletSwarm');
+	}
+
+	function AddDoNotConsumeAllAbility(name AbilityName, name PassiveAbilityName)
+	{
+	}
+
+Well, we still don't have code that does something, but at least we have some variables now. You'll appreciate having the extra function if you decide to edit another ability similarly later, and it helps make the code clearer.
+
+Let's start actually filling out AddDoNotConsumeAllAbility. First we need some local variables. In actual practice I'd add these one by one as I discovered I need them, but for the sake of brevity we'll just add all of them now.
+
+		local X2AbilityTemplateManager		AbilityManager;
+		local X2AbilityTemplate				Template;
+		local X2AbilityCost					AbilityCost;
+		local X2AbilityCost_ActionPoints	ActionPointCost;
+
+If you read the first tutorial (I did tell you to read it first), you'll recognize X2AbilityTemplate. X2AbilityCost is used for setting up the costs of an ability - usually action points and ammo. X2AbilityCost_ActionPoints is specifically an action point cost. You saw one above in the Salvo example (go back and check if you missed it). But what's X2AbilityTemplateManager? Well, X2AbilityTemplateManager is the thing that keeps track of all the ability templates, and lets us find a specific ability template. Just what we need. First, we need to get the ability template manager:
+
+		AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+
+There are a bunch of different manager classes for different template types, and each of them has exactly one actual instance. In software engineering this is called a "singleton". Each of the classes has a static method that gets the single instance, so you can easily get any of the managers from anywhere in the code.
+
+Since we have the ability manager now, we can look up the ability we want to change:
+
+		Template = AbilityManager.FindAbilityTemplate(AbilityName);
+
+Now we have the template for the ability, just like the template we filled out to create the Damn Good Ground ability. All we have to do is find the action point cost and add our exception for Bullet Swarm. First comes the finding:
+
+		foreach Template.AbilityCosts(AbilityCost)
+		{
+		}
+
+The foreach construct will loop over each of the template's ability costs, putting the result in the AbilityCost variable. We want one that's an action point cost, so we'll try turning it into an X2AbilityCost_ActionPoints and then check if it works. Don't forget the checking part! Casting to another class without checking that the cast worked can get you into trouble.
+
+		foreach Template.AbilityCosts(AbilityCost)
+		{
+			ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
+			if (ActionPointCost != none)
+			{
+			}
+		}
+
+Now we can just add our ability to DoNotConsumeAllSoldierAbilities...
+
+			if (ActionPointCost != none)
+			{
+				ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem(PassiveAbilityName);
+			}
+
+And we're done! Right?
+
+Not so fast.
+
+Right now, this code is going to trigger *every time* the player enters tactical play, and add Bullet Swarm to the Standard Shot do-not-consume ability list *every time*. That's redundant and too many copies, so we should fix that. First, let's check that we have't already added Bullet Swarm to the list before we add it again:
+
+			if (ActionPointCost != none && ActionPointCost.DoNotConsumeAllSoldierAbilities.Find(PassiveAbilityName) == INDEX_NONE)
+			{
+				ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem(PassiveAbilityName);
+			}
+
+"Find" is a useful UnrealScript function that searches an array for a specific value. If it finds it, it returns the index into the array where it found it, otherwise it returns INDEX_NONE. So we're checking that the ability isn't already in the list. Good, now the list won't keep growing.
+
+This is still kind of wasteful, though. Every time we enter the tactical screen we're going to try to edit StandardShot. We really only need to try the edit the *first* time we enter tactical play after loading the game. So we'll use a variable to track if we've already done our edit. Put this at the top of the file, after the "class" line:
+
+	var bool bEditedTemplates;
+
+And we'll change OnInit to track whether we've edited the templates before, and only do it once:
+
+	event OnInit(UIScreen Screen)
+	{
+		if (!bEditedTemplates)
+		{
+			EditTemplates();
+			bEditedTemplates = true;
+		}
+	}
+
+Now we're almost done. All we need is to add the actual Bullet Swarm ability. Since the code that does the actual effect of Bullet Swarm is somewhere else, our ability doesn't really need to do anything itself. There's a useful helper function that can create abilities like that: PurePassive. Add this line to CreateTemplates in your ability set file:
+
+		Templates.AddItem(PurePassive('BulletSwarm', "img:///UILibrary_PerkIcons.UIPerk_bulletswarm", true));
+
+The first argument to PurePassive there is the name of the ability - make sure it matches the name you used in EditTemplates exactly! The second argument is an image for the ability - again, we have all the XCOM 1 ability icons to use. The third argument is whether this is eligible to be granted as a cross-class ability from the AWC.
+
+The very last thing is to add some text for the ability to Localization\XComGame.int:
+
+	[BulletSwarm X2AbilityTemplate]
+	LocFriendlyName="Bullet Swarm"
+	LocLongDescription="Firing your <Ability:WeaponName/> with your first action no longer ends your turn."
+	LocHelpText="Firing your <Ability:WeaponName/> with your first action no longer ends your turn."
+	LocFlyOverText="Bullet Swarm"
+	LocPromotionPopupText="<Bullet/> Firing your secondary weapon still ends your turn. <br/>"
+
+There are two new things here that we didn't have in XComGame.int last time. One is "<Ability:WeaponName/>". That will be replaced with the actual name of the primary weapon for the soldier who gets it: "assault rifle", "sniper rifle", etc. We're using it because this ability might be granted to a class with a different primary ability in the AWC, and we want it to use the right weapon name.
+
+The other new thing is LocPromotionPopupText. This is the bulleted list that pops up when you click the "?" button that appears when you hover over an ability in the promotion screen. This is the place to put warnings, information about cooldowns and charges, and other things that the player might want to know before selecting ability, but aren't worth putting in the main ability text.
+
+And that's it, we're done! Well, we are done, but there's one more thing to mention. It doesn't matter for this, but some of the template types don't just have a single version of each template, they have a different version for each difficulty level. I'll put code for handling that in the cut-and-paste code dump comment below.
+
+
+	class TemplateEditors_Tactical extends UIScreenListener;
+
+	var array<bool> bEditedTemplatesForDifficulty;
+	var bool bEditedTemplates;
+
+	event OnInit(UIScreen Screen)
+	{
+		if (!bEditedTemplates)
+		{
+			EditTemplates();
+			bEditedTemplates = true;
+		}
+
+		bEditedTemplatesForDifficulty.Length = 4;
+		if (!bEditedTemplatesForDifficulty[`DifficultySetting])
+		{
+			EditTemplatesForDifficulty();
+			bEditedTemplatesForDifficulty[`DifficultySetting] = true;
+		}
+	}
+
+
+	// The following template types have per-difficulty variants:
+	// X2CharacterTemplate (except civilians and characters who never appear in tactical play)
+	// X2FacilityTemplate
+	// X2FacilityUpgradeTemplate
+	// X2MissionSourceTemplate
+	// X2SchematicTemplate
+	// X2SoldierClassTemplate
+	// X2SoldierUnlockTemplate
+	// X2SpecialRoomFeatureTemplate
+	// X2TechTemplate
+	function EditTemplatesForDifficulty()
+	{
+	}
+
+	function EditTemplates()
+	{
+		// Add Bullet Swarm to the standard shot ability
+		AddDoNotConsumeAllAbility('StandardShot', 'BulletSwarm');
+	}
+
+	function AddDoNotConsumeAllAbility(name AbilityName, name PassiveAbilityName)
+	{
+		local X2AbilityTemplateManager		AbilityManager;
+		local X2AbilityTemplate				Template;
+		local X2AbilityCost					AbilityCost;
+		local X2AbilityCost_ActionPoints	ActionPointCost;
+
+		AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+		Template = AbilityManager.FindAbilityTemplate(AbilityName);
+
+		foreach Template.AbilityCosts(AbilityCost)
+		{
+			ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
+			if (ActionPointCost != none && ActionPointCost.DoNotConsumeAllSoldierAbilities.Find(PassiveAbilityName) == INDEX_NONE)
+			{
+				ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem(PassiveAbilityName);
+			}
+		}
+	}
+
+	defaultproperties
+	{
+		ScreenClass = "UITacticalHUD";
+	}
