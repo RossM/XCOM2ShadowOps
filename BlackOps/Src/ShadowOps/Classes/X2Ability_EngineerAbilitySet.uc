@@ -3,8 +3,11 @@ class X2Ability_EngineerAbilitySet extends X2Ability
 
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
 var config int BreachEnvironmentalDamage;
-var config float BreachRange;
+var config float BreachRange, BreachRadius;
 var config float DangerZoneBonusRadius, DangerZoneBreachBonusRadius;
+
+var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
+var config int BreachAmmo, FractureAmmo;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -73,7 +76,7 @@ static function X2AbilityTemplate Breach()
 	Template.TargetingMethod = class'X2TargetingMethod_Breach';
 
 	AmmoCost = new class'X2AbilityCost_Ammo';	
-	AmmoCost.iAmmo = 3;
+	AmmoCost.iAmmo = default.BreachAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -83,7 +86,7 @@ static function X2AbilityTemplate Breach()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.BreachCooldown;
 	Template.AbilityCooldown = Cooldown;
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
@@ -102,7 +105,7 @@ static function X2AbilityTemplate Breach()
 	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
 	// but zero out BonusRadius so it isn't affected by Volatile Mix.
 	RadiusMultiTarget = new class'X2AbilityMultiTarget_SoldierBonusRadius_BO';
-	RadiusMultiTarget.fTargetRadius = 3;
+	RadiusMultiTarget.fTargetRadius = default.BreachRadius;
 	RadiusMultiTarget.BonusRadius = 0;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
@@ -145,7 +148,7 @@ static function X2AbilityTemplate Fastball()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 5;
+	Cooldown.iNumTurns = default.FastballCooldown;
 	Template.AbilityCooldown = Cooldown;
 	
 	Template.AbilityToHitCalc = default.DeadEye;
@@ -239,14 +242,14 @@ static function X2AbilityTemplate FractureAbility()
 	Template.CinescriptCameraType = "StandardGunFiring";
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 3;
+	Cooldown.iNumTurns = default.FractureCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
 	Template.AbilityToHitCalc = ToHitCalc;
 
 	AmmoCost = new class'X2AbilityCost_Ammo';
-	AmmoCost.iAmmo = 1;
+	AmmoCost.iAmmo = default.FractureAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -361,7 +364,7 @@ static function X2AbilityTemplate SlamFire()
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.SlamFireCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
