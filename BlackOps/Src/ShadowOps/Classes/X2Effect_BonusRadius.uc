@@ -17,7 +17,7 @@ simulated function float GetRadiusModifier(const XComGameState_Ability Ability, 
 		if (ItemState == none)
 			return 0;
 
-		if (AllowedTemplateNames.Find(ItemState.GetMyTemplateName()) < 0)
+		if (AllowedTemplateNames.Find(ItemState.GetMyTemplateName()) == INDEX_NONE)
 			return 0;
 	}
 

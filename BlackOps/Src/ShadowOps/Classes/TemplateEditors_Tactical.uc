@@ -74,7 +74,7 @@ function AddDoNotConsumeAllEffect(name AbilityName, name EffectName)
 	foreach Template.AbilityCosts(AbilityCost)
 	{
 		ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
-		if (ActionPointCost != none && ActionPointCost.DoNotConsumeAllEffects.Find(EffectName) < 0)
+		if (ActionPointCost != none && ActionPointCost.DoNotConsumeAllEffects.Find(EffectName) == INDEX_NONE)
 		{
 			ActionPointCost.DoNotConsumeAllEffects.AddItem(EffectName);
 		}
