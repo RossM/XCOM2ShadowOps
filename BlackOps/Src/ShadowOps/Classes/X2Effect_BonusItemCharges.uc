@@ -12,7 +12,7 @@ var int PerItemBonus;
 
 function int GetItemChargeModifier(XComGameState NewGameState, XComGameState_Unit NewUnit, XComGameState_Item ItemIter)
 {
-	if (ApplyToSlots.Find(ItemIter.InventorySlot) >= 0)
+	if (ApplyToSlots.Find(ItemIter.InventorySlot) != INDEX_NONE)
 	{
 		return PerItemBonus * ItemIter.MergedItemCount;
 	}
