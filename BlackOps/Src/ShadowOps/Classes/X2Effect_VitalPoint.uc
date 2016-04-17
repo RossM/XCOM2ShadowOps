@@ -31,7 +31,8 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 	local X2WeaponTemplate WeaponTemplate;
 	local int Result;
 
-	if (AbilityState.SourceWeapon == EffectState.ApplyEffectParameters.ItemStateObjectRef)
+	if (AbilityState.SourceWeapon == EffectState.ApplyEffectParameters.ItemStateObjectRef &&
+			class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult))
 	{
 		SourceWeapon = AbilityState.GetSourceWeapon();
 
