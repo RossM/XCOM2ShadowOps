@@ -12,6 +12,9 @@ var config int SliceAndDiceHitModifier;
 var config int BullseyeOffensePenalty, BullseyeDefensePenalty, BullseyeWillPenalty;
 var config int FirstStrikeDamageBonus;
 var config int DamnGoodGroundOffenseBonus, DamnGoodGroundDefenseBonus;
+var config float TrackingRadius;
+
+var config int HunterMarkCooldown, HipFireCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -252,7 +255,7 @@ static function X2DataTemplate HunterMark()
 	Template.Hostility = eHostility_Offensive;
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 2;
+	Cooldown.iNumTurns = default.HunterMarkCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -402,7 +405,7 @@ static function X2AbilityTemplate HipFire()
 	Template.bAllowAmmoEffects = true;
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.HipFireCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	// *** VALIDITY CHECKS *** //
@@ -550,7 +553,7 @@ static function X2AbilityTemplate Sprint()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 3;
+	Cooldown.iNumTurns = default.SprintCooldown;
 	Template.AbilityCooldown = Cooldown;
 	
 	Template.AbilityToHitCalc = default.DeadEye;
@@ -676,7 +679,7 @@ static function X2AbilityTemplate Fade()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.FadeCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -732,7 +735,7 @@ static function X2AbilityTemplate SliceAndDice()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 2;
+	Cooldown.iNumTurns = default.SliceAndDiceCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	StandardMelee = new class'X2AbilityToHitCalc_StandardMelee';
@@ -897,7 +900,7 @@ static function X2AbilityTemplate TrackingTrigger()
 	Template.AbilityTargetStyle = default.SelfTarget;
 
 	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
-	RadiusMultiTarget.fTargetRadius = 27;
+	RadiusMultiTarget.fTargetRadius = default.TrackingRadius;
 	RadiusMultiTarget.bIgnoreBlockingCover = true; // skip the cover checks, the squad viewer will handle this once selected
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
@@ -996,7 +999,7 @@ static function X2AbilityTemplate Bullseye()
 	Template.bAllowAmmoEffects = true;
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 5;
+	Cooldown.iNumTurns = default.BullseyeCooldown;
 	Template.AbilityCooldown = Cooldown;
 
 	StatChangeEffect = new class'X2Effect_PersistentStatChange';
