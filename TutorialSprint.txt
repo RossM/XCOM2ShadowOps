@@ -1,0 +1,103 @@
+Ability Tutorial series:  
+[Part 1](https://www.reddit.com/r/xcom2mods/comments/4f0i7e/ability_tutorial_adding_a_new_x2effect/)  
+[Part 2](https://www.reddit.com/r/xcom2mods/comments/4f4j4t/ability_tutorial_2_modifying_a_base_game_ability/)  
+Part 3
+
+----
+
+It's time for another exciting episode of my Ability Tutorial series. This one will be shorter because it's late and I'm feeling *interesting* side effects of prescription medication. I'll be assuming that you've read the previous episodes.
+
+For today, I'm going to pick an ability from [my mod](http://steamcommunity.com/sharedfiles/filedetails/?id=651343461): Sprint from the Hunter class. Sprint gives the user a bonus move action when activated. It's much simpler than most activated abilities, but there's still some stuff to talk about, so let's get to it.
+
+Let's just start at the beginning of the function and take it line by line:
+
+	static function X2AbilityTemplate Sprint()
+	{
+		local X2AbilityTemplate                 Template;	
+		local X2AbilityCost_ActionPoints        ActionPointCost;
+		local X2AbilityCooldown                 Cooldown;
+		local X2Effect_GrantActionPoints		ActionPointEffect;
+		local X2AbilityTargetStyle              TargetStyle;
+
+Again, I happen to know that I'll need these variables later. I'll explain what they do when we use them.
+
+		`CREATE_X2ABILITY_TEMPLATE(Template, 'Sprint');
+	
+		Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sprinter";
+		Template.AbilitySourceName = 'eAbilitySource_Perk';
+		Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+		Template.Hostility = eHostility_Neutral;
+		Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
+
+Now we've got some things that are different from the passive we did earlier. Our icon behavior is now EAbilityIconBehavior_AlwaysShow, which means that this is an activated ability that will be shown on the HUD with the other activated abilities. *Where* it will be shown depends on the ShotHUDPriority. For a class ability, you want to set it to the constant corresponding to the rank where you unlock the ability, in this case CLASS_CAPTAIN_PRIORITY.
+
+		ActionPointCost = new class'X2AbilityCost_ActionPoints';
+		ActionPointCost.iNumPoints = 1;
+		ActionPointCost.bFreeCost = true;
+		Template.AbilityCosts.AddItem(ActionPointCost);
+	
+Sprint is an activated ability, but it doesn't actually have an action point cost. So why am I adding an action point cost here? Well, think of the Evac ability from vanilla: it always appears as an ability that can be activated, even after you've used all your actions. The only way to end your turn without using Evac when it's avaiable is to use the end turn button. That's kind of annoying. Most free abilities don't work like that, though, because they use the trick I'm using here: the ability has a cost of 1 action point, so it will only be usable when the unit has action point left, but it has bFreeCost set true so the cost isn't actually deducted when the unit uses the ability!
+
+		Cooldown = new class'X2AbilityCooldown';
+		Cooldown.iNumTurns = default.SprintCooldown;
+		Template.AbilityCooldown = Cooldown;
+	
+This is a totally standard ability cooldown. From the "default." you should guess that we're going to use a config file entry for the value. Let's add that to the top of the file now:
+
+	var config int SprintCooldown;
+
+And we need to add a value to Config\XComGameData_SoldierSkills.ini:
+
+	[MyMod.X2Ability_MyClassAbilitySet]
+	SprintCooldown=3
+
+Continuing on with the ability code:
+
+		Template.AbilityToHitCalc = default.DeadEye;
+		TargetStyle = new class'X2AbilityTarget_Self';
+		Template.AbilityTargetStyle = TargetStyle;
+
+You should recognize the DeadEye hit calc and self target from our passive ability; like the passive, this ability affects the unit using it and always succeeds.
+
+		Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+Since this is an activated ability, we set the trigger for it to player-activated.
+
+		Template.AddShooterEffectExclusions();
+
+This adds some of the standard conditions for using an ability: you can't use it while disoriented, burning, bound by a Viper, etc.
+
+		ActionPointEffect = new class'X2Effect_GrantActionPoints';
+		ActionPointEffect.NumActionPoints = 1;
+		ActionPointEffect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
+		Template.AddTargetEffect(ActionPointEffect);
+
+XEffect_GrantActionPoints does exactly what it sounds like: it adds an action point, or points, to a unit. We set the PointType to MoveActionPoint so that the granted action point can only be used for a move. You can also add a StandardActionPoint which allows all normal actions, or a RunAndGunActionPoint that allows any action *except* moving. See X2CharacterTemplateManager.uc for a complete list of action point types.
+
+		Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+		Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+		Template.bSkipFireAction = true;
+
+This time we have a visualization function, TypicalAbility_BuildVisualization. Unless you're doing something fancy you'll usually want to use this for activated abilities. By default, it will show an animation of the character stepping out of cover and firing; that's obviously not needed here so we set bSkipFireAction to skip it.
+
+		Template.bCrossClassEligible = true;
+
+		return Template;	
+	}
+
+That wraps up the ability function itself. Don't forget to add it to the CreateTemplates() function:
+
+		Templates.AddItem(Sprint());
+
+We also need to add the name and description to Localization\XComGame.int:
+
+	[Sprint X2AbilityTemplate]
+	LocFriendlyName="Sprint"
+	LocLongDescription="Gain a bonus move action this turn."
+	LocHelpText="Gain a bonus move action this turn."
+	LocFlyOverText="Sprint"
+	LocPromotionPopupText="<Bullet/> Sprint has a <Ability:SelfCooldown/> turn cooldown. <br/>"
+
+This time we're using <Ability:SelfCooldown/>, which will pull the actual cooldown value from the ability and insert it into the description. We don't need to do this - we could just write "Sprint has a 3 turn cooldown" - but this way, if you change the cooldown at some later point, the description will be updated automatically.
+
+And we're done! Leave a suggestion in the comments if there's anything you'd like me to cover in an upcoming episode.
