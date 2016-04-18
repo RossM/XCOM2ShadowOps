@@ -6,6 +6,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(FlechetteRounds());
 	Templates.AddItem(HollowPointRounds());
+	Templates.AddItem(ReinforcedVestBonusAbility());
 
 	return Templates;
 }
@@ -68,3 +69,31 @@ static function X2AbilityTemplate HollowPointRounds()
 	return Template;
 }
 
+static function X2AbilityTemplate ReinforcedVestBonusAbility()
+{
+	local X2AbilityTemplate                 Template;
+	local X2Effect_PersistentStatChange		PersistentStatChangeEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ReinforcedVestBonus');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_item_nanofibervest";
+
+	Template.AbilitySourceName = 'eAbilitySource_Item';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+	Template.bDisplayInUITacticalText = false;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	PersistentStatChangeEffect = new class'X2Effect_PersistentStatChange';
+	PersistentStatChangeEffect.BuildPersistentEffect(1, true, false, false);
+	PersistentStatChangeEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, false, , Template.AbilitySourceName);
+	PersistentStatChangeEffect.AddPersistentStatChange(eStat_ArmorChance, class 'X2Item_Armor_BO'.default.ReinforcedVestMitigationChance);
+	PersistentStatChangeEffect.AddPersistentStatChange(eStat_ArmorMitigation, class 'X2Item_Armor_BO'.default.ReinforcedVestMitigationAmount);
+	Template.AddTargetEffect(PersistentStatChangeEffect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+
+	return Template;
+}

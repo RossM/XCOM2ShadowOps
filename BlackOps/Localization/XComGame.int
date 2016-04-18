@@ -6,6 +6,9 @@ LocFriendlyName="Flechette Rounds"
 [HollowPointRounds X2AbilityTemplate]
 LocFriendlyName="Hollow-Point Rounds"
 
+[ReinforcedVestBonus X2AbilityTemplate]
+LocFriendlyName="Reinforced Vest"
+
 ; === Infantry abilities ===
 
 [BulletSwarm X2AbilityTemplate]
@@ -456,6 +459,12 @@ FriendlyName="Hollow-Point Rounds"
 FriendlyNamePlural="Hollow-Point Rounds"
 BriefSummary=""
 TacticalText="<Bullet/> Hollow-point ammunition expands inside the target, dealing greater damage to soft flesh and fragile electronic components. <br/>"
+
+[ReinforcedVest X2EquipmentTemplate]
+FriendlyName="Reinforced Vest"
+FriendlyNamePlural="Reinforced Vests"
+BriefSummary=""
+TacticalText="<Bullet/> Increases Armor. <br/>"
 
 ; === GTS ability templates ===
 [PackmasterUnlock X2SoldierAbilityUnlockTemplate]

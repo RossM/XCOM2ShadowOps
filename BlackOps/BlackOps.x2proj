@@ -254,6 +254,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Item_Ammo_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Item_Armor_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2TacticalGameRuleset_BO.uc">
       <SubType>Content</SubType>
     </Content>
