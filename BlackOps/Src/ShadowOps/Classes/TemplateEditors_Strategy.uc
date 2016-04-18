@@ -1,4 +1,4 @@
-class TemplateEditors extends UIScreenListener;
+class TemplateEditors_Strategy extends UIScreenListener;
 
 var array<bool> bEditedTemplatesForDifficulty;
 var bool bEditedTemplates;
@@ -24,7 +24,7 @@ event OnInit(UIScreen Screen)
 // X2CharacterTemplate (except civilians and characters who never appear in tactical play)
 // X2FacilityTemplate
 // X2FacilityUpgradeTemplate
-// X2Item (grenades, weapons, and heavy weapons only)
+// X2Item (grenades, weapons, and heavy weapons only) [bugged]
 // X2MissionSourceTemplate
 // X2SchematicTemplate
 // X2SoldierClassTemplate
@@ -38,6 +38,7 @@ function EditTemplatesForDifficulty()
 
 function EditTemplates()
 {
+	class'TemplateEditors_Items'.static.EditTemplates();
 }
 
 function AddGtsUnlocks()

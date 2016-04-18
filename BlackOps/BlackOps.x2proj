@@ -79,7 +79,10 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\AcademyUnlocks.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\TemplateEditors.uc">
+    <Content Include="Src\ShadowOps\Classes\TemplateEditors_Items.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\TemplateEditors_Strategy.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\TemplateEditors_Tactical.uc">
@@ -246,9 +249,6 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_ZeroIn.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2ItemOverrides_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Item_Ammo_BO.uc">

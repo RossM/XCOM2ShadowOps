@@ -36,6 +36,8 @@ function EditTemplatesForDifficulty()
 
 function EditTemplates()
 {
+	class'TemplateEditors_Items'.static.EditTemplates();
+
 	AddAllDoNotConsumeAllAbilities();
 	FixAllSimpleStandardAims();
 	ChangeAllToGrenadeActionPoints();
