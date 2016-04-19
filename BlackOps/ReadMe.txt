@@ -5,6 +5,8 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 Beta version v0.3
 General changes
   * Improved compatibility with other mods, hopefully
+Item changes
+  * New experimental armor: Reinforced Vest - grants +2 Armor.
 
 Beta version v0.2
 Class changes
