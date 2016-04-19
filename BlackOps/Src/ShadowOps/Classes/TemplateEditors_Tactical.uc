@@ -41,6 +41,7 @@ function EditTemplates()
 	AddAllDoNotConsumeAllAbilities();
 	FixAllSimpleStandardAims();
 	ChangeAllToGrenadeActionPoints();
+	AddAllSuppressionConditions();
 }
 
 function AddDoNotConsumeAllAbility(name AbilityName, name PassiveAbilityName)
@@ -169,6 +170,34 @@ function ChangeAllToGrenadeActionPoints()
 {
 	ChangeToGrenadeActionPoints('ThrowGrenade');
 	ChangeToGrenadeActionPoints('LaunchGrenade');
+}
+
+function AddSuppressionCondition(name AbilityName)
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local X2AbilityTemplate						Template;
+	local X2Condition							Condition;
+	local X2Condition_UnitEffects				ExcludeEffectsCondition;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	Template = AbilityManager.FindAbilityTemplate(AbilityName);
+
+	foreach Template.AbilityShooterConditions(Condition)
+	{
+		ExcludeEffectsCondition = X2Condition_UnitEffects(Condition);
+		if (ExcludeEffectsCondition != none && ExcludeEffectsCondition.ExcludeEffects.Find('EffectName', class'X2Effect_Suppression'.default.EffectName) != INDEX_NONE)
+			return;
+	}
+
+	ExcludeEffectsCondition = new class'X2Condition_UnitEffects';
+	ExcludeEffectsCondition.AddExcludeEffect(class'X2Effect_Suppression'.default.EffectName, 'AA_UnitIsSuppressed');
+	Template.AbilityShooterConditions.AddItem(ExcludeEffectsCondition);
+}
+
+function AddAllSuppressionConditions()
+{
+	AddSuppressionCondition('ThrowGrenade');
+	AddSuppressionCondition('LaunchGrenade');
 }
 
 defaultproperties
