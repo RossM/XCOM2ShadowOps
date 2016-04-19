@@ -198,6 +198,7 @@ function AddAllSuppressionConditions()
 {
 	AddSuppressionCondition('ThrowGrenade');
 	AddSuppressionCondition('LaunchGrenade');
+	AddSuppressionCondition('MicroMissiles');
 }
 
 defaultproperties
