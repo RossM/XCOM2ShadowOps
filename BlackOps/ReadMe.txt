@@ -6,6 +6,7 @@ Beta version v0.3
 General changes
   * Improved compatibility with other mods, hopefully
 Item changes
+  * Smoke grenades start with 2 charges (up from 1).
   * New experimental armor: Reinforced Vest - grants +2 Armor.
 
 Beta version v0.2
