@@ -94,9 +94,6 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\UIArmory_Loadout_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\UIArmory_Promotion_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\UIPersonnel_BO.uc">
       <SubType>Content</SubType>
     </Content>

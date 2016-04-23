@@ -5,6 +5,7 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 Beta version v0.3
 General changes
   * Improved compatibility with other mods, hopefully
+  * The AWC is no longer made retroactive. Install the retroactive AWC mod if you want to preserve the behavior.
 Item changes
   * Smoke grenades start with 2 charges (up from 1).
   * New experimental armor: Reinforced Vest - grants +2 Armor.
