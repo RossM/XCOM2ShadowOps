@@ -160,6 +160,7 @@ function ChangeToGrenadeActionPoints(name AbilityName)
 			GrenadeCost.DoNotConsumeAllSoldierAbilities = ActionPointCost.DoNotConsumeAllSoldierAbilities;
 			GrenadeCost.DoNotConsumeAllEffects = ActionPointCost.DoNotConsumeAllEffects;
 			GrenadeCost.AllowedTypes = ActionPointCost.AllowedTypes;
+			GrenadeCost.AllowedTypes.AddItem('grenade');
 
 			Template.AbilityCosts[i] = GrenadeCost;
 		}

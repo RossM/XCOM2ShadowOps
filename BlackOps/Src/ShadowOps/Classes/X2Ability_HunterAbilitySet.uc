@@ -564,7 +564,7 @@ static function X2AbilityTemplate Sprint()
 
 	ActionPointEffect = new class'X2Effect_GrantActionPoints';
 	ActionPointEffect.NumActionPoints = 1;
-	ActionPointEffect.PointType = 'move';
+	ActionPointEffect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
 	Template.AddTargetEffect(ActionPointEffect);
 
 	Template.AddShooterEffectExclusions();

@@ -557,6 +557,7 @@ static function X2AbilityTemplate Flush()
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_Knockback				KnockbackEffect;
 	local X2Condition_Visibility            VisibilityCondition;
+	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2Effect_Flush					FlushEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
@@ -612,6 +613,11 @@ static function X2AbilityTemplate Flush()
 		
 	// Weapon Upgrade Compatibility
 	Template.bAllowFreeFireWeaponUpgrade = true;                        // Flag that permits action to become 'free action' via 'Hair Trigger' or similar upgrade / effects
+
+	ActionPointEffect = new class'X2Effect_GrantActionPoints';
+	ActionPointEffect.NumActionPoints = 1;
+	ActionPointEffect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
+	Template.AddTargetEffect(ActionPointEffect);
 
 	FlushEffect = new class'X2Effect_Flush';
 	Template.AddTargetEffect(FlushEffect);

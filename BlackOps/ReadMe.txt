@@ -4,7 +4,8 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 
 Beta version v0.3
 General changes
-  * Improved compatibility with other mods, hopefully
+  * Improved compatibility with other mods, hopefully.
+  * More things can be tuned in the ini file.
   * The AWC is no longer made retroactive. Install the retroactive AWC mod if you want to preserve the behavior.
 Ability changes
   * Suppression now prevents ADVENT MECs from using their missile attack.
@@ -13,6 +14,8 @@ Item changes
   * New experimental armor from the Proving Ground: Reinforced Vest - grants +2 Armor.
 Visual changes
   * Integrated Divine Lucubration's Suppression Visualization Fix mod to fix the Rifle Suppression animation.
+Bugfixes
+  * Fixed Flush to actually work, for real this time.
 
 Beta version v0.2
 Class changes
