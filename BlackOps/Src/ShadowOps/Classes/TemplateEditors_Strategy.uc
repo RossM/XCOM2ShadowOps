@@ -8,6 +8,7 @@ event OnInit(UIScreen Screen)
 	if (!bEditedTemplates)
 	{
 		EditTemplates();
+		CreateStartingItems();
 		bEditedTemplates = true;
 	}
 
@@ -19,6 +20,36 @@ event OnInit(UIScreen Screen)
 	}
 }
 
+function CreateStartingItems()
+{
+	local XComGameState_HeadquartersXCom XComHQ;
+	local X2ItemTemplateManager ItemTemplateMgr;
+	local XComGameState_Item NewItemState;
+	local X2DataTemplate DataTemplate;
+	local XComGameStateHistory History;
+	local XComGameState NewGameState;
+
+	History = `XCOMHISTORY;
+
+	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
+
+	ItemTemplateMgr = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Create Starting Items");
+
+	// Create one of each starting item
+	foreach ItemTemplateMgr.IterateTemplates(DataTemplate, none)
+	{
+		if( X2ItemTemplate(DataTemplate) != none && X2ItemTemplate(DataTemplate).StartingItem && !XComHQ.HasItem(X2ItemTemplate(DataTemplate)))
+		{
+			NewItemState = X2ItemTemplate(DataTemplate).CreateInstanceFromTemplate(NewGameState);
+			NewGameState.AddStateObject(NewItemState);
+			XComHQ.AddItemToHQInventory(NewItemState);
+		}
+	}
+
+	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+}
 
 // The following template types have per-difficulty variants:
 // X2CharacterTemplate (except civilians and characters who never appear in tactical play)
