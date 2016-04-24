@@ -10,13 +10,18 @@ General changes
   * Added comments in XComEngine.ini noting which class overloads can be removed if they are causing conflicts.
 Ability changes
   * Suppression now prevents ADVENT MECs from using their missile attack.
+  * Hip Fire is now available through the AWC. Hip Fire - Fire your primary weapon at a target. This attack does not cost an action, but has a -20 Aim modifier. 3 turn cooldown.
 Item changes
   * Smoke grenades start with 2 charges (up from 1).
   * New experimental armor from the Proving Ground: Reinforced Vest - grants +2 Armor.
 Visual changes
   * Integrated Divine Lucubration's Suppression Visualization Fix mod to fix the Rifle Suppression animation.
+  * All standard-shot-like abilities now use over-the-shoulder targeting.
 Bugfixes
   * Fixed Flush to actually work, for real this time.
+  * Combat Engineers can no longer get Lightning Reflexes through the AWC.
+Bugs added
+  * Probably a lot.
 
 Beta version v0.2
 Class changes
