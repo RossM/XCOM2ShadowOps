@@ -4,9 +4,10 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 
 Beta version v0.3
 General changes
-  * Improved compatibility with other mods, hopefully.
-  * More things can be tuned in the ini file.
   * The AWC is no longer made retroactive. Install the retroactive AWC mod if you want to preserve the behavior.
+  * Improved compatibility with other mods, hopefully.
+  * More things can be tuned in the mod ini files.
+  * Added comments in XComEngine.ini noting which class overloads can be removed if they are causing conflicts.
 Ability changes
   * Suppression now prevents ADVENT MECs from using their missile attack.
 Item changes
