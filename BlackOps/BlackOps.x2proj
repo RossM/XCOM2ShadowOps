@@ -79,6 +79,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\AcademyUnlocks.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\TemplateEditors_FinalShell.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\TemplateEditors_Items.uc">
       <SubType>Content</SubType>
     </Content>
