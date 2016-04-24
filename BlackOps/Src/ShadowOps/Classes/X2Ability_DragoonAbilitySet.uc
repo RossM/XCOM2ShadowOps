@@ -360,6 +360,10 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
 
+	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
+	Template.bUsesFiringCamera = true;
+	Template.CinescriptCameraType = "StandardGunFiring";	
+
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
 	ActionPointCost.bAddWeaponTypicalCost = true;

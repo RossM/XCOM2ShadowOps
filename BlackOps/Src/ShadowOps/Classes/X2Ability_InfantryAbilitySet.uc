@@ -260,6 +260,10 @@ static function X2AbilityTemplate FullAuto()
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fanfire";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 
+	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
+	Template.bUsesFiringCamera = true;
+	Template.CinescriptCameraType = "StandardGunFiring";	
+
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = default.FullAutoActions;
 	ActionPointCost.bConsumeAllPoints = true;
@@ -574,6 +578,10 @@ static function X2AbilityTemplate Flush()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	// Activated by a button press; additionally, tells the AI this is an activatable
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
+	Template.bUsesFiringCamera = true;
+	Template.CinescriptCameraType = "StandardGunFiring";	
 
 	Template.AddShooterEffectExclusions();
 
