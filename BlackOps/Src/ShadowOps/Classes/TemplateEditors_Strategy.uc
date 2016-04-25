@@ -20,12 +20,15 @@ event OnInit(UIScreen Screen)
 	}
 }
 
+// This function fixes up savefiles that are missing a starting item because the mod wasn't installed
+// when the game was started, or because the item is new in the current version of the mod.
 function CreateStartingItems()
 {
 	local XComGameState_HeadquartersXCom XComHQ;
 	local X2ItemTemplateManager ItemTemplateMgr;
 	local XComGameState_Item NewItemState;
 	local X2DataTemplate DataTemplate;
+	local X2ItemTemplate ItemTemplate;
 	local XComGameStateHistory History;
 	local XComGameState NewGameState;
 
@@ -37,12 +40,13 @@ function CreateStartingItems()
 
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Create Starting Items");
 
-	// Create one of each starting item
+	// Create one of each starting item that HQ doesn't already have
 	foreach ItemTemplateMgr.IterateTemplates(DataTemplate, none)
 	{
-		if( X2ItemTemplate(DataTemplate) != none && X2ItemTemplate(DataTemplate).StartingItem && !XComHQ.HasItem(X2ItemTemplate(DataTemplate)))
+		ItemTemplate = X2ItemTemplate(DataTemplate);
+		if( ItemTemplate != none && ItemTemplate.StartingItem && !XComHQ.HasItem(ItemTemplate))
 		{
-			NewItemState = X2ItemTemplate(DataTemplate).CreateInstanceFromTemplate(NewGameState);
+			NewItemState = ItemTemplate.CreateInstanceFromTemplate(NewGameState);
 			NewGameState.AddStateObject(NewItemState);
 			XComHQ.AddItemToHQInventory(NewItemState);
 		}
