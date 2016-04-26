@@ -22,6 +22,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(SnapShot());
 	Templates.AddItem(SnapShotOverwatch());
+	Templates.AddItem(PurePassive('SnapShotIcon', "img:///UILibrary_PerkIcons.UIPerk_snapshot", false));
 	Templates.AddItem(HunterMark());
 	Templates.AddItem(VitalPoint());
 	Templates.AddItem(HipFire()); // Unused
@@ -135,6 +136,7 @@ static function X2AbilityTemplate SnapShot()
 	Template.AddTargetEffect(KnockbackEffect);
 
 	Template.AdditionalAbilities.AddItem('SnapShotOverwatch');
+	Template.AdditionalAbilities.AddItem('SnapShotIcon');
 
 	Template.bCrossClassEligible = false;
 
