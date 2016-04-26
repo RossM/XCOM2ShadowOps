@@ -67,6 +67,7 @@ static function DisableItem(name ItemName)
 	Template.CreatorTemplateName = '';
 	Template.BaseItem = '';
 	Template.Cost.ResourceCosts.Length = 0;
+	Template.Requirements.RequiredTechs.Length = 0;
 
 	if (BaseTemplate != none)
 	{
