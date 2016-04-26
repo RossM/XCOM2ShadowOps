@@ -422,7 +422,7 @@ LocFlyOverText="HEAT Ammo"
 
 ; === Class templates ===
 
-[Infantry X2SoldierClassTemplate]
+[ShadowOps_Infantry X2SoldierClassTemplate]
 DisplayName="Infantry"
 ClassSummary="Our Infantry bring to bear sustained firepower at short and medium ranges. They're a key member of any squad."
 LeftAbilityTreeTitle="Rifleman"
@@ -454,7 +454,7 @@ RandomNickNames_Male[0]="Baron"
 RandomNickNames_Male[1]="King"
 RandomNickNames_Male[2]="Snowman"
 
-[Dragoon X2SoldierClassTemplate]
+[ShadowOps_Dragoon X2SoldierClassTemplate]
 DisplayName="Dragoon"
 ClassSummary="The Dragoon is a versatile class that can bring our heaviest weapons and armor to the front lines, or run fast and light for infilitration missions. They excel at protecting and supporting the rest of the squad."
 LeftAbilityTreeTitle="Paladin"
@@ -485,7 +485,7 @@ RandomNickNames[22]="Unicorn"
 RandomNickNames_Male[0]="Orc"
 RandomNickNames_Female[0]="Siren"
 
-[Hunter X2SoldierClassTemplate]
+[ShadowOps_Hunter X2SoldierClassTemplate]
 DisplayName="Hunter"
 ClassSummary="The Hunter class is equally at home taking down enemies at long range with the sniper rifle or right up close with the sword. Our enemies will never know what hit them."
 LeftAbilityTreeTitle="Marksman"
@@ -515,7 +515,7 @@ RandomNickNames_Female[0]="Black Widow"
 RandomNickNames_Male[0]="Cougar"
 RandomNickNames_Male[1]="Green Man"
 
-[Engineer X2SoldierClassTemplate]
+[ShadowOps_CombatEngineer X2SoldierClassTemplate]
 DisplayName="Combat Engineer"
 ClassSummary="Combat Engineers are experts at using grenades both offensively and defensively. If you want something blown up, torn down, or hidden in smoke, bring a Combat Engineer."
 LeftAbilityTreeTitle="Pioneer"

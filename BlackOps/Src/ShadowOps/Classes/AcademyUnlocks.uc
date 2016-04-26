@@ -19,13 +19,13 @@ static function X2SoldierAbilityUnlockTemplate PackmasterUnlock()
 
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'PackmasterUnlock');
 
-	Template.AllowedClasses.AddItem('Engineer');
+	Template.AllowedClasses.AddItem('ShadowOps_CombatEngineer');
 	Template.AbilityName = 'Packmaster';
 	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
 
 	// Requirements
 	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = 'Engineer';
+	Template.Requirements.RequiredSoldierClass = 'ShadowOps_CombatEngineer';
 	Template.Requirements.RequiredSoldierRankClassCombo = true;
 	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
 
@@ -44,13 +44,13 @@ static function X2SoldierAbilityUnlockTemplate DamnGoodGroundUnlock()
 
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'DamnGoodGroundUnlock');
 
-	Template.AllowedClasses.AddItem('Hunter');
+	Template.AllowedClasses.AddItem('ShadowOps_Hunter');
 	Template.AbilityName = 'DamnGoodGround';
 	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
 
 	// Requirements
 	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = 'Hunter';
+	Template.Requirements.RequiredSoldierClass = 'ShadowOps_Hunter';
 	Template.Requirements.RequiredSoldierRankClassCombo = true;
 	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
 
@@ -69,13 +69,13 @@ static function X2SoldierAbilityUnlockTemplate AdrenalineSurgeUnlock()
 
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'AdrenalineSurgeUnlock');
 
-	Template.AllowedClasses.AddItem('Infantry');
+	Template.AllowedClasses.AddItem('ShadowOps_Infantry');
 	Template.AbilityName = 'AdrenalineSurge';
 	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
 
 	// Requirements
 	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = 'Infantry';
+	Template.Requirements.RequiredSoldierClass = 'ShadowOps_Infantry';
 	Template.Requirements.RequiredSoldierRankClassCombo = true;
 	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
 
@@ -94,13 +94,13 @@ static function X2SoldierAbilityUnlockTemplate TacticalSenseUnlock()
 
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'TacticalSenseUnlock');
 
-	Template.AllowedClasses.AddItem('Dragoon');
+	Template.AllowedClasses.AddItem('ShadowOps_Dragoon');
 	Template.AbilityName = 'TacticalSense';
 	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
 
 	// Requirements
 	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = 'Dragoon';
+	Template.Requirements.RequiredSoldierClass = 'ShadowOps_Dragoon';
 	Template.Requirements.RequiredSoldierRankClassCombo = true;
 	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
 
