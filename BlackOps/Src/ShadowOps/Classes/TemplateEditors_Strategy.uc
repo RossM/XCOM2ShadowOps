@@ -8,6 +8,7 @@ event OnInit(UIScreen Screen)
 	if (!bEditedTemplates)
 	{
 		EditTemplates();
+		CreateStartingItems();
 		bEditedTemplates = true;
 	}
 
@@ -17,41 +18,6 @@ event OnInit(UIScreen Screen)
 		EditTemplatesForDifficulty();
 		bEditedTemplatesForDifficulty[`DifficultySetting] = true;
 	}
-
-	// This needs to be checked for each new save loaded
-	CreateStartingItems();
-	PerformUpgrades();
-}
-
-function PerformUpgrades()
-{
-	local XComGameState NewGameState;
-	local XComGameState_ShadowOpsUpgradeInfo UpgradeInfo;
-	local XComGameStateHistory History;
-	local bool bChanged;
-
-	History = `XCOMHISTORY;
-
-	foreach History.IterateByClassType(class'XComGameState_ShadowOpsUpgradeInfo', UpgradeInfo)
-	{
-		break;
-	}
-
-	//if (UpgradeInfo.UpgradesPerformed.Find('RenameSoldierClasses') != INDEX_NONE)
-		//return;
-
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Shadow Ops Upgrades");
-
-	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(NewGameState.CreateStateObject(class'XComGameState_ShadowOpsUpgradeInfo', UpgradeInfo != none ? UpgradeInfo.ObjectId : -1));
-	NewGameState.AddStateObject(UpgradeInfo);
-
-	if (UpgradeInfo.PerformUpgrade('RenameSoldierClasses', NewGameState))
-		bChanged = true;
-
-	if (bChanged)
-		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-	else
-		History.CleanupPendingGameState(NewGameState);
 }
 
 // This function fixes up savefiles that are missing a starting item because the mod wasn't installed
@@ -65,7 +31,6 @@ function CreateStartingItems()
 	local X2ItemTemplate ItemTemplate;
 	local XComGameStateHistory History;
 	local XComGameState NewGameState;
-	local bool bChanged;
 
 	History = `XCOMHISTORY;
 
@@ -79,19 +44,15 @@ function CreateStartingItems()
 	foreach ItemTemplateMgr.IterateTemplates(DataTemplate, none)
 	{
 		ItemTemplate = X2ItemTemplate(DataTemplate);
-		if (ItemTemplate != none && ItemTemplate.StartingItem && !XComHQ.HasItem(ItemTemplate))
+		if( ItemTemplate != none && ItemTemplate.StartingItem && !XComHQ.HasItem(ItemTemplate))
 		{
 			NewItemState = ItemTemplate.CreateInstanceFromTemplate(NewGameState);
 			NewGameState.AddStateObject(NewItemState);
 			XComHQ.AddItemToHQInventory(NewItemState);
-			bChanged = true;
 		}
 	}
 
-	if (bChanged)
-		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-	else
-		History.CleanupPendingGameState(NewGameState);
+	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 }
 
 // The following template types have per-difficulty variants:

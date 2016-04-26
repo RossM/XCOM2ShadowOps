@@ -16,30 +16,10 @@ class X2DownloadableContentInfo_BlackOps extends X2DownloadableContentInfo;
 /// create without the content installed. Subsequent saves will record that the content was installed.
 /// </summary>
 static event OnLoadedSavedGame()
-{
-	local XComGameState NewGameState;
-
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Shadow Ops Upgrade State");
-
-	CreateInitialUpgradeInfo(NewGameState);
-
-	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-}
+{}
 
 /// <summary>
 /// Called when the player starts a new campaign while this DLC / Mod is installed
 /// </summary>
 static event InstallNewCampaign(XComGameState StartState)
-{
-	CreateInitialUpgradeInfo(StartState);
-}
-
-static function CreateInitialUpgradeInfo(XComGameState StartState)
-{
-	local XComGameState_ShadowOpsUpgradeInfo UpgradeInfo;
-
-	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(StartState.CreateStateObject(class'XComGameState_ShadowOpsUpgradeInfo'));
-	StartState.AddStateObject(UpgradeInfo);
-
-	UpgradeInfo.UpgradesPerformed.AddItem('RenameSoldierClasses');
-}
+{}
