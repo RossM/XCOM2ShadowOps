@@ -256,7 +256,7 @@ LocFlyOverText="Keen Edge"
 
 [HipFire X2AbilityTemplate]
 LocFriendlyName="Hip Fire"
-LocLongDescription="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action, but has a -20 Aim modifier."
+LocLongDescription="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
 LocHelpText="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
 LocFlyOverText="Hip Fire"
 
