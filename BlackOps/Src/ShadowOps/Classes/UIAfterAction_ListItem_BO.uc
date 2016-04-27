@@ -3,7 +3,7 @@ class UIAfterAction_ListItem_BO extends UIAfterAction_ListItem;
 // Modified to display subclass names
 simulated function UpdateData(optional StateObjectReference UnitRef)
 {
-	local int days;
+	local int days, woundHours;
 	local bool bCanPromote;
 	local string statusLabel, statusText, daysLabel, daysText, ClassStr;
 	local XComGameState_Unit Unit;
@@ -27,10 +27,12 @@ simulated function UpdateData(optional StateObjectReference UnitRef)
 			statusText = Caps(Unit.GetWoundStatus());
 			statusLabel = "wounded"; // corresponds to timeline label on 'AfterActionBG' mc in SquadList.fla
 			
-			if (Unit.m_iInjuryHours > 0) 
+			//After Action Days Wounded Mod fix
+			Unit.GetWoundState(woundHours);
+			if (woundHours > 0) 
 			{
-				days = Unit.m_iInjuryHours / 24;
-				if( Unit.m_iInjuryHours % 24 > 0 )
+				days = woundHours / 24;
+				if( woundHours % 24 > 0 )
 					days += 1;
 
 				daysLabel = class'UIUtilities_Text'.static.GetDaysString(days);
