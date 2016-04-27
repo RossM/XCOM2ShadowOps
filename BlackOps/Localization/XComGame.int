@@ -259,6 +259,7 @@ LocFriendlyName="Hip Fire"
 LocLongDescription="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
 LocHelpText="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
 LocFlyOverText="Hip Fire"
+LocPromotionPopupText="<Bullet/> Hip Fire has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [Precision X2AbilityTemplate]
 LocFriendlyName="Precision"
