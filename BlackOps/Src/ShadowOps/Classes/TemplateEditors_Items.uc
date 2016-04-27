@@ -46,7 +46,7 @@ static function EditPlatedVest(name ItemName)
 	Template.Cost.ResourceCosts.AddItem(Resources);
 
 	Artifacts.ItemTemplateName = 'CorpseAdventTrooper';
-	Artifacts.Quantity = 2;
+	Artifacts.Quantity = 4;
 	Template.Cost.ArtifactCosts.AddItem(Artifacts);
 }
 
