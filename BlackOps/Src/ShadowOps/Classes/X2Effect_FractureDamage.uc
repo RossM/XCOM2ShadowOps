@@ -1,6 +1,5 @@
 class X2Effect_FractureDamage extends X2Effect_Persistent config(GameData_SoldierSkills);
 
-var config int ConventionalCritDamage, MagneticCritDamage, BeamCritDamage;
 var config int ConventionalBonusShred, MagneticBonusShred, BeamBonusShred;
 
 function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage)
@@ -16,12 +15,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 			WeaponTemplate = X2WeaponTemplate(AbilityState.GetSourceWeapon().GetMyTemplate());
 			if (WeaponTemplate != none)
 			{
-				ExtraDamage = default.ConventionalCritDamage;
-
-				if (WeaponTemplate.WeaponTech == 'magnetic')
-					ExtraDamage = default.MagneticCritDamage;
-				else if (WeaponTemplate.WeaponTech == 'beam')
-					ExtraDamage = default.BeamCritDamage;
+				ExtraDamage = WeaponTemplate.BaseDamage.Crit;
 			}
 		}
 	}
