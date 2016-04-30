@@ -2,6 +2,17 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.4
+General changes
+  * Improved compatibility with other mods
+Ability changes
+  * Fracture now doubles the bonus crit damage of the equipped weapon (previously it added 2/4/6 damage based on weapon tech level).
+  * Hip Fire no longer has an aim penalty.
+Item changes
+  * Plated vest now requires 4 ADVENT Trooper corpses (up from 2).
+Visual changes
+  * Integrated MachDelta's After Action Days Wounded mod.
+
 Beta version v0.3
 General changes
   * The AWC is no longer made retroactive. Install the retroactive AWC mod if you want to preserve the behavior.
