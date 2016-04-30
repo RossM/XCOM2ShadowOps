@@ -358,6 +358,7 @@ static function X2AbilityTemplate BurstFire()
 	local X2AbilityCost_ActionPoints			ActionPointCost;
 	local X2AbilityCost_Ammo					AmmoCost;
 	local X2Effect_ApplyWeaponDamage			WeaponDamageEffect;
+	local X2Effect_ApplyDirectionalWorldDamage  WorldDamage;
 	local X2AbilityCooldown						Cooldown;
 	local X2AbilityToHitCalc_StandardAim		ToHitCalc;
 	local X2AbilityTarget_Cursor				CursorTarget;
@@ -398,23 +399,31 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilityCosts.AddItem(AmmoCost);
 
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
+	ToHitCalc.bMultiTargetOnly = true;
 	ToHitCalc.BuiltInHitMod = default.BurstFireHitMod;
 	Template.AbilityToHitCalc = ToHitCalc;
 	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 
-	//Template.AbilityTargetStyle = default.SimpleSingleTarget;
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
 
-	//Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
-	//Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
-
+	WorldDamage = new class'X2Effect_ApplyDirectionalWorldDamage';
+	WorldDamage.bUseWeaponDamageType = true;
+	WorldDamage.bUseWeaponEnvironmentalDamage = false;
+	WorldDamage.EnvironmentalDamageAmount = default.BurstFireEnvironmentalDamage;
+	WorldDamage.bApplyOnHit = true;
+	WorldDamage.bApplyOnMiss = true;
+	WorldDamage.bApplyToWorldOnHit = true;
+	WorldDamage.bApplyToWorldOnMiss = true;
+	WorldDamage.bHitAdjacentDestructibles = true;
+	WorldDamage.PlusNumZTiles = 1;
+	WorldDamage.bHitTargetTile = true;
+	WorldDamage.ApplyChance = 100;
+	Template.AddMultiTargetEffect(WorldDamage);
+	
 	WeaponDamageEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
-	WeaponDamageEffect.EnvironmentalDamageAmount = default.BurstFireEnvironmentalDamage;
-	WeaponDamageEffect.bApplyToWorldOnHit = true;
-	WeaponDamageEffect.bApplyToWorldOnMiss = true;
 	Template.AddMultiTargetEffect(WeaponDamageEffect);
 	Template.AddMultiTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
 	Template.bAllowAmmoEffects = true;
