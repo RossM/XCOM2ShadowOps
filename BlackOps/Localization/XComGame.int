@@ -141,8 +141,8 @@ LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or ev
 
 [ShadowOps_BurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage"
-LocLongDescription="Fire a special shot that uses extra ammo but has +20 Aim and may damage or destroy cover near the target."
-LocHelpText="Fire a special shot that uses extra ammo but has +20 Aim and may damage or destroy cover near the target."
+LocLongDescription="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
+LocHelpText="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
 LocFlyOverText="Barrage"
 LocPromotionPopupText="<Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 

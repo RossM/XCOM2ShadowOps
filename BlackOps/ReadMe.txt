@@ -8,6 +8,7 @@ General changes
   * Units no longer panic from taking damage if all of the damage is absorbed by an energy shield.
 Ability changes
   * Fracture now doubles the bonus crit damage of the equipped weapon (previously it added 2/4/6 damage based on weapon tech level).
+  * Barrage now attacks all targets in a line, but requires 3 ammo points (up from 2).
   * Hip Fire no longer has an aim penalty.
 Item changes
   * Plated vest now requires 4 ADVENT Trooper corpses (up from 2).

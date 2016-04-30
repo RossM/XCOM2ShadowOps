@@ -357,9 +357,11 @@ static function X2AbilityTemplate BurstFire()
 	local X2AbilityTemplate						Template;
 	local X2AbilityCost_ActionPoints			ActionPointCost;
 	local X2AbilityCost_Ammo					AmmoCost;
-	local X2Effect_ApplyDirectionalWorldDamage  WorldDamage;
+	local X2Effect_ApplyWeaponDamage			WeaponDamageEffect;
 	local X2AbilityCooldown						Cooldown;
-	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
+	local X2AbilityToHitCalc_StandardAim		ToHitCalc;
+	local X2AbilityTarget_Cursor				CursorTarget;
+	local X2AbilityMultiTarget_Line				LineMultiTarget;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_BurstFire');
 
@@ -370,8 +372,15 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
 
-	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
-	Template.bUsesFiringCamera = true;
+	CursorTarget = new class'X2AbilityTarget_Cursor';
+	CursorTarget.bRestrictToWeaponRange = true;
+	Template.AbilityTargetStyle = CursorTarget;
+
+	LineMultiTarget = new class'X2AbilityMultiTarget_Line';
+	Template.AbilityMultiTargetStyle = LineMultiTarget;
+
+	Template.TargetingMethod = class'X2TargetingMethod_Line';
+
 	Template.CinescriptCameraType = "StandardGunFiring";	
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -393,31 +402,21 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilityToHitCalc = ToHitCalc;
 	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 
-	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+	//Template.AbilityTargetStyle = default.SimpleSingleTarget;
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
 
-	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
-	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
+	//Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+	//Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
 
-	WorldDamage = new class'X2Effect_ApplyDirectionalWorldDamage';
-	WorldDamage.bUseWeaponDamageType = true;
-	WorldDamage.EnvironmentalDamageAmount = default.BurstFireEnvironmentalDamage;
-	WorldDamage.bApplyOnHit = true;
-	WorldDamage.bApplyOnMiss = true;
-	WorldDamage.bApplyToWorldOnHit = true;
-	WorldDamage.bApplyToWorldOnMiss = true;
-	WorldDamage.bHitAdjacentDestructibles = true;
-	WorldDamage.PlusNumZTiles = 1;
-	WorldDamage.bHitTargetTile = true;
-	Template.AddTargetEffect(WorldDamage);
-
-	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
-	Template.AssociatedPassives.AddItem('HoloTargeting');
-	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
-	Template.AddTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
+	WeaponDamageEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
+	WeaponDamageEffect.EnvironmentalDamageAmount = default.BurstFireEnvironmentalDamage;
+	WeaponDamageEffect.bApplyToWorldOnHit = true;
+	WeaponDamageEffect.bApplyToWorldOnMiss = true;
+	Template.AddMultiTargetEffect(WeaponDamageEffect);
+	Template.AddMultiTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
 	Template.bAllowAmmoEffects = true;
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
