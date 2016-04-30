@@ -41,5 +41,5 @@ static function CreateInitialUpgradeInfo(XComGameState StartState)
 	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(StartState.CreateStateObject(class'XComGameState_ShadowOpsUpgradeInfo'));
 	StartState.AddStateObject(UpgradeInfo);
 
-	UpgradeInfo.UpgradesPerformed.AddItem('RenameSoldierClasses');
+	UpgradeInfo.InitializeForNewGame();
 }

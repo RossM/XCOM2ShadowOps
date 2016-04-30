@@ -2,6 +2,12 @@ class XComGameState_ShadowOpsUpgradeInfo extends XComGameState_BaseObject;
 
 var array<name> UpgradesPerformed;
 
+function InitializeForNewGame()
+{
+	UpgradesPerformed.AddItem('RenameSoldierClasses');
+	UpgradesPerformed.AddItem('RenameAWCAbilities');
+}
+
 function bool PerformUpgrade(name UpgradeName, XComGameState NewGameState)
 {
 	if (UpgradesPerformed.Find(UpgradeName) != INDEX_NONE)
