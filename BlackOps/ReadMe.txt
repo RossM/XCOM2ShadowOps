@@ -5,6 +5,7 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 Beta version v0.4
 General changes
   * Improved compatibility with other mods.
+  * Units no longer panic from taking damage if all of the damage is absorbed by an energy shield.
 Ability changes
   * Fracture now doubles the bonus crit damage of the equipped weapon (previously it added 2/4/6 damage based on weapon tech level).
   * Hip Fire no longer has an aim penalty.
@@ -14,6 +15,7 @@ Visual changes
   * Integrated MachDelta's After Action Days Wounded mod.
 Bugfixes
   * Learning Finesse will equip the highest level rifle available.
+  * Assorted minor fixes.
 
 Beta version v0.3b
 Bugfixes
