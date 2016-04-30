@@ -269,6 +269,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\XComGameState_Ability_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\XComGameState_ShadowOpsUpgradeInfo.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\XComGameState_Unit_BO.uc">
       <SubType>Content</SubType>
     </Content>
