@@ -18,7 +18,7 @@ simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XCo
 			if (GrenadeTemplate.DataName == 'SmokeGrenade' ||
 				GrenadeTemplate.DataName == 'SmokeGrenadeMk2')
 			{
-				if (AbilityOwner.HasSoldierAbility('SmokeAndMirrors'))
+				if (AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors'))
 					return false;
 			}
 		}

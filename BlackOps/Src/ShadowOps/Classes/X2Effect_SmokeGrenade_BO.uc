@@ -42,7 +42,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	{
 		SourceUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
-		if (SourceUnit.HasSoldierAbility('CombatDrugs'))
+		if (SourceUnit.HasSoldierAbility('ShadowOps_CombatDrugs'))
 		{
 			AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 			AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('CombatDrugs');
