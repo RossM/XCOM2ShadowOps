@@ -599,6 +599,12 @@ FriendlyNamePlural="Tiger Rounds"
 BriefSummary="Study of the armor ADVENT units use in the field has led to the development of improved ammunition capable of shredding alloy armor."
 TacticalText="<Bullet/> Tiger rounds contain a miniature shaped charge designed to shred armor. <br/><Bullet/> These rounds have no special effect on unarmored targets. <br/>"
 
+[ShadowOps_DepletedEleriumRounds X2AmmoTemplate]
+FriendlyName="Depleted Elerium Rounds"
+FriendlyNamePlural="Depleted Elerium Rounds"
+BriefSummary="Adding small amounts of Elerium to our shaped-charge ammunition has resulted in both increased damage and dramatically improved shredding ability."
+TacticalText="<Bullet/> Depleted Elerium rounds combine high density with explosive power, capable of shredding even the heaviest armor. <br/>"
+
 [ReinforcedVest X2EquipmentTemplate]
 FriendlyName="Reinforced Vest"
 FriendlyNamePlural="Reinforced Vests"

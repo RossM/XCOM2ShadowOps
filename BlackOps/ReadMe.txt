@@ -11,7 +11,8 @@ Ability changes
   * Barrage now attacks all targets in a line, but requires 3 ammo points (up from 2).
   * Hip Fire no longer has an aim penalty.
 Item changes
-  * New item: Tiger Rounds. Unlocked with Hybrid Materials. Adds one point of armor shredding to weapon damage.
+  * New item: Tiger Rounds. Unlocked with Hybrid Materials tech. Adds one point of armor shredding to weapon damage.
+  * New item: Depleted Elerium Rounds. Unlocked with Elerium tech. Adds one point of damage and three points of shredding to weapon damage.
   * Plated vest now requires 4 ADVENT Trooper corpses (up from 2).
 Visual changes
   * Integrated MachDelta's After Action Days Wounded mod.

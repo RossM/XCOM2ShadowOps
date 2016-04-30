@@ -3,6 +3,7 @@ class X2Item_Ammo_BO extends X2Item config(GameData_WeaponData);
 var config int FlechetteDamageModifier, FlechetteHitModifier;
 var config int HollowPointCritDamageModifier;
 var config int TigerShred;
+var config int DepletedEleriumDamageModifier, DepletedEleriumShred;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -11,6 +12,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(CreateFlechetteRounds());
 	Templates.AddItem(CreateHollowPointRounds());
 	Templates.AddItem(CreateTigerRounds());
+	Templates.AddItem(CreateDepletedEleriumRounds());
 
 	return Templates;
 }
@@ -97,5 +99,45 @@ static function X2DataTemplate CreateTigerRounds()
 	Resources.Quantity = 40;
 	Template.Cost.ResourceCosts.AddItem(Resources);
 	
+	return Template;
+}
+
+static function X2DataTemplate CreateDepletedEleriumRounds()
+{
+	local X2AmmoTemplate Template;
+	local WeaponDamageValue DamageValue;
+	local ArtifactCost Resources;
+
+	`CREATE_X2TEMPLATE(class'X2AmmoTemplate', Template, 'ShadowOps_DepletedEleriumRounds');
+	Template.strImage = "img:///UILibrary_BlackOps.X2InventoryIcons.Inv_Depleted_Elerium_Rounds";
+	DamageValue.Damage = default.DepletedEleriumDamageModifier;
+	DamageValue.Shred = default.DepletedEleriumShred;
+	Template.AddAmmoDamageModifier(none, DamageValue);
+	Template.TradingPostValue = 30;
+	Template.PointsToComplete = 0;
+	Template.Tier = 2;
+	Template.EquipSound = "StrategyUI_Ammo_Equip";
+
+	Template.StartingItem = false;
+	Template.CanBeBuilt = true;
+
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.DamageBonusLabel, , default.DepletedEleriumDamageModifier);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.ShredLabel, , default.DepletedEleriumShred);
+
+	//FX Reference
+	Template.GameArchetype = "Ammo_Talon.PJ_Talon";
+
+	// Requirements
+	Template.Requirements.RequiredTechs.AddItem('Tech_Elerium');
+
+	// Cost
+	Resources.ItemTemplateName = 'Supplies';
+	Resources.Quantity = 75;
+	Template.Cost.ResourceCosts.AddItem(Resources);
+	
+	Resources.ItemTemplateName = 'EleriumDust';
+	Resources.Quantity = 10;
+	Template.Cost.ResourceCosts.AddItem(Resources);
+
 	return Template;
 }
