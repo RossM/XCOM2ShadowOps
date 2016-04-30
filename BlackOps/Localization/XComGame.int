@@ -553,6 +553,32 @@ RandomNickNames[22]="Thunder"
 RandomNickNames[23]="Torque"
 RandomNickNames[24]="Wrench"
 
+; Compatibility duplicates
+
+[Infantry X2SoldierClassTemplate]
+DisplayName="Infantry (OLD)"
+ClassSummary="This is a compatibility class for saves with older versions of the Shadow Ops Class Pack. It should not appear in new games."
+LeftAbilityTreeTitle="Rifleman (OLD)"
+RightAbilityTreeTitle="Support (OLD)"
+
+[Dragoon X2SoldierClassTemplate]
+DisplayName="Dragoon (OLD)"
+ClassSummary="This is a compatibility class for saves with older versions of the Shadow Ops Class Pack. It should not appear in new games."
+LeftAbilityTreeTitle="Paladin (OLD)"
+RightAbilityTreeTitle="Ghost (OLD)"
+
+[Hunter X2SoldierClassTemplate]
+DisplayName="Hunter (OLD)"
+ClassSummary="This is a compatibility class for saves with older versions of the Shadow Ops Class Pack. It should not appear in new games."
+LeftAbilityTreeTitle="Marksman (OLD)"
+RightAbilityTreeTitle="Tracker (OLD)"
+
+[Engineer X2SoldierClassTemplate]
+DisplayName="Combat Enginee (OLD)r"
+ClassSummary="This is a compatibility class for saves with older versions of the Shadow Ops Class Pack. It should not appear in new games."
+LeftAbilityTreeTitle="Pioneer (OLD)"
+RightAbilityTreeTitle="Sapper (OLD)"
+
 ; === Item templates ===
 
 [FlechetteRounds X2AmmoTemplate]
