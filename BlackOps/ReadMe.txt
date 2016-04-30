@@ -4,7 +4,7 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 
 Beta version v0.4
 General changes
-  * Improved compatibility with other mods
+  * Improved compatibility with other mods.
 Ability changes
   * Fracture now doubles the bonus crit damage of the equipped weapon (previously it added 2/4/6 damage based on weapon tech level).
   * Hip Fire no longer has an aim penalty.
@@ -14,6 +14,10 @@ Visual changes
   * Integrated MachDelta's After Action Days Wounded mod.
 Bugfixes
   * Learning Finesse will equip the highest level rifle available.
+
+Beta version v0.3b
+Bugfixes
+  * Fixed problem where some items were missing when starting a new game.
 
 Beta version v0.3
 General changes
