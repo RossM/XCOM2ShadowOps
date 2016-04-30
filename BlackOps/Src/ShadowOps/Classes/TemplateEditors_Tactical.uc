@@ -88,18 +88,18 @@ function AddDoNotConsumeAllEffect(name AbilityName, name EffectName)
 function AddAllDoNotConsumeAllAbilities()
 {
 	// Bullet Swarm
-	AddDoNotConsumeAllAbility('StandardShot', 'BulletSwarm');
+	AddDoNotConsumeAllAbility('StandardShot', 'ShadowOps_BulletSwarm');
 
 	// Smoke and Mirrors
-	AddDoNotConsumeAllAbility('ThrowGrenade', 'SmokeAndMirrors');
-	AddDoNotConsumeAllAbility('LaunchGrenade', 'SmokeAndMirrors');
+	AddDoNotConsumeAllAbility('ThrowGrenade', 'ShadowOps_SmokeAndMirrors');
+	AddDoNotConsumeAllAbility('LaunchGrenade', 'ShadowOps_SmokeAndMirrors');
 
 	// Fastball
 	AddDoNotConsumeAllEffect('ThrowGrenade', 'Fastball');
 	AddDoNotConsumeAllEffect('LaunchGrenade', 'Fastball');
 
 	// Entrench
-	AddDoNotConsumeAllAbility('HunkerDown', 'Entrench');
+	AddDoNotConsumeAllAbility('HunkerDown', 'ShadowOps_Entrench');
 }
 
 function FixSimpleStandardAim(name AbilityName)
