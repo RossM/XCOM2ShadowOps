@@ -24,37 +24,36 @@ function RenameSoldierClasses(XComGameState NewGameState)
 {
 	local XComGameStateHistory History;
 	local XComGameState_Unit UnitState;
+	local name NewTemplateName;
 
 	History = `XCOMHISTORY;
 
 	foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
 	{
+		NewTemplateName = '';
+
 		switch (UnitState.GetSoldierClassTemplateName())
 		{
 		case 'Engineer':
-			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
-			UnitState.SetSoldierClassTemplate('ShadowOps_CombatEngineer');
-			NewGameState.AddStateObject(UnitState);
-			`Log("Updating unit id" @ UnitState.ObjectId @ "to" @ UnitState.GetSoldierClassTemplateName()); 
+			NewTemplateName = 'ShadowOps_CombatEngineer';
 			break;
 		case 'Dragoon':
-			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
-			UnitState.SetSoldierClassTemplate('ShadowOps_Dragoon');
-			NewGameState.AddStateObject(UnitState);
-			`Log("Updating unit id" @ UnitState.ObjectId @ "to" @ UnitState.GetSoldierClassTemplateName()); 
+			NewTemplateName = 'ShadowOps_Dragoon';
 			break;
 		case 'Hunter':
-			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
-			UnitState.SetSoldierClassTemplate('ShadowOps_Hunter');
-			NewGameState.AddStateObject(UnitState);
-			`Log("Updating unit id" @ UnitState.ObjectId @ "to" @ UnitState.GetSoldierClassTemplateName()); 
+			NewTemplateName = 'ShadowOps_Hunter';
 			break;
 		case 'Infantry':
-			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
-			UnitState.SetSoldierClassTemplate('ShadowOps_Infantry');
-			NewGameState.AddStateObject(UnitState);
-			`Log("Updating unit id" @ UnitState.ObjectId @ "to" @ UnitState.GetSoldierClassTemplateName()); 
+			NewTemplateName = 'ShadowOps_Infantry';
 			break;
+		}
+		
+		if (NewTemplateName != '')
+		{
+			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
+			UnitState.SetSoldierClassTemplate(NewTemplateName);
+			NewGameState.AddStateObject(UnitState);
+			`Log("Updating unit id" @ UnitState.ObjectId @ "to" @ NewTemplateName); 
 		}
 	}
 }
