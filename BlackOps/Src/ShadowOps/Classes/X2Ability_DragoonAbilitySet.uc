@@ -213,9 +213,10 @@ static function X2AbilityTemplate Finesse()
 static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit UnitState)
 {
 	local XComGameState_Item RelevantItem, ItemState;
-	local X2WeaponTemplate WeaponTemplate, NewWeaponTemplate;
+	local X2WeaponTemplate WeaponTemplate, BestWeaponTemplate;
 	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;
+	local int idx;
 
 	// Grab HQ Object
 	History = `XCOMHISTORY;
@@ -244,18 +245,27 @@ static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit 
 			XComHQ.PutItemInInventory(NewGameState, RelevantItem);
 		}
 
-		NewWeaponTemplate = X2WeaponTemplate(class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate('AssaultRifle_CV'));
-
-		if (!UnitState.CanAddItemToInventory(NewWeaponTemplate, NewWeaponTemplate.InventorySlot, NewGameState))
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
-			`RedScreen("Unable to add assault rifle to inventory." @ NewWeaponTemplate.DataName);
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+
+			if (WeaponTemplate != none && WeaponTemplate.bInfiniteItem && WeaponTemplate.WeaponCat == 'rifle' && (BestWeaponTemplate == none || (WeaponTemplate.Tier >= BestWeaponTemplate.Tier)))
+			{
+				BestWeaponTemplate = WeaponTemplate;
+			}
+		}
+
+		if (!UnitState.CanAddItemToInventory(BestWeaponTemplate, BestWeaponTemplate.InventorySlot, NewGameState))
+		{
+			`RedScreen("Unable to add assault rifle to inventory." @ BestWeaponTemplate.DataName);
 			return;
 		}
 
-		ItemState = NewWeaponTemplate.CreateInstanceFromTemplate(NewGameState);
+		ItemState = BestWeaponTemplate.CreateInstanceFromTemplate(NewGameState);
 		ItemState.WeaponAppearance.iWeaponTint = UnitState.kAppearance.iWeaponTint;
 		ItemState.WeaponAppearance.nmWeaponPattern = UnitState.kAppearance.nmWeaponPattern;
-		UnitState.AddItemToInventory(ItemState, NewWeaponTemplate.InventorySlot, NewGameState);
+		UnitState.AddItemToInventory(ItemState, BestWeaponTemplate.InventorySlot, NewGameState);
 		NewGameState.AddStateObject(ItemState);
 	}
 }

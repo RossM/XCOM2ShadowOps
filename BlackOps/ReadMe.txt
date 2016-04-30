@@ -12,6 +12,8 @@ Item changes
   * Plated vest now requires 4 ADVENT Trooper corpses (up from 2).
 Visual changes
   * Integrated MachDelta's After Action Days Wounded mod.
+Bugfixes
+  * Learning Finesse will equip the highest level rifle available.
 
 Beta version v0.3
 General changes
