@@ -15,16 +15,16 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(DeepPockets());
 	Templates.AddItem(DenseSmoke());
-	Templates.AddItem(PurePassive('SmokeAndMirrors', "img:///UILibrary_PerkIcons.UIPerk_smokeandmirrors", false));
+	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_PerkIcons.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(Breach());
 	Templates.AddItem(Fastball());
 	Templates.AddItem(FastballRemovalTrigger());
 	Templates.AddItem(FractureAbility());
 	Templates.AddItem(FractureDamage());
 	Templates.AddItem(Packmaster());
-	Templates.AddItem(PurePassive('Entrench', "img:///UILibrary_PerkIcons.UIPerk_one_for_all", true));
+	Templates.AddItem(PurePassive('ShadowOps_Entrench', "img:///UILibrary_PerkIcons.UIPerk_one_for_all", true));
 	Templates.AddItem(Aggression());
-	Templates.AddItem(PurePassive('CombatDrugs', "img:///UILibrary_PerkIcons.UIPerk_combatdrugs", true));
+	Templates.AddItem(PurePassive('ShadowOps_CombatDrugs', "img:///UILibrary_PerkIcons.UIPerk_combatdrugs", true));
 	Templates.AddItem(SlamFire());
 	Templates.AddItem(DangerZone());
 	Templates.AddItem(ChainReaction());
@@ -38,7 +38,7 @@ static function X2AbilityTemplate DeepPockets()
 {
 	local X2AbilityTemplate Template;
 
-	Template = PurePassive('DeepPockets', "img:///UILibrary_PerkIcons.UIPerk_deeppockets");
+	Template = PurePassive('ShadowOps_DeepPockets', "img:///UILibrary_PerkIcons.UIPerk_deeppockets");
 
 	Template.SoldierAbilityPurchasedFn = DeepPocketsPurchased;
 
@@ -64,7 +64,7 @@ static function X2AbilityTemplate Breach()
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Breach');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Breach');
 	
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
@@ -134,7 +134,7 @@ static function X2AbilityTemplate Fastball()
 	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2AbilityTargetStyle              TargetStyle;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Fastball');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fastball');
 	
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bombard";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -174,7 +174,7 @@ static function X2AbilityTemplate Fastball()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.bSkipFireAction = true;
 
-	Template.AdditionalAbilities.AddItem('FastballRemovalTrigger');
+	Template.AdditionalAbilities.AddItem('ShadowOps_FastballRemovalTrigger');
 	
 	Template.bCrossClassEligible = true;
 
@@ -188,7 +188,7 @@ static function X2AbilityTemplate FastballRemovalTrigger()
 	local X2AbilityTrigger_EventListener		Trigger;
 	local X2AbilityTargetStyle					TargetStyle;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'FastballRemovalTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FastballRemovalTrigger');
 	
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bombard";
 
@@ -226,9 +226,9 @@ static function X2AbilityTemplate FractureAbility()
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Fracture');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fracture');
 
-	Template.AdditionalAbilities.AddItem('FractureDamage');
+	Template.AdditionalAbilities.AddItem('ShadowOps_FractureDamage');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_damagecover";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -290,7 +290,7 @@ static function X2AbilityTemplate FractureDamage()
 	local X2Effect_FractureDamage                DamageEffect;
 
 	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'FractureDamage');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FractureDamage');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_momentum";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -318,7 +318,7 @@ static function X2AbilityTemplate Aggression()
 	local X2Effect_Aggression                   Effect;
 
 	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Aggression');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Aggression');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_aggression";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -352,7 +352,7 @@ static function X2AbilityTemplate SlamFire()
 	local X2Effect_SlamFire             SlamFireEffect;
 	local X2AbilityCost_ActionPoints    ActionPointCost;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'SlamFire');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SlamFire');
 
 	// Icon Properties
 	Template.DisplayTargetHitChance = false;
@@ -403,9 +403,9 @@ static function X2AbilityTemplate ChainReaction()
 	local X2Effect_ChainReaction                Effect;
 
 	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ChainReaction');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ChainReaction');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fuse";
-	Template.AdditionalAbilities.AddItem('ChainReactionFuse');
+	Template.AdditionalAbilities.AddItem('ShadowOps_ChainReactionFuse');
 	//Template.AdditionalAbilities.AddItem('FusePostActivationConcealmentBreaker');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -433,7 +433,7 @@ static function X2AbilityTemplate ChainReactionFuse()
 {
 	local X2AbilityTemplate					Template;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ChainReactionFuse');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ChainReactionFuse');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fuse";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -523,7 +523,7 @@ static function X2AbilityTemplate Packmaster()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_BonusItemCharges             ItemChargesEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Packmaster');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Packmaster');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_expanded_storage";
@@ -563,7 +563,7 @@ static function X2AbilityTemplate DangerZone()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_DangerZone					RadiusEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'DangerZone');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DangerZone');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_dangerzone";
@@ -603,7 +603,7 @@ static function X2AbilityTemplate DenseSmoke()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_BonusRadius					RadiusEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'DenseSmoke');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DenseSmoke');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_densesmoke";
@@ -644,7 +644,7 @@ static function X2AbilityTemplate HeatAmmo()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_HeatAmmo						HeatEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'HeatAmmo');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HeatAmmo');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_heatammo";

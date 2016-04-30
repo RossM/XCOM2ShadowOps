@@ -19,7 +19,7 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 	
-	Templates.AddItem(PurePassive('BulletSwarm', "img:///UILibrary_PerkIcons.UIPerk_bulletswarm", true));
+	Templates.AddItem(PurePassive('ShadowOps_BulletSwarm', "img:///UILibrary_PerkIcons.UIPerk_bulletswarm", true));
 	Templates.AddItem(Bandolier());
 	Templates.AddItem(Magnum());
 	Templates.AddItem(GoodEye());
@@ -45,7 +45,7 @@ static function X2AbilityTemplate Bandolier()
 {
 	local X2AbilityTemplate Template;
 
-	Template = PurePassive('Bandolier', "img:///UILibrary_PerkIcons.UIPerk_wholenineyards");
+	Template = PurePassive('ShadowOps_Bandolier', "img:///UILibrary_PerkIcons.UIPerk_wholenineyards");
 
 	Template.SoldierAbilityPurchasedFn = BandolierPurchased;
 
@@ -88,7 +88,7 @@ static function X2AbilityTemplate Magnum()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_PersistentBonus              MagnumEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Magnum');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Magnum');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_gunslinger";
@@ -128,7 +128,7 @@ static function X2AbilityTemplate GoodEye()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_GoodEye                      GoodEyeEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'GoodEye');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_GoodEye');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_platform_stability";
@@ -162,8 +162,8 @@ static function X2AbilityTemplate AlwaysReady()
 {
 	local X2AbilityTemplate         Template;
 
-	Template = PurePassive('AlwaysReady', "img:///UILibrary_PerkIcons.UIPerk_evervigilant");
-	Template.AdditionalAbilities.AddItem('AlwaysReadyTrigger');
+	Template = PurePassive('ShadowOps_AlwaysReady', "img:///UILibrary_PerkIcons.UIPerk_evervigilant");
+	Template.AdditionalAbilities.AddItem('ShadowOps_AlwaysReadyTrigger');
 
 	Template.bCrossClassEligible = false;
 
@@ -182,7 +182,7 @@ static function X2AbilityTemplate AlwaysReadyTrigger()
 	local X2Condition_UnitEffects           SuppressedCondition;
 	local X2AbilityTrigger_EventListener	EventListener;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'AlwaysReadyTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AlwaysReadyTrigger');
 	
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
@@ -252,7 +252,7 @@ static function X2AbilityTemplate FullAuto()
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 	local X2AbilityCooldown                 Cooldown;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'FullAuto');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FullAuto');
 
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -308,8 +308,8 @@ static function X2AbilityTemplate FullAuto()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
-	Template.AdditionalAbilities.AddItem('FullAuto2');
-	Template.PostActivationEvents.AddItem('FullAuto2');
+	Template.AdditionalAbilities.AddItem('ShadowOps_FullAuto2');
+	Template.PostActivationEvents.AddItem('ShadowOps_FullAuto2');
 	Template.CinescriptCameraType = "StandardGunFiring";
 
 	//Template.DamagePreviewFn = FullAutoDamagePreview;
@@ -328,7 +328,7 @@ static function X2AbilityTemplate FullAuto2()
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 	local X2AbilityTrigger_EventListener    Trigger;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'FullAuto2');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FullAuto2');
 
 	AmmoCost = new class'X2AbilityCost_Ammo';
 	AmmoCost.iAmmo = 1;
@@ -354,7 +354,7 @@ static function X2AbilityTemplate FullAuto2()
 
 	Trigger = new class'X2AbilityTrigger_EventListener';
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
-	Trigger.ListenerData.EventID = 'FullAuto2';
+	Trigger.ListenerData.EventID = 'ShadowOps_FullAuto2';
 	Trigger.ListenerData.Filter = eFilter_Unit;
 	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.ChainShotListener;
 	Template.AbilityTriggers.AddItem(Trigger);
@@ -368,8 +368,8 @@ static function X2AbilityTemplate FullAuto2()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
-	Template.AdditionalAbilities.AddItem('FullAuto2');
-	Template.PostActivationEvents.AddItem('FullAuto2');
+	Template.AdditionalAbilities.AddItem('ShadowOps_FullAuto2');
+	Template.PostActivationEvents.AddItem('ShadowOps_FullAuto2');
 	Template.bShowActivation = true;
 	Template.CinescriptCameraType = "StandardGunFiring";
 
@@ -385,7 +385,7 @@ static function X2AbilityTemplate ZoneOfControl()
 	local X2Effect_ReserveActionPoints  ReservePointsEffect;
 	local X2Condition_UnitEffects           SuppressedCondition;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ZoneOfControl');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ZoneOfControl');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
@@ -426,7 +426,7 @@ static function X2AbilityTemplate ZoneOfControl()
 	ReservePointsEffect.ReserveType = 'ZoneOfControl';
 	Template.AddShooterEffect(ReservePointsEffect);
 
-	Template.AdditionalAbilities.AddItem('ZoneOfControlShot');
+	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlShot');
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.bSkipFireAction = true;
@@ -454,7 +454,7 @@ static function X2AbilityTemplate ZoneOfControlShot()
 	local X2Condition_UnitEffectsWithAbilitySource  ZoneOfControlCondition;
 	local X2Condition_Visibility            TargetVisibilityCondition;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ZoneOfControlShot');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ZoneOfControlShot');
 
 	AmmoCost = new class'X2AbilityCost_Ammo';
 	AmmoCost.iAmmo = 1;
@@ -529,7 +529,7 @@ static function X2AbilityTemplate ZeroIn()
 	local X2AbilityTemplate             Template;
 	local X2Effect_ZeroIn               ZeroInEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ZeroIn');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ZeroIn');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_hyperactivepupils";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -567,7 +567,7 @@ static function X2AbilityTemplate Flush()
 	local X2AbilityCooldown                 Cooldown;
 
 	// Macro to do localisation and stuffs
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Flush');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Flush');
 
 	// Icon Properties
 	Template.bDontDisplayInAbilitySummary = true;
@@ -674,7 +674,7 @@ static function X2AbilityTemplate BulletSweep()
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'BulletSweep');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_BulletSweep');
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = default.BulletSweepAmmo;
@@ -747,7 +747,7 @@ static function X2AbilityTemplate RifleSuppression()
 	local X2Effect_ReserveActionPoints      ReserveActionPointsEffect;
 	local X2Effect_Suppression              SuppressionEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'RifleSuppression');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_RifleSuppression');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_riflesupression";
 	
@@ -873,7 +873,7 @@ static function X2AbilityTemplate Focus()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_Persistent                   Effect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Focus');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Focus');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fire_control";
@@ -909,7 +909,7 @@ static function X2AbilityTemplate Resilience()
 	local X2Effect_Persistent                   Effect;
 
 	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Resilience');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Resilience');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_resilience";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -937,8 +937,8 @@ static function X2AbilityTemplate AdrenalineSurge()
 {
 	local X2AbilityTemplate         Template;
 
-	Template = PurePassive('AdrenalineSurge', "img:///UILibrary_PerkIcons.UIPerk_adrenalneurosympathy");
-	Template.AdditionalAbilities.AddItem('AdrenalineSurgeTrigger');
+	Template = PurePassive('ShadowOps_AdrenalineSurge', "img:///UILibrary_PerkIcons.UIPerk_adrenalneurosympathy");
+	Template.AdditionalAbilities.AddItem('ShadowOps_AdrenalineSurgeTrigger');
 
 	Template.bCrossClassEligible = true;
 
@@ -956,7 +956,7 @@ static function X2AbilityTemplate AdrenalineSurgeTrigger()
 	local X2Condition_UnitProperty			PropertyCondition;
 	local X2Condition_UnitEffects			EffectsCondition;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'AdrenalineSurgeTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AdrenalineSurgeTrigger');
 	
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;

@@ -19,7 +19,6 @@ event OnInit(UIScreen Screen)
 	}
 }
 
-
 // The following template types have per-difficulty variants:
 // X2CharacterTemplate (except civilians and characters who never appear in tactical play)
 // X2FacilityTemplate

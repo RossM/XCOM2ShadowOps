@@ -37,15 +37,14 @@ function PerformUpgrades()
 		break;
 	}
 
-	//if (UpgradeInfo.UpgradesPerformed.Find('RenameSoldierClasses') != INDEX_NONE)
-		//return;
-
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Shadow Ops Upgrades");
 
 	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(NewGameState.CreateStateObject(class'XComGameState_ShadowOpsUpgradeInfo', UpgradeInfo != none ? UpgradeInfo.ObjectId : -1));
 	NewGameState.AddStateObject(UpgradeInfo);
 
 	if (UpgradeInfo.PerformUpgrade('RenameSoldierClasses', NewGameState))
+		bChanged = true;
+	if (UpgradeInfo.PerformUpgrade('RenameAWCAbilities', NewGameState))
 		bChanged = true;
 
 	if (bChanged)

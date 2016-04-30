@@ -76,7 +76,7 @@ static simulated function bool CanAddItemToInventory(XComGameState_Unit Unit, co
 
 static function bool HasAmmoPocket(XComGameState_Unit Unit)
 {
-	return (!Unit.IsMPCharacter() && Unit.HasSoldierAbility('Bandolier'));
+	return (!Unit.IsMPCharacter() && Unit.HasSoldierAbility('ShadowOps_Bandolier'));
 }
 
 static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, ECharStatType Stat, XComGameState_Item InventoryItem)
@@ -86,7 +86,7 @@ static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, EC
 	local X2WeaponTemplate WeaponTemplate;
 
 	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
-	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && Unit.HasSoldierAbility('Finesse'))
+	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && Unit.HasSoldierAbility('ShadowOps_Finesse'))
 	{
 		if (Stat == eStat_Mobility)
 			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseMobilityBonus;
@@ -95,7 +95,7 @@ static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, EC
 	}
 
 	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
-	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && Unit.HasSoldierAbility('HeavyArmor'))
+	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && Unit.HasSoldierAbility('ShadowOps_HeavyArmor'))
 	{
 		if (Stat == eStat_ArmorMitigation)
 			Result += class'X2Ability_DragoonAbilitySet'.default.HeavyArmorBonus;

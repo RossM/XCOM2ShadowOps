@@ -20,7 +20,7 @@ static function X2SoldierAbilityUnlockTemplate PackmasterUnlock()
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'PackmasterUnlock');
 
 	Template.AllowedClasses.AddItem('ShadowOps_CombatEngineer');
-	Template.AbilityName = 'Packmaster';
+	Template.AbilityName = 'ShadowOps_Packmaster';
 	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
 
 	// Requirements
@@ -45,7 +45,7 @@ static function X2SoldierAbilityUnlockTemplate DamnGoodGroundUnlock()
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'DamnGoodGroundUnlock');
 
 	Template.AllowedClasses.AddItem('ShadowOps_Hunter');
-	Template.AbilityName = 'DamnGoodGround';
+	Template.AbilityName = 'ShadowOps_DamnGoodGround';
 	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
 
 	// Requirements
@@ -70,7 +70,7 @@ static function X2SoldierAbilityUnlockTemplate AdrenalineSurgeUnlock()
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'AdrenalineSurgeUnlock');
 
 	Template.AllowedClasses.AddItem('ShadowOps_Infantry');
-	Template.AbilityName = 'AdrenalineSurge';
+	Template.AbilityName = 'ShadowOps_AdrenalineSurge';
 	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
 
 	// Requirements
@@ -95,7 +95,7 @@ static function X2SoldierAbilityUnlockTemplate TacticalSenseUnlock()
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'TacticalSenseUnlock');
 
 	Template.AllowedClasses.AddItem('ShadowOps_Dragoon');
-	Template.AbilityName = 'TacticalSense';
+	Template.AbilityName = 'ShadowOps_TacticalSense';
 	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
 
 	// Requirements

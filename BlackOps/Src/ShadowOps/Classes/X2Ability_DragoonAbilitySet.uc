@@ -49,7 +49,7 @@ static function X2AbilityTemplate ShieldProtocol()
 	local X2AbilityCharges                      Charges;
 	local X2AbilityCost_Charges                 ChargeCost;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShieldProtocol');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ShieldProtocol');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -128,7 +128,7 @@ static function X2AbilityTemplate HeavyArmor()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_HeavyArmor                   HeavyArmorEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'HeavyArmor');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HeavyArmor');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_willtosurvive";
@@ -170,7 +170,7 @@ static function X2AbilityTemplate Finesse()
 	local X2Effect_PersistentStatChange         FinesseEffect;
 	local X2Condition_UnitInventory				Condition;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Finesse');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Finesse');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stickandmove";
@@ -269,7 +269,7 @@ static function X2AbilityTemplate StealthProtocol()
 	local X2AbilityCharges                      Charges;
 	local X2AbilityCost_Charges                 ChargeCost;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'StealthProtocol');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_StealthProtocol');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stealth";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -351,7 +351,7 @@ static function X2AbilityTemplate BurstFire()
 	local X2AbilityCooldown						Cooldown;
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'BurstFire');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_BurstFire');
 
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -422,8 +422,8 @@ static function X2AbilityTemplate BurstFire()
 static function X2AbilityTemplate ShieldsUp()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('ShieldsUp', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false);
-	Template.AdditionalAbilities.AddItem('ShieldsUpTrigger');
+	Template = PurePassive('ShadowOps_ShieldsUp', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false);
+	Template.AdditionalAbilities.AddItem('ShadowOps_ShieldsUpTrigger');
 
 	return Template;
 }
@@ -433,7 +433,7 @@ static function X2AbilityTemplate ShieldsUpTrigger()
 	local X2AbilityTemplate                     Template;
 	local X2AbilityMultiTarget_AllUnits			MultiTargetStyle;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShieldsUpTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ShieldsUpTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -479,8 +479,8 @@ static function X2Effect ShieldsUpEffect(string FriendlyName, string LongDescrip
 static function X2AbilityTemplate ECM()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('ECM', "img:///UILibrary_PerkIcons.UIPerk_jamthesignal", false);
-	Template.AdditionalAbilities.AddItem('ECMTrigger');
+	Template = PurePassive('ShadowOps_ECM', "img:///UILibrary_PerkIcons.UIPerk_jamthesignal", false);
+	Template.AdditionalAbilities.AddItem('ShadowOps_ECMTrigger');
 
 	return Template;
 }
@@ -490,7 +490,7 @@ static function X2AbilityTemplate ECMTrigger()
 	local X2AbilityTemplate                     Template;
 	local X2AbilityMultiTarget_AllUnits			MultiTargetStyle;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ECMTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ECMTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -534,8 +534,8 @@ static function X2Effect ECMEffect(string FriendlyName, string LongDescription)
 static function X2AbilityTemplate Vanish()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('Vanish', "img:///UILibrary_PerkIcons.UIPerk_quadricepshypertrophy", true);
-	Template.AdditionalAbilities.AddItem('VanishTrigger');
+	Template = PurePassive('ShadowOps_Vanish', "img:///UILibrary_PerkIcons.UIPerk_quadricepshypertrophy", true);
+	Template.AdditionalAbilities.AddItem('ShadowOps_VanishTrigger');
 
 	return Template;
 }
@@ -547,7 +547,7 @@ static function X2AbilityTemplate VanishTrigger()
 	local X2Condition_NotVisibleToEnemies		VisibilityCondition;
 	local X2AbilityTrigger_EventListener		EventListener;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'VanishTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_VanishTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
@@ -598,7 +598,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	local X2Effect_RemoveEffects				RemoveEffects;
 	local X2Effect_Persistent					StandUpEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'RestorationProtocol');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_RestorationProtocol');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_regeneration";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -701,7 +701,7 @@ static function X2AbilityTemplate StasisField()
 	local X2Effect_Stasis						StasisEffect;
 	local X2AbilityMultiTarget_Radius			RadiusMultiTarget;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'StasisField');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_StasisField');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stasis";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -761,7 +761,7 @@ static function X2AbilityTemplate PuppetProtocol()
 	local X2AbilityCooldown             Cooldown;
 	local X2Effect_BreakUnitConcealment	BreakConcealmentEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'PuppetProtocol');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_PuppetProtocol');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_domination";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -835,7 +835,7 @@ static function X2AbilityTemplate Rocketeer()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_BonusItemCharges             ItemChargesEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Rocketeer');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Rocketeer');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_rocketeer";
@@ -874,7 +874,7 @@ static function X2AbilityTemplate TacticalSense()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_TacticalSense				Effect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'TacticalSense');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TacticalSense');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_tacticalsense";

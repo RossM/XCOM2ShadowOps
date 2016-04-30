@@ -15,6 +15,10 @@ function bool PerformUpgrade(name UpgradeName, XComGameState NewGameState)
 		RenameSoldierClasses(NewGameState);
 		UpgradesPerformed.AddItem(UpgradeName);
 		return true;
+	case 'RenameAWCAbilities':
+		RenameAWCAbilities(NewGameState);
+		UpgradesPerformed.AddItem(UpgradeName);
+		return true;
 	}
 
 	return false;
@@ -54,6 +58,41 @@ function RenameSoldierClasses(XComGameState NewGameState)
 			UnitState.SetSoldierClassTemplate(NewTemplateName);
 			NewGameState.AddStateObject(UnitState);
 			`Log("Updating unit id" @ UnitState.ObjectId @ "to" @ NewTemplateName); 
+		}
+	}
+}
+
+function RenameAWCAbilities(XComGameState NewGameState)
+{
+	local XComGameStateHistory History;
+	local XComGameState_Unit UnitState;
+	local ClassAgnosticAbility AWCAbility;
+	local X2AbilityTemplateManager AbilityTemplateManager;
+	local int i;
+	local name NewTemplateName;
+
+	History = `XCOMHISTORY;
+
+	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+
+	foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
+	{
+		for (i = 0; i < UnitState.AWCAbilities.Length; i++)
+		{
+			AWCAbility = UnitState.AWCAbilities[i];
+
+			if (AbilityTemplateManager.FindAbilityTemplate(AWCAbility.AbilityType.AbilityName) == none)
+			{
+				NewTemplateName = name('ShadowOps_' $ AWCAbility.AbilityType.AbilityName);
+
+				if (AbilityTemplateManager.FindAbilityTemplate(NewTemplateName) != none)
+				{
+					UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
+					NewGameState.AddStateObject(UnitState);
+
+					UnitState.AWCAbilities[i].AbilityType.AbilityName = NewTemplateName;
+				}
+			}
 		}
 	}
 }

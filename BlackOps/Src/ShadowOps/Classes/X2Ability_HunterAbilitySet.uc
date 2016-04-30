@@ -22,7 +22,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(SnapShot());
 	Templates.AddItem(SnapShotOverwatch());
-	Templates.AddItem(PurePassive('SnapShotIcon', "img:///UILibrary_PerkIcons.UIPerk_snapshot", false));
+	Templates.AddItem(PurePassive('ShadowOps_SnapShotIcon', "img:///UILibrary_PerkIcons.UIPerk_snapshot", false));
 	Templates.AddItem(HunterMark());
 	Templates.AddItem(VitalPoint());
 	Templates.AddItem(HipFire()); // Unused
@@ -55,7 +55,7 @@ static function X2AbilityTemplate SnapShot()
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 
 	//Macro to do localisation and stuffs
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'SnapShot');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SnapShot');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_snapshot";
@@ -135,8 +135,8 @@ static function X2AbilityTemplate SnapShot()
 	KnockbackEffect.bUseTargetLocation = true;
 	Template.AddTargetEffect(KnockbackEffect);
 
-	Template.AdditionalAbilities.AddItem('SnapShotOverwatch');
-	Template.AdditionalAbilities.AddItem('SnapShotIcon');
+	Template.AdditionalAbilities.AddItem('ShadowOps_SnapShotOverwatch');
+	Template.AdditionalAbilities.AddItem('ShadowOps_SnapShotIcon');
 
 	Template.bCrossClassEligible = false;
 
@@ -158,7 +158,7 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	local X2Condition_UnitActionPoints		UnitActionPointCondition;
 	local X2Effect_PersistentStatChange		LowerAimEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'SnapShotOverwatch');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SnapShotOverwatch');
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 1;
@@ -248,7 +248,7 @@ static function X2DataTemplate HunterMark()
 	local X2Effect_RemoveEffects RemovePreviousMarkEffect;
 	local X2AbilityCooldown Cooldown;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'HunterMark');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HunterMark');
 
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_targetpaint";
@@ -349,7 +349,7 @@ static function X2AbilityTemplate VitalPoint()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_VitalPoint                   VitalPointEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'VitalPoint');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_VitalPoint');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_momentum";
@@ -387,7 +387,7 @@ static function X2AbilityTemplate HipFire()
 	local X2AbilityCooldown					Cooldown;
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'HipFire');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HipFire');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_lightninghands";
@@ -462,7 +462,7 @@ static function X2AbilityTemplate Precision()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_PersistentBonus              PrecisionEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Precision');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Precision');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_urban_aim";
@@ -501,7 +501,7 @@ static function X2AbilityTemplate LowProfile()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_PersistentBonus              LowProfileEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'LowProfile');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_LowProfile');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_lowprofile";
@@ -541,7 +541,7 @@ static function X2AbilityTemplate Sprint()
 	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2AbilityTargetStyle              TargetStyle;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Sprint');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Sprint');
 	
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sprinter";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -587,11 +587,11 @@ static function X2AbilityTemplate Assassin()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_Persistent                   PersistentEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Assassin');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Assassin');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays";
-	Template.AdditionalAbilities.AddItem('AssassinTrigger');
+	Template.AdditionalAbilities.AddItem('ShadowOps_AssassinTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -625,7 +625,7 @@ static function X2AbilityTemplate AssassinTrigger()
 	local X2Effect_RangerStealth                StealthEffect;
 	local X2AbilityTrigger_EventListener		EventListener;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'AssassinTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AssassinTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
@@ -668,7 +668,7 @@ static function X2AbilityTemplate Fade()
 	local X2AbilityCooldown                     Cooldown;
 	local X2AbilityCost_ActionPoints			ActionPointCost;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Fade');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fade');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
@@ -719,7 +719,7 @@ static function X2AbilityTemplate SliceAndDice()
 	local X2AbilityCooldown                 Cooldown;
 	local array<name>                       SkipExclusions;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'SliceAndDice');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SliceAndDice');
 
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
@@ -766,8 +766,8 @@ static function X2AbilityTemplate SliceAndDice()
 	WeaponDamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	Template.AddTargetEffect(WeaponDamageEffect);
 
-	Template.AdditionalAbilities.AddItem('SliceAndDice2');
-	Template.PostActivationEvents.AddItem('SliceAndDice2');
+	Template.AdditionalAbilities.AddItem('ShadowOps_SliceAndDice2');
+	Template.PostActivationEvents.AddItem('ShadowOps_SliceAndDice2');
 
 	Template.bAllowBonusWeaponEffects = true;
 	Template.bSkipMoveStop = true;
@@ -818,7 +818,7 @@ static function X2AbilityTemplate SliceAndDice2()
 	local array<name>                       SkipExclusions;
 	local X2AbilityTrigger_EventListener    Trigger;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'SliceAndDice2');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SliceAndDice2');
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
@@ -829,7 +829,7 @@ static function X2AbilityTemplate SliceAndDice2()
 
 	Trigger = new class'X2AbilityTrigger_EventListener';
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
-	Trigger.ListenerData.EventID = 'SliceAndDice2';
+	Trigger.ListenerData.EventID = 'ShadowOps_SliceAndDice2';
 	Trigger.ListenerData.Filter = eFilter_Unit;
 	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.ChainShotListener;
 	Template.AbilityTriggers.AddItem(Trigger);
@@ -873,8 +873,8 @@ static function X2AbilityTemplate SliceAndDice2()
 static function X2AbilityTemplate Tracking()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('Tracking', "img:///UILibrary_PerkIcons.UIPerk_observer", true);
-	Template.AdditionalAbilities.AddItem('TrackingTrigger');
+	Template = PurePassive('ShadowOps_Tracking', "img:///UILibrary_PerkIcons.UIPerk_observer", true);
+	Template.AdditionalAbilities.AddItem('ShadowOps_TrackingTrigger');
 
 	return Template;
 }
@@ -887,7 +887,7 @@ static function X2AbilityTemplate TrackingTrigger()
 	local X2Condition_UnitProperty      TargetProperty;
 	local X2AbilityTrigger_EventListener	EventListener;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'TrackingTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TrackingTrigger');
 
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_observer";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -958,7 +958,7 @@ static function X2AbilityTemplate Bullseye()
 	local X2Effect_PersistentStatChange		StatChangeEffect;
 	local X2Condition_Visibility			TargetVisibilityCondition;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'Bullseye');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Bullseye');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_precisionshot";
@@ -1046,7 +1046,7 @@ static function X2AbilityTemplate FirstStrike()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_FirstStrike					FirstStrikeEffect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'FirstStrike');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FirstStrike');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_executioner";
@@ -1084,7 +1084,7 @@ static function X2AbilityTemplate DamnGoodGround()
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_DamnGoodGround				Effect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'DamnGoodGround');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DamnGoodGround');
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_damngoodground";
