@@ -584,14 +584,20 @@ RightAbilityTreeTitle="Sapper (OLD)"
 [FlechetteRounds X2AmmoTemplate]
 FriendlyName="Flechette Rounds"
 FriendlyNamePlural="Flechette Rounds"
-BriefSummary=""
+BriefSummary="Flecette rounds deal additional damage, but have a reduced hit chance."
 TacticalText="<Bullet/> Flechette rounds are essentially small darts. They pierce both armor and flesh more effectively than standard bullets. <br/><Bullet/> Despite the addition of stabilizing fins, flechette rounds are slightly less accurate than normal rounds. <br/><Bullet/> Flechette rounds are particularly useful against armored enemies such as MECs. <br/>"
 
 [HollowPointRounds X2AmmoTemplate]
 FriendlyName="Hollow-Point Rounds"
 FriendlyNamePlural="Hollow-Point Rounds"
-BriefSummary=""
+BriefSummary="Hollow-point rounds deal additional damage on critical hits."
 TacticalText="<Bullet/> Hollow-point ammunition expands inside the target, dealing greater damage to soft flesh and fragile electronic components. <br/>"
+
+[ShadowOps_TigerRounds X2AmmoTemplate]
+FriendlyName="Tiger Rounds"
+FriendlyNamePlural="Tiger Rounds"
+BriefSummary="Study of the armor ADVENT units use in the field has led to the development of improved ammunition capable of shredding alloy armor."
+TacticalText="<Bullet/> Tiger rounds contain a miniature shaped charge designed to shred armor. <br/><Bullet/> These rounds have no special effect on unarmored targets. <br/>"
 
 [ReinforcedVest X2EquipmentTemplate]
 FriendlyName="Reinforced Vest"

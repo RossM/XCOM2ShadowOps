@@ -2,6 +2,7 @@ class X2Item_Ammo_BO extends X2Item config(GameData_WeaponData);
 
 var config int FlechetteDamageModifier, FlechetteHitModifier;
 var config int HollowPointCritDamageModifier;
+var config int TigerShred;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -9,6 +10,7 @@ static function array<X2DataTemplate> CreateTemplates()
 
 	Templates.AddItem(CreateFlechetteRounds());
 	Templates.AddItem(CreateHollowPointRounds());
+	Templates.AddItem(CreateTigerRounds());
 
 	return Templates;
 }
@@ -64,3 +66,36 @@ static function X2DataTemplate CreateHollowPointRounds()
 	return Template;
 }
 
+static function X2DataTemplate CreateTigerRounds()
+{
+	local X2AmmoTemplate Template;
+	local WeaponDamageValue DamageValue;
+	local ArtifactCost Resources;
+
+	`CREATE_X2TEMPLATE(class'X2AmmoTemplate', Template, 'ShadowOps_TigerRounds');
+	Template.strImage = "img:///UILibrary_BlackOps.X2InventoryIcons.Inv_Tiger_Rounds";
+	DamageValue.Shred = default.TigerShred;
+	Template.AddAmmoDamageModifier(none, DamageValue);
+	Template.TradingPostValue = 15;
+	Template.PointsToComplete = 0;
+	Template.Tier = 1;
+	Template.EquipSound = "StrategyUI_Ammo_Equip";
+
+	Template.StartingItem = false;
+	Template.CanBeBuilt = true;
+
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.ShredLabel, , default.TigerShred);
+
+	//FX Reference
+	Template.GameArchetype = "Ammo_Incendiary.PJ_Incendiary";
+
+	// Requirements
+	Template.Requirements.RequiredTechs.AddItem('HybridMaterials');
+
+	// Cost
+	Resources.ItemTemplateName = 'Supplies';
+	Resources.Quantity = 40;
+	Template.Cost.ResourceCosts.AddItem(Resources);
+	
+	return Template;
+}
