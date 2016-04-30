@@ -1,6 +1,31 @@
 class X2TacticalGameRuleset_BO extends X2TacticalGameRuleset;
 
-// Modified for Rocketeer and Packmaster abilities
+simulated function AddUniversalAbilities(out array<AbilitySetupData> AbilityData)
+{
+	local name AbilityName;
+	local AbilitySetupData Data, EmptyData;
+	local X2AbilityTemplateManager AbilityTemplateMan;
+	local X2AbilityTemplate	AbilityTemplate;
+
+	AbilityTemplateMan = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+
+	foreach class'XModBase_Config'.default.UniversalAbilitySet(AbilityName)
+	{
+		AbilityTemplate = AbilityTemplateMan.FindAbilityTemplate(AbilityName);
+		if (AbilityTemplate != none && !AbilityTemplate.bUniqueSource || AbilityData.Find('TemplateName', AbilityTemplate.DataName) == INDEX_NONE)
+		{
+			Data = EmptyData;
+			Data.TemplateName = AbilityName;
+			Data.Template = AbilityTemplate;
+			AbilityData.AddItem(Data);
+		}
+		else if (AbilityTemplate == none)
+		{
+			`RedScreen("UniversalAbilitySet array specifies unknown ability:" @ AbilityName);
+		}
+	}
+}
+
 simulated function InitializeUnitAbilities(XComGameState NewGameState, XComGameState_Unit NewUnit)
 {		
 	local XComGameState_Player kPlayer;
@@ -19,6 +44,8 @@ simulated function InitializeUnitAbilities(XComGameState NewGameState, XComGameS
 
 	kPlayer = XComGameState_Player(CachedHistory.GetGameStateForObjectID(NewUnit.ControllingPlayer.ObjectID));			
 	AbilityData = NewUnit.GatherUnitAbilitiesForInit(NewGameState, kPlayer);
+
+	AddUniversalAbilities(AbilityData);
 
 	// Add bonus item charges from any X2Effect_BonusItemCharges
 	for (i = 0; i < AbilityData.Length; ++i)

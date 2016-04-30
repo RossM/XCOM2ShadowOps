@@ -2200,6 +2200,9 @@ Beta version v0.1
     <Content Include="Src\XModBase\Classes\X2TargetingMethod_Grenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_BonusItemCharges.uc">
       <SubType>Content</SubType>
     </Content>
