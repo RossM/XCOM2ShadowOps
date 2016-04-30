@@ -18,7 +18,7 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 	{
 		SourceUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
-		if (SourceUnit.HasSoldierAbility('DenseSmoke'))
+		if (SourceUnit.HasSoldierAbility('ShadowOps_DenseSmoke'))
 		{
 			AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 			AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('DenseSmoke');
