@@ -39,11 +39,15 @@ Beta version v0.1
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
     <Folder Include="Src\" />
+    <Folder Include="Src\XModBase" />
+    <Folder Include="Src\XModBase\Classes" />
+    <Folder Include="Src\XModBase_Interfaces" />
     <Folder Include="Src\ShadowOps\Classes\" />
     <Folder Include="Src\XComGame\" />
     <Folder Include="Src\XComGame\Classes\" />
     <Folder Include="Src\ShadowOps" />
     <Folder Include="Src\ShadowOps\Classes" />
+    <Folder Include="Src\XModBase_Interfaces\Classes" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\XComAI.ini">
@@ -68,6 +72,9 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Localization\ShadowOps.int">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\XModBase.int">
       <SubType>Content</SubType>
     </Content>
     <Content Include="ReadMe.txt" />
@@ -118,13 +125,7 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2AbilityMultiTarget_SoldierBonusRadius_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_StandardAim_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_DragoonAbilitySet.uc">
@@ -162,9 +163,6 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Assassin.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_BonusItemCharges.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Breach.uc">
@@ -209,9 +207,6 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_PersistentBonus.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_BonusRadius.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_RangerStealth_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -245,9 +240,6 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_VitalPoint.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_XModBase.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_ZeroIn.uc">
       <SubType>Content</SubType>
     </Content>
@@ -257,13 +249,7 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Item_Armor_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2TacticalGameRuleset_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2TargetingMethod_Breach.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2TargetingMethod_Grenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\XComGameState_Ability_BO.uc">
@@ -2202,6 +2188,27 @@ Beta version v0.1
     <Content Include="Src\XComGame\Classes\XGWeapon.uc" />
     <Content Include="Src\XComGame\Classes\XLocalizedData.uc" />
     <Content Include="Src\XComGame\Classes\XpEventData.uc" />
+    <Content Include="Src\XModBase\Classes\X2AbilityMultiTarget_SoldierBonusRadius_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase\Classes\X2AbilityToHitCalc_StandardAim_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase\Classes\X2TacticalGameRuleset_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase\Classes\X2TargetingMethod_Grenade_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_BonusItemCharges.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_BonusRadius.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_XModBase.uc">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
 </Project>
