@@ -86,7 +86,7 @@ static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, EC
 	local X2WeaponTemplate WeaponTemplate;
 
 	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
-	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == 'rifle' && Unit.HasSoldierAbility('ShadowOps_Finesse'))
+	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == class'X2Ability_DragoonAbilitySet'.default.FinesseWeaponCat && Unit.HasSoldierAbility('ShadowOps_Finesse'))
 	{
 		if (Stat == eStat_Mobility)
 			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseMobilityBonus;
