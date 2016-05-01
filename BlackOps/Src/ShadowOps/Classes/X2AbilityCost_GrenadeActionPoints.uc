@@ -34,7 +34,7 @@ simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XCo
 		}
 		for (i = 0; i < DoNotConsumeAllSoldierAbilities.Length; ++i)
 		{
-			if (DoNotConsumeAllSoldierAbilities[i] == 'SmokeAndMirrors')
+			if (DoNotConsumeAllSoldierAbilities[i] == 'ShadowOps_SmokeAndMirrors')
 				continue;
 			if (AbilityOwner.HasSoldierAbility(DoNotConsumeAllSoldierAbilities[i]))
 				return false;
