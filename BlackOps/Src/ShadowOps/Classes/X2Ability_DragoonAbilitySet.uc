@@ -245,12 +245,14 @@ static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit 
 			XComHQ.PutItemInInventory(NewGameState, RelevantItem);
 		}
 
+		BestWeaponTemplate = X2WeaponTemplate(class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate('AssaultRifle_CV'));
+
 		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
 			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
 			WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
 
-			if (WeaponTemplate != none && WeaponTemplate.bInfiniteItem && WeaponTemplate.WeaponCat == 'rifle' && (BestWeaponTemplate == none || (WeaponTemplate.Tier >= BestWeaponTemplate.Tier)))
+			if (WeaponTemplate != none && (WeaponTemplate.bInfiniteItem || WeaponTemplate.StartingItem) && WeaponTemplate.WeaponCat == 'rifle' && (BestWeaponTemplate == none || (WeaponTemplate.Tier >= BestWeaponTemplate.Tier)))
 			{
 				BestWeaponTemplate = WeaponTemplate;
 			}
