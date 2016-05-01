@@ -11,6 +11,7 @@ simulated function bool EquipItem(UIArmory_LoadoutItem Item)
 	local array<XComGameState_Item> PrevUtilityItems;
 	local XComGameState_Unit UpdatedUnit;
 	local XComGameState UpdatedState;
+	local X2EquipmentTemplate EquipmentTemplate;
 
 	UpdatedState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Equip Item");
 	UpdatedUnit = XComGameState_Unit(UpdatedState.CreateStateObject(class'XComGameState_Unit', GetUnit().ObjectID));
@@ -74,6 +75,13 @@ simulated function bool EquipItem(UIArmory_LoadoutItem Item)
 			if( PrevItem != none )
 			{
 				XComHQ.PutItemInInventory(UpdatedState, PrevItem);
+			}
+
+			EquipmentTemplate = X2EquipmentTemplate(Item.ItemTemplate);
+			if (EquipmentTemplate != none && (EquipmentTemplate.InventorySlot == eInvSlot_PrimaryWeapon || EquipmentTemplate.InventorySlot == eInvSlot_SecondaryWeapon))
+			{
+				NewItem.WeaponAppearance.iWeaponTint = UpdatedUnit.kAppearance.iWeaponTint;
+				NewItem.WeaponAppearance.nmWeaponPattern = UpdatedUnit.kAppearance.nmWeaponPattern;
 			}
 
 			if(class'XComGameState_HeadquartersXCom'.static.GetObjectiveStatus('T0_M5_EquipMedikit') == eObjectiveState_InProgress &&
