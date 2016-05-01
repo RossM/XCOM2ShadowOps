@@ -6,6 +6,7 @@ var config int ConventionalShieldProtocol, MagneticShieldProtocol, BeamShieldPro
 var config int ConventionalShieldsUp, MagneticShieldsUp, BeamShieldsUp;
 var config int HeavyArmorBase, HeavyArmorBonus;
 var config int FinesseMobilityBonus, FinesseOffenseBonus;
+var config name FinesseWeaponCat, FinesseDefaultWeapon;
 var config int BurstFireHitMod, BurstFireEnvironmentalDamage;
 var config float ECMDetectionModifier;
 var config int TacticalSenseDodgeBonus, TacticalSenseMaxDodgeBonus;
@@ -197,7 +198,7 @@ static function X2AbilityTemplate Finesse()
 
 	Condition = new class'X2Condition_UnitInventory';
 	Condition.RelevantSlot = eInvSlot_PrimaryWeapon;
-	Condition.RequireWeaponCategory = 'rifle';
+	Condition.RequireWeaponCategory = default.FinesseWeaponCat;
 	Template.AbilityTargetConditions.AddItem(Condition);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -237,7 +238,7 @@ static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit 
 	if (RelevantItem != none)
 		WeaponTemplate = X2WeaponTemplate(RelevantItem.GetMyTemplate());
 
-	if (WeaponTemplate == none || WeaponTemplate.WeaponCat != 'rifle')
+	if (WeaponTemplate == none || WeaponTemplate.WeaponCat != default.FinesseWeaponCat)
 	{
 		if (RelevantItem != none)
 		{
@@ -245,14 +246,14 @@ static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit 
 			XComHQ.PutItemInInventory(NewGameState, RelevantItem);
 		}
 
-		BestWeaponTemplate = X2WeaponTemplate(class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate('AssaultRifle_CV'));
+		BestWeaponTemplate = X2WeaponTemplate(class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate(default.FinesseDefaultWeapon));
 
 		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
 			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
 			WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
 
-			if (WeaponTemplate != none && (WeaponTemplate.bInfiniteItem || WeaponTemplate.StartingItem) && WeaponTemplate.WeaponCat == 'rifle' && (BestWeaponTemplate == none || (WeaponTemplate.Tier >= BestWeaponTemplate.Tier)))
+			if (WeaponTemplate != none && (WeaponTemplate.bInfiniteItem || WeaponTemplate.StartingItem) && WeaponTemplate.WeaponCat == default.FinesseWeaponCat && (BestWeaponTemplate == none || (WeaponTemplate.Tier >= BestWeaponTemplate.Tier)))
 			{
 				BestWeaponTemplate = WeaponTemplate;
 			}
