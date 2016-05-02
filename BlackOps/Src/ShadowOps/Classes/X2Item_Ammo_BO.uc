@@ -21,6 +21,7 @@ static function X2AmmoTemplate CreateFlechetteRounds()
 {
 	local X2AmmoTemplate Template;
 	local WeaponDamageValue DamageValue;
+	local ArtifactCost Resources;
 
 	`CREATE_X2TEMPLATE(class'X2AmmoTemplate', Template, 'FlechetteRounds');
 	Template.strImage = "img:///UILibrary_StrategyImages.X2InventoryIcons.Inv_Flechette_Rounds";
@@ -32,13 +33,21 @@ static function X2AmmoTemplate CreateFlechetteRounds()
 	Template.Tier = 0;
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
-	Template.StartingItem = true;
-	Template.CanBeBuilt = false;
+	Template.StartingItem = false;
+	Template.CanBeBuilt = true;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.DamageBonusLabel, , default.FlechetteDamageModifier);
 
 	//FX Reference
 	Template.GameArchetype = "Ammo_Flechette.PJ_Flechette";
+	
+	// Requirements
+	Template.Requirements.RequiredTechs.AddItem('ModularWeapons');
+
+	// Cost
+	Resources.ItemTemplateName = 'Supplies';
+	Resources.Quantity = 25;
+	Template.Cost.ResourceCosts.AddItem(Resources);
 	
 	return Template;
 }

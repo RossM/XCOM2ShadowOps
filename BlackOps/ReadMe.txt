@@ -4,7 +4,8 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 
 Beta version v0.5
 Item changes
-  * Flechette rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 at maximum visual range.
+  * Flechette Rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 at maximum visual range.
+  * Flechette Rounds now requires Modular Weapons tech and costs 25 resources to build.
 
 Beta version v0.4
 General changes
