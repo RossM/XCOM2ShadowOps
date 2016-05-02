@@ -378,19 +378,28 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	// Apply final modifiers. These can read the whole shot breakdown. To avoid ordering issues with them reading the breakdown,
 	// we collect all the modifiers first and then apply them together.
 	FinalEffectModifiers.Length = 0;
+	UniqueToHitEffects.Length = 0;
 	foreach UnitState.AffectedByEffects(EffectRef)
 	{
 		EffectModifiers.Length = 0;
 		EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
 		PersistentEffect = EffectState.GetX2Effect();
+		if (UniqueToHitEffects.Find(PersistentEffect) != INDEX_NONE)
+			continue;
 
 		XModBaseEffect = X2Effect_XModBase(PersistentEffect);
 		if (XModBaseEffect != none)
 		{
 			XModBaseEffect.GetFinalToHitModifiers(EffectState, UnitState, TargetState, kAbility, self.Class, bMeleeAttack, bFlanking, bIndirectFire, m_ShotBreakdown, EffectModifiers);
-			for (i = 0; i < EffectModifiers.Length; ++i)
+			if (EffectModifiers.Length > 0)
 			{
-				FinalEffectModifiers.AddItem(EffectModifiers[i]);
+				if (PersistentEffect.UniqueToHitAsTargetModifiers())
+					UniqueToHitEffects.AddItem(PersistentEffect);
+
+				for (i = 0; i < EffectModifiers.Length; ++i)
+				{
+					FinalEffectModifiers.AddItem(EffectModifiers[i]);
+				}
 			}
 		}
 	}
