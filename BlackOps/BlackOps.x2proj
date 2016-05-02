@@ -68,13 +68,13 @@ Beta version v0.1
     <Content Include="Config\XComGameData_WeaponData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\XComModOptions.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Content\UILibrary_BlackOps.upk">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Localization\ShadowOps.int">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Localization\XModBase.int">
       <SubType>Content</SubType>
     </Content>
     <Content Include="ReadMe.txt" />

@@ -1,11 +1,5 @@
 class X2AbilityToHitCalc_StandardAim_BO extends X2AbilityToHitCalc_StandardAim config(GameCore);
 
-var localized string LowHitChanceCritModifier;
-var localized string CritImmuneModifier;
-
-var config float MinimumHitChanceForNoCritPenalty;
-var config float HitChanceCritPenaltyScale;
-
 protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTarget kTarget, optional bool bDebugLog=false)
 {
 	local XComGameState_Unit UnitState, TargetState;
@@ -14,7 +8,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	local array<X2WeaponUpgradeTemplate> WeaponUpgrades;
 	local int i, iWeaponMod, iRangeModifier, Tiles;
 	local ShotBreakdown EmptyShotBreakdown;
-	local array<ShotModifierInfo> EffectModifiers;
+	local array<ShotModifierInfo> EffectModifiers, FinalEffectModifiers;
 	local StateObjectReference EffectRef;
 	local XComGameState_Effect EffectState;
 	local XComGameStateHistory History;
@@ -376,12 +370,28 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 		AddModifier(-int(FinalAdjust), AbilityTemplate.LocFriendlyName);
 	}
 
-	// Rules change: Hit chances below 85 cause a penalty to crit chance.
-	if (m_ShotBreakdown.ResultTable[eHit_Success] < default.MinimumHitChanceForNoCritPenalty)
+	// Apply final modifiers. These can read the whole shot breakdown. To avoid ordering issues with them reading the breakdown,
+	// we collect all the modifiers first and then apply them together.
+	FinalEffectModifiers.Length = 0;
+	foreach UnitState.AffectedByEffects(EffectRef)
 	{
-		FinalAdjust = (default.MinimumHitChanceForNoCritPenalty - m_ShotBreakdown.ResultTable[eHit_Success]) * default.HitChanceCritPenaltyScale;
-		FinalAdjust = min(FinalAdjust, m_ShotBreakdown.ResultTable[eHit_Crit]);
-		AddModifier(-int(FinalAdjust), LowHitChanceCritModifier, eHit_Crit);
+		EffectModifiers.Length = 0;
+		EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
+		PersistentEffect = EffectState.GetX2Effect();
+
+		XModBaseEffect = X2Effect_XModBase(PersistentEffect);
+		if (XModBaseEffect != none)
+		{
+			XModBaseEffect.GetFinalToHitModifiers(EffectState, UnitState, TargetState, kAbility, self.Class, bMeleeAttack, bFlanking, bIndirectFire, m_ShotBreakdown, EffectModifiers);
+			for (i = 0; i < EffectModifiers.Length; ++i)
+			{
+				FinalEffectModifiers.AddItem(EffectModifiers[i]);
+			}
+		}
+	}
+	for (i = 0; i < FinalEffectModifiers.Length; ++i)
+	{
+		AddModifier(EffectModifiers[i].Value, EffectModifiers[i].Reason, EffectModifiers[i].ModType);
 	}
 
 	FinalizeHitChance();

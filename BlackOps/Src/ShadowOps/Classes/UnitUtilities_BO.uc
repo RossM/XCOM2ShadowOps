@@ -1,4 +1,4 @@
-class UnitUtilities_BO extends Object config(GameCore);
+class UnitUtilities_BO extends Object config(ModOptions);
 
 var config bool bDisplaySubclassNames;
 
