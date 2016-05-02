@@ -71,6 +71,9 @@ Beta version v0.1
     <Content Include="Config\XComModOptions.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Content\Perk_ShadowOps_ShieldProtocol.upk">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Content\UILibrary_BlackOps.upk">
       <SubType>Content</SubType>
     </Content>
