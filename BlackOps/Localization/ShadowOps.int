@@ -1,6 +1,8 @@
 [X2Ability_HunterAbilitySet]
 FadePenaltyText="This unit's concealment will be broken if it moves."
 SnapShotPenaltyText="This unit has an aim penalty for overwatching with a single action."
+BullseyePenaltyName="Rattled"
+BullseyePenaltyText="This unit has -20 penalties to Aim, Defense and Will."
 
 [X2Effect_Universal_BO]
 LowHitChanceCritModifier="Hit chance"

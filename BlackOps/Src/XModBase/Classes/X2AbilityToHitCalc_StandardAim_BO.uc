@@ -141,6 +141,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 				}
 				//  Target defense
 				AddModifier(-TargetState.GetBaseStat(eStat_Defense), class'XLocalizedData'.default.DefenseStat);			
+				TargetState.GetStatModifiers(eStat_Defense, StatMods, StatModValues);
 				for (i = 0; i < StatMods.Length; ++i)
 				{
 					AddModifier(-int(StatModValues[i]), StatMods[i].GetX2Effect().FriendlyName);

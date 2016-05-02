@@ -1,7 +1,7 @@
 class X2Ability_HunterAbilitySet extends X2Ability
 	config(GameData_SoldierSkills);
 
-var localized string FadePenaltyText, SnapShotPenaltyText;
+var localized string FadePenaltyText, SnapShotPenaltyText, BullseyePenaltyName, BullseyePenaltyText;
 
 var config int SnapShotHitModifier;
 var config int HunterMarkHitModifier;
@@ -1007,7 +1007,7 @@ static function X2AbilityTemplate Bullseye()
 	StatChangeEffect = new class'X2Effect_PersistentStatChange';
 	StatChangeEffect.EffectName = 'Bullseye';
 	StatChangeEffect.BuildPersistentEffect(1, true, true, true);
-	StatChangeEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	StatChangeEffect.SetDisplayInfo(ePerkBuff_Penalty, default.BullseyePenaltyName, default.BullseyePenaltyText, Template.IconImage,,,Template.AbilitySourceName);
 	StatChangeEffect.AddPersistentStatChange(eStat_Offense, default.BullseyeOffensePenalty);
 	StatChangeEffect.AddPersistentStatChange(eStat_Defense, default.BullseyeDefensePenalty);
 	StatChangeEffect.AddPersistentStatChange(eStat_Will, default.BullseyeWillPenalty);
