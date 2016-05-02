@@ -140,7 +140,11 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 					}
 				}
 				//  Target defense
-				AddModifier(-TargetState.GetCurrentStat(eStat_Defense), class'XLocalizedData'.default.DefenseStat);			
+				AddModifier(-TargetState.GetBaseStat(eStat_Defense), class'XLocalizedData'.default.DefenseStat);			
+				for (i = 0; i < StatMods.Length; ++i)
+				{
+					AddModifier(-int(StatModValues[i]), StatMods[i].GetX2Effect().FriendlyName);
+				}
 				
 				//  Add weapon range
 				if (SourceWeapon != none)
