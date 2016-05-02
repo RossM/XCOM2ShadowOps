@@ -26,26 +26,13 @@ simulated function AddUniversalAbilities(out array<AbilitySetupData> AbilityData
 	}
 }
 
-simulated function InitializeUnitAbilities(XComGameState NewGameState, XComGameState_Unit NewUnit)
-{		
-	local XComGameState_Player kPlayer;
-	local int i, j;
-	local array<AbilitySetupData> AbilityData;
-	local bool bIsMultiplayer;
+simulated function AddBonusItemCharges(XComGameState NewGameState, XComGameState_Unit NewUnit, out array<AbilitySetupData> AbilityData)
+{
 	local X2AbilityTemplate AbilityTemplate;
 	local X2Effect Effect;
 	local X2Effect_BonusItemCharges AmmoEffect;
 	local XComGameState_Item ItemIter;
-
-	`assert(NewGameState != none);
-	`assert(NewUnit != None);
-
-	bIsMultiplayer = class'Engine'.static.GetEngine().IsMultiPlayerGame();
-
-	kPlayer = XComGameState_Player(CachedHistory.GetGameStateForObjectID(NewUnit.ControllingPlayer.ObjectID));			
-	AbilityData = NewUnit.GatherUnitAbilitiesForInit(NewGameState, kPlayer);
-
-	AddUniversalAbilities(AbilityData);
+	local int i, j;
 
 	// Add bonus item charges from any X2Effect_BonusItemCharges
 	for (i = 0; i < AbilityData.Length; ++i)
@@ -71,6 +58,26 @@ simulated function InitializeUnitAbilities(XComGameState NewGameState, XComGameS
 			}
 		}
 	}
+}
+
+simulated function InitializeUnitAbilities(XComGameState NewGameState, XComGameState_Unit NewUnit)
+{		
+	local XComGameState_Player kPlayer;
+	local int i;
+	local array<AbilitySetupData> AbilityData;
+	local bool bIsMultiplayer;
+	local X2AbilityTemplate AbilityTemplate;
+
+	`assert(NewGameState != none);
+	`assert(NewUnit != None);
+
+	bIsMultiplayer = class'Engine'.static.GetEngine().IsMultiPlayerGame();
+
+	kPlayer = XComGameState_Player(CachedHistory.GetGameStateForObjectID(NewUnit.ControllingPlayer.ObjectID));			
+	AbilityData = NewUnit.GatherUnitAbilitiesForInit(NewGameState, kPlayer);
+
+	AddUniversalAbilities(AbilityData);
+	AddBonusItemCharges(NewGameState, NewUnit, AbilityData);
 
 	for (i = 0; i < AbilityData.Length; ++i)
 	{
