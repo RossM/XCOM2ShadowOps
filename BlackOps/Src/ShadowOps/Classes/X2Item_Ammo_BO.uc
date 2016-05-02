@@ -36,7 +36,6 @@ static function X2AmmoTemplate CreateFlechetteRounds()
 	Template.CanBeBuilt = false;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.DamageBonusLabel, , default.FlechetteDamageModifier);
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.AimLabel, eStat_Offense, default.FlechetteHitModifier);
 
 	//FX Reference
 	Template.GameArchetype = "Ammo_Flechette.PJ_Flechette";

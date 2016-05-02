@@ -584,8 +584,8 @@ RightAbilityTreeTitle="Sapper (OLD)"
 [FlechetteRounds X2AmmoTemplate]
 FriendlyName="Flechette Rounds"
 FriendlyNamePlural="Flechette Rounds"
-BriefSummary="Flecette rounds deal additional damage, but have a reduced hit chance."
-TacticalText="<Bullet/> Flechette rounds are essentially small darts. They pierce both armor and flesh more effectively than standard bullets. <br/><Bullet/> Despite the addition of stabilizing fins, flechette rounds are slightly less accurate than normal rounds. <br/><Bullet/> Flechette rounds are particularly useful against armored enemies such as MECs. <br/>"
+BriefSummary="Flecette rounds deal additional damage, but have a penalty to hit chance that increases with range."
+TacticalText="<Bullet> Flechette rounds deal additional damage, but have a penalty to hit chance that increases with range. <br/><Bullet/> Flechette rounds are essentially small darts. They pierce both armor and flesh more effectively than standard bullets. <br/><Bullet/> Despite the addition of stabilizing fins, flechette rounds are slightly less accurate than normal rounds, especially at long range. <br/><Bullet/> Flechette rounds are particularly useful against armored enemies such as MECs. <br/>"
 
 [HollowPointRounds X2AmmoTemplate]
 FriendlyName="Hollow-Point Rounds"

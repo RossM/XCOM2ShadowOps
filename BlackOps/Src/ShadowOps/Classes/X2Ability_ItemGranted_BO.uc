@@ -31,7 +31,6 @@ static function X2AbilityTemplate FlechetteRounds()
 	Effect = new class'X2Effect_FlechetteRounds';
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, false);
-	Effect.AimMod = class 'X2Item_Ammo_BO'.default.FlechetteHitModifier;
 	Template.AddShooterEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;

@@ -2,6 +2,10 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.5
+Item changes
+  * Flechette rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 at maximum visual range.
+
 Beta version v0.4
 General changes
   * Improved compatibility with other mods.
