@@ -347,7 +347,6 @@ function HunterMark_BuildVisualization(XComGameState VisualizeGameState, out arr
 	local VisualizationTrack        EmptyTrack;
 	local VisualizationTrack        BuildTrack;
 	local Actor                     TargetVisualizer;
-	local X2VisualizerInterface     TargetVisualizerInterface;
 	local XComGameStateHistory      History;
 	local name						EffectApplyResult;
 	local X2Effect_Persistent		Effect;
