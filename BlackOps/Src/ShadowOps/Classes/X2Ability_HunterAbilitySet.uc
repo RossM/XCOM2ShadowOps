@@ -315,8 +315,7 @@ static function X2DataTemplate HunterMark()
 
 	Template.CustomFireAnim = 'HL_SignalPoint';
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
-	Template.BuildVisualizationFn = class'X2Ability_AdventCaptain'.static.TargetGettingMarked_BuildVisualization;
+	Template.BuildVisualizationFn = HunterMark_BuildVisualization;
 	Template.CinescriptCameraType = "Mark_Target";
 	
 	Template.bCrossClassEligible = true;
@@ -340,6 +339,44 @@ static function X2Effect_HunterMarked CreateMarkedEffect(int NumTurns, bool bIsI
 	MarkedEffect.AccuracyBonus = default.HunterMarkHitModifier;
 
 	return MarkedEffect;
+}
+
+function HunterMark_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{
+	local XComGameState_Effect		EffectState;
+	local VisualizationTrack        EmptyTrack;
+	local VisualizationTrack        BuildTrack;
+	local Actor                     TargetVisualizer;
+	local X2VisualizerInterface     TargetVisualizerInterface;
+	local XComGameStateHistory      History;
+	local name						EffectApplyResult;
+	local X2Effect_Persistent		Effect;
+	local XComGameStateContext_Ability  Context;
+	
+	TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);
+		
+	History = `XCOMHISTORY;
+	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+
+	//  We are assuming that any removed effects were cleansed by the RemoveEffects. If this turns out to not be a good assumption, something will have to change.
+	foreach VisualizeGameState.IterateByClassType(class'XComGameState_Effect', EffectState)
+	{
+		if (EffectState.bRemoved)
+		{
+			TargetVisualizer = History.GetVisualizer(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID);
+
+			BuildTrack = EmptyTrack;
+			BuildTrack.TrackActor = TargetVisualizer;
+			BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
+			BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID);
+
+			Effect = EffectState.GetX2Effect();
+			EffectApplyResult = Context.FindTargetEffectApplyResult(Effect);
+			Effect.AddX2ActionsForVisualization_Removed(VisualizeGameState, BuildTrack, EffectApplyResult, EffectState);
+
+			OutVisualizationTracks.AddItem(BuildTrack);
+		}
+	}		
 }
 
 static function X2AbilityTemplate VitalPoint()
