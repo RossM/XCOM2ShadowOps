@@ -96,6 +96,7 @@ static function X2AbilityTemplate ShieldProtocol()
 	Template.bStationaryWeapon = true;
 	Template.BuildNewGameStateFn = class'X2Ability_SpecialistAbilitySet'.static.AttachGremlinToTarget_BuildGameState;
 	Template.BuildVisualizationFn = class'X2Ability_SpecialistAbilitySet'.static.GremlinSingleTarget_BuildVisualization;
+	Template.bSkipPerkActivationActions = true;
 	Template.bShowActivation = true;
 	Template.PostActivationEvents.AddItem('ItemRecalled');
 
