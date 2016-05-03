@@ -11,6 +11,7 @@ Item changes
 Visual changes
   * Mark has an improved visualization.
   * Shield Protocol has an improved visualization.
+  * Changing equipped weapons will apply the soldier's custom weapon color and pattern.
 
 Beta version v0.4
 General changes
