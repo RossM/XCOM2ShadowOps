@@ -3,9 +3,14 @@
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
 Beta version v0.5
+General changes
+  * Mod configuration options are now in XComModOptions.ini (only bDisplaySubclassNames for now).
 Item changes
-  * Flechette Rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 at maximum visual range.
+  * Flechette Rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 near maximum visual range.
   * Flechette Rounds now requires Modular Weapons tech and costs 25 resources to build.
+Visual changes
+  * Mark has an improved visualization.
+  * Shield Protocol has an improved visualization.
 
 Beta version v0.4
 General changes
@@ -18,7 +23,7 @@ Ability changes
 Item changes
   * New item: Tiger Rounds. Unlocked with Hybrid Materials tech. Adds one point of armor shredding to weapon damage.
   * New item: Depleted Elerium Rounds. Unlocked with Elerium tech. Adds one point of damage and three points of shredding to weapon damage.
-  * Plated vest now requires 4 ADVENT Trooper corpses (up from 2).
+  * Plated Vest now requires 4 ADVENT Trooper corpses (up from 2).
 Visual changes
   * Integrated MachDelta's After Action Days Wounded mod.
 Bugfixes
