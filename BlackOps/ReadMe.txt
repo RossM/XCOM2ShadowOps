@@ -5,6 +5,8 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 Beta version v0.5
 General changes
   * Mod configuration options are now in XComModOptions.ini (only bDisplaySubclassNames for now).
+Ability changes
+  * Breach range reduced to 14 (from 18).
 Item changes
   * Flechette Rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 near maximum visual range.
   * Flechette Rounds now requires Modular Weapons tech and costs 25 resources to build.
