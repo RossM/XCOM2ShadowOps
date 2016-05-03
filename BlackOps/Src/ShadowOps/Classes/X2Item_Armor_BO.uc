@@ -1,4 +1,4 @@
-class X2Item_Armor_BO extends X2Item config(GameData_WeaponData);
+class X2Item_Armor_BO extends X2Item config(GameCore);
 
 var config int ReinforcedVestMitigationChance, ReinforcedVestMitigationAmount;
 
