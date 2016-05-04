@@ -41,12 +41,12 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 			WeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
 			if (WeaponTemplate != none)
 			{
-				Result = ConventionalBonusDamage;
+				Result = default.ConventionalBonusDamage;
 					
 				if (WeaponTemplate.WeaponTech == 'magnetic')
-					Result = MagneticBonusDamage;
+					Result = default.MagneticBonusDamage;
 				else if (WeaponTemplate.WeaponTech == 'beam')
-					Result = BeamBonusDamage;
+					Result = default.BeamBonusDamage;
 			}
 		}
 	}
@@ -69,12 +69,12 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 			WeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
 			if (WeaponTemplate != none)
 			{
-				Result = ConventionalBonusShred;
+				Result = default.ConventionalBonusShred;
 					
 				if (WeaponTemplate.WeaponTech == 'magnetic')
-					Result = MagneticBonusShred;
+					Result = default.MagneticBonusShred;
 				else if (WeaponTemplate.WeaponTech == 'beam')
-					Result = BeamBonusShred;
+					Result = default.BeamBonusShred;
 			}
 		}
 	}

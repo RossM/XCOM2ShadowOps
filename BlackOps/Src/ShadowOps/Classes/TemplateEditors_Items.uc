@@ -7,6 +7,7 @@ static function EditTemplates()
 	ChangeToStartingItem('NanofiberVest');
 	DisableItem('SmokeGrenadeMk2');
 	EditPlatedVest('PlatedVest');
+	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
 }
 
 static function ChangeToStartingItem(name ItemName)
@@ -74,4 +75,18 @@ static function DisableItem(name ItemName)
 	{
 		BaseTemplate.HideIfResearched = '';
 	}
+}
+
+static function ChangeWeaponTier(name ItemName, name WeaponTech)
+{
+	local X2ItemTemplateManager			ItemManager;
+	local X2WeaponTemplate				Template;
+	
+	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	Template = X2WeaponTemplate(ItemManager.FindItemTemplate(ItemName));
+
+	if (Template == none)
+		return;
+
+	Template.WeaponTech = WeaponTech;
 }
