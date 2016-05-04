@@ -13,7 +13,10 @@ Item changes
 Visual changes
   * Mark has an improved visualization.
   * Shield Protocol has an improved visualization.
+  * Tracking no longer applies a red outline to units it reveals.
   * Changing equipped weapons will apply the soldier's custom weapon color and pattern.
+Bugfixes
+  * Tracking correctly reveals Faceless inside its range.
 
 Beta version v0.4
 General changes

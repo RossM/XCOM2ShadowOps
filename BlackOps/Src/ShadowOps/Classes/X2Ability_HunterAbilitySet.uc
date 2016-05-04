@@ -939,33 +939,17 @@ static function X2AbilityTemplate TrackingTrigger()
 
 	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
 	RadiusMultiTarget.fTargetRadius = default.TrackingRadius;
-	RadiusMultiTarget.bIgnoreBlockingCover = true; // skip the cover checks, the squad viewer will handle this once selected
+	RadiusMultiTarget.bIgnoreBlockingCover = true;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	TargetProperty = new class'X2Condition_UnitProperty';
 	TargetProperty.ExcludeDead = true;
 	TargetProperty.FailOnNonUnits = true;
+	TargetProperty.ExcludeFriendlyToSource = false;
 	Template.AbilityMultiTargetConditions.AddItem(TargetProperty);
 
 	TrackingEffect = new class'X2Effect_Tracking';
 	TrackingEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
-	TrackingEffect.TargetConditions.AddItem(default.LivingHostileUnitOnlyProperty);
-	Template.AddMultiTargetEffect(TrackingEffect);
-
-	TrackingEffect = new class'X2Effect_Tracking';
-	TrackingEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
-	TargetProperty = new class'X2Condition_UnitProperty';
-	TargetProperty.ExcludeNonCivilian = true;
-	TargetProperty.ExcludeHostileToSource = false;
-	TargetProperty.ExcludeFriendlyToSource = false;
-	TrackingEffect.TargetConditions.AddItem(TargetProperty);
-	Template.AddMultiTargetEffect(TrackingEffect);
-
-	TrackingEffect = new class'X2Effect_Tracking';
-	TrackingEffect.bFlyover = true;
-	TrackingEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
-	TrackingEffect.TargetConditions.AddItem(default.LivingHostileUnitOnlyProperty);
-	TrackingEffect.TargetConditions.AddItem(new class'X2Condition_NotVisibleToEnemies');
 	Template.AddMultiTargetEffect(TrackingEffect);
 
 	EventListener = new class'X2AbilityTrigger_EventListener';
