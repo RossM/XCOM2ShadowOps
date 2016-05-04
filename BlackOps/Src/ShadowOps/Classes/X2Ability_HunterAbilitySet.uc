@@ -36,6 +36,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SliceAndDice2());
 	Templates.AddItem(Tracking());
 	Templates.AddItem(TrackingTrigger());
+	Templates.AddItem(TrackingSpawnTrigger());
 	Templates.AddItem(Bullseye());
 	Templates.AddItem(FirstStrike());
 	Templates.AddItem(DamnGoodGround());
@@ -911,6 +912,7 @@ static function X2AbilityTemplate Tracking()
 	local X2AbilityTemplate						Template;
 	Template = PurePassive('ShadowOps_Tracking', "img:///UILibrary_PerkIcons.UIPerk_observer", true);
 	Template.AdditionalAbilities.AddItem('ShadowOps_TrackingTrigger');
+	Template.AdditionalAbilities.AddItem('ShadowOps_TrackingSpawnTrigger');
 
 	return Template;
 }
@@ -957,6 +959,59 @@ static function X2AbilityTemplate TrackingTrigger()
 	EventListener.ListenerData.EventID = 'UnitMoveFinished';
 	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
 	EventListener.ListenerData.Filter = eFilter_Unit;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	Template.bSkipFireAction = true;
+	Template.bSkipPerkActivationActions = true;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;
+}
+
+// This triggers whenever a unit is spawned within tracking radius. The most likely
+// reason for this to happen is a Faceless transforming due to tracking being applied.
+// The newly spawned Faceless unit won't have the tracking effect when this happens,
+// so we apply it here.
+static function X2AbilityTemplate TrackingSpawnTrigger()
+{
+	local X2AbilityTemplate             Template;
+	local X2Effect_Tracking     TrackingEffect;
+	local X2Condition_UnitProperty      TargetProperty;
+	local X2AbilityTrigger_EventListener	EventListener;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TrackingSpawnTrigger');
+
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_observer";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+	Template.bDisplayInUITacticalText = false;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+
+	TargetProperty = new class'X2Condition_UnitProperty';
+	TargetProperty.ExcludeDead = true;
+	TargetProperty.FailOnNonUnits = true;
+	TargetProperty.ExcludeFriendlyToSource = false;
+	TargetProperty.RequireWithinRange = true;
+	TargetProperty.WithinRange = default.TrackingRadius * class'XComWorldData'.const.WORLD_METERS_TO_UNITS_MULTIPLIER;
+	Template.AbilityTargetConditions.AddItem(TargetProperty);
+
+	TrackingEffect = new class'X2Effect_Tracking';
+	TrackingEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
+	Template.AddTargetEffect(TrackingEffect);
+
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'UnitSpawned';
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.VoidRiftInsanityListener;
+	EventListener.ListenerData.Filter = eFilter_None;
 	Template.AbilityTriggers.AddItem(EventListener);
 
 	Template.bSkipFireAction = true;
