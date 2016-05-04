@@ -30,7 +30,7 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 		OutlineAction = X2Action_UpdateTracked(class'X2Action_UpdateTracked'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
 		OutlineAction.bEnableOutline = true;
 
-		if (UnitState.GetTeam() == eTeam_Alien && class'X2TacticalVisibilityHelpers'.static.GetNumEnemyViewersOfTarget(UnitState.ObjectID, VisualizeGameState.HistoryIndex) == 0)
+		if (UnitState.GetTeam() == eTeam_Alien && !class'X2TacticalVisibilityHelpers'.static.CanSquadSeeTarget(`TACTICALRULES.GetLocalClientPlayerObjectID(), UnitState.ObjectID))
 		{
 			AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(XComGameStateContext_Ability(VisualizeGameState.GetContext()).InputContext.AbilityTemplateName);
 			FlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
