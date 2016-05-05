@@ -144,7 +144,14 @@ LocFriendlyName="Barrage"
 LocLongDescription="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
 LocHelpText="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
 LocFlyOverText="Barrage"
-LocPromotionPopupText="<Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet> Barrage is less effective when used with an assault rifle. <br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_RifleBurstFire X2AbilityTemplate]
+LocFriendlyName="Barrage (Rifle)"
+LocLongDescription="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
+LocHelpText="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
+LocFlyOverText="Barrage"
+LocPromotionPopupText="<Bullet> Barrage is less effective when used with an assault rifle. <br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
 LocFriendlyName="Shields Up"

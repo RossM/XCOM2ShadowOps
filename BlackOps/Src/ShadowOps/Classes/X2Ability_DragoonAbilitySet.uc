@@ -7,7 +7,7 @@ var config int ConventionalShieldsUp, MagneticShieldsUp, BeamShieldsUp;
 var config int HeavyArmorBase, HeavyArmorBonus;
 var config int FinesseMobilityBonus, FinesseOffenseBonus;
 var config name FinesseWeaponCat, FinesseDefaultWeapon;
-var config int BurstFireHitMod, BurstFireEnvironmentalDamage;
+var config int BurstFireHitMod, BurstFireEnvironmentalDamage, BurstFireCoverDestructionChance, RifleBurstFireCoverDestructionChance;
 var config float ECMDetectionModifier;
 var config int TacticalSenseDodgeBonus, TacticalSenseMaxDodgeBonus;
 var config int RestorationHealAmount, RestorationMaxHealAmount, RestorationIncreasedHealAmount, RestorationHealingBonusMultiplier;
@@ -15,7 +15,7 @@ var config name RestorationIncreasedHealProject;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
-var config int BurstFireAmmo;
+var config int BurstFireAmmo, RifleBurstFireAmmo;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -26,6 +26,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Finesse());
 	Templates.AddItem(StealthProtocol());
 	Templates.AddItem(BurstFire());
+	Templates.AddItem(RifleBurstFire());
 	Templates.AddItem(ShieldsUp());
 	Templates.AddItem(ShieldsUpTrigger());
 	Templates.AddItem(ECM());
@@ -366,12 +367,14 @@ static function X2AbilityTemplate BurstFire()
 	local X2AbilityToHitCalc_StandardAim		ToHitCalc;
 	local X2AbilityTarget_Cursor				CursorTarget;
 	local X2AbilityMultiTarget_Line				LineMultiTarget;
+	local X2Condition_UnitInventory				InventoryCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_BurstFire');
 
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WeaponIncompatible');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_barage";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
@@ -412,7 +415,12 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
 
-	WorldDamage = new class'X2Effect_ApplyDirectionalWorldDamage';
+	InventoryCondition = new class'X2Condition_UnitInventory';
+	InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
+	InventoryCondition.ExcludeWeaponCategory = 'rifle';
+	Template.AbilityShooterConditions.AddItem(InventoryCondition);
+
+	WorldDamage = new class'X2Effect_MaybeApplyDirectionalWorldDamage';
 	WorldDamage.bUseWeaponDamageType = true;
 	WorldDamage.bUseWeaponEnvironmentalDamage = false;
 	WorldDamage.EnvironmentalDamageAmount = default.BurstFireEnvironmentalDamage;
@@ -423,7 +431,7 @@ static function X2AbilityTemplate BurstFire()
 	WorldDamage.bHitAdjacentDestructibles = true;
 	WorldDamage.PlusNumZTiles = 1;
 	WorldDamage.bHitTargetTile = true;
-	WorldDamage.ApplyChance = 100;
+	WorldDamage.ApplyChance = default.BurstFireCoverDestructionChance;
 	Template.AddMultiTargetEffect(WorldDamage);
 	
 	WeaponDamageEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
@@ -436,6 +444,98 @@ static function X2AbilityTemplate BurstFire()
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
 	Template.bCrossClassEligible = true;
+
+	Template.AdditionalAbilities.AddItem('ShadowOps_RifleBurstFire');
+
+	return Template;
+}
+
+static function X2AbilityTemplate RifleBurstFire()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityCost_ActionPoints			ActionPointCost;
+	local X2AbilityCost_Ammo					AmmoCost;
+	local X2Effect_ApplyWeaponDamage			WeaponDamageEffect;
+	local X2Effect_ApplyDirectionalWorldDamage  WorldDamage;
+	local X2AbilityCooldown						Cooldown;
+	local X2AbilityToHitCalc_StandardAim		ToHitCalc;
+	local X2AbilityTarget_Cursor				CursorTarget;
+	local X2AbilityMultiTarget_Line				LineMultiTarget;
+	local X2Condition_UnitInventory				InventoryCondition;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_RifleBurstFire');
+
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WeaponIncompatible');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_barage";
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+	Template.bLimitTargetIcons = true;
+
+	CursorTarget = new class'X2AbilityTarget_Cursor';
+	CursorTarget.bRestrictToWeaponRange = true;
+	Template.AbilityTargetStyle = CursorTarget;
+
+	LineMultiTarget = new class'X2AbilityMultiTarget_Line';
+	Template.AbilityMultiTargetStyle = LineMultiTarget;
+
+	Template.TargetingMethod = class'X2TargetingMethod_Line';
+
+	Template.CinescriptCameraType = "StandardGunFiring";	
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
+	ActionPointCost.bAddWeaponTypicalCost = true;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = default.BurstFireCooldown;
+	Template.AbilityCooldown = Cooldown;
+
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = default.RifleBurstFireAmmo;
+	Template.AbilityCosts.AddItem(AmmoCost);
+
+	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
+	ToHitCalc.bMultiTargetOnly = true;
+	ToHitCalc.BuiltInHitMod = default.BurstFireHitMod;
+	Template.AbilityToHitCalc = ToHitCalc;
+	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	InventoryCondition = new class'X2Condition_UnitInventory';
+	InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
+	InventoryCondition.RequireWeaponCategory = 'rifle';
+	Template.AbilityShooterConditions.AddItem(InventoryCondition);
+
+	WorldDamage = new class'X2Effect_MaybeApplyDirectionalWorldDamage';
+	WorldDamage.bUseWeaponDamageType = true;
+	WorldDamage.bUseWeaponEnvironmentalDamage = false;
+	WorldDamage.EnvironmentalDamageAmount = default.BurstFireEnvironmentalDamage;
+	WorldDamage.bApplyOnHit = true;
+	WorldDamage.bApplyOnMiss = true;
+	WorldDamage.bApplyToWorldOnHit = true;
+	WorldDamage.bApplyToWorldOnMiss = true;
+	WorldDamage.bHitAdjacentDestructibles = true;
+	WorldDamage.PlusNumZTiles = 1;
+	WorldDamage.bHitTargetTile = true;
+	WorldDamage.ApplyChance = default.RifleBurstFireCoverDestructionChance;
+	Template.AddMultiTargetEffect(WorldDamage);
+	
+	WeaponDamageEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
+	Template.AddMultiTargetEffect(WeaponDamageEffect);
+	Template.AddMultiTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
+	Template.bAllowAmmoEffects = true;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
 	return Template;
 }

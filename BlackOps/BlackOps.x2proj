@@ -222,6 +222,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_HunterMarked.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_MaybeApplyDirectionalWorldDamage.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_PersistentBonus.uc">
       <SubType>Content</SubType>
     </Content>

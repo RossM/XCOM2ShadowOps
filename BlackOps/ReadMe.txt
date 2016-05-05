@@ -8,6 +8,7 @@ General changes
 Ability changes
   * Breach range reduced to 14 (from 18).
   * Tracking range increased to 30 (was 27). It now detects units slightly, but only slightly, outside of visual range.
+  * Barrage now has only a 50% chance of damaging cover when used with a rifle. It still has a 100% chance when used with a cannon.
 Item changes
   * Flechette Rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 near maximum visual range.
   * Flechette Rounds now requires Modular Weapons tech and costs 25 resources to build.
