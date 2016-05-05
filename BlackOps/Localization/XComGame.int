@@ -234,7 +234,7 @@ LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as
 LocHelpText="Fire your <Ability:WeaponName/> as a single action with a small Aim penalty."
 LocFlyOverText="Snap Shot"
 
-[ShadowOps_SnapShotIcon X2AbilityTemplate]
+[ShadowOps_SnapShotShot X2AbilityTemplate]
 LocFriendlyName="Snap Shot"
 LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a -10 Aim penalty."
 LocHelpText="Fire your <Ability:WeaponName/> as a single action with a small Aim penalty."
