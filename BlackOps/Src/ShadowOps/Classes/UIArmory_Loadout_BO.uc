@@ -80,8 +80,11 @@ simulated function bool EquipItem(UIArmory_LoadoutItem Item)
 			EquipmentTemplate = X2EquipmentTemplate(Item.ItemTemplate);
 			if (EquipmentTemplate != none && (EquipmentTemplate.InventorySlot == eInvSlot_PrimaryWeapon || EquipmentTemplate.InventorySlot == eInvSlot_SecondaryWeapon))
 			{
-				NewItem.WeaponAppearance.iWeaponTint = UpdatedUnit.kAppearance.iWeaponTint;
-				NewItem.WeaponAppearance.nmWeaponPattern = UpdatedUnit.kAppearance.nmWeaponPattern;
+				if (NewItem.WeaponAppearance.iWeaponTint == 0 && NewItem.WeaponAppearance.nmWeaponPattern == '')
+				{
+					NewItem.WeaponAppearance.iWeaponTint = UpdatedUnit.kAppearance.iWeaponTint;
+					NewItem.WeaponAppearance.nmWeaponPattern = UpdatedUnit.kAppearance.nmWeaponPattern;
+				}
 			}
 
 			if(class'XComGameState_HeadquartersXCom'.static.GetObjectiveStatus('T0_M5_EquipMedikit') == eObjectiveState_InProgress &&
