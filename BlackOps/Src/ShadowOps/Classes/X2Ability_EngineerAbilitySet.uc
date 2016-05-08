@@ -138,7 +138,8 @@ static function X2AbilityTemplate Fastball()
 	
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bombard";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
 	Template.Hostility = eHostility_Neutral;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
 
@@ -153,6 +154,8 @@ static function X2AbilityTemplate Fastball()
 	
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.AbilityShooterConditions.AddItem(new class'X2Condition_HasGrenade');
 
 	TargetStyle = new class'X2AbilityTarget_Self';
 	Template.AbilityTargetStyle = TargetStyle;
