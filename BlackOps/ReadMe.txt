@@ -24,7 +24,7 @@ Visual changes
   * Mark has an improved visualization.
   * Shield Protocol has an improved visualization.
   * Tracking no longer applies a red outline to units it reveals.
-  * Changing equipped weapons will apply the soldier's custom weapon color and pattern.
+  * Changing equipped weapons will apply the soldier's custom weapon color and pattern if the new weapon doesn't have either.
   * Most Hunter abilities have new or improved icons.
 Bugfixes
   * Tracking correctly reveals Faceless inside its range.
