@@ -634,7 +634,7 @@ static function X2AbilityTemplate Assassin()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Assassin');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_executioner";
 	Template.AdditionalAbilities.AddItem('ShadowOps_AssassinTrigger');
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -674,7 +674,7 @@ static function X2AbilityTemplate AssassinTrigger()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_executioner";
 
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SelfTarget;
@@ -1131,7 +1131,7 @@ static function X2AbilityTemplate FirstStrike()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FirstStrike');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_executioner";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_firststrike";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
