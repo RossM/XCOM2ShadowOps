@@ -8,6 +8,7 @@ General changes
 Ability changes
   * Breach range reduced to 14 (from 18).
   * Tracking range increased to 30 (was 27). It now detects units slightly, but only slightly, outside of visual range.
+  * Tracking now works even if you don't move.
   * Barrage now has only a 50% chance of damaging cover when used with a rifle. It still has a 100% chance when used with a cannon.
 Item changes
   * Flechette Rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 near maximum visual range.
@@ -17,8 +18,10 @@ Visual changes
   * Shield Protocol has an improved visualization.
   * Tracking no longer applies a red outline to units it reveals.
   * Changing equipped weapons will apply the soldier's custom weapon color and pattern.
+  * Most Hunter abilities have new or improved icons.
 Bugfixes
   * Tracking correctly reveals Faceless inside its range.
+  * Assorted minor fixes.
 
 Beta version v0.4
 General changes
