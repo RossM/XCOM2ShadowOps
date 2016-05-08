@@ -396,7 +396,7 @@ static function X2AbilityTemplate VitalPoint()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_VitalPoint');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_momentum";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_vitalpoint";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -770,7 +770,7 @@ static function X2AbilityTemplate SliceAndDice()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.CinescriptCameraType = "Ranger_Reaper";
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_swordSlash";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_sliceanddice";
 	Template.bHideOnClassUnlock = false;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilityConfirmSound = "TacticalUI_SwordConfirm";
@@ -869,7 +869,7 @@ static function X2AbilityTemplate SliceAndDice2()
 	Template.CinescriptCameraType = "Ranger_Reaper";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_swordSlash";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_sliceanddice";
 
 	Trigger = new class'X2AbilityTrigger_EventListener';
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
