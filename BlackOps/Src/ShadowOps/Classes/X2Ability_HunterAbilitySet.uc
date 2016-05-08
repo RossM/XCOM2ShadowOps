@@ -717,7 +717,7 @@ static function X2AbilityTemplate Fade()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stealth";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fade";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
 
 	Template.AbilityToHitCalc = default.DeadEye;
