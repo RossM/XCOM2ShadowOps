@@ -14,7 +14,7 @@ event name CallMeetsCondition(XComGameState_BaseObject kTarget)
 	if (!TargetUnit.GetMyTemplate().bCanBeRevived)
 		return 'AA_UnitIsImmune';
 
-	if (TargetUnit.IsUnconscious() )
+	if (TargetUnit.IsPanicked() || TargetUnit.IsUnconscious() || TargetUnit.IsDisoriented())
 		return 'AA_Success';
 
 	return 'AA_UnitIsNotImpaired';

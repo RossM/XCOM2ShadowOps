@@ -718,6 +718,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	local X2Effect_RestorationProtocol			RestorationEffect;			
 	local X2Effect_RemoveEffects				RemoveEffects;
 	local X2Effect_Persistent					StandUpEffect;
+	local X2Effect_RestoreActionPoints			RestoreActionPointsEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_RestorationProtocol');
 
@@ -771,12 +772,17 @@ static function X2AbilityTemplate RestorationProtocol()
 	RestorationEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true);
 	Template.AddTargetEffect(RestorationEffect);
 
-	Template.AddTargetEffect(class'X2Ability_SpecialistAbilitySet'.static.RemoveAllEffectsByDamageType());
-
 	RemoveEffects = new class'X2Effect_RemoveEffects';
 	RemoveEffects.EffectNamesToRemove.AddItem(class'X2StatusEffects'.default.BleedingOutName);
-	RemoveEffects.EffectNamesToRemove.AddItem(class'X2StatusEffects'.default.UnconsciousName);
 	Template.AddTargetEffect(RemoveEffects);
+
+	// Put the unit back to full actions if it is being revived
+	RestoreActionPointsEffect = new class'X2Effect_RestoreActionPoints';
+	RestoreActionPointsEffect.TargetConditions.AddItem(new class'X2Condition_RevivalProtocol');
+	Template.AddTargetEffect(RestoreActionPointsEffect);      
+
+	Template.AddTargetEffect(class'X2Ability_SpecialistAbilitySet'.static.RemoveAllEffectsByDamageType());
+	Template.AddTargetEffect(class'X2Ability_SpecialistAbilitySet'.static.RemoveAdditionalEffectsForRevivalProtocolAndRestorativeMist());
 
 	StandUpEffect = new class'X2Effect_Persistent';
 	StandUpEffect.BuildPersistentEffect(1);
