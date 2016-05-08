@@ -15,6 +15,8 @@ Ability changes
   Hunter
   * Tracking range increased to 30 (was 27). It now detects units slightly, but only slightly, outside of visual range.
   * Tracking now works even if you don't move.
+  Infantry
+  * Zero In aim bonus increased to +20 (was +15).
 Item changes
   * Flechette Rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 near maximum visual range.
   * Flechette Rounds now requires Modular Weapons tech and costs 25 resources to build.
