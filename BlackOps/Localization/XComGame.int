@@ -368,15 +368,15 @@ LocPromotionPopupText="<Bullet> Throwing or launching a grenade with the bonus a
 
 [ShadowOps_Fracture X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds armor and deals extra damage on critical hits."
-LocHelpText="Make an attack that shreds armor and deals extra damage on critical hits."
+LocLongDescription="Make an attack that shreds armor and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that shreds armor and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 LocPromotionPopupText="<Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_FractureDamage X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds armor and deals extra damage on critical hits."
-LocHelpText="Make an attack that shreds armor and deals extra damage on critical hits."
+LocLongDescription="Make an attack that shreds armor and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that shreds armor and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 LocPromotionPopupText="<Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
