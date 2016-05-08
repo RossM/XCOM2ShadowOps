@@ -10,7 +10,8 @@ Ability changes
   * Breach range reduced to 14 (from 18).
   Dragoon
   * Barrage now has only a 50% chance of damaging cover when used with a rifle. It still has a 100% chance when used with a cannon.
-  * Renewal Protocol now also removes disorientation and panic.
+  * Renewal Protocol also removes disorientation and panic.
+  * Renewal Protocol applies the first tick of regeneration (2 hp) immediately when used.
   Hunter
   * Tracking range increased to 30 (was 27). It now detects units slightly, but only slightly, outside of visual range.
   * Tracking now works even if you don't move.

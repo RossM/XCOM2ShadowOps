@@ -4,6 +4,17 @@ var name IncreasedHealProject;
 var int IncreasedAmountToHeal;
 var int HealingBonusMultiplier;
 
+simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
+{
+	RegenerationTicked(self, ApplyEffectParameters, NewEffectState, NewGameState, true);
+}
+
+simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+{
+	super.AddX2ActionsForVisualization_Tick(VisualizeGameState, BuildTrack, 0, none);
+}
+
+
 function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_Effect kNewEffectState, XComGameState NewGameState, bool FirstApplication)
 {
 	local XComGameState_Unit OldTargetState, NewTargetState;
@@ -90,5 +101,6 @@ function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out
 
 defaultproperties
 {
+	EffectName = "RestorationProtocol";
 	HealthRegeneratedName = "RestorationProtocolHealthRegenerated";
 }
