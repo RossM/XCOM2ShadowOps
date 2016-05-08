@@ -930,6 +930,7 @@ static function X2AbilityTemplate TrackingTrigger()
 	local X2AbilityMultiTarget_Radius   RadiusMultiTarget;
 	local X2Effect_Tracking     TrackingEffect;
 	local X2Condition_UnitProperty      TargetProperty;
+	local X2Condition_UnitEffects		EffectsCondition;
 	local X2AbilityTrigger_EventListener	EventListener;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TrackingTrigger');
@@ -943,6 +944,10 @@ static function X2AbilityTemplate TrackingTrigger()
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
+
+	EffectsCondition = new class'X2Condition_UnitEffects';
+	EffectsCondition.AddExcludeEffect(class'X2Effect_MindControl'.default.EffectName, 'AA_UnitIsNotPlayerControlled');
+	Template.AbilityShooterConditions.AddItem(EffectsCondition);
 
 	Template.AbilityTargetStyle = default.SelfTarget;
 
@@ -966,6 +971,13 @@ static function X2AbilityTemplate TrackingTrigger()
 	EventListener.ListenerData.EventID = 'UnitMoveFinished';
 	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
 	EventListener.ListenerData.Filter = eFilter_Unit;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'PlayerTurnBegun';
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	EventListener.ListenerData.Filter = eFilter_Player;
 	Template.AbilityTriggers.AddItem(EventListener);
 
 	Template.bSkipFireAction = true;

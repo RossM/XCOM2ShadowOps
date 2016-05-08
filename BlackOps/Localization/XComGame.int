@@ -310,9 +310,10 @@ LocPromotionPopupText="<Bullet/> Slice and Dice has a <Ability:SelfCooldown/> tu
 
 [ShadowOps_Tracking X2AbilityTemplate]
 LocFriendlyName="Tracking"
-LocLongDescription="You detect nearby units when you move."
-LocHelpText="You detect nearby units when you move."
+LocLongDescription="You detect nearby units even without line of sight."
+LocHelpText="You detect nearby units even without line of sight."
 LocFlyOverText="Tracking"
+LocPromotionPopupText="<Bullet/> Tracking will reveal concealed and burrowed enemies. <br/>"
 
 [ShadowOps_TrackingTrigger X2AbilityTemplate]
 LocFriendlyName="Tracking"
