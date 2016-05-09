@@ -162,7 +162,7 @@ static function X2AbilityTemplate AlwaysReady()
 {
 	local X2AbilityTemplate         Template;
 
-	Template = PurePassive('ShadowOps_AlwaysReady', "img:///UILibrary_PerkIcons.UIPerk_evervigilant");
+	Template = PurePassive('ShadowOps_AlwaysReady', "img:///UILibrary_BlackOps.UIPerk_alwaysready");
 	Template.AdditionalAbilities.AddItem('ShadowOps_AlwaysReadyTrigger');
 
 	Template.bCrossClassEligible = false;
@@ -257,7 +257,7 @@ static function X2AbilityTemplate FullAuto()
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fanfire";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fullauto";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 
 	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
@@ -362,7 +362,7 @@ static function X2AbilityTemplate FullAuto2()
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fanfire";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fullauto";
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
