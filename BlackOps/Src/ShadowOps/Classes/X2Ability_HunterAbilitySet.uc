@@ -1049,7 +1049,6 @@ static function X2AbilityTemplate Bullseye()
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
-	local X2Effect_PersistentStatChange		StatChangeEffect;
 	local X2Condition_Visibility			TargetVisibilityCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Bullseye');
@@ -1098,14 +1097,7 @@ static function X2AbilityTemplate Bullseye()
 	Cooldown.iNumTurns = default.BullseyeCooldown;
 	Template.AbilityCooldown = Cooldown;
 
-	StatChangeEffect = new class'X2Effect_PersistentStatChange';
-	StatChangeEffect.EffectName = 'Bullseye';
-	StatChangeEffect.BuildPersistentEffect(1, true, true, true);
-	StatChangeEffect.SetDisplayInfo(ePerkBuff_Penalty, default.BullseyePenaltyName, default.BullseyePenaltyText, Template.IconImage,,,Template.AbilitySourceName);
-	StatChangeEffect.AddPersistentStatChange(eStat_Offense, default.BullseyeOffensePenalty);
-	StatChangeEffect.AddPersistentStatChange(eStat_Defense, default.BullseyeDefensePenalty);
-	StatChangeEffect.AddPersistentStatChange(eStat_Will, default.BullseyeWillPenalty);
-	Template.AddTargetEffect(StatChangeEffect);
+	Template.AddTargetEffect(BuildRattledEffect(Template.IconImage, Template.AbilitySourceName));
 
 	// Weapon Upgrade Compatibility
 	Template.bAllowFreeFireWeaponUpgrade = true;                                            // Flag that permits action to become 'free action' via 'Hair Trigger' or similar upgrade / effects
@@ -1131,6 +1123,30 @@ static function X2AbilityTemplate Bullseye()
 	Template.bCrossClassEligible = false;
 
 	return Template;	
+}
+
+static function X2Effect_Persistent BuildRattledEffect(string IconImage, name AbilitySourceName)
+{
+	local X2Effect_PersistentStatChange		RattledEffect;
+
+	RattledEffect = new class'X2Effect_PersistentStatChange';
+	RattledEffect.EffectName = 'Bullseye';
+	RattledEffect.BuildPersistentEffect(1, true, true, true);
+	RattledEffect.SetDisplayInfo(ePerkBuff_Penalty, default.BullseyePenaltyName, default.BullseyePenaltyText, IconImage,,,AbilitySourceName);
+	RattledEffect.AddPersistentStatChange(eStat_Offense, default.BullseyeOffensePenalty);
+	RattledEffect.AddPersistentStatChange(eStat_Defense, default.BullseyeDefensePenalty);
+	RattledEffect.AddPersistentStatChange(eStat_Will, default.BullseyeWillPenalty);
+	RattledEffect.VisualizationFn = RattledVisualization;
+
+	return RattledEffect;
+}
+
+static function RattledVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+{
+	local X2Action_PlaySoundAndFlyOver SoundAndFlyOver;
+	
+	SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
+	SoundAndFlyOver.SetSoundAndFlyOverParameters(None, default.BullseyePenaltyName, '', eColor_Bad);
 }
 
 static function X2AbilityTemplate FirstStrike()
