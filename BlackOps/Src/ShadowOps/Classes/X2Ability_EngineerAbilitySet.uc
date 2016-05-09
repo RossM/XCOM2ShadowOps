@@ -15,7 +15,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(DeepPockets());
 	Templates.AddItem(DenseSmoke());
-	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_PerkIcons.UIPerk_smokeandmirrors", false));
+	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_BlackOps.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(Breach());
 	Templates.AddItem(Fastball());
 	Templates.AddItem(FastballRemovalTrigger());
@@ -24,7 +24,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Packmaster());
 	Templates.AddItem(PurePassive('ShadowOps_Entrench', "img:///UILibrary_PerkIcons.UIPerk_one_for_all", true));
 	Templates.AddItem(Aggression());
-	Templates.AddItem(PurePassive('ShadowOps_CombatDrugs', "img:///UILibrary_PerkIcons.UIPerk_combatdrugs", true));
+	Templates.AddItem(PurePassive('ShadowOps_CombatDrugs', "img:///UILibrary_BlackOps.UIPerk_combatdrugs", true));
 	Templates.AddItem(SlamFire());
 	Templates.AddItem(DangerZone());
 	Templates.AddItem(ChainReaction());
@@ -68,7 +68,7 @@ static function X2AbilityTemplate Breach()
 	
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_deathblossom";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_breach";
 	Template.Hostility = eHostility_Offensive;
 	Template.DisplayTargetHitChance = false;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CORPORAL_PRIORITY;
@@ -136,7 +136,7 @@ static function X2AbilityTemplate Fastball()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fastball');
 	
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bombard";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fastball";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
 	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
@@ -193,7 +193,7 @@ static function X2AbilityTemplate FastballRemovalTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FastballRemovalTrigger');
 	
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bombard";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fastball";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -233,7 +233,7 @@ static function X2AbilityTemplate FractureAbility()
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_FractureDamage');
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_damagecover";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fracture";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.Hostility = eHostility_Offensive;
@@ -322,7 +322,7 @@ static function X2AbilityTemplate Aggression()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Aggression');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_aggression";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_aggression";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -360,7 +360,7 @@ static function X2AbilityTemplate SlamFire()
 	// Icon Properties
 	Template.DisplayTargetHitChance = false;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';                                       // color of the icon
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_bringemon";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_slamfire";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.Hostility = eHostility_Neutral;
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
@@ -529,7 +529,7 @@ static function X2AbilityTemplate Packmaster()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Packmaster');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_expanded_storage";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_packmaster";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -569,7 +569,7 @@ static function X2AbilityTemplate DangerZone()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DangerZone');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_dangerzone";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_dangerzone";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -609,7 +609,7 @@ static function X2AbilityTemplate DenseSmoke()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DenseSmoke');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_densesmoke";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_densesmoke";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -650,7 +650,7 @@ static function X2AbilityTemplate HeatAmmo()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HeatAmmo');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_heatammo";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_heatammo";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;

@@ -133,7 +133,7 @@ static function X2AbilityTemplate HeavyArmor()
 	`CREATE_X2TEMPLATE(class'X2AbilityTemplate_BO', Template, 'ShadowOps_HeavyArmor');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_willtosurvive";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_heavyarmor";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -395,7 +395,7 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
 	Template.HideErrors.AddItem('AA_WeaponIncompatible');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_barage";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_burstfire";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
 
@@ -489,7 +489,7 @@ static function X2AbilityTemplate RifleBurstFire()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
 	Template.HideErrors.AddItem('AA_WeaponIncompatible');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_barage";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_burstfire";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
 
@@ -675,7 +675,7 @@ static function X2Effect ECMEffect(string FriendlyName, string LongDescription)
 static function X2AbilityTemplate Vanish()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('ShadowOps_Vanish', "img:///UILibrary_PerkIcons.UIPerk_quadricepshypertrophy", true);
+	Template = PurePassive('ShadowOps_Vanish', "img:///UILibrary_BlackOps.UIPerk_vanish", true);
 	Template.AdditionalAbilities.AddItem('ShadowOps_VanishTrigger');
 
 	return Template;
@@ -693,7 +693,7 @@ static function X2AbilityTemplate VanishTrigger()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_quadricepshypertrophy";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_vanish";
 
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SelfTarget;
@@ -985,7 +985,7 @@ static function X2AbilityTemplate Rocketeer()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Rocketeer');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_rocketeer";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_rocketeer";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
