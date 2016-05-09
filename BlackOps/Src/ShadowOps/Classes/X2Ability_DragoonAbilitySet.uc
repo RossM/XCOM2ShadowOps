@@ -305,7 +305,7 @@ static function X2AbilityTemplate StealthProtocol()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_StealthProtocol');
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stealth";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_stealthprotocol";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Defensive;
 	Template.bLimitTargetIcons = true;
@@ -742,7 +742,7 @@ static function X2AbilityTemplate RestorationProtocol()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_RestorationProtocol');
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_regeneration";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_restorationprotocol";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Defensive;
 	Template.bLimitTargetIcons = true;
