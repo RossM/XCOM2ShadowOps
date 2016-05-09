@@ -80,7 +80,7 @@ simulated function bool EquipItem(UIArmory_LoadoutItem Item)
 			EquipmentTemplate = X2EquipmentTemplate(Item.ItemTemplate);
 			if (EquipmentTemplate != none && (EquipmentTemplate.InventorySlot == eInvSlot_PrimaryWeapon || EquipmentTemplate.InventorySlot == eInvSlot_SecondaryWeapon))
 			{
-				if (NewItem.WeaponAppearance.iWeaponTint == 0 && NewItem.WeaponAppearance.nmWeaponPattern == '')
+				if (NewItem.WeaponAppearance.iWeaponTint == INDEX_NONE && NewItem.WeaponAppearance.nmWeaponPattern == '')
 				{
 					NewItem.WeaponAppearance.iWeaponTint = UpdatedUnit.kAppearance.iWeaponTint;
 					NewItem.WeaponAppearance.nmWeaponPattern = UpdatedUnit.kAppearance.nmWeaponPattern;
