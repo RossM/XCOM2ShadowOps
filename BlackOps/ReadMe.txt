@@ -17,6 +17,7 @@ Ability changes
   * Tracking now works even if you don't move.
   Infantry
   * Zero In aim bonus increased to +20 (was +15).
+  * Zone of Control will switch to pistol overwatch shots when the primary weapon is out of ammo.
 Item changes
   * Flechette Rounds' hit penalty now depends on range. It scales quadratically from 0 at point blank to -10 near maximum visual range.
   * Flechette Rounds now requires Modular Weapons tech and costs 25 resources to build.

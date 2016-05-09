@@ -29,6 +29,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FullAuto2());
 	Templates.AddItem(ZoneOfControl());
 	Templates.AddItem(ZoneOfControlShot());
+	Templates.AddItem(ZoneOfControlPistolShot());
 	Templates.AddItem(ZeroIn());
 	Templates.AddItem(BulletSweep()); // Unused
 	Templates.AddItem(Flush());
@@ -380,7 +381,6 @@ static function X2AbilityTemplate ZoneOfControl()
 {
 	local X2AbilityTemplate             Template;
 	local X2AbilityCooldown             Cooldown;
-	local X2AbilityCost_Ammo            AmmoCost;
 	local X2AbilityCost_ActionPoints    ActionPointCost;
 	local X2Effect_ReserveActionPoints  ReservePointsEffect;
 	local X2Condition_UnitEffects           SuppressedCondition;
@@ -395,11 +395,6 @@ static function X2AbilityTemplate ZoneOfControl()
 	Template.bDisplayInUITacticalText = false;
 	Template.Hostility = eHostility_Defensive;
 	Template.AbilityConfirmSound = "Unreal2DSounds_OverWatch";
-
-	AmmoCost = new class'X2AbilityCost_Ammo';
-	AmmoCost.iAmmo = 1;
-	AmmoCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(AmmoCost);
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 1;
@@ -427,6 +422,8 @@ static function X2AbilityTemplate ZoneOfControl()
 	Template.AddShooterEffect(ReservePointsEffect);
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlShot');
+	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlPistolShot');
+
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.bSkipFireAction = true;
@@ -465,6 +462,92 @@ static function X2AbilityTemplate ZoneOfControlShot()
 	ReserveActionPointCost.bFreeCost = true;
 	ReserveActionPointCost.AllowedTypes.AddItem('ZoneOfControl');
 	Template.AbilityCosts.AddItem(ReserveActionPointCost);
+
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bReactionFire = true;
+	Template.AbilityToHitCalc = StandardAim;
+
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileUnitDisallowMindControlProperty);
+	TargetVisibilityCondition = new class'X2Condition_Visibility';
+	TargetVisibilityCondition.bRequireGameplayVisible = true;
+	TargetVisibilityCondition.bDisablePeeksOnMovement = true;
+	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
+	Template.AbilityTargetConditions.AddItem(class'X2Ability_DefaultAbilitySet'.static.OverwatchTargetEffectsCondition());
+
+	//  Do not shoot targets that were already hit by this unit this turn with this ability
+	ZoneOfControlCondition = new class'X2Condition_UnitEffectsWithAbilitySource';
+	ZoneOfControlCondition.AddExcludeEffect('ZoneOfControlTarget', 'AA_UnitIsImmune');
+	Template.AbilityTargetConditions.AddItem(ZoneOfControlCondition);
+	//  Mark the target as shot by this unit so it cannot be shot again this turn
+	ZoneOfControlEffect = new class'X2Effect_Persistent';
+	ZoneOfControlEffect.EffectName = 'ZoneOfControlTarget';
+	ZoneOfControlEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
+	ZoneOfControlEffect.SetupEffectOnShotContextResult(true, true);      //  mark them regardless of whether the shot hit or missed
+	Template.AddTargetEffect(ZoneOfControlEffect);
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	SingleTarget = new class'X2AbilityTarget_Single';
+	SingleTarget.OnlyIncludeTargetsInsideWeaponRange = true;
+	Template.AbilityTargetStyle = SingleTarget;
+
+	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+
+	Template.bAllowAmmoEffects = true;
+
+	//Trigger on movement - interrupt the move
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_MovementObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_AttackObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_overwatch";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;
+}
+
+static function X2AbilityTemplate ZoneOfControlPistolShot()
+{
+	local X2AbilityTemplate_BO              Template;
+	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
+	local X2AbilityToHitCalc_StandardAim    StandardAim;
+	local X2AbilityTarget_Single            SingleTarget;
+	local X2AbilityTrigger_Event	        Trigger;
+	local X2Effect_Persistent               ZoneOfControlEffect;
+	local X2Condition_UnitEffectsWithAbilitySource  ZoneOfControlCondition;
+	local X2Condition_Visibility            TargetVisibilityCondition;
+	local X2Condition_UnitInventory			HasPistolCondition;
+
+	`CREATE_X2TEMPLATE(class'X2AbilityTemplate_BO', Template, 'ShadowOps_ZoneOfControlPistolShot');
+
+	// This ability applies to the pistol, if one is equipped.
+	Template.ApplyToWeaponSlot = eInvSlot_SecondaryWeapon;
+
+	ReserveActionPointCost = new class'X2AbilityCost_ReserveActionPoints';
+	ReserveActionPointCost.iNumPoints = 1;
+	ReserveActionPointCost.bFreeCost = true;
+	ReserveActionPointCost.AllowedTypes.AddItem('ZoneOfControl');
+	Template.AbilityCosts.AddItem(ReserveActionPointCost);
+
+	HasPistolCondition = new class'X2Condition_UnitInventory';
+	HasPistolCondition.RelevantSlot = eInvSlot_SecondaryWeapon;
+	HasPistolCondition.RequireWeaponCategory = 'pistol';
+	Template.AbilityShooterConditions.AddItem(HasPistolCondition);
 
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
 	StandardAim.bReactionFire = true;
