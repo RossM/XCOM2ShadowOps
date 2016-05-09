@@ -119,18 +119,7 @@ LocHelpText="Give a friendly unit an energy shield which absorbs damage."
 LocFlyOverText="Shield Protocol""
 LocPromotionPopupText="<Bullet/> The shield is lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
-[ShadowOps_HeavyArmor X2AbilityTemplate]
-LocFriendlyName="Tank"
-LocLongDescription="You gain additional Armor points based on your equipped armor."
-LocHelpText="You gain additional Armor points based on your equipped armor."
-LocFlyOverText="Tank"
-LocPromotionPopupText="<Bullet/> Light and medium armors provide one extra point of Armor, while heavy armor provides two extra points of Armor.<br/>"
-
-[ShadowOps_Finesse X2AbilityTemplate]
-LocFriendlyName="Finesse"
-LocLongDescription="Gain +10 Aim and +3 Mobility while equipped with a rifle."
-LocHelpText="Gain +10 Aim and +3 Mobility while equipped with a rifle."
-LocFlyOverText="Finesse"
+; HeavyArmor and Finesse are in ShadowOps.int
 
 [ShadowOps_StealthProtocol X2AbilityTemplate]
 LocFriendlyName="Stealth Protocol"

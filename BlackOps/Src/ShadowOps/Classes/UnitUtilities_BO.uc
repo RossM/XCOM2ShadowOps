@@ -82,23 +82,21 @@ static function bool HasAmmoPocket(XComGameState_Unit Unit)
 static simulated function int GetUIStatBonusFromItem(XComGameState_Unit Unit, ECharStatType Stat, XComGameState_Item InventoryItem)
 {
 	local int Result;
-	local X2ArmorTemplate ArmorTemplate;
-	local X2WeaponTemplate WeaponTemplate;
+	local array<SoldierClassAbilityType> AbilityTree;
+	local SoldierClassAbilityType SoldierClassAbility;
+	local X2AbilityTemplateManager AbilityTemplateManager;
+	local X2AbilityTemplate_BO AbilityTemplate;
 
-	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
-	if (WeaponTemplate != none && WeaponTemplate.WeaponCat == class'X2Ability_DragoonAbilitySet'.default.FinesseWeaponCat && Unit.HasSoldierAbility('ShadowOps_Finesse'))
-	{
-		if (Stat == eStat_Mobility)
-			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseMobilityBonus;
-		else if (Stat == eStat_Offense)
-			Result += class'X2Ability_DragoonAbilitySet'.default.FinesseOffenseBonus;
-	}
+	AbilityTree = Unit.GetEarnedSoldierAbilities();
+	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
-	ArmorTemplate = X2ArmorTemplate(InventoryItem.GetMyTemplate());
-	if (ArmorTemplate != none && ArmorTemplate.bHeavyWeapon && Unit.HasSoldierAbility('ShadowOps_HeavyArmor'))
+	foreach AbilityTree(SoldierClassAbility)
 	{
-		if (Stat == eStat_ArmorMitigation)
-			Result += class'X2Ability_DragoonAbilitySet'.default.HeavyArmorBonus;
+		AbilityTemplate = X2AbilityTemplate_BO(AbilityTemplateManager.FindAbilityTemplate(SoldierClassAbility.AbilityName));
+		if (AbilityTemplate != none)
+		{
+			Result += AbilityTemplate.GetUIBonusStatMarkup(Stat, InventoryItem);
+		}
 	}
 
 	return Result;
