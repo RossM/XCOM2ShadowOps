@@ -68,8 +68,8 @@ LocPromotionPopupText="<Bullet/> Zone of Control will switch to pistol overwatch
 
 [ShadowOps_ZeroIn X2AbilityTemplate]
 LocFriendlyName="Zero In"
-LocLongDescription="When you miss an attack, you get +15 Aim on your next attack."
-LocHelpText="When you miss an attack, you get +15 Aim on your next attack."
+LocLongDescription="When you miss an attack, you get +20 Aim on your next attack."
+LocHelpText="When you miss an attack, you get +20 Aim on your next attack."
 LocFlyOverText="Zero In"
 
 [ShadowOps_Flush X2AbilityTemplate]
