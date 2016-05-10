@@ -21,14 +21,17 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	local UnitValue AccuracyUnitValue;
 	local ShotModifierInfo AccuracyInfo;
 	
-	Attacker.GetUnitValue(ZeroInUnitValueName, AccuracyUnitValue);
-
-	if (AccuracyUnitValue.fValue > 0)
+	if (AbilityState != none && AbilityState.IsAbilityInputTriggered() && AbilityState.GetMyTemplate().Hostility == eHostility_Offensive)
 	{
-		AccuracyInfo.ModType = eHit_Success;
-		AccuracyInfo.Value = AccuracyUnitValue.fValue;
-		AccuracyInfo.Reason = FriendlyName;
-		ShotModifiers.AddItem(AccuracyInfo);
+		Attacker.GetUnitValue(ZeroInUnitValueName, AccuracyUnitValue);
+
+		if (AccuracyUnitValue.fValue > 0)
+		{
+			AccuracyInfo.ModType = eHit_Success;
+			AccuracyInfo.Value = AccuracyUnitValue.fValue;
+			AccuracyInfo.Reason = FriendlyName;
+			ShotModifiers.AddItem(AccuracyInfo);
+		}
 	}
 }
 
