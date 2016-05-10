@@ -910,7 +910,7 @@ static function X2AbilityTemplate PuppetProtocol()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_PuppetProtocol');
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_domination";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_puppetprotocol";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
 	Template.Hostility = eHostility_Neutral;
