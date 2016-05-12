@@ -3,7 +3,7 @@ class UISquadSelect_ListItem_BO extends UISquadSelect_ListItem;
 simulated function UpdateData(optional int Index = -1, optional bool bDisableEdit, optional bool bDisableDismiss, optional bool bDisableLoadout, optional array<EInventorySlot> CannotEditSlotsList)
 {
 	local bool bCanPromote;
-	local string ClassStr;
+	local string ClassStr, NameStr;
 	local int i, NumUtilitySlots, UtilityItemIndex;
 	local float UtilityItemWidth, UtilityItemHeight;
 	local UISquadSelect_UtilityItem UtilityItem;
@@ -18,6 +18,11 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		return;
 
 	SlotIndex = Index != -1 ? Index : SlotIndex;
+
+	bDisabledEdit = bDisableEdit;
+	bDisabledDismiss = bDisableDismiss;
+	bDisabledLoadout = bDisableLoadout;
+	CannotEditSlots = CannotEditSlotsList;
 
 	if( UtilitySlots == none )
 	{
@@ -53,9 +58,6 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		DynamicContainer.Show();
 		//Backpack controlled separately by the heavy weapon info. 
 
-		if( Navigator.SelectedIndex == -1 )
-			Navigator.SelectFirstAvailable();
-
 		NumUtilitySlots = 2;
 		if(Unit.HasGrenadePocket()) NumUtilitySlots++;
 		if(Unit.HasAmmoPocket()) NumUtilitySlots++;
@@ -72,6 +74,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 			{
 				UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.CreateItem(class'UISquadSelect_UtilityItem').InitPanel());
 				UtilityItem.SetSize(UtilityItemWidth, UtilityItemHeight);
+				UtilityItem.CannotEditSlots = CannotEditSlotsList;
 				UtilitySlots.OnItemSizeChanged(UtilityItem);
 			}
 		}
@@ -80,7 +83,10 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 
 		UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
 		EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_Utility);
-		UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
+		if (bDisableLoadout)
+			UtilityItem.SetDisabled(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
+		else
+			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
 
 		if(class'XComGameState_HeadquartersXCom'.static.GetObjectiveStatus('T0_M5_EquipMedikit') == eObjectiveState_InProgress)
 		{
@@ -93,23 +99,34 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		}
 
 		UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-		if(Unit.HasExtraUtilitySlot())
-			UtilityItem.SetAvailable(EquippedItems.Length > 1 ? EquippedItems[1] : none, eInvSlot_Utility, 1, NumUtilitySlots);
+		if (Unit.HasExtraUtilitySlot())
+		{
+			if (bDisableLoadout)
+				UtilityItem.SetDisabled(EquippedItems.Length > 1 ? EquippedItems[1] : none, eInvSlot_Utility, 1, NumUtilitySlots);
+			else
+				UtilityItem.SetAvailable(EquippedItems.Length > 1 ? EquippedItems[1] : none, eInvSlot_Utility, 1, NumUtilitySlots);
+		}
 		else
 			UtilityItem.SetLocked(m_strNeedsMediumArmor);
 
 		if(Unit.HasGrenadePocket())
 		{
 			UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_GrenadePocket);
-			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_GrenadePocket, 0, NumUtilitySlots);
+			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_GrenadePocket); 
+			if (bDisableLoadout)
+				UtilityItem.SetDisabled(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_GrenadePocket, 0, NumUtilitySlots);
+			else
+				UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_GrenadePocket, 0, NumUtilitySlots);
 		}
 
 		if(Unit.HasAmmoPocket())
 		{
 			UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
 			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_AmmoPocket);
-			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_AmmoPocket, 0, NumUtilitySlots);
+			if (bDisableLoadout)
+				UtilityItem.SetDisabled(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_AmmoPocket, 0, NumUtilitySlots);
+			else
+				UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_AmmoPocket, 0, NumUtilitySlots);
 		}
 		
 		// Don't show class label for rookies since their rank is shown which would result in a duplicate string
@@ -124,6 +141,12 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 			PrimaryWeaponTemplate = X2WeaponTemplate(PrimaryWeapon.GetMyTemplate());
 		}
 
+		NameStr = Unit.GetName(eNameType_Last);
+		if (NameStr == "") // If the unit has no last name, display their first name instead
+		{
+			NameStr = Unit.GetName(eNameType_First);
+		}
+
 		// TUTORIAL: Disable buttons if tutorial is enabled
 		if(bDisableEdit)
 			MC.FunctionVoid("disableEdit");
@@ -131,14 +154,15 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 			MC.FunctionVoid("disableDismiss");
 
 		AS_SetFilled( class'UIUtilities_Text'.static.GetColoredText(Caps(class'X2ExperienceConfig'.static.GetRankName(Unit.GetRank(), Unit.GetSoldierClassTemplateName())), eUIState_Normal, 18),
-					  class'UIUtilities_Text'.static.GetColoredText(Caps(Unit.GetName(eNameType_Last)), eUIState_Normal, 22),
+					  class'UIUtilities_Text'.static.GetColoredText(Caps(NameStr), eUIState_Normal, 22),
 					  class'UIUtilities_Text'.static.GetColoredText(Caps(Unit.GetName(eNameType_Nick)), eUIState_Header, 28),
 					  Unit.GetSoldierClassTemplate().IconImage, class'UIUtilities_Image'.static.GetRankIcon(Unit.GetRank(), Unit.GetSoldierClassTemplateName()),
 					  class'UIUtilities_Text'.static.GetColoredText(m_strEdit, bDisableEdit ? eUIState_Disabled : eUIState_Normal),
 					  class'UIUtilities_Text'.static.GetColoredText(m_strDismiss, bDisableDismiss ? eUIState_Disabled : eUIState_Normal),
-					  PrimaryWeaponTemplate.GetItemFriendlyName(PrimaryWeapon.ObjectID), 
-					  class'UIArmory_loadout'.default.m_strInventoryLabels[eInvSlot_PrimaryWeapon],
-					  GetHeavyWeaponName(), GetHeavyWeaponDesc(),
+					  class'UIUtilities_Text'.static.GetColoredText(PrimaryWeaponTemplate.GetItemFriendlyName(PrimaryWeapon.ObjectID), bDisableLoadout ? eUIState_Disabled : eUIState_Normal),
+					  class'UIUtilities_Text'.static.GetColoredText(class'UIArmory_loadout'.default.m_strInventoryLabels[eInvSlot_PrimaryWeapon], bDisableLoadout ? eUIState_Disabled : eUIState_Normal),
+					  class'UIUtilities_Text'.static.GetColoredText(GetHeavyWeaponName(), bDisableLoadout ? eUIState_Disabled : eUIState_Normal),
+					  class'UIUtilities_Text'.static.GetColoredText(GetHeavyWeaponDesc(), bDisableLoadout ? eUIState_Disabled : eUIState_Normal),
 					  (bCanPromote ? m_strPromote : ""), Unit.IsPsiOperative() || (Unit.HasPsiGift() && Unit.GetRank() < 2), ClassStr);
 
 		PsiMarkup.SetVisible(Unit.HasPsiGift());
