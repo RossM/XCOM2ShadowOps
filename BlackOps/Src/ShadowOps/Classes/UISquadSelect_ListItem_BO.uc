@@ -1,6 +1,6 @@
 class UISquadSelect_ListItem_BO extends UISquadSelect_ListItem;
 
-simulated function UpdateData(optional int Index = -1, optional bool bDisableEdit, optional bool bDisableDismiss)
+simulated function UpdateData(optional int Index = -1, optional bool bDisableEdit, optional bool bDisableDismiss, optional bool bDisableLoadout, optional array<EInventorySlot> CannotEditSlotsList)
 {
 	local bool bCanPromote;
 	local string ClassStr;
@@ -58,7 +58,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 
 		NumUtilitySlots = 2;
 		if(Unit.HasGrenadePocket()) NumUtilitySlots++;
-		if(class'UnitUtilities_BO'.static.HasAmmoPocket(Unit)) NumUtilitySlots++;
+		if(Unit.HasAmmoPocket()) NumUtilitySlots++;
 		
 		UtilityItemWidth = (UtilitySlots.GetTotalWidth() - (UtilitySlots.ItemPadding * (NumUtilitySlots - 1))) / NumUtilitySlots;
 		UtilityItemHeight = UtilitySlots.Height;
@@ -79,7 +79,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		UtilityItemIndex = 0;
 
 		UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-		EquippedItems = class'UnitUtilities_BO'.static.GetEquippedItemsInSlot(Unit, eInvSlot_Utility);
+		EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_Utility);
 		UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
 
 		if(class'XComGameState_HeadquartersXCom'.static.GetObjectiveStatus('T0_M5_EquipMedikit') == eObjectiveState_InProgress)
@@ -101,14 +101,14 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		if(Unit.HasGrenadePocket())
 		{
 			UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-			EquippedItems = class'UnitUtilities_BO'.static.GetEquippedItemsInSlot(Unit, eInvSlot_GrenadePocket);
+			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_GrenadePocket);
 			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_GrenadePocket, 0, NumUtilitySlots);
 		}
 
-		if(class'UnitUtilities_BO'.static.HasAmmoPocket(Unit))
+		if(Unit.HasAmmoPocket())
 		{
 			UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-			EquippedItems = class'UnitUtilities_BO'.static.GetEquippedItemsInSlot(Unit, eInvSlot_AmmoPocket);
+			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_AmmoPocket);
 			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_AmmoPocket, 0, NumUtilitySlots);
 		}
 		

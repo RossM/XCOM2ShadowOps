@@ -110,9 +110,6 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\UIAfterAction_ListItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\UIArmory_Loadout_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\UIPersonnel_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -123,9 +120,6 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\UISquadSelect_ListItem_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\UISquadSelect_UtilityItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\UnitUtilities_BO.uc">
