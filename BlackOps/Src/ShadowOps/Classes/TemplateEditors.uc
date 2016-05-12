@@ -233,14 +233,14 @@ static function FixSimpleStandardAim(name AbilityName)
 		ToHitCalc = Template.AbilityToHitCalc;
 		if (ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim') && !ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim_BO'))
 		{
-			NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_BO';
+			NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_BO'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
 			Template.AbilityToHitCalc = NewToHitCalc;
 		}
 
 		ToHitCalc = Template.AbilityToHitOwnerOnMissCalc;
 		if (ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim') && !ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim_BO'))
 		{
-			NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_BO';
+			NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_BO'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
 			Template.AbilityToHitOwnerOnMissCalc = NewToHitCalc;
 		}
 	}
