@@ -276,12 +276,7 @@ static function ChangeToGrenadeActionPoints(name AbilityName)
 			ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
 			if (ActionPointCost != none && !ActionPointCost.IsA('X2AbilityCost_GrenadeActionPoints'))
 			{
-				GrenadeCost = new class 'X2AbilityCost_GrenadeActionPoints';
-				GrenadeCost.iNumPoints = ActionPointCost.iNumPoints;
-				GrenadeCost.bConsumeAllPoints = ActionPointCost.bConsumeAllPoints;
-				GrenadeCost.DoNotConsumeAllSoldierAbilities = ActionPointCost.DoNotConsumeAllSoldierAbilities;
-				GrenadeCost.DoNotConsumeAllEffects = ActionPointCost.DoNotConsumeAllEffects;
-				GrenadeCost.AllowedTypes = ActionPointCost.AllowedTypes;
+				GrenadeCost = new class 'X2AbilityCost_GrenadeActionPoints'(ActionPointCost);
 				GrenadeCost.AllowedTypes.AddItem('grenade');
 
 				Template.AbilityCosts[i] = GrenadeCost;
