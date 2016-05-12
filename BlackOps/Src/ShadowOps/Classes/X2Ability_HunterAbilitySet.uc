@@ -113,6 +113,7 @@ static function X2AbilityTemplate SnapShotShot()
 	AmmoCost.iAmmo = 1;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	// Weapon Upgrade Compatibility
 	Template.bAllowFreeFireWeaponUpgrade = true;                                            // Flag that permits action to become 'free action' via 'Hair Trigger' or similar upgrade / effects
@@ -449,6 +450,7 @@ static function X2AbilityTemplate HipFire()
 	AmmoCost.iAmmo = 1;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.HipFireCooldown;
@@ -1092,6 +1094,7 @@ static function X2AbilityTemplate Bullseye()
 	AmmoCost.iAmmo = 1;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.BullseyeCooldown;

@@ -302,6 +302,7 @@ static function X2AbilityTemplate FullAuto()
 	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
 	Template.AddTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
@@ -352,6 +353,7 @@ static function X2AbilityTemplate FullAuto2()
 	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
 	Template.AddTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Trigger = new class'X2AbilityTrigger_EventListener';
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
@@ -497,6 +499,7 @@ static function X2AbilityTemplate ZoneOfControlShot()
 	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
 
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	//Trigger on movement - interrupt the move
 	Trigger = new class'X2AbilityTrigger_Event';
@@ -583,6 +586,7 @@ static function X2AbilityTemplate ZoneOfControlPistolShot()
 	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
 
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	//Trigger on movement - interrupt the move
 	Trigger = new class'X2AbilityTrigger_Event';
@@ -692,7 +696,8 @@ static function X2AbilityTemplate Flush()
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 1;
 	Template.AbilityCosts.AddItem(AmmoCost);
-	Template.bAllowAmmoEffects = true; // 	
+	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.FlushCooldown;
