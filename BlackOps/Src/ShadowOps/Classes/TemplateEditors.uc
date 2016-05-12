@@ -71,6 +71,7 @@ static function ChangeToStartingItem(name ItemName)
 	{
 		Template = X2ItemTemplate(DataTemplate);
 
+		Template.bInfiniteItem = true;
 		Template.StartingItem = true;
 	}
 }
