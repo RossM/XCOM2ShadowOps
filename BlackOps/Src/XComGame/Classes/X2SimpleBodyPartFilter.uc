@@ -103,6 +103,11 @@ function bool FilterByCivilian(X2BodyPartTemplate Template)
 	return !bCivilian || Template.bCanUseOnCivilian;
 }
 
+function bool FilterByArmor(X2BodyPartTemplate Template)
+{
+	return Template.ArmorTemplate == '' || Template.ArmorTemplate == ArmorName;
+}
+
 function bool FilterByTech(X2BodyPartTemplate Template)
 {
 	local X2TechTemplate TechTemplate;
@@ -160,6 +165,16 @@ function bool FilterByGenderAndNonSpecializedCivilian(X2BodyPartTemplate Templat
 function bool FilterByGenderAndNonSpecializedAndTech(X2BodyPartTemplate Template)
 {
 	return FilterByGender(Template) && FilterByNonSpecialized(Template) && FilterByTech(Template);
+}
+
+function bool FilterByGenderAndNonSpecializedAndTechAndArmor(X2BodyPartTemplate Template)
+{
+	return FilterByGender(Template) && FilterByNonSpecialized(Template) && FilterByTech(Template) && FilterByArmor(Template);
+}
+
+function bool FilterByGenderAndRaceAndArmor(X2BodyPartTemplate Template)
+{
+	return FilterByGenderAndRace(Template) && FilterByArmor(Template);
 }
 
 function bool FilterByTorsoAndArmorMatch(X2BodyPartTemplate Template)

@@ -2557,6 +2557,8 @@ simulated function BuildConstructionSlotOpenAlert()
 	LibraryPanel.MC.QueueString(m_strOK);
 	LibraryPanel.MC.QueueString(m_strCarryOn);
 	LibraryPanel.MC.EndOp();
+
+	ButtonGroup.Navigator.HorizontalNavigation = true;
 }
 
 simulated function BuildClearRoomSlotOpenAlert()
@@ -2579,6 +2581,8 @@ simulated function BuildClearRoomSlotOpenAlert()
 	LibraryPanel.MC.QueueString(m_strOK);
 	LibraryPanel.MC.QueueString(m_strCarryOn);
 	LibraryPanel.MC.EndOp();
+	
+	ButtonGroup.Navigator.HorizontalNavigation = true;
 }
 
 simulated function BuildStaffSlotOpenAlert()
@@ -2614,6 +2618,8 @@ simulated function BuildStaffSlotOpenAlert()
 	LibraryPanel.MC.QueueString(m_strOK);
 	LibraryPanel.MC.QueueString(m_strCarryOn);
 	LibraryPanel.MC.EndOp();
+
+	ButtonGroup.Navigator.HorizontalNavigation = true;
 }
 
 simulated function TAlertCompletedInfo FillInShenAlertComplete(TAlertCompletedInfo kInfo)

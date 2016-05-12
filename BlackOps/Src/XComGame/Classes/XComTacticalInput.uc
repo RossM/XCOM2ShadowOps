@@ -882,7 +882,7 @@ state UsingTargetingMethod
 			// check for left mouse clicks. It's very difficult to trap these properly in a movie screen, so process them here
 			TacticalHUD = XComPresentationLayer(XComTacticalController(Outer).Pres).GetTacticalHUD();
 			TargetingMethod = TacticalHUD.GetTargetingMethod();
-			if(TargetingMethod != none && TargetingMethod.Action.bFreeAim)
+			if(TargetingMethod != none && TargetingMethod.AllowMouseConfirm())
 			{
 				TacticalHUD.m_kAbilityHUD.ConfirmAbility();
 				return true;
@@ -2570,29 +2570,7 @@ state ActiveUnit_Moving
 
 	simulated function bool EnterKey( int ActionMask )
 	{
-		// Make sure we can end the turn if we have buttons disabled in tutorial.
-		if( ButtonIsDisabled(class'UIUtilities_Input'.const.FXS_BUTTON_SELECT ) )
-			return true;
-
-		if( ( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0 )
-		{
-			if( WorldInfo.NetMode != NM_Client )
-			{
-				if( XComTacticalController(Outer).GetPres().GetTacticalHUD().IsMenuRaised() )
-					XComTacticalController(Outer).GetPres().GetTacticalHUD().CancelTargetingAction();
-
-				XComTacticalController(Outer).PerformEndTurn(ePlayerEndTurnType_PlayerInput);
-			}
-			else
-			{
-				if(!XComTacticalController(Outer).GetPres().GetTacticalHUD().IsMenuRaised())
-				{
-					XComTacticalController(Outer).PerformEndTurn(ePlayerEndTurnType_PlayerInput);
-				}
-			}
-			return true;
-		}
-		return true;
+		return Key_Spacebar(ActionMask);
 	}
 	
 	simulated function bool Key_Home( int ActionMask )

@@ -28,6 +28,8 @@ var private{private} bool bWaitingOnWorldStats;
 var private native Map_Mirror GlobalEndgameStats{ TMap<FName, double> };
 var private int NumEndgameStatSubmissions;
 
+var XComGameState_Analytics		PrevDebugAnalytics;
+
 native function Init();
 
 private native function SendCampaignAnalytics(out CampaignSettings Settings, array<XComGameState_Unit> Units);

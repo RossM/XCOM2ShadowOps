@@ -185,11 +185,13 @@ simulated function UpdateData()
 
 	if (currentSel > -1 && currentSel < List.ItemCount)
 	{
-		List.Navigator.SetSelected(GetListItem(currentSel));
+		//Don't use GetItem(..), because it overwrites enable.disable option indiscriminately. 
+		List.Navigator.SetSelected(List.GetItem(currentSel));
 	}
 	else
 	{
-		List.Navigator.SetSelected(GetListItem(0));
+		//Don't use GetItem(..), because it overwrites enable.disable option indiscriminately. 
+		List.Navigator.SetSelected(List.GetItem(0));
 	}
 	//-----------------------------------------------------------------------------------------
 }
@@ -217,13 +219,13 @@ simulated function OnExportSoldier()
 simulated function OnCustomizeInfo()
 {
 	CustomizeManager.UpdateCamera();
-	Movie.Pres.UICustomize_Info();
+	Movie.Pres.UICustomize_Info(Unit);
 }
 // --------------------------------------------------------------------------
 simulated function OnCustomizeProps()
 {
 	CustomizeManager.UpdateCamera();
-	Movie.Pres.UICustomize_Props();
+	Movie.Pres.UICustomize_Props(Unit);
 }
 // --------------------------------------------------------------------------
 simulated function CustomizeFace()

@@ -110,8 +110,7 @@ static function SetUpHeadquarters(XComGameState StartState, optional bool bTutor
 
 	ResistanceHQ.SupplyDropPercentDecrease = 0.0f;
 
-	// Create the resistance recruits
-	ResistanceHQ.CreateRecruits(StartState);
+	// Used to create the resistance recruits here, moved to XComHQ setup so character pool characters fill staff first
 
 	// Create Resistance Activities List
 	ResistanceHQ.ResetActivities();
@@ -1194,7 +1193,7 @@ function StateObjectReference ChoosePOI(XComGameState NewGameState, optional boo
 		POIState = XComGameState_PointOfInterest(NewGameState.CreateStateObject(class'XComGameState_PointOfInterest', POIState.ObjectID));
 		NewGameState.AddStateObject(POIState);
 		
-		ResHQ.ActivePOIs.AddItem(POIState.GetReference());
+		ActivatePOI(NewGameState, POIState.GetReference());
 
 		// If a staff POI was activated normally (not forced from the staff POI timer), then flag ResHQ
 		if (!bStaffPOISpawnedFromTimer && POIState.GetMyTemplate().bStaffPOI)
@@ -1279,6 +1278,27 @@ function XComGameState_PointOfInterest DrawFromPOIDeck(out array<XComGameState_P
 	POIEventState = POIEventDeck[`SYNC_RAND_STATIC(POIEventDeck.Length)];
 
 	return POIEventState;
+}
+
+//---------------------------------------------------------------------------------------
+static function ActivatePOI(XComGameState NewGameState, StateObjectReference POIRef)
+{
+	local XComGameState_HeadquartersResistance ResHQ;
+
+	foreach NewGameState.IterateByClassType(class'XComGameState_HeadquartersResistance', ResHQ)
+	{
+		break;
+	}
+
+	if (ResHQ == none)
+	{
+		ResHQ = XComGameState_HeadquartersResistance(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersResistance'));
+		ResHQ = XComGameState_HeadquartersResistance(NewGameState.CreateStateObject(class'XComGameState_HeadquartersResistance', ResHQ.ObjectID));
+		NewGameState.AddStateObject(ResHQ);
+	}
+
+	// Add the POI to the activated list
+	ResHQ.ActivePOIs.AddItem(POIRef);
 }
 
 //---------------------------------------------------------------------------------------

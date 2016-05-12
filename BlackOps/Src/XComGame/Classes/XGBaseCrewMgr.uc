@@ -418,6 +418,7 @@ function UpdateHeadStaffLocations()
 	if(HeadScientist == none && !bInShadowChamber)
 	{
 		Pawn = HeadScientistGameState.CreatePawn(self, HeadScientistLocation, HeadScientistRotation, false);
+		Pawn.RestoreAnimSetsToDefault();
 		Pawn.GotoState('InHQ');
 		Pawn.PlayHQIdleAnim();
 		History.SetVisualizer(HeadScientistGameState.ObjectID, Pawn);
@@ -433,6 +434,7 @@ function UpdateHeadStaffLocations()
 	if(HeadEngineer == none && !bInShadowChamber)
 	{
 		Pawn = HeadEngineerGameState.CreatePawn(self, HeadEngineerLocation, HeadEngineerRotation, false);
+		Pawn.RestoreAnimSetsToDefault();
 		Pawn.GotoState('InHQ');
 		Pawn.PlayHQIdleAnim();
 		History.SetVisualizer(HeadEngineerGameState.ObjectID, Pawn);

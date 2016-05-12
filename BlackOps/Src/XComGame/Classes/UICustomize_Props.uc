@@ -162,11 +162,11 @@ simulated function UpdateData()
 
 	if (currentSel > -1 && currentSel < List.ItemCount)
 	{
-		List.Navigator.SetSelected(GetListItem(currentSel));
+		List.Navigator.SetSelected(List.GetItem(currentSel));
 	}
 	else
 	{
-		List.Navigator.SetSelected(GetListItem(0));
+		List.Navigator.SetSelected(List.GetItem(0));
 	}
 }
 

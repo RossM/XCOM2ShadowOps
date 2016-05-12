@@ -22,6 +22,7 @@ static function X2DataTemplate CreateKevlarArmor()
 	Template.strImage = "img:///UILibrary_StrategyImages.X2InventoryIcons.Inv_Kevlar_Armor";
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
+	Template.bInfiniteItem = true;
 	Template.ArmorTechCat = 'conventional';
 	Template.Tier = 0;
 	Template.AkAudioSoldierArmorSwitch = 'Conventional';

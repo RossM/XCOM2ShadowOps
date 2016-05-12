@@ -784,7 +784,7 @@ simulated function TUIGraphicsOptionSettingConfig GetMaxDrawDistanceConfig()
 }
 
 simulated native function bool GetIsBorderlessWindow();
-simulated native function SetSupportedResolutionsNative(bool bBorderlessWindow);
+simulated native function SetSupportedResolutionsNative(bool bFullscreen, bool bBorderlessWindow);
 simulated native function UpdateViewportNative(INT ScreenWidth, INT ScreenHeight, BOOL Fullscreen, INT BorderlessWindow);
 simulated native function bool GetCurrentVSync();
 simulated native function UpdateVSyncNative(bool bUseVSync);
@@ -1125,7 +1125,7 @@ function SetVideoTabSelected()
 	m_arrMechaItems[ePCTabVideo_MouseLock].BG.SetTooltipText(m_strVideolabel_MouseLock_Desc, , , 10, , , , 0.0f);
 
 	// Resolution: --------------------------------------------
-	SetSupportedResolutionsNative(ModeSpinnerVal == 1);
+	SetSupportedResolutionsNative(ModeSpinnerVal == 0, ModeSpinnerVal == 1);
 
 	m_arrMechaItems[ePCTabVideo_Resolution].UpdateDataDropdown(m_strVideoLabel_Resolution, m_kGameResolutionStrings, m_kCurrentSupportedResolutionIndex, UpdateResolution);
 	m_arrMechaItems[ePCTabVideo_Resolution].BG.SetTooltipText(m_strVideoLabel_Resolution_Desc, , , 10, , , , 0.0f);
@@ -1377,7 +1377,7 @@ function SetGameplayTabSelected()
 			}
 		}
 
-		MechaItemIndex = ePCTabGameplay_EnableZipMode + 1 + Index;
+		MechaItemIndex = ePCTabGameplay_EnableZipMode + Index;
 		m_arrMechaItems[MechaItemIndex].UpdateDataSlider(Label, "", int(m_kProfileSettings.Data.PartPackPresets[PartPackPresetIndex].ChanceToSelect * 100.0f), , UpdatePartChance);
 		m_arrMechaItems[MechaItemIndex].BG.SetTooltipText(Tooltip, , , 10, , , , 0.0f);
 
@@ -1386,7 +1386,7 @@ function SetGameplayTabSelected()
 		SliderMapping.AddItem(Mapping);
 	}
 
-	RenableMechaListItems(ePCTabGameplay_Max + PartPackNames.Length);
+	RenableMechaListItems(ePCTabGameplay_Max + PartPackNames.Length - 1);
 }
 
 function SetInterfaceTabSelected()
@@ -1827,7 +1827,7 @@ simulated function SetResolutionDropdown()
 
 simulated function SetSupportedResolutions()
 {
-	SetSupportedResolutionsNative(ModeSpinnerVal == 1);
+	SetSupportedResolutionsNative(ModeSpinnerVal == 0, ModeSpinnerVal == 1);
 
 	SetResolutionDropdown();
 }
@@ -2171,7 +2171,7 @@ simulated public function GPUAutoDetectFinished()
 	SetGraphicsValsFromCurrentSettings();
 	ApplyPresetState(true);
 	SetPresetState();
-	m_bAnyValueChanged = false;
+	m_bAnyValueChanged = true;
 	Show();
 }
 
@@ -2309,6 +2309,8 @@ simulated function SetSelectedTab( int iSelect )
 		XComHUD(WorldInfo.GetALocalPlayerController().myHUD).SetGammaLogoDrawing(true);
 	}
 	*/
+	//Clear the tooltips when switching tabs, else the previous tab tooltips may leak as cached data over on to the new tooltips. 
+	Movie.Pres.m_kTooltipMgr.RemoveTooltipByTarget(string(MCPath), true);
 
 	GPUAutoDetectButton.Hide();
 	switch(m_iCurrentTab)

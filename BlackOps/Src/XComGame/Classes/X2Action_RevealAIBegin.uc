@@ -215,17 +215,55 @@ simulated state Executing
 		}
 	}
 
+	private function bool ShouldPlayLookatCamera()
+	{
+		local XComGameStateHistory History;
+		local XComGameStateContext_CinematicSpawn CinematicContext;
+		local XComGameState_Unit UnitState;
+
+		History = `XCOMHISTORY;
+
+		// if this unit was cinematically spawned, then we don't need to do another reveal animation
+		foreach History.IterateContextsByClassType(class'XComGameStateContext_CinematicSpawn', CinematicContext,, true)
+		{
+			foreach CinematicContext.AssociatedState.IterateByClassType(class'XComGameState_Unit', UnitState)
+			{
+				if(UnitState.ObjectID == MatineeFocusUnitState.ObjectID)
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	function bool ShouldPlayRevealMatinee()
 	{
 		local XComGameStateHistory History;
 		local XComGameStateContext_ChangeContainer Context;
 		local XComGameState_AIReinforcementSpawner SpawnState;
 		local XComGameState_AIUnitData AIUnitData;
+		local UnitValue ImmobilizeValue;
 
 		// not if glam cams are turned off in the options screen
 		if(!`Battle.ProfileSettingsGlamCam())
 		{
 			return false;
+		}
+
+		if(!ShouldPlayLookatCamera())
+		{
+			return false;
+		}
+
+		// not if the reveal focus unit is currently immobilized
+		if(MatineeFocusUnitState.GetUnitValue(class'X2Ability_DefaultAbilitySet'.default.ImmobilizedValueName, ImmobilizeValue))
+		{
+			if(ImmobilizeValue.fValue != 0)
+			{
+				return false;
+			}
 		}
 
 		History = `XCOMHISTORY;
@@ -361,7 +399,7 @@ Begin:
 		FaceRevealUnitsTowardsEnemy();
 
 		//Pan over to the revealing AI group
-		if( !bNewUnitSelected )
+		if( !bNewUnitSelected && ShouldPlayLookatCamera() )
 		{
 			RequestInitialLookAtCamera();
 		}

@@ -20,6 +20,7 @@ var localized string LocStringTest1;
 
 simulated function InitScreen(XComPlayerController InitController, UIMovie InitMovie, optional name InitName)
 {
+
 	super.InitScreen(InitController, InitMovie, InitName);
 
 	//Movie.Pres.UIDrawGridPixel(100, 100);
@@ -63,8 +64,20 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 	//TestSpinnerList();
 	//TestStaffIcons();
 
-	TestTutorialBladeMessages();
+	//TestTutorialBladeMessages();
 	//TestTutorialArrows();
+	TestCommanderKilledPopup();
+
+}
+
+function TestCommanderKilledPopup()
+{
+	local UICombatLose TempScreen; 
+
+	TempScreen = Spawn(class'UICombatLose', self);
+	TempScreen.m_eType = eUICombatLose_UnfailableCommanderKilled;
+	Movie.Stack.Push(TempScreen);
+
 }
 
 simulated function TestSimpleSpinnerList()

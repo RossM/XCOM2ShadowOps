@@ -7,7 +7,7 @@ var PlayerController        CursorController;
 var PlayerController 	    PlayerController;
 var protected XGStrategy    m_kGameCore;
 var string                  m_strSaveFile;
-var XGCharacterGenerator    CharacterGenerator;
+var deprecated XGCharacterGenerator    CharacterGenerator;
 
 var bool                    m_bLoadDemoFromShell;
 var bool                    m_bDebugStrategyFromShell;
@@ -52,8 +52,6 @@ function StartMatch()
 	super.StartMatch();
 
 	InitEarth();
-
-	CharacterGenerator = spawn(class'XGCharacterGenerator');
 
 	// Ensure that the player has the correct rich presence
 	PlayerController.ClientSetOnlineStatus();

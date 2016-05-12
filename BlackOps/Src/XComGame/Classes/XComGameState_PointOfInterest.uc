@@ -166,8 +166,12 @@ function Spawn(XComGameState NewGameState)
 
 	ChooseInformation();
 	SetContinent();
-	SetDespawnTime();
 	GenerateRewards(NewGameState);
+	
+	if (!GetMyTemplate().bNeverExpires)
+	{
+		SetDespawnTime();
+	}
 }
 
 //---------------------------------------------------------------------------------------
@@ -316,8 +320,8 @@ function bool Update(XComGameState NewGameState)
 	// Do not trigger anything while the Avenger or Skyranger are flying, or if another popup is already being presented
 	if (bAvailable && StrategyMap != none && StrategyMap.m_eUIState != eSMS_Flight && !`HQPRES.ScreenStack.IsCurrentClass(class'UIAlert'))
 	{
-		// If the Avenger is not at the location and time runs out, close the market
-		if (XComHQ.GetCurrentScanningSite().GetReference().ObjectID != ObjectID && class'X2StrategyGameRulesetDataStructures'.static.LessThan(DespawnTime, GetCurrentTime()))
+		// If the Avenger is not at the location and time runs out, despawn the POI
+		if (XComHQ.GetCurrentScanningSite().GetReference().ObjectID != ObjectID && !GetMyTemplate().bNeverExpires && class'X2StrategyGameRulesetDataStructures'.static.LessThan(DespawnTime, GetCurrentTime()))
 		{
 			bAvailable = false;
 			ResetPOI(NewGameState);
@@ -675,10 +679,16 @@ simulated public function POICompletePopup()
 			`HQPRES.UIItemReceived(ItemState.GetMyTemplate());
 		}
 	}
-	
-	`HQPRES.UIPointOfInterestCompleted(GetReference());	
 
+	TriggerPOICompletePopup();	
+	
 	`GAME.GetGeoscape().Pause();
+}
+
+// Separated from the POICompletePopup function so it can be easily overwritten by mods
+simulated function TriggerPOICompletePopup()
+{
+	`HQPRES.UIPointOfInterestCompleted(GetReference());
 }
 
 simulated function string GetUIButtonIcon()

@@ -101,6 +101,8 @@ static function X2WeaponTemplate CreateMimicBeacon()
 	Template.PointsToComplete = 0;
 	Template.TradingPostValue = 15;
 
+	Template.bShouldCreateDifficultyVariants = true;
+
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.RangeLabel, , default.MIMICBEACON_RANGE);
 
 	// Requirements
@@ -131,7 +133,8 @@ static function X2DataTemplate CreateXPad()
 	Template.iRange = 15;
 	Template.iRadius = 240;
 	Template.iItemSize = 0;
-	
+	Template.Tier = -1;
+
 	Template.InventorySlot = eInvSlot_Utility;
 	Template.StowedLocation = eSlot_LowerBack;
 	Template.Abilities.AddItem('Hack');
@@ -143,6 +146,7 @@ static function X2DataTemplate CreateXPad()
 
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
+	Template.bInfiniteItem = true;
 
 	return Template;
 }
@@ -336,7 +340,6 @@ static function X2DataTemplate NanoMedikit()
 	Resources.ItemTemplateName = 'Supplies';
 	Resources.Quantity = 50;
 	Template.Cost.ResourceCosts.AddItem(Resources);
-
 
 	Artifacts.ItemTemplateName = 'CorpseViper';
 	Artifacts.Quantity = 1;

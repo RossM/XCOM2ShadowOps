@@ -231,7 +231,7 @@ simulated function RequestFullPawnContent()
 			kRequest.TemplateName = bShouldUseUnderlay ? m_kAppearance.nmArms_Underlay : m_kAppearance.nmArms;
 			kRequest.BodyPartLoadedFn = OnArmsLoaded;
 			PawnContentRequests.AddItem(kRequest);
-		}
+		}		
 
 		if((UnitState == none || UnitState.GetMyTemplateName() != 'Clerk') && !bShouldUseUnderlay && m_kAppearance.nmLeftArm != '')
 		{
@@ -447,6 +447,8 @@ simulated exec function UpdateAnimations()
 			GetAnimTreeController().PlayAdditiveDynamicAnim(AnimParams);
 		}
 	}
+
+	XComReaddCarryAnimSets();
 }
 
 simulated function AddRequiredAnimSets()
@@ -483,7 +485,7 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 	// Do not reset here, just make sure we have the animsets we need to not get monkey people
 	// or freaked out flippy heads -- jboswell
 	// If we reset, in tactical the units will lose their weapon-based animations
-	AddRequiredAnimSets();
+	UpdateAnimations();
 
 	super.PostInitAnimTree(SkelComp);
 
@@ -608,15 +610,19 @@ simulated function UpdateSkinMaterial(MaterialInstanceConstant MIC, bool bHasHai
 
 		if(bIsHead)
 		{
-			if(m_kAppearance.nmScars != '' && ScarsContent.texture != none)
+			if(m_kAppearance.nmScars != '' && ScarsContent != none)
 			{
 				MIC.SetScalarParameterValue('ShowScars', 1);
 				MIC.SetTextureParameterValue('ScarNormal', ScarsContent.texture);
+				MIC.SetTextureParameterValue('ScarDiffuse', ScarsContent.diffuse);
+				MIC.SetTextureParameterValue('ScarSpecMask', ScarsContent.specmask);
 			}
 			else
 			{
 				MIC.SetScalarParameterValue('ShowScars', 0);
 				MIC.SetTextureParameterValue('ScarNormal', none);
+				MIC.SetTextureParameterValue('ScarDiffuse', none);
+				MIC.SetTextureParameterValue('ScarSpecMask', none);
 			}
 
 			if(m_kAppearance.nmFacePaint != '' && FacePaintContent.texture != none)
@@ -797,12 +803,14 @@ simulated function UpdateMeshMaterials(MeshComponent MeshComp)
 					case 'HeadCustomizable_Scars_TC':
 						UpdateSkinMaterial(MIC, true, MeshComp == m_kHeadMeshComponent);
 						break;
-					case 'SoldierArmorCustomizable_TC':		
+					case 'SoldierArmorCustomizable_TC':
+					case 'Diffuse_TC_Metalic':		
 					case 'M_Master_PwrdArm_TC':
+					case 'Diffuse_TC_Metalic':
 					case 'Props_OpcMask_TC':
 					case 'CivilianCustomizable_TC':					
 					case 'SoldierArmorCustomizable_Decals_TC':
-						UpdateArmorMaterial(MeshComp, MIC, m_kAppearance.iArmorTint, m_kAppearance.iArmorTintSecondary, PatternsContent[0]);
+						UpdateArmorMaterial(MeshComp, MIC, m_kAppearance.iArmorTint, m_kAppearance.iArmorTintSecondary, PatternsContent.Length > 0 ? PatternsContent[0] : none);
 						break;
 					case 'WeaponCustomizable_TC':
 						// Weapon customization data is now stored in XComGameState_Item.WeaponAppearance, and applied in XGWeapon.UpdateWeaponMaterial
@@ -990,25 +998,6 @@ simulated function RemoveProps()
 	m_aPhysicsProps.Length = 0;
 }
 
-simulated function RemoveProp(MeshComponent PropComponent)
-{
-	local int PropIdx;
-
-	DetachComponent(PropComponent);
-	Mesh.DetachComponent(PropComponent);
-	
-	for (PropIdx = 0; PropIdx < m_aPhysicsProps.Length; ++PropIdx)
-	{
-		if (m_aPhysicsProps[PropIdx] != none && m_aPhysicsProps[PropIdx].SkeletalMeshComponent == PropComponent)
-		{
-			//m_aPhysicsProps[PropIdx].SetBase(none);
-			m_aPhysicsProps[PropIdx].Destroy();
-			m_aPhysicsProps.Remove(PropIdx, 1);
-			break;
-		}
-	}  
-}
-
 simulated function RemoveAttachments()
 {
 	local ItemAttachment AttachedItem;
@@ -1057,7 +1046,27 @@ simulated function ReturnFromMatinee()
 	super.ReturnFromMatinee();
 }
 
-simulated function FreezeHair()
+function FreezePhysics()
+{
+	local int Index;
+
+	for(Index = 0; Index < m_aPhysicsProps.Length; ++Index)
+	{
+		m_aPhysicsProps[Index].SkeletalMeshComponent.SetHasPhysicsAssetInstance(false);
+	}
+}
+
+function WakePhysics()
+{
+	local int Index;
+
+	for(Index = 0; Index < m_aPhysicsProps.Length; ++Index)
+	{
+		m_aPhysicsProps[Index].SkeletalMeshComponent.SetHasPhysicsAssetInstance(true);
+	}
+}
+
+simulated function FreezeHair() 
 {
 	
 }
@@ -1105,8 +1114,21 @@ simulated function OnHeadLoaded(PawnContentRequest ContentRequest)
 		return;
 
 	HeadContent = XComHeadContent(ContentRequest.kContent);
-	m_kHeadMeshComponent = Mesh; //The base mesh is the head for pawns that load head content
 	
+	if( HeadContent.SkeletalMesh != Mesh.SkeletalMesh )
+ 	{
+ 		m_kHeadMeshComponent.SetSkeletalMesh(HeadContent.SkeletalMesh);
+ 		m_kHeadMeshComponent.SetParentAnimComponent(Mesh);
+		AttachComponent(m_kHeadMeshComponent);
+		Mesh.AppendSockets(m_kHeadMeshComponent.Sockets, true);
+		ResetMaterials(m_kHeadMeshComponent);
+		m_kHeadMeshComponent.SetHidden(false);
+ 	}
+	else
+	{
+		m_kHeadMeshComponent = Mesh; //The base mesh is the head for pawns that load head content
+	}
+
 	// Head materials: 0 = skin, 1= eyelashes/eyebrows
 	// Add a new MIC so we can change parameters for just this character
 	SkinMaterial = HeadContent.HeadMaterial;
@@ -1116,7 +1138,18 @@ simulated function OnHeadLoaded(PawnContentRequest ContentRequest)
 	}
 
 	//Play the additive anim that will morph the head shape from the ref head
-	if( HeadContent.AdditiveAnimSet != none && HeadContent.AdditiveAnim != '' )
+	if(HelmetContent != none && HelmetContent.bUseDefaultHead)
+	{
+		if(m_kAppearance.iGender == eGender_Female)
+		{
+			AnimTreeController.SetHeadAnim('ADD_DEBUG_Neutral_FEM');
+		}
+		else
+		{
+			AnimTreeController.SetHeadAnim('ADD_DEBUG_Neutral_M');
+		}
+	}
+	else if( HeadContent.AdditiveAnimSet != none && HeadContent.AdditiveAnim != '' )
 	{		
 		AnimTreeController.SetHeadAnim(HeadContent.AdditiveAnim);		
 	}
@@ -1517,6 +1550,19 @@ simulated function OnBodyPartLoaded(PawnContentRequest ContentRequest)
 			UseMeshComponent.SetSkeletalMesh(none);
 			bSkipAttachment = true;
 		}
+
+		if(HelmetContent.bUseDefaultHead)
+		{
+			if(m_kAppearance.iGender == eGender_Female)
+			{
+				AnimTreeController.SetHeadAnim('ADD_DEBUG_Neutral_FEM');
+			}
+			else
+			{
+				AnimTreeController.SetHeadAnim('ADD_DEBUG_Neutral_M');
+			}			
+		}
+
 		break;
 	}
 
@@ -1652,6 +1698,16 @@ function UpdateMorphs(SkeletalMeshComponent CheckMeshComponent, MorphTargetSet U
 
 simulated function OnTorsoLoaded(PawnContentRequest ContentRequest)
 {
+	local int AttachmentIndex;
+
+	if( TorsoContent != None )
+	{
+		for( AttachmentIndex = 0; AttachmentIndex < TorsoContent.DefaultAttachments.Length; ++AttachmentIndex )
+		{
+			RemoveBodyPartAttachment(TorsoContent.DefaultAttachments[AttachmentIndex]);
+		}
+	}
+
 	TorsoContent = XComTorsoContent(ContentRequest.kContent);
 	m_kTorsoComponent.SetSkeletalMesh(TorsoContent.SkeletalMesh);
 	ResetMaterials(m_kTorsoComponent);	
@@ -1662,6 +1718,14 @@ simulated function OnTorsoLoaded(PawnContentRequest ContentRequest)
 	m_kTorsoComponent.SetParentAnimComponent(Mesh);
 	
 	Mesh.AppendSockets(m_kTorsoComponent.Sockets, true);
+
+	for( AttachmentIndex = 0; AttachmentIndex < TorsoContent.DefaultAttachments.Length; ++AttachmentIndex )
+	{
+		CreateBodyPartAttachment(TorsoContent.DefaultAttachments[AttachmentIndex]);
+	}
+
+	UpdateAnimations();
+
 	MarkAuxParametersAsDirty(m_bAuxParamNeedsPrimary, m_bAuxParamNeedsSecondary, m_bAuxParamUse3POutline);
 }
 

@@ -71,7 +71,7 @@ function Init(const out VisualizationTrack InTrack)
 	`assert(UnitState != none);
 
 	NewHistoryIndex = InTrack.StateObject_NewState.GetParentGameState().HistoryIndex;
-	OldHistoryIndex = InTrack.StateObject_OldState.GetParentGameState().HistoryIndex;
+	OldHistoryIndex = NewHistoryIndex - 1;
 	OldUnitState = XComGameState_Unit(InTrack.StateObject_OldState);
 
 	OldLootableObjectState = Lootable(History.GetGameStateForObjectID(LootableObjectID, , OldHistoryIndex));

@@ -16,6 +16,7 @@ var config int MAX_UNTOUCHABLE;
 var config int REAPER_COOLDOWN;
 var config int INSTINCT_DMG;
 var config int RAPIDFIRE_AIM;
+var config int RUNANDGUN_COOLDOWN;
 
 var name SwordSliceName;
 
@@ -227,7 +228,7 @@ static function X2AbilityTemplate RunAndGunAbility(Name AbilityName)
 	Template.AbilityConfirmSound = "TacticalUI_Activate_Ability_Run_N_Gun";
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.RUNANDGUN_COOLDOWN;
 	Template.AbilityCooldown = Cooldown;
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
@@ -565,7 +566,7 @@ static function X2AbilityTemplate BladestormAttack()
 
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildVisualizationFn = BladeStorm_BuildVisualization;
 	Template.bShowActivation = true;
 
 	return Template;
@@ -602,6 +603,43 @@ static function EventListenerReturn BladestormConcealmentListener(Object EventDa
 	
 	BladestormState.AbilityTriggerAgainstSingleTarget(ConcealmentBrokenUnit.ConcealmentBrokenByUnitRef, false);
 	return ELR_NoInterrupt;
+}
+
+simulated function BladeStorm_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameStateContext Context;
+	local int TrackIndex, ActionIndex;
+	local XComGameStateHistory History;
+	local X2Action_EnterCover EnterCoverAction;
+	local XGUnit SourceUnit;
+
+	History = `XCOMHISTORY;
+
+	// Build the first shot of Bladestorm's visualization
+	TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);	
+
+	Context = VisualizeGameState.GetContext();
+	AbilityContext = XComGameStateContext_Ability(Context);
+	SourceUnit = XGUnit(History.GetVisualizer(AbilityContext.InputContext.SourceObject.ObjectID));
+
+	for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
+	{
+		// Find the SourceUnit's track
+		if( SourceUnit == OutVisualizationTracks[TrackIndex].TrackActor )
+		{
+			//Look for the EnteringCover action for the ranger and prevent the delay from happening
+			for( ActionIndex = 0; ActionIndex < OutVisualizationTracks[TrackIndex].TrackActions.Length; ++ActionIndex )
+			{
+				EnterCoverAction = X2Action_EnterCover(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+				if( EnterCoverAction != none )
+				{
+					EnterCoverAction.bInstantEnterCover = true;
+					break;
+				}
+			}
+		}
+	}
 }
 
 static function X2AbilityTemplate DeepCover()
@@ -683,6 +721,7 @@ static function X2AbilityTemplate RapidFire()
 	Template.AssociatedPassives.AddItem('HoloTargeting');
 	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
@@ -791,6 +830,7 @@ static function X2AbilityTemplate RapidFire2()
 	Template.AssociatedPassives.AddItem('HoloTargeting');
 	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Trigger = new class'X2AbilityTrigger_EventListener';
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;

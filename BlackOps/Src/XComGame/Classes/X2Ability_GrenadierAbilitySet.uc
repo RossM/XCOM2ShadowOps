@@ -28,6 +28,11 @@ var config float BLAST_PADDING_DMG_ADJUST;
 var config int CHAINSHOT_HIT_MOD;
 var config int ORDNANCE_BONUS;
 var config name FreeGrenadeForPocket;
+var config int HAILOFBULLETS_COOLDOWN;
+var config int BULLETSHRED_COOLDOWN;
+var config int SATURATION_FIRE_COOLDOWN;
+var config int CHAINSHOT_COOLDOWN;
+var config int DEMOLITION_COOLDOWN;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -72,7 +77,7 @@ static function X2AbilityTemplate HailOfBullets()
 	Template.AbilityCosts.AddItem(AmmoCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 6;
+	Cooldown.iNumTurns = default.HAILOFBULLETS_COOLDOWN;
 	Template.AbilityCooldown = Cooldown;
 
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
@@ -93,6 +98,7 @@ static function X2AbilityTemplate HailOfBullets()
 	Template.AssociatedPassives.AddItem( 'HoloTargeting' );
 	Template.AddTargetEffect(ShredderDamageEffect());
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
@@ -128,9 +134,12 @@ function GrenadePocketPurchased(XComGameState NewGameState, XComGameState_Unit U
 	local X2ItemTemplate FreeItem;
 	local XComGameState_Item ItemState;
 
+	if (UnitState.IsMPCharacter())
+		return;
+	
 	if (!UnitState.HasGrenadePocket())
 	{
-		`RedScreen("GrenadePocketPurchased called but the unit doesn't have one? -jbouscher / @gameplay" @ UnitState.ToString());
+		`RedScreen("GrenadePocketPurchased called but the unit doesn't have one? -jbouscher / @gameplay" @ UnitState.ToString());		
 		return;
 	}
 	FreeItem = class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate(default.FreeGrenadeForPocket);
@@ -531,7 +540,7 @@ static function X2AbilityTemplate BulletShred()
 	Template.bAllowAmmoEffects = true;
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.BULLETSHRED_COOLDOWN;
 	Template.AbilityCooldown = Cooldown;
 
 	// Weapon Upgrade Compatibility
@@ -540,6 +549,7 @@ static function X2AbilityTemplate BulletShred()
 	WeaponDamageEffect = ShredderDamageEffect();
 	WeaponDamageEffect.EffectDamageValue.Rupture = default.BULLET_SHRED;
 	Template.AddTargetEffect(WeaponDamageEffect);
+	Template.bAllowBonusWeaponEffects = true;
 	
 	Template.AddTargetEffect(HoloTargetEffect());
 	Template.AssociatedPassives.AddItem('HoloTargeting');
@@ -637,7 +647,7 @@ static function X2AbilityTemplate SaturationFire()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 6;
+	Cooldown.iNumTurns = default.SATURATION_FIRE_COOLDOWN;
 	Template.AbilityCooldown = Cooldown;
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
@@ -717,7 +727,7 @@ static function X2AbilityTemplate ChainShot()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.CHAINSHOT_COOLDOWN;
 	Template.AbilityCooldown = Cooldown;
 
 	//  require 2 ammo to be present so that both shots can be taken
@@ -748,6 +758,7 @@ static function X2AbilityTemplate ChainShot()
 	Template.AddTargetEffect(ShredderDamageEffect());
 	Template.AddTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
@@ -882,6 +893,7 @@ static function X2AbilityTemplate ChainShot2()
 	Template.AddTargetEffect(ShredderDamageEffect());
 	Template.AddTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Trigger = new class'X2AbilityTrigger_EventListener';
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
@@ -962,7 +974,7 @@ static function X2AbilityTemplate Demolition()
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = 4;
+	Cooldown.iNumTurns = default.DEMOLITION_COOLDOWN;
 	Template.AbilityCooldown = Cooldown;
 
 	AmmoCost = new class'X2AbilityCost_Ammo';

@@ -24,6 +24,10 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(AddKillSiredZombies());
 
 	Templates.AddItem(AddSireZombieLink());
+	Templates.AddItem(CreatePsiZombieInitializationAbility());
+
+	// MP Versions of Abilities
+	Templates.AddItem(AddPsiReanimationMP());
 
 	return Templates;
 }
@@ -346,6 +350,10 @@ static function X2AbilityTemplate AddPsiReanimation()
 	UnitValue.AddCheckValue(class'X2Effect_SpawnPsiZombie'.default.TurnedZombieName, 1, eCheck_LessThan);
 	Template.AbilityTargetConditions.AddItem(UnitValue);
 
+	// the target's tile must be clear of obstruction. Functionally this is the same as the
+	// unburrow condition, but it can't renamed now that we've launched the game
+	Template.AbilityTargetConditions.AddItem(new class'X2Condition_ValidUnburrowTile');
+
 	ExcludeEffects = new class'X2Condition_UnitEffects';
 	ExcludeEffects.AddExcludeEffect(class'X2Ability_CarryUnit'.default.CarryUnitEffectName, 'AA_UnitIsImmune');
 	ExcludeEffects.AddExcludeEffect(class'X2AbilityTemplateManager'.default.BeingCarriedEffectName, 'AA_UnitIsImmune');
@@ -379,6 +387,7 @@ static function X2AbilityTemplate AddPsiReanimation()
 	Template.AddTargetEffect(SpawnZombieEffect);
 
 	Template.bSkipPerkActivationActions = true;
+	Template.bSkipPerkActivationActionsSync = false;
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 	Template.BuildVisualizationFn = PsiReanimation_BuildVisualization;
@@ -725,6 +734,124 @@ simulated function BuildVisualization_SireDeathEffect(XComGameState VisualizeGam
 		LookAtAction.LookAtObject = UnitState;
 		LookAtAction.BlockUntilActorOnScreen = true;
 	}
+}
+
+static function X2AbilityTemplate CreatePsiZombieInitializationAbility()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_DamageImmunity DamageImmunity;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ZombieInitialization');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_mentalfortress"; 
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+	
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	// Build the immunities
+	DamageImmunity = new class'X2Effect_DamageImmunity';
+	DamageImmunity.BuildPersistentEffect(1, true, true, true);
+	DamageImmunity.ImmuneTypes.AddItem(class'X2Item_DefaultDamageTypes'.default.DisorientDamageType);
+	DamageImmunity.ImmuneTypes.AddItem('stun');
+	DamageImmunity.ImmuneTypes.AddItem('Unconscious');
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+
+	return Template;
+}
+
+// #######################################################################################
+// -------------------- MP Abilities -----------------------------------------------------
+// #######################################################################################
+
+static function X2AbilityTemplate AddPsiReanimationMP()
+{
+	local X2AbilityTemplate Template;
+	local X2AbilityCost_ActionPoints ActionPointCost;
+	local X2AbilityCooldown Cooldown;
+	local X2Condition_UnitProperty UnitPropertyCondition;
+	local X2Condition_Visibility TargetVisibilityCondition;
+	local X2Effect_SpawnPsiZombie SpawnZombieEffect;
+	local X2Condition_UnitValue UnitValue;
+	local X2Condition_UnitEffects ExcludeEffects;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'PsiReanimationMP');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_sectoid_psireanimate";
+	Template.MP_PerkOverride = 'PsiReanimation';
+
+	Template.AbilitySourceName = 'eAbilitySource_Psionic';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.Hostility = eHostility_Offensive;
+
+	// Cost of the ability
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	// Cooldown on the ability
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = 4;
+	Template.AbilityCooldown = Cooldown;
+
+	Template.AbilityTargetStyle = new class'X2AbilityTarget_Single';
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);// Prevent ability from being available when dead
+	Template.AddShooterEffectExclusions();
+
+	// This ability is only valid if the target has not yet been turned into a zombie
+	UnitValue = new class'X2Condition_UnitValue';
+	UnitValue.AddCheckValue(class'X2Effect_SpawnPsiZombie'.default.TurnedZombieName, 1, eCheck_LessThan);
+	Template.AbilityTargetConditions.AddItem(UnitValue);
+
+	ExcludeEffects = new class'X2Condition_UnitEffects';
+	ExcludeEffects.AddExcludeEffect(class'X2Ability_CarryUnit'.default.CarryUnitEffectName, 'AA_UnitIsImmune');
+	ExcludeEffects.AddExcludeEffect(class'X2AbilityTemplateManager'.default.BeingCarriedEffectName, 'AA_UnitIsImmune');
+	Template.AbilityTargetConditions.AddItem(ExcludeEffects);
+
+	// The unit must be organic, dead, and not an alien
+	UnitPropertyCondition = new class'X2Condition_UnitProperty';
+	UnitPropertyCondition.ExcludeDead = false;
+	UnitPropertyCondition.ExcludeAlive = true;
+	UnitPropertyCondition.ExcludeRobotic = true;
+	UnitPropertyCondition.ExcludeOrganic = false;
+	UnitPropertyCondition.ExcludeAlien = true;
+	UnitPropertyCondition.ExcludeCivilian = false;
+	UnitPropertyCondition.ExcludeCosmetic = true;
+	UnitPropertyCondition.ExcludeFriendlyToSource = false;
+	UnitPropertyCondition.ExcludeHostileToSource = false;
+	UnitPropertyCondition.FailOnNonUnits = true;
+	Template.AbilityTargetConditions.AddItem(UnitPropertyCondition);
+
+	// Must be able to see the dead unit to reanimate it
+	TargetVisibilityCondition = new class'X2Condition_Visibility';
+	TargetVisibilityCondition.bRequireGameplayVisible = true;
+	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
+
+	// Add dead eye to guarantee the reanimation occurs
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	// The target will now be turned into a zombie
+	SpawnZombieEffect = new class'X2Effect_SpawnPsiZombie';
+	SpawnZombieEffect.UnitToSpawnName = 'PsiZombieMP';
+	SpawnZombieEffect.AltUnitToSpawnName = 'PsiZombieHumanMP';
+	SpawnZombieEffect.BuildPersistentEffect(1, true);
+	Template.AddTargetEffect(SpawnZombieEffect);
+
+	Template.bSkipPerkActivationActions = true;
+	Template.bSkipPerkActivationActionsSync = false;
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
+	Template.BuildVisualizationFn = PsiReanimation_BuildVisualization;
+	Template.CinescriptCameraType = "Sectoid_PsiReanimation";
+
+	return Template;
 }
 
 defaultproperties

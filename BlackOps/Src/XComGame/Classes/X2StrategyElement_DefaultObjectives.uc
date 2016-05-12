@@ -1357,7 +1357,7 @@ function TutorialKickToBridge()
 	local XComGameState NewGameState;
 
 	HQPres = `HQPRES;
-	HQPres.ScreenStack.PopUntilClass(class'UIFacility_Armory');
+	HQPres.ScreenStack.PopUntilFirstInstanceOfClass(class'UIFacility_Armory');
 	CurrentScreen = UIFacility_Armory(HQPres.ScreenStack.GetCurrentScreen());
 	CurrentScreen.LeaveArmory();
 

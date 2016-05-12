@@ -514,7 +514,7 @@ function GeneratePersonnelReward(XComGameState_Reward RewardState, XComGameState
 	local XComGameStateHistory History;
 	local XComGameState_Unit NewUnitState;
 	local XComGameState_WorldRegion RegionState;
-	local int i, idx, NewRank;
+	local int idx, NewRank;
 	local name nmCountry;
 
 	History = `XCOMHISTORY;
@@ -554,10 +554,7 @@ function GeneratePersonnelReward(XComGameState_Reward RewardState, XComGameState
 			{
 				NewUnitState.RankUpSoldier(NewGameState, ResistanceHQ.SelectNextSoldierClass());
 				NewUnitState.ApplySquaddieLoadout(NewGameState);
-				for(i = 0; i < NewUnitState.GetSoldierClassTemplate().GetAbilityTree(0).Length; ++i)
-				{
-					NewUnitState.BuySoldierProgressionAbility(NewGameState, 0, i);
-				}
+				NewUnitState.bNeedsNewClassPopup = false;
 			}
 			else
 			{
@@ -1470,7 +1467,7 @@ function GiveLootTableReward(XComGameState NewGameState, XComGameState_Reward Re
 		ItemTemplate = ItemTemplateManager.FindItemTemplate(LootName);
 		ItemState = ItemTemplate.CreateInstanceFromTemplate(NewGameState);
 		NewGameState.AddStateObject(ItemState);
-		XComHQ.PutItemInInventory(NewGameState, ItemState, true);
+		XComHQ.PutItemInInventory(NewGameState, ItemState);
 
 		RewardState.RewardString $= ItemTemplate.GetItemFriendlyName();
 		if (idx < (LootToGive.LootToBeCreated.Length - 1))

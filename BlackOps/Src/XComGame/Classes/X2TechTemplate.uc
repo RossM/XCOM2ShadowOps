@@ -26,6 +26,7 @@ var int					SortingTier; // The importance "tier" of this tech, used for sorting
 
 // Requirements and Cost
 var config StrategyRequirement Requirements;
+var config array<StrategyRequirement> AlternateRequirements; // Other possible StrategyRequirements for this tech
 var config StrategyRequirement InstantRequirements; // If these requirements are met, the tech will become instant
 var config StrategyCost	Cost;
 

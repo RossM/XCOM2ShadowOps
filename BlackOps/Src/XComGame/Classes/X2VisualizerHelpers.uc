@@ -229,7 +229,6 @@ static function ParsePath(const out XComGameStateContext_Ability AbilityContext,
 			TempPoint = VisualizerHelper.InputData.MovementData[0];
 			//This unit was not seen at any point during its move, teleport to keep turn times down
 			VisualizerHelper.AddTrackAction_Teleport(LastTraversalType, TempPoint.Position, VisualizerHelper.InputData.MovementData[VisualizerHelper.InputData.MovementData.Length - 1].Position, NewDirection, 0, 0, AbilityContext, BuildTrack);
-
 		}
 		else
 		{			
@@ -237,7 +236,7 @@ static function ParsePath(const out XComGameStateContext_Ability AbilityContext,
 				MovementPathIndex == 0 &&  //For group moves, follow the first mover
 				UnitState.ReflexActionState != eReflexActionState_AIScamper && //The scamper action sequence has its own camera
 				!Unit.bNextMoveIsFollow && //A unit following another will not get a follow cam
-				class'X2TacticalVisibilityHelpers'.static.IsUnitVisibleToLocalPlayer(UnitState.ObjectID, AbilityContext.AssociatedState.HistoryIndex)) //A unit that isn't visible to the local player shouldn't frame
+				bMoveVisible) //A unit that isn't visible to the local player shouldn't frame
 			{
 				// Movement is unique in that we spawn our own frame ability camera
 				if(class'X2Camera_FollowMovingUnit'.default.UseFollowUnitCamera)

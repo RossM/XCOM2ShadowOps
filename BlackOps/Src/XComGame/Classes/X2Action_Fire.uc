@@ -110,6 +110,10 @@ function Init(const out VisualizationTrack InTrack)
 
 	MoveEndDirection = TargetLoc - MoveEndDestination;
 	MoveEndDirection.Z = 0;
+	if( MoveEndDirection.X == 0.0f && MoveEndDirection.Y == 0.0f )
+	{
+		MoveEndDirection = vector(UnitPawn.Rotation);
+	}
 	MoveEndDirection = Normal(MoveEndDirection);
 
 	DistanceForAttack = VSize2D(MoveEndDestination - UnitPawn.Location);
@@ -286,11 +290,11 @@ function ProjectileNotifyHit(bool bMainImpactNotify, Vector HitLocation)
 	local XComGameState_EnvironmentDamage EnvironmentDamageEvent;
 	local XComGameState_InteractiveObject InteractiveObject;
 	local XComInteractiveLevelActor InteractiveLevelActor;
-	local StateObjectReference Target;	
-
+	local StateObjectReference Target;
+	
 	foreach VisualizeGameState.IterateByClassType(class'XComGameState_EnvironmentDamage', EnvironmentDamageEvent)
 	{		
-		if(VSize(EnvironmentDamageEvent.HitLocation - HitLocation) < (class'XComWorldData'.const.WORLD_StepSize * 3))
+		if(EnvironmentDamageEvent.HitLocation == HitLocation)
 		{
 			Target = EnvironmentDamageEvent.GetReference();
 			VisualizationMgr.SendInterTrackMessage(Target, CurrentHistoryIndex);
@@ -351,6 +355,26 @@ function EndVolleyConstants( AnimNotify_EndVolleyConstants Notify )
 	}
 }
 
+// Called by the animation system to place an impact decal in the world
+function NotifyApplyDecal(XComAnimNotify_TriggerDecal Notify)
+{
+	local vector StartLocation, EndLocation;
+	local XComWorldData World;
+	local int i;
+	
+	World = `XWORLD;
+
+	for( i = 0; i < AbilityContext.InputContext.TargetLocations.Length; ++i )
+	{
+		StartLocation = AbilityContext.InputContext.TargetLocations[i];
+		StartLocation.Z += 0.5f;    // Offset by a bit to make sure we have an acutal travel direction
+		EndLocation = AbilityContext.InputContext.TargetLocations[i];
+		EndLocation.Z = World.GetFloorZForPosition(EndLocation, false) - 0.5f;  // Offset by a bit to make sure we have an acutal travel direction
+
+		Unit.AddDecalProjectile(StartLocation, EndLocation, AbilityContext);
+	}
+}
+
 function bool IsTimedOut()
 {
 	return ExecutingTime >= TimeoutSeconds;
@@ -372,7 +396,6 @@ function CompleteAction()
 
 	`assert(Unit.CurrentFireAction == self);
 	Unit.CurrentFireAction = none;
-
 
 	// Do this last, because if two X2Action_Fire actions are played back to back, the next Fire will
 	// immediately set Unit.CurrentFireAction to itself, which, if this came sooner, might mess up

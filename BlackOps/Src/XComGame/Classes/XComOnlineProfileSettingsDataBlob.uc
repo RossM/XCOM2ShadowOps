@@ -23,6 +23,18 @@ struct native MarketingPreset
 	var array<name> CheckboxSettings; //If a check box's name is in the list, it is checked
 };
 
+struct native NarrativeContentFlag
+{
+	var bool NarrativeContentEnabled;
+	var name DLCName;
+};
+
+struct native CustomizationAlertInfo
+{
+	var int Category;
+	var name DLCName;
+};
+
 var MarketingPreset MarketingPresets;
 
 // Stores the player's selection for the part packs ( chance to see the various parts show up on generated soldiers )
@@ -70,7 +82,6 @@ var bool	m_bEnableSoldierSpeech;
 var bool	m_bSubtitles;
 var bool	m_bPushToTalk;
 var bool	m_bPlayerHasUncheckedBoxTutorialSetting;
-var bool	bHasPlayedDLCCampaign;
 var int		m_iMasterVolume;
 var int		m_iVoiceVolume;
 var int		m_iFXVolume;
@@ -94,7 +105,11 @@ var bool bEnableZipMode;
 var int MaxVisibleCrew;
 
 // Character customization usage 
-var array<int> m_arrCharacterCustomizationCategoriesClearedAttention;
+var array<int> m_arrCharacterCustomizationCategoriesClearedAttention; // DEPRECATED. Converted in XComCharacterCustomization.Init
+var array<CustomizationAlertInfo> m_arrCharacterCustomizationCategoriesInfo; //Used from DLC2 forward, for all DLCs.
+
+// DLC Narrative Tracking
+var array<NarrativeContentFlag> m_arrNarrativeContentEnabled;
 
 event bool IsMouseActive()
 {
@@ -257,6 +272,8 @@ function Options_ResetToDefaults( bool bInShell )
 	m_iVOIPVolume   = class'XComOnlineProfileSettingsDataBlob'.default.m_iVOIPVolume;
 
 	m_bPlayerHasUncheckedBoxTutorialSetting = class'XComOnlineProfileSettingsDataBlob'.default.m_bPlayerHasUncheckedBoxTutorialSetting;
+
+	m_arrNarrativeContentEnabled.Length = 0;
 }
 
 defaultproperties
@@ -287,9 +304,7 @@ defaultproperties
 	m_bIsConsoleBuild = false
 	m_bPlayerHasUncheckedBoxTutorialSetting = false;
 	UnitMovementSpeed = 1.0f;
-
-	bHasPlayedDLCCampaign=false;
-
+	
 	m_bAutoSave=true
 
 	m_eCharPoolUsage=eCPSM_PoolOnly

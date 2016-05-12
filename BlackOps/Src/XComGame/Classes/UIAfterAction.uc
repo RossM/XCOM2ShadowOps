@@ -200,6 +200,8 @@ event OnRemoteEvent(name RemoteEventName)
 			}
 		}
 
+		`GAME.GetGeoscape().m_kBase.UpdateFacilityProps();
+
 		`GAME.GetGeoscape().m_kBase.m_kCrewMgr.PopulateBaseRoomsWithCrew();
 	}
 	else if(RemoteEventName == 'PostM_ShowSoldiers')

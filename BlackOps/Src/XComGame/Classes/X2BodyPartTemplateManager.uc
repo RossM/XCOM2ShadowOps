@@ -96,7 +96,7 @@ protected event InitTemplatesInternal()
 		Template.DLCName			= name(PartInfo.DLCName);
 
 		Template.SetTemplateName(PartInfo.TemplateName);
-		AddUberTemplate(Template.PartType, Template);
+		AddUberTemplate(Template.PartType, Template, true);
 
 		`log(`location @ "Adding BodyPartTemplate: " @ `ShowVar(Template.DataName) @ `ShowVar(Template) @ `ShowVar(Template.PartType),,'XCom_Templates');
 	}

@@ -1,6 +1,7 @@
 class X2SchematicTemplate extends X2ItemTemplate;
 
 var(X2SchematicTemplate) array<name>	ItemsToUpgrade; // Deprecated! Still here to support mods compiled before this change
+var(X2SchematicTemplate) array<name>	ItemRewards; // Items which should be given to the player when this schematic is built
 var(X2SchematicTemplate) name			ReferenceItemTemplate; // Item which should be referenced for text & loc information
 
 var(X2SchematicTemplate) bool			bSquadUpgrade; // Does this schematic provide an upgrade for the entire squad
@@ -13,7 +14,7 @@ function string GetItemFriendlyName(optional int ItemID = 0, optional bool bShow
 	local X2ItemTemplate ReferenceTemplate;
 	local string NameStr;
 
-	ItemTemplateManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();	
+	ItemTemplateManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 	ReferenceTemplate = ItemTemplateManager.FindItemTemplate(ReferenceItemTemplate);
 
 	FriendlyName = ReferenceTemplate.FriendlyName;

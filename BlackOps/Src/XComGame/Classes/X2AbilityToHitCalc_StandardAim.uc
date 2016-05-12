@@ -471,7 +471,8 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 			}
 			else
 			{
-				AddModifier(TargetState.GetCurrentStat(eStat_Dodge), class'XLocalizedData'.default.DodgeStat, eHit_Graze);
+				if (SourceWeapon == none || SourceWeapon.CanWeaponBeDodged())
+					AddModifier(TargetState.GetCurrentStat(eStat_Dodge), class'XLocalizedData'.default.DodgeStat, eHit_Graze);
 			}
 		}					
 

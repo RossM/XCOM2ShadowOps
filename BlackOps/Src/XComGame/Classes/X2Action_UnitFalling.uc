@@ -24,7 +24,7 @@ var private X2Camera_FallingCam FallingCamera;
 var private CustomAnimParams AnimParams;
 var private float SingleTileFallStartTime;
 
-
+var bool StartingAllowAnimations;
 
 function Init(const out VisualizationTrack InTrack)
 {
@@ -124,6 +124,7 @@ Begin:
 
 	UnitPawn.EnableFootIK(false);
 
+	StartingAllowAnimations = UnitPawn.GetAnimTreeController().GetAllowNewAnimations();
 	UnitPawn.GetAnimTreeController().SetAllowNewAnimations(true);
 
 	// Lets put him in the first couple frames of the get up animation to get him to land on his back
@@ -229,6 +230,8 @@ Begin:
 		Unit.IdleStateMachine.CheckForStanceUpdate();
 	}
 	
+	UnitPawn.GetAnimTreeController().SetAllowNewAnimations(StartingAllowAnimations);
+
 	CompleteAction();
 }
 

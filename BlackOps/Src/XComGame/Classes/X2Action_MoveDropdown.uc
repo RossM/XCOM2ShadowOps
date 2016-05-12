@@ -16,6 +16,8 @@ var int     m_iAimingIterations;
 var bool    bStoredSkipIK;
 var CustomAnimParams AnimParams;
 var float   DropHeight;
+var float	DistanceTraveledZ;
+var float	StartingLocationZ;
 var private BoneAtom StartingAtom;
 var private AnimNodeSequence PlayingSequence;
 var Rotator DesiredRotation;
@@ -80,15 +82,21 @@ Begin:
 	StartingAtom.Rotation = QuatFromRotator(DesiredRotation);
 	UnitPawn.GetAnimTreeController().GetDesiredEndingAtomFromStartingAtom(AnimParams, StartingAtom);
 	PlayingSequence = UnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams);
-
-	while(Unit.Location.Z >= Destination.Z)
+	
+	DistanceTraveledZ = 0.0f;
+	StartingLocationZ = Unit.Location.Z;
+	while( DistanceTraveledZ < DropHeight )
 	{
 		if( !PlayingSequence.bRelevant || !PlayingSequence.bPlaying || PlayingSequence.AnimSeq == None )
 		{
-			`RedScreen("Dropdown never made it to the destination");
+			if( DropHeight - DistanceTraveledZ > fPawnHalfHeight )
+			{
+				`RedScreen("Dropdown never made it to the destination");
+			}
 			break;
 		}
 		Sleep(0.0f);
+		DistanceTraveledZ = StartingLocationZ - Unit.Location.Z;
 	}
 
 	AnimParams = default.AnimParams;

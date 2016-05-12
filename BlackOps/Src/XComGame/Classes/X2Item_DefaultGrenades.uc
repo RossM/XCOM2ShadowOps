@@ -307,6 +307,7 @@ static function X2DataTemplate CreateFragGrenade()
 
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
+	Template.bInfiniteItem = true;
 
 	WeaponDamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	WeaponDamageEffect.bExplosiveDamage = true;
@@ -402,7 +403,7 @@ static function X2DataTemplate CreateFlashbangGrenade()
 	Template.bFriendlyFireWarning = false;
 	Template.Abilities.AddItem('ThrowGrenade');
 
-	Template.ThrownGrenadeEffects.AddItem(class'X2StatusEffects'.static.CreateDisorientedStatusEffect());
+	Template.ThrownGrenadeEffects.AddItem(class'X2StatusEffects'.static.CreateDisorientedStatusEffect(, , false));
 
 	//We need to have an ApplyWeaponDamage for visualization, even if the grenade does 0 damage (makes the unit flinch, shows overwatch removal)
 	WeaponDamageEffect = new class'X2Effect_ApplyWeaponDamage';
@@ -778,6 +779,7 @@ static function X2GrenadeLauncherTemplate GrenadeLauncher()
 	
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
+	Template.bInfiniteItem = true;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.GrenadeRangeBonusLabel, , default.GRENADELAUNCHER_RANGEBONUS);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.GrenadeRadiusBonusLabel, , default.GRENADELAUNCHER_RADIUSBONUS);
@@ -1154,7 +1156,7 @@ static function X2DataTemplate EMPGrenade()
 	RemoveEffects.EffectNamesToRemove.AddItem(class'X2Effect_EnergyShield'.default.EffectName);
 	Template.ThrownGrenadeEffects.AddItem(RemoveEffects);
 
-	StunnedEffect = class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, 33);
+	StunnedEffect = class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, 33, false);
 	StunnedEffect.SetDisplayInfo(ePerkBuff_Penalty, class'X2StatusEffects'.default.RoboticStunnedFriendlyName, class'X2StatusEffects'.default.RoboticStunnedFriendlyDesc, "img:///UILibrary_PerkIcons.UIPerk_stun");
 	StunnedEffect.TargetConditions.AddItem(UnitCondition);
 	Template.ThrownGrenadeEffects.AddItem(StunnedEffect);
@@ -1229,7 +1231,7 @@ static function X2DataTemplate EMPGrenadeMk2()
 	RemoveEffects.EffectNamesToRemove.AddItem(class'X2Effect_EnergyShield'.default.EffectName);
 	Template.ThrownGrenadeEffects.AddItem(RemoveEffects);
 
-	StunnedEffect = class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, 50);
+	StunnedEffect = class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, 50, false);
 	StunnedEffect.SetDisplayInfo(ePerkBuff_Penalty, class'X2StatusEffects'.default.RoboticStunnedFriendlyName, class'X2StatusEffects'.default.RoboticStunnedFriendlyDesc, "img:///UILibrary_PerkIcons.UIPerk_stun");
 	StunnedEffect.TargetConditions.AddItem(UnitCondition);
 	Template.ThrownGrenadeEffects.AddItem(StunnedEffect);

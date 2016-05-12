@@ -81,12 +81,13 @@ event XComGameState_Unit CreateSoldier(name DataTemplateName)
 	ChangeContainer = class'XComGameStateContext_ChangeContainer'.static.CreateEmptyChangeContainer("Character Pool Manager");
 	SoldierContainerState = History.CreateNewGameState(true, ChangeContainer);
 
-	CharacterGenerator = `XCOMGAME.spawn( class 'XGCharacterGenerator' );
-
 	CharTemplateMgr = class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager();
 	`assert(CharTemplateMgr != none);
 
 	CharacterTemplate = CharTemplateMgr.FindCharacterTemplate(DataTemplateName);	
+	`assert(CharacterTemplate != none);
+	CharacterGenerator = `XCOMGAME.Spawn(CharacterTemplate.CharacterGeneratorClass);
+	`assert(CharacterGenerator != none);
 
 	NewSoldierState = CharacterTemplate.CreateInstanceFromTemplate(SoldierContainerState);
 	NewSoldierState.RandomizeStats();
@@ -147,7 +148,8 @@ event InitSoldier( XComGameState_Unit Unit, const out CharacterPoolDataElement C
 	if (!FixAppearanceOfInvalidAttributes(Unit.kAppearance))
 	{
 		//This should't fail now that we attempt to fix invalid attributes
-		CharacterGenerator = XComGameInfo(class'WorldInfo'.static.GetWorldInfo().Game).m_CharacterGen;
+		CharacterGenerator = `XCOMGRI.Spawn(Unit.GetMyTemplate().CharacterGeneratorClass);
+		`assert(CharacterGenerator != none);
 		CharacterGeneratorResult = CharacterGenerator.CreateTSoldierFromUnit(Unit, none);
 		Unit.SetTAppearance(CharacterGeneratorResult.kAppearance);
 	}
@@ -428,8 +430,8 @@ function XComGameState_Unit CreateCharacter(XComGameState StartState, optional E
 	else
 	{
 
-		CharacterGenerator = XComGameInfo(class'WorldInfo'.static.GetWorldInfo().Game).m_CharacterGen;
-
+		CharacterGenerator = `XCOMGRI.Spawn(CharacterTemplate.CharacterGeneratorClass);
+		`assert(CharacterGenerator != none);
 		CharacterGeneratorResult = CharacterGenerator.CreateTSoldier(CharacterTemplateName);
 
 		// Give Random Personality if not from pool

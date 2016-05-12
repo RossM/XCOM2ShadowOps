@@ -561,7 +561,8 @@ function bt_status TargetScoreByScaledDistance()
 		{
 			strParam = String(m_ParamList[0]);
 			ScaleValue = float(strParam);
-			if (`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(m_kUnitState.ObjectID, TargetUnitState.ObjectID, VisInfo))
+			if (`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(m_kUnitState.ObjectID, TargetUnitState.ObjectID, VisInfo)
+				&& VisInfo.bClearLOS ) // DefaultTargetDist isn't valid if visibility check fails.
 			{
 				DistMeters = Sqrt(VisInfo.DefaultTargetDist);
 			}

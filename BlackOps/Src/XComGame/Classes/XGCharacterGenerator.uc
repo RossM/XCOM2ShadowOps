@@ -329,6 +329,7 @@ function UpdateDLCPackFilters()
 	PartTemplateManager = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager();
 	PartPackNames = PartTemplateManager.GetPartPackNames();
 		
+	DLCNames.Length = 0;
 	DLCNames.AddItem('');
 	for(PartPackIndex = 0; PartPackIndex < PartPackNames.Length; ++PartPackIndex)
 	{
@@ -338,7 +339,8 @@ function UpdateDLCPackFilters()
 			if(ProfileSettings.Data.PartPackPresets[Index].PartPackName == PartPackNames[PartPackIndex])
 			{
 				bHasSetting = true;
-				if(ProfileSettings.Data.PartPackPresets[Index].ChanceToSelect > 0.0f && (`SYNC_FRAND() <= ProfileSettings.Data.PartPackPresets[Index].ChanceToSelect))
+				if(`SYNC_FRAND() <= ProfileSettings.Data.PartPackPresets[Index].ChanceToSelect &&
+					ProfileSettings.Data.PartPackPresets[Index].ChanceToSelect > 0.01f )
 				{
 					DLCNames.AddItem(ProfileSettings.Data.PartPackPresets[Index].PartPackName);
 					break;
@@ -420,8 +422,8 @@ function TSoldier CreateTSoldier( optional name CharacterTemplateName, optional 
 	
 	//Set again now that we have picked our torso
 	BodyPartFilter.Set(EGender(kSoldier.kAppearance.iGender), ECharacterRace(kSoldier.kAppearance.iRace), kSoldier.kAppearance.nmTorso, !(CharacterTemplateName == 'Soldier' || CharacterTemplateName == ''), , DLCNames);
-	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHaircut, "Hair", BodyPartFilter.FilterByGenderAndNonSpecialized);
-	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHead, "Head", BodyPartFilter.FilterByGenderAndRace);
+	
+
 	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmLegs, "Legs", BodyPartFilter.FilterByTorsoAndArmorMatch);
 	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmArms, "Arms", BodyPartFilter.FilterByTorsoAndArmorMatch, true);
 
@@ -434,9 +436,19 @@ function TSoldier CreateTSoldier( optional name CharacterTemplateName, optional 
 		RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmRightArmDeco, "RightArmDeco", BodyPartFilter.FilterByTorsoAndArmorMatch);
 	}
 
+	if(CharacterTemplateName == 'Soldier' || CharacterTemplateName == '')
+	{
+		RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHaircut, "Hair", BodyPartFilter.FilterByGenderAndNonSpecialized);
+	}
+	else
+	{
+		RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHaircut, "Hair", BodyPartFilter.FilterByGenderAndNonSpecializedCivilian);
+	}
+
+	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHead, "Head", BodyPartFilter.FilterByGenderAndRaceAndArmor);
 	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmEye, "Eyes", BodyPartFilter.FilterAny);
 	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmTeeth, "Teeth", BodyPartFilter.FilterAny);
-
+	
 	//Custom settings depending on whether the unit is a soldier or not
 	SetBodyPartToFirstInArray(PartTemplateManager, kSoldier.kAppearance.nmPatterns, "Patterns", BodyPartFilter.FilterAny);
 	SetBodyPartToFirstInArray(PartTemplateManager, kSoldier.kAppearance.nmTattoo_LeftArm, "Tattoos", BodyPartFilter.FilterAny);
@@ -455,7 +467,7 @@ function TSoldier CreateTSoldier( optional name CharacterTemplateName, optional 
 
 		if( `SYNC_FRAND() < NewSoldier_HatChance )
 		{
-			RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHelmet, "Helmets", BodyPartFilter.FilterByGenderAndNonSpecializedAndTech);
+			RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHelmet, "Helmets", BodyPartFilter.FilterByGenderAndNonSpecializedAndTechAndArmor);
 		}
 		else
 		{
@@ -493,7 +505,7 @@ function TSoldier CreateTSoldier( optional name CharacterTemplateName, optional 
 
 		if(`SYNC_FRAND() < NewCivlian_HatChance )
 		{
-			RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHelmet, "Helmets", BodyPartFilter.FilterByGenderAndNonSpecializedAndTech);
+			RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHelmet, "Helmets", BodyPartFilter.FilterByGenderAndNonSpecializedAndTechAndArmor);
 		}
 		else
 		{

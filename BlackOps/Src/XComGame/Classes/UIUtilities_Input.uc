@@ -242,7 +242,7 @@ const ICON_PC_LEFTMOUSE4    = "PC_mouseLeft4";
 const ICON_PC_LEFTMOUSE5    = "PC_mouseLeft5";
 
 
-static function string HTML( string sIcon, optional int imgDimensions = 30, optional int vspaceOffset=0 )
+static function string HTML( string sIcon, optional int imgDimensions = 18, optional int vspaceOffset=-3 )
 {
 	return( "<img src='" $ sIcon $ "' align='baseline' vspace='"$vspaceOffset$"' width='"$imgDimensions$"' height='"$imgDimensions$"'>" );
 }
@@ -268,7 +268,8 @@ static function string InsertGamepadIcons(string sSource)
 {
 	local string sResult;
 
-	// TODO: Add all gamepad icons
+	//TODO: Import Steam icons, and look those up if steam controller is active. 
+
 	sResult = Repl(sSource, "%LS", class'UIUtilities_Input'.static.HTML(class'UIUtilities_Input'.const.ICON_LSTICK));
 	sResult = Repl(sResult, "%RS", class'UIUtilities_Input'.static.HTML(class'UIUtilities_Input'.const.ICON_RSTICK));
 	sResult = Repl(sResult, "%A", class'UIUtilities_Input'.static.HTML(GetAdvanceButtonIcon()));

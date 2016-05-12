@@ -5,7 +5,7 @@ class X2Action_WaitForAbilityEffect extends X2Action;
 
 var bool bWaitingForActionMessage;
 
-var private bool bAbilityEffectReceived;
+var privatewrite bool bAbilityEffectReceived;
 var private bool bSkip;
 
 function Init(const out VisualizationTrack InTrack)

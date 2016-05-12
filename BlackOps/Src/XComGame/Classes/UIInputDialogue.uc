@@ -310,5 +310,6 @@ defaultproperties
 	MCName = "theInputDialogueScreen";
 	InputState = eInputState_Consume;
 	bConsumeMouseEvents = true;
+	bAlwaysTick = true
 	bProcessMouseEventsIfNotFocused = true;
 }

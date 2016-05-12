@@ -365,7 +365,7 @@ simulated function OnButtonCallback(UIButton kButton)
 simulated function OnCancel()
 {
 	XComShellPresentationLayer(Movie.Pres).GetCamera().GotoState( 'CinematicView' );
-	SetTimer(2.0, false, nameof(CloseScreen));
+	SetTimer(3.0, false, nameof(CloseScreen));
 	`XCOMGRI.DoRemoteEvent('ReturnToShell');
 	AnimateOut();
 }

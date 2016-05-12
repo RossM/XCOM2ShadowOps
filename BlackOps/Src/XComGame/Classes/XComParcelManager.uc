@@ -740,6 +740,8 @@ private function ChooseNonObjectiveParcels(array<ParcelDefinition> RandomizedPar
 		// no valid layout exists, this could be because the LDs are still prototyping and don't have enough parcel maps
 		// to uniquely cover every parcel.
 		// Just randomly fill out the parcels, without worrying about dupes.
+		BacktrackStack.Length = 0;
+
 		ParcelGenerationAssert(false, "Could not find a layout solution without duplicating parcel maps. Randomly selecting parcels...");
 		foreach ParcelsToLayout(CurrentParcel)
 		{

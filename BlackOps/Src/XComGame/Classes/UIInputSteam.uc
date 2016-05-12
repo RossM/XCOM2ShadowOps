@@ -46,16 +46,27 @@ simulated function InitLink( UIInputDialogue Screen )
 event OnAccept(string Text)
 {
 	UserText = Text;
-	InputDialogueScreen.OnAccept(Text);
+	// Use a delay to allow the Steam overlay to clean itself up. 
+	InputDialogueScreen.SetTimer(0.5, false, 'NotifyAccept', self);
+}
+
+function NotifyAccept()
+{
+	InputDialogueScreen.OnAccept(UserText);
 	InputDialogueScreen.Movie.Pres.PlayUISound(eSUISound_MenuClose);
 }
 
 event OnCancel()
 {
+	// Use a delay to allow the Steam overlay to clean itself up. 
+	InputDialogueScreen.SetTimer(0.5, false, 'NotifyCancel', self);
+}
+
+function NotifyCancel()
+{
 	InputDialogueScreen.OnCancel();
 	InputDialogueScreen.Movie.Pres.PlayUISound(eSUISound_MenuClose);
 }
-
 
 cpptext
 {

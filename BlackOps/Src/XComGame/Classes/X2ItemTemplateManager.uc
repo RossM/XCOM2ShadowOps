@@ -251,7 +251,7 @@ function array<X2ItemTemplate> GetBuildableItemTemplates()
 			if(ItemTemplate.CanBeBuilt && 
 				(!ItemTemplate.bOneTimeBuild || (!XComHQ.HasItem(ItemTemplate) && XComHQ.GetNumItemBeingBuilt(ItemTemplate) == 0)) && 
 				(!ItemTemplate.bBlocked || XComHQ.UnlockedItems.Find(ItemTemplate.DataName) != INDEX_NONE) &&
-				XComHQ.MeetsEnoughRequirementsToBeVisible(ItemTemplate.Requirements) && 
+				XComHQ.MeetsEnoughRequirementsToBeVisible(ItemTemplate.Requirements, ItemTemplate.AlternateRequirements) && 
 				!XComHQ.IsTechResearched(ItemTemplate.HideIfResearched) && !XComHQ.HasItemByName(ItemTemplate.HideIfPurchased))
 			{
 				arrBuildTemplates.AddItem(ItemTemplate);
@@ -310,6 +310,7 @@ function LoadAllContent()
 	local X2DataTemplate Template;
 	local X2EquipmentTemplate EquipmentTemplate;
 	local XComContentManager ContentMgr;
+	local int i;
 
 	ContentMgr = `CONTENT;
 	foreach IterateTemplates(Template, none)
@@ -330,6 +331,14 @@ function LoadAllContent()
 			if(EquipmentTemplate.CosmeticUnitTemplate != "")
 			{
 				ContentMgr.RequestGameArchetype(EquipmentTemplate.CosmeticUnitTemplate, none, none, true);
+			}
+
+			for (i = 0; i < EquipmentTemplate.AltGameArchetypeArray.Length; ++i)
+			{
+				if (EquipmentTemplate.AltGameArchetypeArray[i].ArchetypeString != "")
+				{
+					ContentMgr.RequestGameArchetype(EquipmentTemplate.AltGameArchetypeArray[i].ArchetypeString, none, none, true);
+				}
 			}
 		}
 	}
