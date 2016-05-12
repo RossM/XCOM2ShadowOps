@@ -95,16 +95,10 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\AcademyUnlocks.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\TemplateEditors_FinalShell.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\TemplateEditors_Items.uc">
+    <Content Include="Src\ShadowOps\Classes\TemplateEditors.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\TemplateEditors_Strategy.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\TemplateEditors_Tactical.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\UIAfterAction_ListItem_BO.uc">
