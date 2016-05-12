@@ -1,8 +1,13 @@
 // This is an Unreal Script
-class TemplateEditors extends Object;
+class TemplateEditors extends Object config(GameCore);
+
+var config array<name> ExtraStartingItems, DisabledItems;
+var config array<name> GrenadeAbilities, SuppressionBlockedAbilities;
 
 static function EditTemplates()
 {
+	local name DataName;
+
 	// Strategy
 	AddGtsUnlocks();
 
@@ -15,10 +20,14 @@ static function EditTemplates()
 	CreateCompatAbilities();
 
 	// Items
-	ChangeToStartingItem('FlashbangGrenade');
-	ChangeToStartingItem('SmokeGrenade');
-	ChangeToStartingItem('NanofiberVest');
-	DisableItem('SmokeGrenadeMk2');
+	foreach default.ExtraStartingItems(DataName)
+	{
+		ChangeToStartingItem(DataName);
+	}
+	foreach default.DisabledItems(DataName)
+	{
+		DisableItem(DataName);
+	}
 	EditPlatedVest('PlatedVest');
 	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
 }
@@ -203,16 +212,17 @@ static function AddDoNotConsumeAllEffect(name AbilityName, name EffectName)
 
 static function AddAllDoNotConsumeAllAbilities()
 {
+	local name DataName;
+
 	// Bullet Swarm
 	AddDoNotConsumeAllAbility('StandardShot', 'ShadowOps_BulletSwarm');
 
-	// Smoke and Mirrors
-	AddDoNotConsumeAllAbility('ThrowGrenade', 'ShadowOps_SmokeAndMirrors');
-	AddDoNotConsumeAllAbility('LaunchGrenade', 'ShadowOps_SmokeAndMirrors');
-
-	// Fastball
-	AddDoNotConsumeAllEffect('ThrowGrenade', 'Fastball');
-	AddDoNotConsumeAllEffect('LaunchGrenade', 'Fastball');
+	// Smoke and Mirrors, Fastball
+	foreach default.GrenadeAbilities(DataName)
+	{
+		AddDoNotConsumeAllAbility(DataName, 'ShadowOps_SmokeAndMirrors');
+		AddDoNotConsumeAllEffect(DataName, 'Fastball');
+	}
 
 	// Entrench
 	AddDoNotConsumeAllAbility('HunkerDown', 'ShadowOps_Entrench');
@@ -287,8 +297,12 @@ static function ChangeToGrenadeActionPoints(name AbilityName)
 
 static function ChangeAllToGrenadeActionPoints()
 {
-	ChangeToGrenadeActionPoints('ThrowGrenade');
-	ChangeToGrenadeActionPoints('LaunchGrenade');
+	local name DataName;
+
+	foreach default.GrenadeAbilities(DataName)
+	{
+		ChangeToGrenadeActionPoints(DataName);
+	}
 }
 
 static function AddSuppressionCondition(name AbilityName)
@@ -326,9 +340,12 @@ static function AddSuppressionCondition(name AbilityName)
 
 static function AddAllSuppressionConditions()
 {
-	AddSuppressionCondition('ThrowGrenade');
-	AddSuppressionCondition('LaunchGrenade');
-	AddSuppressionCondition('MicroMissiles');
+	local name DataName;
+
+	foreach default.SuppressionBlockedAbilities(DataName)
+	{
+		AddSuppressionCondition(DataName);
+	}
 }
 
 // This function creates extra versions of all the ShadowOps_* abilities without the ShadowOps_ prefix,
