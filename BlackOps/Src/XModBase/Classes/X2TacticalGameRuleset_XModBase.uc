@@ -1,5 +1,11 @@
 class X2TacticalGameRuleset_XModBase extends X2TacticalGameRuleset;
 
+// This function is called when setting up the abilities of each unit. It adds all abilities in
+// class'XModBase_Config'.default.UniversalAbilitySet to every unit. It's similar to the
+// default ability set in class'X2Ability_DefaultAbilitySet'.default.DefaultAbilitySet, but
+// many units don't get the default ability set for one reason or another.
+//
+// Please use this sparingly, as too many active effects has the potential to slow down the game.
 simulated function AddUniversalAbilities(out array<AbilitySetupData> AbilityData)
 {
 	local name AbilityName;
@@ -26,6 +32,11 @@ simulated function AddUniversalAbilities(out array<AbilitySetupData> AbilityData
 	}
 }
 
+// This function is called when setting up a new unit to add bonus item charges from any 
+// X2Effect_BonusItemCharges effects the unit has. At this point in setting up a unit, begins-play
+// abilities haven't triggered yet (because abilities are still being set up!), so there are no
+// actual effects to look through. Instead, we look through the abilities directly to find any
+// with the appropriate effects.
 simulated function AddBonusItemCharges(XComGameState NewGameState, XComGameState_Unit NewUnit, out array<AbilitySetupData> AbilityData)
 {
 	local X2AbilityTemplate AbilityTemplate;
@@ -60,6 +71,7 @@ simulated function AddBonusItemCharges(XComGameState NewGameState, XComGameState
 	}
 }
 
+// This overrides InitializeUnitAbilities in order to add calls to the two functions above.
 simulated function InitializeUnitAbilities(XComGameState NewGameState, XComGameState_Unit NewUnit)
 {		
 	local XComGameState_Player kPlayer;

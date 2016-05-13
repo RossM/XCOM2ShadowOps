@@ -1,5 +1,9 @@
 class X2AbilityToHitCalc_StandardAim_XModBase extends X2AbilityToHitCalc_StandardAim config(GameCore);
 
+// This class overrides X2AbilityToHitCalc_StandardAim to have it call the methods in
+// X2Effect_XModBase.
+
+// Copied from X2AbilityToHitCalc and modified.
 protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTarget kTarget, optional bool bDebugLog=false)
 {
 	local XComGameState_Unit UnitState, TargetState;
@@ -80,7 +84,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 				if (VisInfo.bClearLOS && !VisInfo.bVisibleGameplay)
 					bSquadsight = true;
 
-				// Check for abilities that negate squadsight penalty
+				// XModBase: Check for abilities that negate squadsight penalty
 				if (bSquadsight)
 				{
 					foreach UnitState.AffectedByEffects(EffectRef)
@@ -140,6 +144,8 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 					}
 				}
 				//  Target defense
+				//  XModBase: Defensive modifiers are broken out separately in the shot breakdown.
+				//            Vanilla rolls them all into one "Defense" modifier.
 				AddModifier(-TargetState.GetBaseStat(eStat_Defense), class'XLocalizedData'.default.DefenseStat);			
 				TargetState.GetStatModifiers(eStat_Defense, StatMods, StatModValues);
 				for (i = 0; i < StatMods.Length; ++i)
@@ -334,7 +340,8 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 						AddModifier(EffectModifiers[i].Value, EffectModifiers[i].Reason, EffectModifiers[i].ModType);
 					}
 				}
-				
+	
+				// XModBase: Check for crit immunity.			
 				XModBaseEffect = X2Effect_XModBase(PersistentEffect);
 				if (XModBaseEffect != none)
 				{
@@ -376,8 +383,9 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 		AddModifier(-int(FinalAdjust), AbilityTemplate.LocFriendlyName);
 	}
 
-	// Apply final modifiers. These can read the whole shot breakdown. To avoid ordering issues with them reading the breakdown,
-	// we collect all the modifiers first and then apply them together.
+	// XModBase: Apply final modifiers. These can read the whole shot breakdown. To avoid ordering 
+	// issues with them reading the breakdown, we collect all the modifiers first and then apply 
+	// them together.
 	FinalEffectModifiers.Length = 0;
 	UniqueToHitEffects.Length = 0;
 	foreach UnitState.AffectedByEffects(EffectRef)
@@ -414,6 +422,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	return m_ShotBreakdown.FinalHitChance;
 }
 
+// Copied from X2AbilityToHitCalc and modified.
 function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarget kTarget, const out AbilityResultContext ResultContext, out EAbilityHitResult Result, out ArmorMitigationResults ArmorMitigated, out int HitChance)
 {
 	local int i, RandRoll, Current, ModifiedHitChance, Luck;
@@ -530,7 +539,7 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 		}
 	}
 
-	// TODO Calculate luck here
+	// XModBase: This calculates unit luck and adds it to the aim assist modifier.
 	if (UnitState != none && TargetState != none)
 	{
 		foreach UnitState.AffectedByEffects(EffectRef)
@@ -547,11 +556,12 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 		}
 	}
 
-	// Luck can't more than double the hit chance or double the miss chance
+	// XModBase: Luck can't more than double the hit chance or double the miss chance
 	Luck = Clamp(Luck, (HitChance - 100) * 2, HitChance * 2);
 
 	ModifiedHitChance += Luck;
 
+	// XModBase: Change the result if necessary.
 	if (bRolledResultIsAMiss && RandRoll < ModifiedHitChance)
 	{
 		Result = eHit_Success;
