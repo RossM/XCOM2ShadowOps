@@ -1,4 +1,4 @@
-class X2TacticalGameRuleset_BO extends X2TacticalGameRuleset;
+class X2TacticalGameRuleset_XModBase extends X2TacticalGameRuleset;
 
 simulated function AddUniversalAbilities(out array<AbilitySetupData> AbilityData)
 {

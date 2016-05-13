@@ -1,4 +1,4 @@
-class X2AbilityMultiTarget_SoldierBonusRadius_BO extends X2AbilityMultiTarget_SoldierBonusRadius;
+class X2AbilityMultiTarget_SoldierBonusRadius_XModBase extends X2AbilityMultiTarget_SoldierBonusRadius;
 
 var float fRadiusModifier;
 

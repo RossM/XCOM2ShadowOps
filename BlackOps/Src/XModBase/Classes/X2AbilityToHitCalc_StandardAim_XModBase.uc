@@ -1,4 +1,4 @@
-class X2AbilityToHitCalc_StandardAim_BO extends X2AbilityToHitCalc_StandardAim config(GameCore);
+class X2AbilityToHitCalc_StandardAim_XModBase extends X2AbilityToHitCalc_StandardAim config(GameCore);
 
 protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTarget kTarget, optional bool bDebugLog=false)
 {

@@ -59,7 +59,7 @@ static function X2AbilityTemplate Breach()
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityTarget_Cursor            CursorTarget;
-	local X2AbilityMultiTarget_SoldierBonusRadius_BO       RadiusMultiTarget;
+	local X2AbilityMultiTarget_SoldierBonusRadius_XModBase       RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
@@ -104,7 +104,7 @@ static function X2AbilityTemplate Breach()
 
 	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
 	// but zero out BonusRadius so it isn't affected by Volatile Mix.
-	RadiusMultiTarget = new class'X2AbilityMultiTarget_SoldierBonusRadius_BO';
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_SoldierBonusRadius_XModBase';
 	RadiusMultiTarget.fTargetRadius = default.BreachRadius;
 	RadiusMultiTarget.BonusRadius = 0;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;

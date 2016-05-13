@@ -389,7 +389,7 @@ static function X2AbilityTemplate AddPanicAbility_UnitPanicked()
 
 defaultproperties
 {
-	Begin Object Class=X2AbilityToHitCalc_StandardAim_BO Name=DefaultSimpleStandardAim
+	Begin Object Class=X2AbilityToHitCalc_StandardAim_XModBase Name=DefaultSimpleStandardAim
 	End Object
 	SimpleStandardAim = DefaultSimpleStandardAim;
 }
