@@ -458,6 +458,7 @@ static function X2AbilityTemplate BurstFire()
 	Template.AddMultiTargetEffect(WeaponDamageEffect);
 	Template.AddMultiTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
@@ -552,6 +553,7 @@ static function X2AbilityTemplate RifleBurstFire()
 	Template.AddMultiTargetEffect(WeaponDamageEffect);
 	Template.AddMultiTargetEffect(class'X2Ability'.default.WeaponUpgradeMissDamage);
 	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
