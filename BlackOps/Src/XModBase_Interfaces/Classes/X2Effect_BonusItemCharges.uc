@@ -9,7 +9,6 @@ var int PerItemBonus;
 //
 // To use this effect, create an ability with AbilityTargetStyle set to X2AbilityTarget_Self and add this
 // effect to the AbilityTargetEffects.
-
 function int GetItemChargeModifier(XComGameState NewGameState, XComGameState_Unit NewUnit, XComGameState_Item ItemIter)
 {
 	if (ApplyToSlots.Find(ItemIter.InventorySlot) != INDEX_NONE)

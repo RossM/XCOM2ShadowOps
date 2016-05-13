@@ -1,8 +1,10 @@
 class X2Effect_BonusRadius extends X2Effect_Persistent;
 
-var float fBonusRadius;
-var array<name> AllowedTemplateNames;
+var float fBonusRadius;					// Amount to increase the radius, in meters. One tile equals 1.5 meters.
+var array<name> AllowedTemplateNames;	// Ammo types (grenades) which the bonus will apply to. If empty, it applies to everything.
 
+// This effect increases the radius of any effect using X2AbilityMultiTarget_SoldierBonusRadius, which in vanilla is only grenades.
+//
 // Note that the Ability passed in is the ability that the radius is being modified on, and NOT the ability that created this effect.
 simulated function float GetRadiusModifier(const XComGameState_Ability Ability, const XComGameState_Unit SourceUnit, float fBaseRadius)
 {
