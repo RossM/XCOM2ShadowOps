@@ -406,7 +406,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	}
 	for (i = 0; i < FinalEffectModifiers.Length; ++i)
 	{
-		AddModifier(EffectModifiers[i].Value, EffectModifiers[i].Reason, EffectModifiers[i].ModType);
+		AddModifier(FinalEffectModifiers[i].Value, FinalEffectModifiers[i].Reason, FinalEffectModifiers[i].ModType);
 	}
 
 	FinalizeHitChance();
