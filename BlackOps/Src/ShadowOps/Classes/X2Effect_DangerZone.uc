@@ -9,3 +9,8 @@ simulated function float GetRadiusModifier(const XComGameState_Ability Ability, 
 
 	return fBonusRadius;
 }
+
+defaultproperties
+{
+	EffectName = "DangerZone";
+}
