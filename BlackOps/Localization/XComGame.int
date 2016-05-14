@@ -16,32 +16,35 @@ LocFriendlyName="Bullet Swarm"
 LocLongDescription="Firing your <Ability:WeaponName/> with your first action no longer ends your turn."
 LocHelpText="Fire your <Ability:WeaponName/> at a target. This does not end your turn if used as your first action."
 LocFlyOverText="Bullet Swarm"
-LocPromotionPopupText="<Bullet/> Firing your pistol still ends your turn.<br/>"
+LocPromotionPopupText="<Bullet/> Bullet Swarm can deal a lot of damage, but it chews through ammo fast. Consider using a weapon with an expanded magazine or auto-loader.<br/><Bullet/>Good positioning will help you get the most of both shots each turn.<br/><Bullet/> Firing your pistol still ends your turn.<br/>"
 
 [ShadowOps_Bandolier X2AbilityTemplate]
 LocFriendlyName="Bandolier"
 LocLongDescription="Grants an extra utility item slot only usable for ammo."
 LocHelpText="Grants an extra utility item slot only usable for ammo."
 LocFlyOverText="Bandolier"
+LocPromotionPopupText="<Bullet/> A soldier can only benefit from one ammo type at a time, so Infantry are unable to equip ammo in standard utility slots.<br/><Bullet> Consider which ammo you should take on each mission. Infantry become much more powerful when equipped with an ammo type appropriate to the situation.<br/>"
 
 [ShadowOps_Magnum X2AbilityTemplate]
 LocFriendlyName="Magnum"
 LocLongDescription="Your pistol attacks get +10 Aim and deal +1 damage."
 LocHelpText="Your pistol attacks get +10 Aim and deal +1 damage."
 LocFlyOverText="Magnum"
+LocPromotionPopupText="<Bullet/> Even without Magnum, your pistol is more accurate than your rifle at close range.<br/><Bullet/> Combining Magnum with ammo that adds extra damage will give you guaranteed kills on ADVENT Troopers at point-blank range."
 
 [ShadowOps_GoodEye X2AbilityTemplate]
 LocFriendlyName="Good Eye"
 LocLongDescription="Your shots can't be dodged."
 LocHelpText="Your shots can't be dodged."
 LocFlyOverText="Good Eye"
+LocPromotionPopupText="<Bullet/> This ability gets more useful in the late game, when many enemies have dodge chances.<br/>"
 
 [ShadowOps_AlwaysReady X2AbilityTemplate]
 LocFriendlyName="Ready for Anything"
 LocLongDescription="If you did not attack this turn, you are granted an automatic pistol overwatch shot at the end of the turn."
 LocHelpText="Automatically activate Pistol Overwatch if you didn't attack this turn."
 LocFlyOverText="Pistol Overwatch: Ready for Anything"
-LocPromotionPopupText="<Bullet/> Non-offensive actions like Reload can still be performed without invalidating Ready for Anything.<br/>"
+LocPromotionPopupText="<Bullet/> Ready for Anything won't trigger if you fire or use an overwatch ability.<br/><Bullet/> Non-offensive actions like Reload can still be performed without invalidating Ready for Anything.<br/>"
 
 [ShadowOps_AlwaysReadyTrigger X2AbilityTemplate]
 LocFriendlyName="Ready for Anything"
@@ -52,7 +55,7 @@ LocFriendlyName="Full Auto"
 LocLongDescription="Take a shot with an aim penalty of -20. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo."
 LocHelpText="Take shots with an aim penalty of -20 until you miss or run out of ammo. Costs both actions."
 LocFlyOverText="Full Auto"
-LocPromotionPopupText="<Bullet/> Full Auto costs both actions to use. <br/><Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Full Auto can deal enormous amounts of damage with a full magazine and the right ammo.<br/><Bullet/> This ability costs both actions to use. <br/><Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_FullAuto2 X2AbilityTemplate]
 LocFriendlyName="Full Auto"
@@ -71,32 +74,35 @@ LocFriendlyName="Zero In"
 LocLongDescription="When you miss an attack, you get +20 Aim on your next attack."
 LocHelpText="When you miss an attack, you get +20 Aim on your next attack."
 LocFlyOverText="Zero In"
+LocPromotionPopupText="<Bullet/> Zero In can help compensate for not being able to move to get a better shot while using Bullet Swarm. It makes it much more likely that at least one shot in a turn will hit.<br/><Bullet> Zero In doesn't apply to reaction shots.<br/>"
 
 [ShadowOps_Flush X2AbilityTemplate]
 LocFriendlyName="Flush"
 LocLongDescription="Fire a shot that has a high chance to hit and forces the target to move to new cover."
 LocHelpText="Fire a shot that has a high chance to hit and forces the target to move to new cover."
 LocFlyOverText="Flush"
-LocPromotionPopupText="<Bullet/> The shot has a +20 Aim modifier, and does full damage. <br/><Bullet/> Flush has a <Ability:SelfCooldown/> turn cooldown. <br/>"
+LocPromotionPopupText="<Bullet/> Flush can force an enemy to trigger your other soldiers' reaction fire.<br/><Bullet/> The shot has a +20 Aim modifier, and does full damage. <br/><Bullet/> Flush has a <Ability:SelfCooldown/> turn cooldown. <br/>"
 
 [ShadowOps_RifleSuppression X2AbilityTemplate]
 LocFriendlyName="Rifle Suppression"
 LocLongDescription="Fire a barrage that pins down a target, granting reaction fire against it if it moves, and imposing a <Ability:SUPPRESSIONPENALTY/> penalty to the target's aim."
 LocHelpText="Penalize target's aim and shoot them if they move."
 LocFlyOverText="Rifle Suppression"
-LocPromotionPopupText="<Bullet/> Rifle Suppression costs <Ability:SelfAmmoCost/> ammo points to use, but has no cooldown.<br/><Bullet/> Rifle Suppression will be canceled if the suppressing unit is damaged.<br/><Bullet/> If multiple units suppress a target, the aim penalty will stack.<br/>"
+LocPromotionPopupText="<Bullet/> Suppressed enemies take a -50 penalty to their Aim and can't use grenades.<br/><Bullet/> The reaction shot from Rifle Suppression has a +20 aim modifier.<br/><Bullet/> Suppression doesn't benefit from Covering Fire.<br/><Bullet/> Rifle Suppression costs <Ability:SelfAmmoCost/> ammo points to use, but has no cooldown.<br/><Bullet/> Rifle Suppression will be canceled if the suppressing unit is damaged.<br/><Bullet/> If multiple units suppress a target, the aim penalty will stack.<br/>"
 
 [ShadowOps_Focus X2AbilityTemplate]
 LocFriendlyName="Focus"
 LocLongDescription="Your first reaction shot each turn is guaranteed to hit."
 LocHelpText="Your first reaction shot each turn is guaranteed to hit."
 LocFlyOverText="Focus"
+LocPromotionPopupText="<Bullet/> This ability goes well with other abilities that boost your overwatch, like Covering Fire.<br/><Bullet/> Your reaction shots can still be dodged.<br/>"
 
 [ShadowOps_Resilience X2AbilityTemplate]
 LocFriendlyName="Resilience"
 LocLongDescription="You can't be critically hit."
 LocHelpText="You can't be critically hit."
 LocFlyOverText="Resilience"
+LocPromotionPopupText="<Bullet/> Resilience is useful for controlling the amount of damage you take if you get flanked.<br/><Bullet/> Just because you can't be crit doesn't mean you won't die if you stand out in the open.<br/>"
 
 [ShadowOps_AdrenalineSurge X2AbilityTemplate]
 LocFriendlyName="Adrenaline Surge"
@@ -117,7 +123,7 @@ LocFriendlyName="Shield Protocol"
 LocLongDescription="Give a friendly unit an energy shield which will absorb three points of damage. More advanced GREMLINs will increase the damage absorbed."
 LocHelpText="Give a friendly unit an energy shield which absorbs damage."
 LocFlyOverText="Shield Protocol""
-LocPromotionPopupText="<Bullet/> The shield is lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
+LocPromotionPopupText="<Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield is lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
 ; HeavyArmor and Finesse are in ShadowOps.int
 
@@ -126,35 +132,33 @@ LocFriendlyName="Stealth Protocol"
 LocLongDescription="Give a friendly unit concealment."
 LocHelpText="Give a friendly unit concealment."
 LocFlyOverText="Stealth Protocol"
-LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or evacs.<br/><Bullet/> Stealth Protocol has one charge per mission.<br/>"
+LocPromotionPopupText="<Bullet/> Stealth Protocol can be used on any soldier, so consider who you plan on using it on when selecting your squad.<br/><Bullet/> Sometimes Stealth Protocol can be used to protect a soldier in a sticky situation, but it won't work on a soldier who is flanked by an enemy.<br/><Bullet/> Using Stealth Protocol costs an action.<br/><Bullet/> The effect is removed if the Dragoon dies or evacs.<br/><Bullet/> Stealth Protocol has one charge per mission.<br/>"
 
 [ShadowOps_BurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage"
 LocLongDescription="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
 LocHelpText="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
 LocFlyOverText="Barrage"
-LocPromotionPopupText="<Bullet> Barrage is less effective when used with an assault rifle. <br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Barrage can hit multiple enemies if you position yourself correctly, but it's okay to use it on just one.<br/><Bullet/> Be aware of what Barrage is going to destroy before you fire, including whatever is behind the target.<br/><Bullet/> Be careful when aiming Barrage from full cover. The soldier may \"step out\", causing Barrage to hit a different line than you expected.<br/><Bullet/> Barrage is less likely to destroy cover when used with an assault rifle. <br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_RifleBurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage (Rifle)"
 LocLongDescription="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
 LocHelpText="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
 LocFlyOverText="Barrage"
-LocPromotionPopupText="<Bullet> Barrage is less effective when used with an assault rifle. <br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
 LocFriendlyName="Shields Up"
 LocLongDescription="All squad members begin play with an energy shield that will absorb damage based on the equipped GREMLIN."
 LocHelpText="All squad members begin play with an energy shield which absorbs damage."
 LocFlyOverText="Shields Up"
-LocPromotionPopupText="<Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
+LocPromotionPopupText="<Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
 
 [ShadowOps_ShieldsUpTrigger X2AbilityTemplate]
 LocFriendlyName="Shields Up"
 LocLongDescription="All squad members begin play with an energy shield that will absorb damage based on the equipped GREMLIN."
 LocHelpText="All squad members begin play with an energy shield which absorbs damage."
 LocFlyOverText="Shields Up"
-LocPromotionPopupText="<Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
 
 [ShadowOps_ECM X2AbilityTemplate]
 LocFriendlyName="ECM"
@@ -168,19 +172,20 @@ LocFriendlyName="ECM"
 LocLongDescription="All squad members are more difficult for enemies to detect while concealed."
 LocHelpText="All squad members are more difficult for enemies to detect while concealed."
 LocFlyOverText="ECM"
-LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or evacs.<br/>"
 
 [ShadowOps_Rocketeer X2AbilityTemplate]
 LocFriendlyName="Rocketeer"
 LocLongDescription="Your heavy weapon gains a bonus use."
 LocHelpText="Your heavy weapon gains a bonus use."
 LocFlyOverText="Rocketeer"
+LocPromotionPopupText="<Bullet/> Heavy weapons are weapons such as the rocket launcher that can only be mounted on an EXO or WAR suit.<br/>"
 
 [ShadowOps_Vanish X2AbilityTemplate]
 LocFriendlyName="Vanish"
 LocLongDescription="If you begin your turn with no enemies able to see you, you gain concealment."
 LocHelpText="If you begin your turn with no enemies able to see you, you gain concealment."
 LocFlyOverText="Vanish"
+LocPromotionPopupText="<Bullet/> Units with Vanish make excellent scouts. If they get spotted, just retreat and regain concealment.<br/><Bullet/> There's no limit to the number of times a unit can regain concealment using Vanish.<br/>"
 
 [ShadowOps_VanishTrigger X2AbilityTemplate]
 LocFriendlyName="Vanish"
@@ -193,7 +198,7 @@ LocFriendlyName="Renewal Protocol"
 LocLongDescription="Grants a unit HP regeneration every turn. Also stabilizes and revives bleeding out or unconscious units and removes some debuffs."
 LocHelpText="Grants a unit HP regeneration every turn. Also stabilizes and revives bleeding out or unconscious units and removes some debuffs."
 LocFlyOverText="Renewal Protocol"
-LocPromotionPopupText="<Bullet/> Renewal Protocol restores 2 HP per turn, to a maximum of 8 HP. <br/><Bullet/> The Battlefield Medicine foundry project will increase the amount to 3 HP per turn. <br/><Bullet/> Advanced GREMLINs will heal more total HP.  <br/><Bullet/> Restoration Protocol has one charge per mission. <br/>"
+LocPromotionPopupText="<Bullet/> Renewal Protocol will get a unit that is bleeding out or unconscious up and back into the fight. Try to save it for a unit that really needs it.<br/><Bullet/> Renewal Protocol restores 2 HP per turn, to a maximum of 8 HP. The first tick of healing is applied immediately when it is used.<br/><Bullet/> The Battlefield Medicine foundry project will increase the amount to 3 HP per turn. <br/><Bullet/> Advanced GREMLINs will heal more total HP.  <br/><Bullet/> Restoration Protocol has one charge per mission. <br/>"
 
 [ShadowOps_StasisField X2AbilityTemplate]
 LocFriendlyName="Stasis Field"
@@ -207,7 +212,7 @@ LocFriendlyName="Puppet Protocol"
 LocLongDescription="Takes permanent control of an enemy robotic unit. You can only puppet one unit per mission."
 LocHelpText="Takes permanent control of an enemy robotic unit. You can only puppet one unit per mission."
 LocFlyOverText="Puppet Protocol"
-LocPromotionPopupText="<Bullet/> A failed Puppet Protocol attempt does not use a charge. <br/><Bullet/> Puppet Protocol has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Using Puppet Protocol will only break concealment if the attempt fails.<br/><Bullet/> A failed Puppet Protocol attempt does not use a charge. <br/><Bullet/> Puppet Protocol has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_TacticalSense X2AbilityTemplate]
 LocFriendlyName="Tactical Sense"
@@ -222,6 +227,7 @@ LocFriendlyName="Snap Shot"
 LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a -10 Aim penalty."
 LocHelpText="Fire your <Ability:WeaponName/> as a single action with a small Aim penalty."
 LocFlyOverText="Snap Shot"
+LocPromotionPopupText="<Bullet/> Snap Shot is most useful on Hunters that move with the rest of the squad rather than staying in a single place.<br/><Bullet/> Your sniper rifle has an aim penalty at close range. A sword attack will usually be more effective than a close-range flank shot.<br/>"
 
 [ShadowOps_SnapShotShot X2AbilityTemplate]
 LocFriendlyName="Snap Shot"
@@ -242,13 +248,14 @@ LocFriendlyName="Mark"
 LocLongDescription="Mark a target, giving all friendly units +15 Aim on shots against it."
 LocHelpText="Mark a target, giving all friendly units +15 Aim on shots against it."
 LocFlyOverText="Mark"
-LocPromotionPopupText="<Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns where you have to move or reload your sniper rifle.<br/><Bullet/> Use Mark on dangerous enemies before triggering an ambush.<br/><Bullet> Mark followed by Snap Shot is more accurage than a standard sniper rifle shot, and also helps the rest of the squad.<br/><Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_VitalPoint X2AbilityTemplate]
 LocFriendlyName="Keen Edge"
 LocLongDescription="Your sword attacks shred armor and deal additional damage."
 LocHelpText="Your sword attacks shred armor and deal additional damage."
 LocFlyOverText="Keen Edge"
+LocPromotionPopupText="<Bullet>Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
 
 [ShadowOps_HipFire X2AbilityTemplate]
 LocFriendlyName="Hip Fire"
@@ -262,6 +269,7 @@ LocFriendlyName="Precision"
 LocLongDescription="You get +20 Aim against targets in full cover."
 LocHelpText="You get +20 Aim against targets in full cover."
 LocFlyOverText="Precision"
+LocPromotionPopupText=""
 
 [ShadowOps_LowProfile X2AbilityTemplate]
 LocFriendlyName="Low Profile"
@@ -275,20 +283,21 @@ LocFriendlyName="Sprint"
 LocLongDescription="Gain a bonus move action this turn."
 LocHelpText="Gain a bonus move action this turn."
 LocFlyOverText="Sprint"
-LocPromotionPopupText="<Bullet/> Sprint has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Sprint can be used to move very long distances in a single turn, or to move and then take a normal sniper rifle shot.<br/><Bullet/> The extra move action from Sprint is wasted if you use an ability that ends your turn, like firing your weapon, before taking the move.<br/><Bullet/> Sprint has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Assassin X2AbilityTemplate]
 LocFriendlyName="Assassin"
 LocLongDescription="When you kill a flanked or uncovered enemy with your <Ability:WeaponName/>, you gain concealment."
 LocHelpText="When you kill a flanked or uncovered enemy with your <Ability:WeaponName/>, you gain concealment."
 LocFlyOverText="Assassin"
+LocPromotionPopupText="<Bullet/> You must have cover from all enemies that can see you in order to gain the concealment.<br/>"
 
 [ShadowOps_Fade X2AbilityTemplate]
 LocFriendlyName="Fade"
 LocLongDescription="Gain concealment that is broken if you move."
 LocHelpText="Gain concealment that is broken if you move."
 LocFlyOverText="Fade"
-LocPromotionPopupText="<Bullet/> Concealment granted by Fade can also be broken normally.<br/><Bullet/> Fade consumes an action and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Fade will let you use your First Strike bonus multiple times during a battle.<br/><Bullet/> Concealment granted by Fade can also be broken normally.<br/><Bullet/> Fade consumes an action and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_SliceAndDice X2AbilityTemplate]
 LocFriendlyName="Slice and Dice"
@@ -302,7 +311,7 @@ LocFriendlyName="Tracking"
 LocLongDescription="You detect nearby units even without line of sight."
 LocHelpText="You detect nearby units even without line of sight."
 LocFlyOverText="Tracking"
-LocPromotionPopupText="<Bullet/> Tracking will reveal concealed and burrowed enemies. <br/>"
+LocPromotionPopupText="<Bullet/> Soldiers with Tracking make excellent scouts, especially if you give them concealment with Stealth Protocol.<br/><Bullet> Tracking detects enemies slightly, but only slightly, outside normal visual range.<br/><Bullet/> Tracking will reveal concealed and burrowed enemies. <br/>"
 
 [ShadowOps_TrackingTrigger X2AbilityTemplate]
 LocFriendlyName="Tracking"
@@ -313,13 +322,14 @@ LocFriendlyName="Bullseye"
 LocLongDescription="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will."
 LocHelpText="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will."
 LocFlyOverText="Bullseye"
-LocPromotionPopupText="<Bullet/> The penalties last until the end of the battle. <br/><Bullet/> Bullseye has a <Ability:SelfCooldown/> turn cooldown. <br/>"
+LocPromotionPopupText="<Bullet/> Bullseye is good for weakening tough enemies while also dealing extra damage.<br/><Bullet/> Bullseye applies -20 penalties to Aim, Defense, and Will that last until the end of the battle. <br/><Bullet/> Bullseye has a <Ability:SelfCooldown/> turn cooldown. <br/>"
 
 [ShadowOps_FirstStrike X2AbilityTemplate]
 LocFriendlyName="First Strike"
 LocLongDescription="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
 LocHelpText="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
 LocFlyOverText="First Strike"
+LocPromotionPopupText="<Bullet/> First Strike can provide a decisive advantage in an ambush by taking out a tough enemy in one shot.<br/><Bullet/> The soldier with First Strike must initiate the ambush to get the bonus. It doesn't affect concealed overwatch."
 
 [ShadowOps_DamnGoodGround X2AbilityTemplate]
 LocFriendlyName="Damn Good Ground"
@@ -334,19 +344,21 @@ LocFriendlyName="Dense Smoke"
 LocLongDescription="Your smoke grenades have an increased radius and provide an additional +20 Defense."
 LocHelpText="Your smoke grenades have an increased radius and provide an additional +20 Defense."
 LocFlyOverText="Dense Smoke"
+LocPromotionPopupText=""
 
 [ShadowOps_SmokeAndMirrors X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
 LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocHelpText="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocFlyOverText="Smoke and Mirrors"
+LocPromotionPopupText=""
 
 [ShadowOps_Breach X2AbilityTemplate]
 LocFriendlyName="Breach"
 LocLongDescription="Fire a shot that destroys cover and shreds armor in a small area, but deals reduced damage."
 LocHelpText="Fire a shot that destroys cover and shreds armor in a small area."
 LocFlyOverText="Breach"
-LocPromotionPopupText="<Bullet> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet> The damage is based off your weapon damage, so shotguns will do more damage than rifles.<br/><Bullet> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Fastball X2AbilityTemplate]
 LocFriendlyName="Fastball"
@@ -395,24 +407,28 @@ LocFriendlyName="Combat Drugs"
 LocLongDescription="Units in your smoke grenade cloud get +10 Aim and +10 Crit chance."
 LocHelpText="Units in your smoke grenade cloud get +10 Aim and +10 Crit chance."
 LocFlyOverText="Combat Drugs"
+LocPromotionPopupText=""
 
 [ShadowOps_SlamFire X2AbilityTemplate]
 LocFriendlyName="Slam Fire"
 LocLongDescription="For the rest of the turn, whenever you get a critical hit with your <Ability:WeaponName/>, your actions are refunded."
 LocHelpText="For the rest of the turn, whenever you get a critical hit with your <Ability:WeaponName/>, your actions are refunded."
 LocFlyOverText="Slam Fire"
+LocPromotionPopupText=""
 
 [ShadowOps_DangerZone X2AbilityTemplate]
 LocFriendlyName="Danger Zone"
 LocLongDescription="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
 LocHelpText="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
 LocFlyOverText="Danger Zone"
+LocPromotionPopupText=""
 
 [ShadowOps_ChainReaction X2AbilityTemplate]
 LocFriendlyName="Chain Reaction"
 LocLongDescription="When you kill an enemy with explosion damage, any explosives the enemy was carrying detonate."
 LocHelpText="When you kill an enemy with explosion damage, any explosives the enemy was carrying detonate."
 LocFlyOverText="Chain Reaction"
+LocPromotionPopupText=""
 
 [ShadowOps_ChainReactionFuse X2AbilityTemplate]
 LocFriendlyName="Chain Reaction"
@@ -423,6 +439,7 @@ LocFriendlyName="HEAT Ammo"
 LocLongDescription="Confers +50% damage against robotic enemies."
 LocHelpText="Confers +50% damage against robotic enemies."
 LocFlyOverText="HEAT Ammo"
+LocPromotionPopupText=""
 
 ; === Class templates ===
 
