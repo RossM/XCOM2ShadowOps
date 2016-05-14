@@ -393,8 +393,8 @@ static function X2AbilityTemplate BurstFire()
 
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
-	Template.HideErrors.AddItem('AA_WeaponIncompatible');
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideIfOtherAvailable;
+	Template.HideIfAvailable.AddItem('ShadowOps_RifleBurstFire');
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_burstfire";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
@@ -483,13 +483,13 @@ static function X2AbilityTemplate RifleBurstFire()
 	local X2AbilityTarget_Cursor				CursorTarget;
 	local X2AbilityMultiTarget_Line				LineMultiTarget;
 	local X2Condition_UnitInventory				InventoryCondition;
+	local AdditionalCooldownInfo				AdditionalCooldown;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_RifleBurstFire');
 
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
-	Template.HideErrors.AddItem('AA_WeaponIncompatible');
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_ShowIfAvailable;
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_burstfire";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
@@ -513,6 +513,9 @@ static function X2AbilityTemplate RifleBurstFire()
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.BurstFireCooldown;
+	AdditionalCooldown.AbilityName = 'ShadowOps_BurstFire';
+	AdditionalCooldown.bUseAbilityCooldownNumTurns = true;
+	Cooldown.AditionalAbilityCooldowns.AddItem(AdditionalCooldown);
 	Template.AbilityCooldown = Cooldown;
 
 	AmmoCost = new class'X2AbilityCost_Ammo';
