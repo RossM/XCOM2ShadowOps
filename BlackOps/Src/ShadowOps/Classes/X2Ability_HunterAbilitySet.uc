@@ -62,7 +62,6 @@ static function X2AbilityTemplate SnapShotShot()
 	local X2Condition_Visibility            TargetVisibilityCondition;
 	local array<name>                       SkipExclusions;
 	local X2Effect_Knockback				KnockbackEffect;
-	local X2Condition_UnitActionPoints		UnitActionPointCondition;
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 
 	//Macro to do localisation and stuffs
@@ -72,7 +71,8 @@ static function X2AbilityTemplate SnapShotShot()
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_snapshot_shot";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY;
 	Template.DisplayTargetHitChance = true;
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_ShowIfAvailableOrNoTargets;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideIfOtherAvailable;
+	Template.HideIfAvailable.AddItem('SniperStandardFire');
 	Template.AbilitySourceName = 'eAbilitySource_Standard';                                       // color of the icon
 	// Activated by a button press; additionally, tells the AI this is an activatable
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
@@ -97,10 +97,6 @@ static function X2AbilityTemplate SnapShotShot()
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	// Only at single targets that are in range.
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
-
-	UnitActionPointCondition = new class'X2Condition_UnitActionPoints';
-	UnitActionPointCondition.AddActionPointCheck(1);
-	Template.AbilityShooterConditions.AddItem(UnitActionPointCondition);
 
 	// Action Point
 	ActionPointCost = new class 'X2AbilityCost_ActionPoints';
@@ -164,7 +160,6 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	local X2Condition_UnitProperty          ConcealedCondition;
 	local X2Effect_SetUnitValue             UnitValueEffect;
 	local X2Condition_UnitEffects           SuppressedCondition;
-	local X2Condition_UnitActionPoints		UnitActionPointCondition;
 	local X2Effect_PersistentStatChange		LowerAimEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SnapShotOverwatch');
@@ -188,10 +183,6 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	SuppressedCondition.AddExcludeEffect(class'X2Effect_Suppression'.default.EffectName, 'AA_UnitIsSuppressed');
 	Template.AbilityShooterConditions.AddItem(SuppressedCondition);
 	
-	UnitActionPointCondition = new class'X2Condition_UnitActionPoints';
-	UnitActionPointCondition.AddActionPointCheck(1);
-	Template.AbilityShooterConditions.AddItem(UnitActionPointCondition);
-
 	ReserveActionPointsEffect = new class'X2Effect_ReserveOverwatchPoints';
 	Template.AddTargetEffect(ReserveActionPointsEffect);
 
@@ -224,8 +215,8 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
-	Template.HideErrors.AddItem('AA_CannotAfford_ActionPoints');
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideIfOtherAvailable;
+	Template.HideIfAvailable.AddItem('SniperRifleOverwatch');
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_snapshot_overwatch";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.OVERWATCH_PRIORITY;
 	Template.bDisplayInUITooltip = false;
