@@ -132,7 +132,7 @@ static function X2AbilityTemplate GoodEye()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_GoodEye');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_goodeye";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_zeroin";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -618,7 +618,7 @@ static function X2AbilityTemplate ZeroIn()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ZeroIn');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_zeroin";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_goodeye";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
