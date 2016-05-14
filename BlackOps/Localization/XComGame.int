@@ -181,7 +181,7 @@ LocFriendlyName="Rocketeer"
 LocLongDescription="Your heavy weapon gains a bonus use."
 LocHelpText="Your heavy weapon gains a bonus use."
 LocFlyOverText="Rocketeer"
-LocPromotionPopupText=""
+LocPromotionPopupText="<Bullet/> Heavy weapons are weapons such as the rocket launcher that can only be mounted on an EXO or WAR suit.<br/>"
 
 [ShadowOps_Vanish X2AbilityTemplate]
 LocFriendlyName="Vanish"
@@ -232,7 +232,7 @@ LocFriendlyName="Snap Shot"
 LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a -10 Aim penalty."
 LocHelpText="Fire your <Ability:WeaponName/> as a single action with a small Aim penalty."
 LocFlyOverText="Snap Shot"
-LocPromotionPopupText=""
+LocPromotionPopupText="<Bullet/> Snap Shot is most useful on Hunters that move with the rest of the squad rather than staying in a single place.<br/><Bullet/> Your sniper rifle has an aim penalty at close range. A sword attack will usually be more effective than a close-range flank shot.<br/>"
 
 [ShadowOps_SnapShotShot X2AbilityTemplate]
 LocFriendlyName="Snap Shot"
@@ -253,14 +253,14 @@ LocFriendlyName="Mark"
 LocLongDescription="Mark a target, giving all friendly units +15 Aim on shots against it."
 LocHelpText="Mark a target, giving all friendly units +15 Aim on shots against it."
 LocFlyOverText="Mark"
-LocPromotionPopupText="<Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns where you have to move or reload your sniper rifle.<br/><Bullet/> Use Mark on dangerous enemies before triggering an ambush.<br/><Bullet> Mark followed by Snap Shot is more accurage than a standard sniper rifle shot, and also helps the rest of the squad.<br/><Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_VitalPoint X2AbilityTemplate]
 LocFriendlyName="Keen Edge"
 LocLongDescription="Your sword attacks shred armor and deal additional damage."
 LocHelpText="Your sword attacks shred armor and deal additional damage."
 LocFlyOverText="Keen Edge"
-LocPromotionPopupText=""
+LocPromotionPopupText="<Bullet>Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
 
 [ShadowOps_HipFire X2AbilityTemplate]
 LocFriendlyName="Hip Fire"
@@ -288,21 +288,21 @@ LocFriendlyName="Sprint"
 LocLongDescription="Gain a bonus move action this turn."
 LocHelpText="Gain a bonus move action this turn."
 LocFlyOverText="Sprint"
-LocPromotionPopupText="<Bullet/> Sprint has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Sprint can be used to move very long distances in a single turn, or to move and then take a normal sniper rifle shot.<br/><Bullet/> The extra move action from Sprint is wasted if you use an ability that ends your turn, like firing your weapon, before taking the move.<br/><Bullet/> Sprint has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Assassin X2AbilityTemplate]
 LocFriendlyName="Assassin"
 LocLongDescription="When you kill a flanked or uncovered enemy with your <Ability:WeaponName/>, you gain concealment."
 LocHelpText="When you kill a flanked or uncovered enemy with your <Ability:WeaponName/>, you gain concealment."
 LocFlyOverText="Assassin"
-LocPromotionPopupText=""
+LocPromotionPopupText="<Bullet/> You must have cover from all enemies that can see you in order to gain the concealment.<br/>"
 
 [ShadowOps_Fade X2AbilityTemplate]
 LocFriendlyName="Fade"
 LocLongDescription="Gain concealment that is broken if you move."
 LocHelpText="Gain concealment that is broken if you move."
 LocFlyOverText="Fade"
-LocPromotionPopupText="<Bullet/> Concealment granted by Fade can also be broken normally.<br/><Bullet/> Fade consumes an action and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Fade will let you use your First Strike bonus multiple times during a battle.<br/><Bullet/> Concealment granted by Fade can also be broken normally.<br/><Bullet/> Fade consumes an action and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_SliceAndDice X2AbilityTemplate]
 LocFriendlyName="Slice and Dice"
@@ -316,7 +316,7 @@ LocFriendlyName="Tracking"
 LocLongDescription="You detect nearby units even without line of sight."
 LocHelpText="You detect nearby units even without line of sight."
 LocFlyOverText="Tracking"
-LocPromotionPopupText="<Bullet/> Tracking will reveal concealed and burrowed enemies. <br/>"
+LocPromotionPopupText="<Bullet/> Soldiers with Tracking make excellent scouts, especially if you give them concealment with Stealth Protocol.<br/><Bullet> Tracking detects enemies slightly, but only slightly, outside normal visual range.<br/><Bullet/> Tracking will reveal concealed and burrowed enemies. <br/>"
 
 [ShadowOps_TrackingTrigger X2AbilityTemplate]
 LocFriendlyName="Tracking"
@@ -327,14 +327,14 @@ LocFriendlyName="Bullseye"
 LocLongDescription="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will."
 LocHelpText="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will."
 LocFlyOverText="Bullseye"
-LocPromotionPopupText="<Bullet/> The penalties last until the end of the battle. <br/><Bullet/> Bullseye has a <Ability:SelfCooldown/> turn cooldown. <br/>"
+LocPromotionPopupText="<Bullet/> Bullseye is good for weakening tough enemies while also dealing extra damage.<br/><Bullet/> Bullseye applies -20 penalties to Aim, Defense, and Will that last until the end of the battle. <br/><Bullet/> Bullseye has a <Ability:SelfCooldown/> turn cooldown. <br/>"
 
 [ShadowOps_FirstStrike X2AbilityTemplate]
 LocFriendlyName="First Strike"
 LocLongDescription="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
 LocHelpText="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
 LocFlyOverText="First Strike"
-LocPromotionPopupText=""
+LocPromotionPopupText="<Bullet/> First Strike can provide a decisive advantage in an ambush by taking out a tough enemy in one shot.<br/><Bullet/> The soldier with First Strike must initiate the ambush to get the bonus. It doesn't affect concealed overwatch."
 
 [ShadowOps_DamnGoodGround X2AbilityTemplate]
 LocFriendlyName="Damn Good Ground"
