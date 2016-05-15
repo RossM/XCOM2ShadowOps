@@ -2,7 +2,7 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
-Beta version v0.6
+Beta version v0.5.4
 Item changes
   * The Advanced Grenade Launcher has been restored to its previous stats.
 Visual/audio changes
