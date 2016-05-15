@@ -2,6 +2,23 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.6
+Item changes
+  * The Advanced Grenade Launcher has been restored to its previous stats.
+Visual/audio changes
+  * Zero In and Good Eye have swapped icons.
+  * Launching smoke grenades or flashbangs will now play appropriate audio.
+Bugfixes
+  * Fixed bug where Infantry had trouble using their second utility slot while an ammo item was equipped.
+  * Fixed bug that could make Assassin, Focus, and Good Eye sometimes fail to work.
+  * Assorted minor fixes.
+
+Beta version v0.5.3
+General changes
+  * Many abilities have expanded popup text.
+Bugfixes
+  * Assorted minor fixes for issues caused by 2016-05-12 patch.
+
 Beta version v0.5.2
 Bugfixes
   * Assorted minor fixes for issues caused by 2016-05-12 patch.
