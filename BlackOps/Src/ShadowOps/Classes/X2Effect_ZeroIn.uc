@@ -18,17 +18,15 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 
 function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {
-	local UnitValue AccuracyUnitValue;
 	local ShotModifierInfo AccuracyInfo;
 	
 	if (AbilityState != none && AbilityState.IsAbilityInputTriggered() && AbilityState.GetMyTemplate().Hostility == eHostility_Offensive)
 	{
-		Attacker.GetUnitValue(ZeroInUnitValueName, AccuracyUnitValue);
-
-		if (AccuracyUnitValue.fValue > 0)
+		// We (ab)use iStacks to indicate whether the last attack hit or missed.
+		if (EffectState.iStacks > 0)
 		{
 			AccuracyInfo.ModType = eHit_Success;
-			AccuracyInfo.Value = AccuracyUnitValue.fValue;
+			AccuracyInfo.Value = AccuracyBonus * EffectState.iStacks;
 			AccuracyInfo.Reason = FriendlyName;
 			ShotModifiers.AddItem(AccuracyInfo);
 		}
@@ -40,7 +38,8 @@ function EventListenerReturn ZeroInListener(Object EventData, Object EventSource
 	local XComGameState_Ability AbilityState;
 	local XComGameStateContext_Ability AbilityContext;
 	local XComGameState_Unit UnitState;
-	local XComGameState_Effect EffectState;
+	local XComGameState_Effect EffectState, NewEffectState;
+	local XComGameState NewGameState;
 
 	UnitState = XComGameState_Unit(EventSource);
 	if (UnitState == none)
@@ -56,14 +55,14 @@ function EventListenerReturn ZeroInListener(Object EventData, Object EventSource
 		AbilityContext = XComGameStateContext_Ability(GameState.GetContext());
 		if (AbilityContext != none)
 		{
+			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("ZeroIn");
+			NewEffectState = XComGameState_Effect(NewGameState.CreateStateObject(class'XComGameState_Effect', EffectState.ObjectID));
 			if (class'XComGameStateContext_Ability'.static.IsHitResultHit(AbilityContext.ResultContext.HitResult))
-			{
-				UnitState.SetUnitFloatValue(ZeroInUnitValueName, 0, eCleanup_BeginTactical);
-			}
+				NewEffectState.iStacks = 0;
 			else
-			{
-				UnitState.SetUnitFloatValue(ZeroInUnitValueName, AccuracyBonus, eCleanup_BeginTactical);
-			}
+				NewEffectState.iStacks = 1;
+			NewGameState.AddStateObject(NewEffectState);
+			`GAMERULES.SubmitGameState(NewGameState);
 		}
 	}
 
