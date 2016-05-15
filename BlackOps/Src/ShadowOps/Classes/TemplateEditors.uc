@@ -30,6 +30,8 @@ static function EditTemplates()
 	}
 	EditPlatedVest('PlatedVest');
 	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
+
+	UpgradeAbilityVisualization('LaunchGrenade');
 }
 
 // --- Strategy ---
@@ -349,6 +351,20 @@ static function AddAllSuppressionConditions()
 	}
 }
 
+static function UpgradeAbilityVisualization(name AbilityName)
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		Template.BuildVisualizationFn = class'X2Ability_BO'.static.TypicalAbility_BuildVisualization;
+	}
+}
+
 // This function creates extra versions of all the ShadowOps_* abilities without the ShadowOps_ prefix,
 // unless an ability without the prefix already exists. The extra versions are needed for games saved
 // during tactical play with a previous mod version to continue working.
@@ -384,4 +400,3 @@ static function CreateCompatAbilities()
 		}
 	}
 }
-

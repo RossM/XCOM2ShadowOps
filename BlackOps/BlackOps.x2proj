@@ -134,6 +134,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Ability_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_DragoonAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
