@@ -12,7 +12,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
-	ListenerObj = self;
+	ListenerObj = EffectGameState;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', FocusListener, ELD_OnStateSubmitted, , UnitState);	
 }
 
@@ -20,16 +20,18 @@ function bool ChangeHitResultForAttacker(XComGameState_Unit Attacker, XComGameSt
 {
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityToHitCalc_StandardAim StandardAim;
-	local UnitValue CountUnitValue;
+	local XComGameState_Effect EffectState;
+
+	EffectState = Attacker.GetUnitAffectedByEffectState(EffectName);
+	if (EffectState == none)
+		return false;
 
 	AbilityTemplate = AbilityState.GetMyTemplate();
 	StandardAim = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
 
 	if (StandardAim != none && StandardAim.bReactionFire)
 	{
-		Attacker.GetUnitValue(FocusValueName, CountUnitValue);
-
-		if (CountUnitValue.fValue <= 0)
+		if (EffectState.iStacks <= 0)
 		{
 			if (class'XComGameStateContext_Ability'.static.IsHitResultMiss(CurrentResult))
 			{
@@ -42,11 +44,11 @@ function bool ChangeHitResultForAttacker(XComGameState_Unit Attacker, XComGameSt
 	return false;
 }
 
-function EventListenerReturn FocusListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function static EventListenerReturn FocusListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameState_Unit SourceUnit;
-	local XComGameState_Effect EffectState;
+	local XComGameState_Effect EffectState, NewEffectState;
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityToHitCalc_StandardAim StandardAim;
 	local UnitValue CountUnitValue;
@@ -56,7 +58,7 @@ function EventListenerReturn FocusListener(Object EventData, Object EventSource,
 	if (SourceUnit == none)
 		return ELR_NoInterrupt;
 
-	EffectState = SourceUnit.GetUnitAffectedByEffectState(EffectName);
+	EffectState = SourceUnit.GetUnitAffectedByEffectState(default.EffectName);
 	if (EffectState == none)
 		return ELR_NoInterrupt;
 
@@ -71,11 +73,9 @@ function EventListenerReturn FocusListener(Object EventData, Object EventSource,
 	{
 		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState(string(GetFuncName()));
 
-		SourceUnit.GetUnitValue(FocusValueName, CountUnitValue);
-
-		SourceUnit = XComGameState_Unit(NewGameState.CreateStateObject(SourceUnit.Class, SourceUnit.ObjectID));
-		SourceUnit.SetUnitFloatValue(FocusValueName, CountUnitValue.fValue + 1, eCleanup_BeginTurn);
-		NewGameState.AddStateObject(SourceUnit);
+		NewEffectState = XComGameState_Effect(NewGameState.CreateStateObject(EffectState.Class, EffectState.ObjectID));
+		NewEffectState.iStacks++;
+		NewGameState.AddStateObject(NewEffectState);
 
 		`TACTICALRULES.SubmitGameState(NewGameState);
 	}
