@@ -9,7 +9,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	local XComGameState_Unit UnitState;
 	local Object ListenerObj;
 
-	ListenerObj = self;
+	ListenerObj = EffectGameState;
 
 	EventMan = `XEVENTMGR;
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
@@ -33,7 +33,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	}
 }
 
-function EventListenerReturn ZeroInListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function static EventListenerReturn ZeroInListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameStateContext_Ability AbilityContext;
