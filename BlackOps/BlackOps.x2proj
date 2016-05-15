@@ -122,6 +122,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\UISquadSelect_UtilityItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\UIUtilities_Strategy_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\UnitUtilities_BO.uc">
       <SubType>Content</SubType>
     </Content>
