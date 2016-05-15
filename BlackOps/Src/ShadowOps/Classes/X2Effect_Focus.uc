@@ -51,7 +51,6 @@ function static EventListenerReturn FocusListener(Object EventData, Object Event
 	local XComGameState_Effect EffectState, NewEffectState;
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityToHitCalc_StandardAim StandardAim;
-	local UnitValue CountUnitValue;
 	local XComGameState NewGameState;
 
 	SourceUnit = XComGameState_Unit(EventSource);

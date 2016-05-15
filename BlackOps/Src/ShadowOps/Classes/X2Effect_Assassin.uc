@@ -13,11 +13,11 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 	EventMgr.RegisterForEvent(EffectObj, 'Assassin', EffectGameState.TriggerAbilityFlyover, ELD_OnStateSubmitted, , UnitState);
 
-	ListenerObj = self;
+	ListenerObj = EffectGameState;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AssassinListener, ELD_OnStateSubmitted, , UnitState);	
 }
 
-function EventListenerReturn AssassinListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function static EventListenerReturn AssassinListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameStateContext_Ability AbilityContext;
@@ -30,7 +30,7 @@ function EventListenerReturn AssassinListener(Object EventData, Object EventSour
 	if (SourceUnit == none)
 		return ELR_NoInterrupt;
 
-	EffectState = SourceUnit.GetUnitAffectedByEffectState(EffectName);
+	EffectState = SourceUnit.GetUnitAffectedByEffectState(default.EffectName);
 	if (EffectState == none)
 		return ELR_NoInterrupt;
 
