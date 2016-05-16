@@ -69,6 +69,11 @@ LocHelpText="Enhanced overwatch that can fire multiple times in a turn."
 LocFlyOverText="Zone of Control"
 LocPromotionPopupText="<Bullet/> Zone of Control will switch to pistol overwatch shots when the primary weapon is out of ammo. <br/><Bullet/> There is no limit to the amount of Zone of Control shots an Infantry can take in a turn. <br/><Bullet/> Zone of Control has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
+[ShadowOps_ZoneOfControlShot X2AbilityTemplate]
+LocFriendlyName="Shot (Zone of Control)"
+
+; ShadowOps_ZoneOfControlPistolShot is in ShadowOps.int
+
 [ShadowOps_ZeroIn X2AbilityTemplate]
 LocFriendlyName="Zero In"
 LocLongDescription="When you miss an attack, you get +20 Aim on your next attack."
