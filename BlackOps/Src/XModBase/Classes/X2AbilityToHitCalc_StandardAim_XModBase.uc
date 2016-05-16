@@ -494,22 +494,6 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 	UnitState = XComGameState_Unit(History.GetGameStateForObjectID(kAbility.OwnerStateObject.ObjectID));
 	TargetState = XComGameState_Unit(History.GetGameStateForObjectID(kTarget.PrimaryTarget.ObjectID));
 	
-	if (UnitState != none && TargetState != none)
-	{
-		foreach UnitState.AffectedByEffects(EffectRef)
-		{
-			EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
-			if (EffectState != none)
-			{
-				if (EffectState.GetX2Effect().ChangeHitResultForAttacker(UnitState, TargetState, kAbility, Result, ChangeResult))
-				{
-					`log("Effect" @ EffectState.GetX2Effect().FriendlyName @ "changing hit result for attacker:" @ ChangeResult,true,'XCom_HitRolls');
-					Result = ChangeResult;
-				}
-			}
-		}
-	}
-	
 	// Aim Assist (miss streak prevention)
 	bRolledResultIsAMiss = class'XComGameStateContext_Ability'.static.IsHitResultMiss(Result);
 
@@ -575,6 +559,22 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 		`log("*** AIM ASSIST or LUCK forcing a HIT to become a MISS!", true, 'XCom_HitRolls');
 	}
 
+	if (UnitState != none && TargetState != none)
+	{
+		foreach UnitState.AffectedByEffects(EffectRef)
+		{
+			EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
+			if (EffectState != none)
+			{
+				if (EffectState.GetX2Effect().ChangeHitResultForAttacker(UnitState, TargetState, kAbility, Result, ChangeResult))
+				{
+					`log("Effect" @ EffectState.GetX2Effect().FriendlyName @ "changing hit result for attacker:" @ ChangeResult,true,'XCom_HitRolls');
+					Result = ChangeResult;
+				}
+			}
+		}
+	}
+	
 	`log("***HIT" @ Result, !bRolledResultIsAMiss, 'XCom_HitRolls');
 	`log("***MISS" @ Result, bRolledResultIsAMiss, 'XCom_HitRolls');
 
