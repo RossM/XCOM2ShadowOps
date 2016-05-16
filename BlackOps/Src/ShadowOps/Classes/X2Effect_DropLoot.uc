@@ -29,7 +29,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	else
 	{
 		// roll on regular timed loot if vulture is not enabled
-		LootManager.RollForLootCarrier(Unit.GetMyTemplate().VultureLoot, Loot);
+		LootManager.RollForLootCarrier(Unit.GetMyTemplate().TimedLoot, Loot);
 	}
 
 	`Log("Adding loot:" @ class'X2LootTableManager'.static.LootResultsToString(Loot));
