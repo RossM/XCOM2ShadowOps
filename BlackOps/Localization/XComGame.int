@@ -70,7 +70,7 @@ LocFlyOverText="Zone of Control"
 LocPromotionPopupText="<Bullet/> Zone of Control will switch to pistol overwatch shots when the primary weapon is out of ammo. <br/><Bullet/> There is no limit to the amount of Zone of Control shots an Infantry can take in a turn. <br/><Bullet/> Zone of Control has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_ZoneOfControlShot X2AbilityTemplate]
-LocFriendlyName="Shot (Zone of Control)"
+LocFriendlyName="Zone of Control Shot"
 
 ; ShadowOps_ZoneOfControlPistolShot is in ShadowOps.int
 
