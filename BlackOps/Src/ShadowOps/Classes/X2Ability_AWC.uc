@@ -12,6 +12,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(HipFire());
 	Templates.AddItem(Anatomist());
+	Templates.AddItem(Scrounger());
 
 	return Templates;
 }
@@ -116,6 +117,38 @@ static function X2AbilityTemplate Anatomist()
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
 	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate Scrounger()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityMultiTarget_AllUnits			MultiTargetStyle;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Scrounger');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_deeppockets"; // TODO
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	MultiTargetStyle = new class'X2AbilityMultiTarget_AllUnits';
+	MultiTargetStyle.bAcceptEnemyUnits = true;
+	MultiTargetStyle.bRandomlySelectOne = true;
+	Template.AbilityMultiTargetStyle = MultiTargetStyle;
+
+	Template.AddMultiTargetEffect(new class'X2Effect_DropLoot');
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!

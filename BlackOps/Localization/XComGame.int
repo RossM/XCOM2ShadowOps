@@ -448,6 +448,11 @@ LocFriendlyName="Anatomist"
 LocLongDescription="You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30."
 LocHelpText="You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30."
 
+[ShadowOps_Scrounger X2AbilityTemplate]
+LocFriendlyName="Scrounger"
+LocLongDescription="You are unusually good at finding useful loot."
+LocHelpText="You are unusually good at finding useful loot."
+
 ; === Class templates ===
 
 [ShadowOps_Infantry X2SoldierClassTemplate]
