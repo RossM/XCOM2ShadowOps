@@ -1,7 +1,19 @@
 class TemplateEditors_Strategy extends UIScreenListener;
 
+var int LastGameIndex;
+
 event OnInit(UIScreen Screen)
 {
+	local XComGameState_CampaignSettings CampaignSettingsStateObject;
+
+	// Begin code stolen shamelessly from Long War Toolbox
+	CampaignSettingsStateObject = XComGameState_CampaignSettings(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_CampaignSettings', true));
+	if (CampaignSettingsStateObject == none) return;
+	if (CampaignSettingsStateObject.GameIndex == LastGameIndex) return;
+
+	LastGameIndex = CampaignSettingsStateObject.GameIndex;
+	// End code stolen shamelessly from Long War Toolbox
+
 	// This needs to be checked for each new save loaded
 	CreateStartingItems();
 	PerformUpgrades();
