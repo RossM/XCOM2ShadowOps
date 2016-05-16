@@ -7,6 +7,9 @@ BullseyePenaltyText="This unit has -20 penalties to Aim, Defense and Will."
 [X2Effect_Universal_BO]
 LowHitChanceCritModifier="Hit chance"
 
+[ShadowOps_ZoneOfControlPistolShot X2AbilityTemplate_BO]
+LocFriendlyName="Zone of Control Pistol Shot"
+
 ; Dragoon abilities (here because reasons)
 
 [ShadowOps_HeavyArmor X2AbilityTemplate_BO]
