@@ -257,13 +257,6 @@ LocHelpText="Your sword attacks shred armor and deal additional damage."
 LocFlyOverText="Keen Edge"
 LocPromotionPopupText="<Bullet>Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
 
-[ShadowOps_HipFire X2AbilityTemplate]
-LocFriendlyName="Hip Fire"
-LocLongDescription="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
-LocHelpText="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
-LocFlyOverText="Hip Fire"
-LocPromotionPopupText="<Bullet/> Hip Fire has a <Ability:SelfCooldown/> turn cooldown.<br/>"
-
 [ShadowOps_Precision X2AbilityTemplate]
 LocFriendlyName="Precision"
 LocLongDescription="You get +20 Aim against targets in full cover."
@@ -440,6 +433,20 @@ LocLongDescription="Confers +50% damage against robotic enemies."
 LocHelpText="Confers +50% damage against robotic enemies."
 LocFlyOverText="HEAT Ammo"
 LocPromotionPopupText=""
+
+; === AWC abilities ===
+
+[ShadowOps_HipFire X2AbilityTemplate]
+LocFriendlyName="Hip Fire"
+LocLongDescription="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
+LocHelpText="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
+LocFlyOverText="Hip Fire"
+LocPromotionPopupText="<Bullet/> Hip Fire has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_Anatomist X2AbilityTemplate]
+LocFriendlyName="Anatomist"
+LocLongDescription="You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30."
+LocHelpText="You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30."
 
 ; === Class templates ===
 

@@ -95,6 +95,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\AcademyUnlocks.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\EvilUnitStateHack.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\TemplateEditors.uc">
       <SubType>Content</SubType>
     </Content>
@@ -135,6 +138,9 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Ability_AWC.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_BO.uc">
@@ -184,6 +190,9 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Aggression.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Anatomist.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Assassin.uc">
