@@ -5,7 +5,6 @@ var localized string FadePenaltyText, SnapShotPenaltyText, BullseyePenaltyName, 
 
 var config int SnapShotHitModifier;
 var config int HunterMarkHitModifier;
-var config int HipFireHitModifier;
 var config int PrecisionOffenseBonus;
 var config int LowProfileDefenseBonus;
 var config int SliceAndDiceHitModifier;
@@ -14,7 +13,7 @@ var config int FirstStrikeDamageBonus;
 var config int DamnGoodGroundOffenseBonus, DamnGoodGroundDefenseBonus;
 var config float TrackingRadius;
 
-var config int HunterMarkCooldown, HipFireCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
+var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -25,7 +24,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SnapShotOverwatch());
 	Templates.AddItem(HunterMark());
 	Templates.AddItem(VitalPoint());
-	Templates.AddItem(HipFire()); // Unused
 	Templates.AddItem(Precision());
 	Templates.AddItem(LowProfile());
 	Templates.AddItem(Sprint());
