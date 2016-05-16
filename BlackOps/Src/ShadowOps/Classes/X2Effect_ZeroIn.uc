@@ -55,7 +55,7 @@ function static EventListenerReturn ZeroInListener(Object EventData, Object Even
 		AbilityContext = XComGameStateContext_Ability(GameState.GetContext());
 		if (AbilityContext != none)
 		{
-			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("ZeroIn");
+			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState(string(GetFuncName()));
 			NewEffectState = XComGameState_Effect(NewGameState.CreateStateObject(class'XComGameState_Effect', EffectState.ObjectID));
 			if (class'XComGameStateContext_Ability'.static.IsHitResultHit(AbilityContext.ResultContext.HitResult))
 				NewEffectState.iStacks = 0;
