@@ -75,6 +75,7 @@ static function ChangeToStartingItem(name ItemName)
 
 		Template.bInfiniteItem = true;
 		Template.StartingItem = true;
+		Template.TradingPostValue = 0;
 	}
 }
 
