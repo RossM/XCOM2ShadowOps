@@ -3,8 +3,8 @@ class X2Ability_AWC extends X2Ability
 
 var config int HipFireHitModifier;
 var config int HipFireCooldown;
-
 var config float AnatomistCritModifier, AnatomistMaxCritModifier;
+var config int WeaponmasterBonusDamage;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -13,6 +13,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(HipFire());
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(Scrounger());
+	Templates.AddItem(Weaponmaster());
 
 	return Templates;
 }
@@ -149,6 +150,38 @@ static function X2AbilityTemplate Scrounger()
 	Template.AbilityMultiTargetStyle = MultiTargetStyle;
 
 	Template.AddMultiTargetEffect(new class'X2Effect_DropLoot');
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate Weaponmaster()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_PersistentBonus              Effect;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Weaponmaster');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	Effect = new class'X2Effect_PersistentBonus';
+	Effect.BonusDamage = default.WeaponmasterBonusDamage;
+	Effect.bRequireAbilityWeapon = true;
+	Effect.BuildPersistentEffect(1, true, false, false);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!

@@ -458,6 +458,11 @@ LocFriendlyName="Scrounger"
 LocLongDescription="You are unusually good at finding useful loot."
 LocHelpText="You are unusually good at finding useful loot."
 
+[ShadowOps_Weaponmaster X2AbilityTemplate]
+LocFriendlyName="Weaponmaster"
+LocLongDescription="Your <Ability:WeaponName/> attacks deal +2 damage."
+LocHelpText="Your <Ability:WeaponName/> attacks deal +2 damage."
+
 ; === Class templates ===
 
 [ShadowOps_Infantry X2SoldierClassTemplate]
