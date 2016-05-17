@@ -7,7 +7,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 	local X2WeaponTemplate WeaponTemplate;
 	local float ExtraDamage;
 
-	if (AbilityState.GetMyTemplateName() == 'Fracture')
+	if (AbilityState.GetMyTemplateName() == 'ShadowOps_Fracture')
 	{
 		//  only add bonus damage on a crit
 		if (AppliedData.AbilityResultContext.HitResult == eHit_Crit)
@@ -28,7 +28,7 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 	local X2WeaponTemplate WeaponTemplate;
 	local float ExtraShred;
 
-	if (AbilityState.GetMyTemplateName() == 'Fracture')
+	if (AbilityState.GetMyTemplateName() == 'ShadowOps_Fracture')
 	{
 		WeaponTemplate = X2WeaponTemplate(AbilityState.GetSourceWeapon().GetMyTemplate());
 		if (WeaponTemplate != none)
