@@ -13,6 +13,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(HipFire());
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(Scrounger());
+	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(Weaponmaster());
 
 	return Templates;
@@ -130,10 +131,20 @@ static function X2AbilityTemplate Anatomist()
 static function X2AbilityTemplate Scrounger()
 {
 	local X2AbilityTemplate						Template;
+	
+	Template = PurePassive('ShadowOps_Scrounger', "img:///UILibrary_PerkIcons.UIPerk_deeppockets", true);
+	Template.AdditionalAbilities.AddItem('ShadowOps_ScroungerTrigger');
+
+	return Template;
+}
+
+static function X2AbilityTemplate ScroungerTrigger()
+{
+	local X2AbilityTemplate						Template;
 	local X2AbilityMultiTarget_AllUnits			MultiTargetStyle;
 
 	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Scrounger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ScroungerTrigger');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_deeppockets"; // TODO
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
