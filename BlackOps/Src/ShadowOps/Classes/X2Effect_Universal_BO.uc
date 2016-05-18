@@ -12,6 +12,8 @@ function GetFinalToHitModifiers(XComGameState_Effect EffectState, XComGameState_
 
 	FinalAdjust = (default.MinimumHitChanceForNoCritPenalty - ShotBreakdown.ResultTable[eHit_Success]) * default.HitChanceCritPenaltyScale;
 	FinalAdjust = min(FinalAdjust, ShotBreakdown.ResultTable[eHit_Crit]);
+	if (ShotBreakdown.ResultTable[eHit_Crit] > ShotBreakdown.ResultTable[eHit_Success])
+		FinalAdjust = max(FinalAdjust, ShotBreakdown.ResultTable[eHit_Crit] - ShotBreakdown.ResultTable[eHit_Success]);
 
 	ModInfo.ModType = eHit_Crit;
 	ModInfo.Reason = LowHitChanceCritModifier;
