@@ -2,6 +2,15 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.5.5
+Item changes
+  * Hollow-Point Rounds can no longer be sold at the black market.
+  * Flechette rounds sell for less at the black market.
+Bugfixes
+  * Fracture now works.
+  * Fixed a conflict with Richard's Engineer mod.
+  * Assorted minor fixes.
+
 Beta version v0.5.4
 Item changes
   * The Advanced Grenade Launcher has been restored to its previous stats.
