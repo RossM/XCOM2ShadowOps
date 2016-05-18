@@ -5,6 +5,7 @@ var config int HipFireHitModifier;
 var config int HipFireCooldown;
 var config float AnatomistCritModifier, AnatomistMaxCritModifier;
 var config int WeaponmasterBonusDamage;
+var config int AbsolutelyCriticalCritBonus;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -15,6 +16,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Scrounger());
 	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(Weaponmaster());
+	Templates.AddItem(AbsolutelyCritical());
 
 	return Templates;
 }
@@ -177,7 +179,7 @@ static function X2AbilityTemplate Weaponmaster()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Weaponmaster');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays"; //TODO
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -190,6 +192,38 @@ static function X2AbilityTemplate Weaponmaster()
 	Effect = new class'X2Effect_PersistentBonus';
 	Effect.BonusDamage = default.WeaponmasterBonusDamage;
 	Effect.bRequireAbilityWeapon = true;
+	Effect.BuildPersistentEffect(1, true, false, false);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate AbsolutelyCritical()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_PersistentBonus              Effect;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AbsolutelyCritical');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays"; // TODO
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	Effect = new class'X2Effect_PersistentBonus';
+	Effect.AllowedCoverTypes.AddItem(CT_NONE);
+	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
 	Template.AddTargetEffect(Effect);

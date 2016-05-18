@@ -463,6 +463,11 @@ LocFriendlyName="Weaponmaster"
 LocLongDescription="Your <Ability:WeaponName/> attacks deal +2 damage."
 LocHelpText="Your <Ability:WeaponName/> attacks deal +2 damage."
 
+[ShadowOps_AbsolutelyCritical X2AbilityTemplate]
+LocFriendlyName="Absolutely Critical"
+LocLongDescription="You get +50 Crit chance against flanked or uncovered targets."
+LocHelpText="You get +50 Crit chance against flanked or uncovered targets."
+
 ; === Class templates ===
 
 [ShadowOps_Infantry X2SoldierClassTemplate]
