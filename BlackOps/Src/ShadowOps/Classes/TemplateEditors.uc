@@ -13,6 +13,7 @@ static function EditTemplates()
 
 	// Tactical
 	AddAllDoNotConsumeAllAbilities();
+	AddAllPostActivationEvents();
 	FixAllSimpleStandardAims();
 	ChangeAllToGrenadeActionPoints();
 	AddAllSuppressionConditions();
@@ -230,6 +231,32 @@ static function AddAllDoNotConsumeAllAbilities()
 
 	// Entrench
 	AddDoNotConsumeAllAbility('HunkerDown', 'ShadowOps_Entrench');
+}
+
+static function AddPostActivationEvent(name AbilityName, name EventName)
+{
+	local X2AbilityTemplateManager		AbilityManager;
+	local array<X2AbilityTemplate>		TemplateAllDifficulties;
+	local X2AbilityTemplate				Template;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		if (Template.PostActivationEvents.Find(EventName) == INDEX_NONE)
+			Template.PostActivationEvents.AddItem(EventName);
+	}
+}
+
+static function AddAllPostActivationEvents()
+{
+	local name DataName;
+
+	// Fastball
+	foreach default.GrenadeAbilities(DataName)
+	{
+		AddPostActivationEvent(DataName, 'GrenadeUsed');
+	}
 }
 
 static function FixSimpleStandardAim(name AbilityName)
