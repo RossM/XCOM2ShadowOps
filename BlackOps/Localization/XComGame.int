@@ -470,8 +470,8 @@ LocHelpText="You get +50 Crit chance against flanked or uncovered targets."
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Hit and Run"
-LocLongDescription="You can take a move action after using an ability that would normally end your turn as your first action."
-LocHelpText="You can take a move action after using an ability that would normally end your turn as your first action."
+LocLongDescription="You can take a move action after using a single-action ability as your first action that would normally end your turn."
+LocHelpText="You can take a move action after using a single-action ability as your first action that would normally end your turn."
 LocFlyOverText="Hit and Run"
 
 ; === Class templates ===
