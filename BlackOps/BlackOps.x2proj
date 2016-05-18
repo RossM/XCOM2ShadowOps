@@ -234,6 +234,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_HeavyArmor.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_HitAndRun.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_HunkerDown.uc">
       <SubType>Content</SubType>
     </Content>

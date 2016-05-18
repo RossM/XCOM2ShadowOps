@@ -468,6 +468,12 @@ LocFriendlyName="Absolutely Critical"
 LocLongDescription="You get +50 Crit chance against flanked or uncovered targets."
 LocHelpText="You get +50 Crit chance against flanked or uncovered targets."
 
+[ShadowOps_HitAndRun X2AbilityTemplate]
+LocFriendlyName="Hit and Run"
+LocLongDescription="You can take a move action after using an ability that would normally end your turn as your first action."
+LocHelpText="You can take a move action after using an ability that would normally end your turn as your first action."
+LocFlyOverText="Hit and Run"
+
 ; === Class templates ===
 
 [ShadowOps_Infantry X2SoldierClassTemplate]

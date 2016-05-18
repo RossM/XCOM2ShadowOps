@@ -17,6 +17,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(Weaponmaster());
 	Templates.AddItem(AbsolutelyCritical());
+	Templates.AddItem(HitAndRun());
 
 	return Templates;
 }
@@ -235,3 +236,34 @@ static function X2AbilityTemplate AbsolutelyCritical()
 
 	return Template;
 }
+
+static function X2AbilityTemplate HitAndRun()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_HitAndRun                    Effect;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HitAndRun');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_runandgun"; // TODO
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	Effect = new class'X2Effect_HitAndRun';
+	Effect.BuildPersistentEffect(1, true, false, false);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
