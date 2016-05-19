@@ -12,7 +12,7 @@ struct TemplateEdit
 
 var config array<name> ExtraStartingItems, DisabledItems;
 var config array<name> GrenadeAbilities, SuppressionBlockedAbilities;
-var config array<TemplateEdit> TemplateEdits;
+var config array<TemplateEdit> BuildableItems;
 
 static function EditTemplates()
 {
@@ -40,7 +40,7 @@ static function EditTemplates()
 	{
 		DisableItem(DataName);
 	}
-	foreach default.TemplateEdits(Edit)
+	foreach default.BuildableItems(Edit)
 	{
 		ApplyTemplateEdit(Edit);
 	}
