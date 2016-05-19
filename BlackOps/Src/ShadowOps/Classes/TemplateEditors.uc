@@ -1,12 +1,23 @@
 // This is an Unreal Script
 class TemplateEditors extends Object config(GameCore);
 
+struct TemplateEdit
+{
+	var name ItemName;
+	var array<name> RequiredTechs;
+	var StrategyCost Cost;
+	var int TradingPostValue;
+	var int Tier;
+};
+
 var config array<name> ExtraStartingItems, DisabledItems;
 var config array<name> GrenadeAbilities, SuppressionBlockedAbilities;
+var config array<TemplateEdit> TemplateEdits;
 
 static function EditTemplates()
 {
 	local name DataName;
+	local TemplateEdit Edit;
 
 	// Strategy
 	AddGtsUnlocks();
@@ -29,7 +40,11 @@ static function EditTemplates()
 	{
 		DisableItem(DataName);
 	}
-	EditPlatedVest('PlatedVest');
+	foreach default.TemplateEdits(Edit)
+	{
+		ApplyTemplateEdit(Edit);
+	}
+
 	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
 
 	UpgradeAbilityVisualization('LaunchGrenade');
@@ -80,38 +95,27 @@ static function ChangeToStartingItem(name ItemName)
 	}
 }
 
-static function EditPlatedVest(name ItemName)
+static function ApplyTemplateEdit(TemplateEdit Edit)
 {
 	local X2ItemTemplateManager			ItemManager;
 	local array<X2DataTemplate>			DataTemplateAllDifficulties;
 	local X2DataTemplate				DataTemplate;
 	local X2EquipmentTemplate			Template;
-	local ArtifactCost					Resources, Artifacts;
 	
-	DisableItem(ItemName);
+	DisableItem(Edit.ItemName);
 
 	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
-	ItemManager.FindDataTemplateAllDifficulties(ItemName, DataTemplateAllDifficulties);
+	ItemManager.FindDataTemplateAllDifficulties(Edit.ItemName, DataTemplateAllDifficulties);
 	foreach DataTemplateAllDifficulties(DataTemplate)
 	{
 		Template = X2EquipmentTemplate(DataTemplate);
 
 		Template.CanBeBuilt = true;
-		Template.TradingPostValue = 15;
+		Template.TradingPostValue = Edit.TradingPostValue;
 		Template.PointsToComplete = 0;
-		Template.Tier = 1;
-
-		// Requirements
-		Template.Requirements.RequiredTechs.AddItem('HybridMaterials');
-
-		// Cost
-		Resources.ItemTemplateName = 'Supplies';
-		Resources.Quantity = 30;
-		Template.Cost.ResourceCosts.AddItem(Resources);
-
-		Artifacts.ItemTemplateName = 'CorpseAdventTrooper';
-		Artifacts.Quantity = 4;
-		Template.Cost.ArtifactCosts.AddItem(Artifacts);
+		Template.Tier = Edit.Tier;
+		Template.Requirements.RequiredTechs = Edit.RequiredTechs;
+		Template.Cost = Edit.Cost;
 	}
 }
 
