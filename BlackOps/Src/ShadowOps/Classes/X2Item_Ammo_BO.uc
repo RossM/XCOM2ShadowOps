@@ -68,6 +68,7 @@ static function X2DataTemplate CreateHollowPointRounds()
 
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
+	Template.bInfiniteItem = true;
 		
 	//FX Reference
 	Template.GameArchetype = "Ammo_Talon.PJ_Talon";
