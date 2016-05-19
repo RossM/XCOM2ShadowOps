@@ -18,7 +18,7 @@ static function X2AbilityTemplate AIShowFlyover()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'AIShowFlyover');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_lightninghands";
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_unknown";
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
 
@@ -36,6 +36,7 @@ static function X2AbilityTemplate AIShowFlyover()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Template.bShowActivation = true;
+	Template.bSkipFireAction = true;
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
