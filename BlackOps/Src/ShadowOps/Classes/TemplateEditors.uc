@@ -120,7 +120,8 @@ static function DisableItem(name ItemName)
 	local X2ItemTemplateManager			ItemManager;
 	local array<X2DataTemplate>			DataTemplateAllDifficulties;
 	local X2DataTemplate				DataTemplate;
-	local X2ItemTemplate				Template, BaseTemplate;
+	local X2ItemTemplate				Template;
+	local name							BaseItem;
 	
 	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 	ItemManager.FindDataTemplateAllDifficulties(ItemName, DataTemplateAllDifficulties);
@@ -129,7 +130,7 @@ static function DisableItem(name ItemName)
 		Template = X2ItemTemplate(DataTemplate);
 
 		if (Template.BaseItem != '')
-			BaseTemplate = ItemManager.FindItemTemplate(Template.BaseItem);
+			BaseItem = Template.BaseItem;
 
 		Template.StartingItem = false;
 		Template.CanBeBuilt = false;
@@ -139,10 +140,16 @@ static function DisableItem(name ItemName)
 		Template.Cost.ResourceCosts.Length = 0;
 		Template.Cost.ArtifactCosts.Length = 0;
 		Template.Requirements.RequiredTechs.Length = 0;
+	}
 
-		if (BaseTemplate != none)
+	if (BaseItem != '')
+	{
+		ItemManager.FindDataTemplateAllDifficulties(BaseItem, DataTemplateAllDifficulties);
+		foreach DataTemplateAllDifficulties(DataTemplate)
 		{
-			BaseTemplate.HideIfResearched = '';
+			Template = X2ItemTemplate(DataTemplate);
+
+			Template.HideIfResearched = '';
 		}
 	}
 }
