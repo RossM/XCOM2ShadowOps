@@ -200,17 +200,9 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 simulated function int GetUIStatFromInventory(XComGameState_Unit Unit, ECharStatType Stat)
 {
 	local int Result;
-	local XComGameState_Item InventoryItem;
-	local array<XComGameState_Item> CurrentInventory;
 
 	Result += Unit.GetUIStatFromInventory(Stat);
-
-	//  Gather abilities from the unit's inventory
-	CurrentInventory = Unit.GetAllInventoryItems(CheckGameState);
-	foreach CurrentInventory(InventoryItem)
-	{
-		Result += class'UnitUtilities_BO'.static.GetUIStatBonusFromItem(Unit, Stat, InventoryItem);
-	}	
+	Result += class'UnitUtilities_BO'.static.GetUIStatBonusFromInventory(Unit, Stat);
 
 	return Result;
 }
