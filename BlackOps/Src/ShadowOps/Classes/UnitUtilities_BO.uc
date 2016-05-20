@@ -73,12 +73,12 @@ static simulated function int GetUIStatBonusFromInventory(XComGameState_Unit Uni
 	AbilityTree = Unit.GetEarnedSoldierAbilities();
 	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
-	CurrentInventory = Unit.GetAllInventoryItems();
-	foreach CurrentInventory(InventoryItem)
+	foreach AbilityTree(SoldierClassAbility)
 	{
-		foreach AbilityTree(SoldierClassAbility)
+		AbilityTemplate = X2AbilityTemplate_BO(AbilityTemplateManager.FindAbilityTemplate(SoldierClassAbility.AbilityName));
+		CurrentInventory = Unit.GetAllInventoryItems();
+		foreach CurrentInventory(InventoryItem)
 		{
-			AbilityTemplate = X2AbilityTemplate_BO(AbilityTemplateManager.FindAbilityTemplate(SoldierClassAbility.AbilityName));
 			if (AbilityTemplate != none)
 			{
 				Result += AbilityTemplate.GetUIBonusStatMarkup(Stat, InventoryItem);
