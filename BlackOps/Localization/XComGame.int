@@ -460,8 +460,8 @@ LocHelpText="You are unusually good at finding useful loot."
 
 [ShadowOps_Weaponmaster X2AbilityTemplate]
 LocFriendlyName="Weaponmaster"
-LocLongDescription="Your <Ability:WeaponName/> attacks deal +2 damage."
-LocHelpText="Your <Ability:WeaponName/> attacks deal +2 damage."
+LocLongDescription="Your <Ability:WeaponName/> attacks deal +1 damage."
+LocHelpText="Your <Ability:WeaponName/> attacks deal +1 damage."
 
 [ShadowOps_AbsolutelyCritical X2AbilityTemplate]
 LocFriendlyName="Absolutely Critical"
