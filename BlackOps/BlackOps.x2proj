@@ -2236,6 +2236,9 @@ Beta version v0.1
     <Content Include="Src\XModBase\Classes\X2AbilityToHitCalc_StandardAim_XModBase.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase\Classes\X2DownloadableContentInfo_XModBase.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase\Classes\X2TacticalGameRuleset_XModBase.uc">
       <SubType>Content</SubType>
     </Content>
