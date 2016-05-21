@@ -191,3 +191,24 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 		}
 	}
 }
+
+simulated function GoToPrimaryWeapon()
+{
+	`HQPRES.UIArmory_Loadout(GetUnitRef(), CannotEditSlots);
+	
+	if (CannotEditSlots.Find(eInvSlot_PrimaryWeapon) == INDEX_NONE)
+	{
+		UIArmory_Loadout(Movie.Stack.GetScreen(class'UIArmory_Loadout_BO')).SelectWeapon(eInvSlot_PrimaryWeapon);
+	}
+}
+
+simulated function GoToHeavyWeapon()
+{
+	`HQPRES.UIArmory_Loadout(GetUnitRef(), CannotEditSlots);
+
+	if (CannotEditSlots.Find(eInvSlot_HeavyWeapon) == INDEX_NONE)
+	{
+		UIArmory_Loadout(Movie.Stack.GetScreen(class'UIArmory_Loadout_BO')).SelectWeapon(eInvSlot_HeavyWeapon);
+	}
+}
+

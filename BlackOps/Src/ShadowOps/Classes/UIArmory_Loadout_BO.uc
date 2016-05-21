@@ -32,3 +32,19 @@ simulated function bool ShowInLockerList(XComGameState_Item Item, EInventorySlot
 
 	return false;
 }
+
+simulated static function CycleToSoldier(StateObjectReference NewRef)
+{
+	local UIArmory_Loadout LoadoutScreen;
+	local UIScreenStack ScreenStack;
+
+	ScreenStack = `SCREENSTACK;
+	LoadoutScreen = UIArmory_Loadout(ScreenStack.GetScreen(class'UIArmory_Loadout_BO'));
+
+	if(LoadoutScreen != none)
+	{
+		LoadoutScreen.ResetAvailableEquipment();
+	}
+	
+	super.CycleToSoldier(NewRef);
+}
