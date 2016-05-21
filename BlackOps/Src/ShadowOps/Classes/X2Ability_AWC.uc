@@ -193,7 +193,7 @@ static function X2AbilityTemplate Weaponmaster()
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
 	Effect = new class'X2Effect_PersistentBonus';
-	Effect.BonusDamage = default.WeaponmasterBonusDamage;
+	Effect.AddDamageModifier(default.WeaponmasterBonusDamage);
 	Effect.bRequireAbilityWeapon = true;
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);

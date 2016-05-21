@@ -110,7 +110,7 @@ static function X2AbilityTemplate Magnum()
 	MagnumEffect.BuildPersistentEffect(1, true, true, true);
 	MagnumEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	MagnumEffect.bRequireAbilityWeapon = true;
-	MagnumEffect.BonusDamage = default.MagnumDamageBonus;
+	MagnumEffect.AddDamageModifier(default.MagnumDamageBonus);
 	MagnumEffect.AddToHitModifier(default.MagnumOffenseBonus);
 	Template.AddTargetEffect(MagnumEffect);
 
