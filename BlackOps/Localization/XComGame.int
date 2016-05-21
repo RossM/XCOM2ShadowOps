@@ -474,10 +474,6 @@ LocLongDescription="You can take a move action after using a single-action abili
 LocHelpText="You can take a move action after using a single-action ability as your first action that would normally end your turn."
 LocFlyOverText="Hit and Run"
 
-; === Misc abilities ===
-[AIShowFlyover X2AbilityTemplate]
-LocFlyOverText="AI Alert"
-
 ; === Class templates ===
 
 [ShadowOps_Infantry X2SoldierClassTemplate]

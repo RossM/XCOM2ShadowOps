@@ -164,9 +164,6 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Ability_ItemGranted_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Ability_Misc.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_Universal_BO.uc">
       <SubType>Content</SubType>
     </Content>
