@@ -476,7 +476,6 @@ LocFlyOverText="Hit and Run"
 
 ; === Misc abilities ===
 [AIShowFlyover X2AbilityTemplate]
-LocFriendlyName="AI Alert"
 LocFlyOverText="AI Alert"
 
 ; === Class templates ===
