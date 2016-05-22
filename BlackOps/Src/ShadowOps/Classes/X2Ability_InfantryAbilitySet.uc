@@ -713,9 +713,13 @@ static function X2AbilityTemplate Flush()
 	ActionPointEffect = new class'X2Effect_GrantActionPoints';
 	ActionPointEffect.NumActionPoints = 1;
 	ActionPointEffect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
+	ActionPointEffect.bApplyOnHit = true;
+	ActionPointEffect.bApplyOnMiss = true;
 	Template.AddTargetEffect(ActionPointEffect);
 
 	FlushEffect = new class'X2Effect_Flush';
+	FlushEffect.bApplyOnHit = true;
+	FlushEffect.bApplyOnMiss = true;
 	Template.AddTargetEffect(FlushEffect);
 
 	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
