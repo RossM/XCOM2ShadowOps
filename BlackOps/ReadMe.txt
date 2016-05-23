@@ -2,6 +2,25 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.6.0
+General changes
+  * More of the item changes made by the mod can be configured in XComGameCore.ini.
+  * Increased compatibility with some mods by removing X2TacticalGameRuleset overide.
+  * Many abilities have expanded popup text.
+Ability changes
+  * Breach now has a reduced radius of 2 when used with a rifle. It still has its previous radius of 3 when used with a shotgun.
+  * Flush now forces the target to move even if the shot misses.
+  * Returning AWC ability: Hip Fire. Fire your primary weapon at a target. This attack does not cost an action. 3 turn cooldown.
+  * New AWC ability: Anatomist. You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30.
+  * New AWC ability: Scrounger. You are unusually good at finding useful loot.
+  * New AWC ability: Weaponmaster. Your primary weapon attacks deal +2 damage.
+  * New AWC ability: Absolutely Critical. You get an additional +50 Crit chance against flanked or uncovered targets.
+  * New AWC ability: Hit and Run. You can take a move action after using a single-action ability as your first action that would normally end your turn.
+  * New AWC ability: Devil's Luck. Your Hit chance is increased by 10% and Crit chance is increased by 20%. These bonuses are doubled when you are flanked or out of cover.
+Bugfixes
+  * Renewal Protocol can no longer bring the dead back to life.
+  * Assorted minor fixes.
+
 Beta version v0.5.5
 Item changes
   * Hollow-Point Rounds can no longer be sold at the black market.
