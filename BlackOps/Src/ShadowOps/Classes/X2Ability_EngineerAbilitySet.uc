@@ -3,7 +3,7 @@ class X2Ability_EngineerAbilitySet extends X2Ability
 
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
 var config int BreachEnvironmentalDamage;
-var config float BreachRange, BreachRadius;
+var config float BreachRange, BreachRadius, BreachShotgunRadius;
 var config float DangerZoneBonusRadius, DangerZoneBreachBonusRadius;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
@@ -17,6 +17,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(DenseSmoke());
 	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_BlackOps.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(Breach());
+	Templates.AddItem(BreachBonusRadius());
 	Templates.AddItem(Fastball());
 	Templates.AddItem(FastballRemovalTrigger());
 	Templates.AddItem(FractureAbility());
@@ -65,6 +66,7 @@ static function X2AbilityTemplate Breach()
 	local X2AbilityCooldown                 Cooldown;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Breach');
+	Template.AdditionalAbilities.AddItem('ShadowOps_BreachBonusRadius');
 	
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
@@ -123,6 +125,41 @@ static function X2AbilityTemplate Breach()
 	Template.bCrossClassEligible = false;
 
 	return Template;	
+}
+
+static function X2AbilityTemplate BreachBonusRadius()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_BonusRadius                  Effect;
+	local X2Condition_UnitInventory				Condition;
+
+	// Icon Properties
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_BreachBonusRadius');
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_momentum";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+
+	Condition = new class'X2Condition_UnitInventory';
+	Condition.RelevantSlot = eInvSlot_PrimaryWeapon;
+	Condition.RequireWeaponCategory = 'shotgun';
+	Template.AbilityTargetConditions.AddItem(Condition);
+
+	Effect = new class'X2Effect_BonusRadius';
+	Effect.fBonusRadius = default.BreachShotgunRadius - default.BreachRadius;
+	Effect.BuildPersistentEffect(1, true, false, false);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, false,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	return Template;
 }
 
 static function X2AbilityTemplate Fastball()

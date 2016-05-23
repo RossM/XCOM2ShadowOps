@@ -356,7 +356,7 @@ LocFriendlyName="Breach"
 LocLongDescription="Fire a shot that destroys cover and shreds armor in a small area, but deals reduced damage and can't get critical hits."
 LocHelpText="Fire a shot that destroys cover and shreds armor in a small area, but deals reduced damage and can't get critical hits."
 LocFlyOverText="Breach"
-LocPromotionPopupText="<Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> The damage is based off your weapon damage, so shotguns will do more damage than rifles.<br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> Breach deals more damage and has a larger radius when used with a shotgun rather than an assault rifle. <br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Fastball X2AbilityTemplate]
 LocFriendlyName="Fastball"
@@ -415,8 +415,8 @@ LocPromotionPopupText="<Bullet/> With the proper setup, you can trigger Slam Fir
 
 [ShadowOps_DangerZone X2AbilityTemplate]
 LocFriendlyName="Danger Zone"
-LocLongDescription="The radius of all your grenades and your Breach ability is increased by 2."
-LocHelpText="The radius of all your grenades and your Breach ability is increased by 2."
+LocLongDescription="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
+LocHelpText="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
 LocFlyOverText="Danger Zone"
 LocPromotionPopupText="<Bullet/> Danger Zone provides a massive increase to grenade radius that makes it easy to hit multiple units and remove their cover, not to mention all other cover nearby. <br/>"
 
