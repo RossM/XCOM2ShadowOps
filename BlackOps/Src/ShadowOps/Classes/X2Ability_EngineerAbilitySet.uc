@@ -562,7 +562,7 @@ static function X2AbilityTemplate Packmaster()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_BonusItemCharges             ItemChargesEffect;
+	local XMBEffect_BonusItemCharges             ItemChargesEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Packmaster');
 
@@ -581,7 +581,7 @@ static function X2AbilityTemplate Packmaster()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	ItemChargesEffect = new class'X2Effect_BonusItemCharges';
+	ItemChargesEffect = new class'XMBEffect_BonusItemCharges';
 	ItemChargesEffect.EffectName = 'Packmaster';
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_Utility);
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_GrenadePocket);

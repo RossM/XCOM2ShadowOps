@@ -1,4 +1,4 @@
-class X2Effect_BonusItemCharges extends X2Effect_Persistent;
+class XMBEffect_BonusItemCharges extends X2Effect_Persistent;
 
 var array<EInventorySlot> ApplyToSlots;
 var int PerItemBonus;
