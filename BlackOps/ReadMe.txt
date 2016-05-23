@@ -11,7 +11,7 @@ Ability changes
   * Breach now has a radius of 2 when used with a rifle. It still has its previous radius of 3 when used with a shotgun.
   * Flush now forces the target to move even if the shot misses.
   * Returning AWC ability: Hip Fire. Fire your primary weapon at a target. This attack does not cost an action. 3 turn cooldown.
-  * New AWC ability: Anatomist. You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30.
+  * New AWC ability: Anatomist. You get a +10 Crit chance bonus for each enemy of the same type you have killed, to a max of +30.
   * New AWC ability: Scrounger. There is a chance of an extra loot drop whenever you are on a mission.
   * New AWC ability: Weaponmaster. Your primary weapon attacks deal +2 damage.
   * New AWC ability: Absolutely Critical. You get an additional +50 Crit chance against flanked or uncovered targets.

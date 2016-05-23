@@ -449,8 +449,8 @@ LocPromotionPopupText="<Bullet/> Hip Fire has a <Ability:SelfCooldown/> turn coo
 
 [ShadowOps_Anatomist X2AbilityTemplate]
 LocFriendlyName="Anatomist"
-LocLongDescription="You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30."
-LocHelpText="You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30."
+LocLongDescription="You get a +10 Crit chance bonus for each enemy of the same type you have killed, to a max of +30."
+LocHelpText="You get a +10 Crit chance bonus for each enemy of the same type you have killed, to a max of +30."
 
 [ShadowOps_Scrounger X2AbilityTemplate]
 LocFriendlyName="Scrounger"
