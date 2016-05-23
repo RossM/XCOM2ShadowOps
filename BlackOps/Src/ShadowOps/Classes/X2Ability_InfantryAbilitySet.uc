@@ -21,6 +21,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(PurePassive('ShadowOps_BulletSwarm', "img:///UILibrary_BlackOps.UIPerk_bulletswarm", true));
 	Templates.AddItem(Bandolier());
+	Templates.AddItem(SwapAmmo());
 	Templates.AddItem(Magnum());
 	Templates.AddItem(GoodEye());
 	Templates.AddItem(AlwaysReady());
@@ -80,6 +81,98 @@ static function BandolierPurchased(XComGameState NewGameState, XComGameState_Uni
 		`RedScreen("Unable to add free ammo to unit's inventory. Sadness." @ UnitState.ToString());
 		return;
 	}
+}
+
+static function X2AbilityTemplate SwapAmmo()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2Condition_UnitProperty          ShooterPropertyCondition;
+	local X2Condition_SwapAmmo				WeaponCondition;
+	local X2AbilityTrigger_PlayerInput      InputTrigger;
+	local array<name>                       SkipExclusions;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SwapAmmo');
+	
+	Template.bDontDisplayInAbilitySummary = true;
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	ShooterPropertyCondition = new class'X2Condition_UnitProperty';	
+	ShooterPropertyCondition.ExcludeDead = true;                    //Can't reload while dead
+	Template.AbilityShooterConditions.AddItem(ShooterPropertyCondition);
+	WeaponCondition = new class'X2Condition_SwapAmmo';
+	Template.AbilityShooterConditions.AddItem(WeaponCondition);
+
+	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+
+	InputTrigger = new class'X2AbilityTrigger_PlayerInput';
+	Template.AbilityTriggers.AddItem(InputTrigger);
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	
+	Template.AbilityTargetStyle = default.SelfTarget;
+	
+	Template.AbilitySourceName = 'eAbilitySource_Standard';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_ShowIfAvailable;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_ammo_ap";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.RELOAD_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+	Template.DisplayTargetHitChance = false;
+
+	Template.ActivationSpeech = 'Reloading';
+
+	Template.BuildNewGameStateFn = SwapAmmo_BuildGameState;
+	Template.BuildVisualizationFn = class'X2Ability_DefaultAbilitySet'.static.ReloadAbility_BuildVisualization;
+
+	ActionPointCost.iNumPoints = 1;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.CinescriptCameraType="GenericAccentCam";
+
+	return Template;	
+}
+
+simulated function XComGameState SwapAmmo_BuildGameState( XComGameStateContext Context )
+{
+	local XComGameState NewGameState;
+	local XComGameState_Unit UnitState;
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameState_Ability AbilityState;
+	local XComGameState_Item WeaponState, NewWeaponState, AmmoState, LoadedAmmoState;
+	local array<XComGameState_Item> InventoryItems;
+
+	NewGameState = `XCOMHISTORY.CreateNewGameState(true, Context);	
+	AbilityContext = XComGameStateContext_Ability(Context);	
+	AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID( AbilityContext.InputContext.AbilityRef.ObjectID ));
+
+	AmmoState = AbilityState.GetSourceWeapon();
+
+	UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));	
+	InventoryItems = UnitState.GetAllInventoryItems(NewGameState);
+
+	foreach InventoryItems(WeaponState)
+	{
+		LoadedAmmoState = XComGameState_Item(`XCOMHISTORY.GetGameStateForObjectID(WeaponState.LoadedAmmo.ObjectID));
+		if (LoadedAmmoState == none || !LoadedAmmoState.GetMyTemplate().IsA('X2AmmoTemplate'))
+			continue;
+
+		NewWeaponState = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', WeaponState.ObjectID));
+		//  apply new ammo
+		NewWeaponState.LoadedAmmo = AmmoState.GetReference();
+		//  refill the weapon's ammo	
+		NewWeaponState.Ammo = NewWeaponState.GetClipSize();
+
+		NewGameState.AddStateObject(NewWeaponState);
+	}
+
+	AbilityState.GetMyTemplate().ApplyCost(AbilityContext, AbilityState, UnitState, NewWeaponState, NewGameState);	
+
+	NewGameState.AddStateObject(UnitState);
+
+	return NewGameState;	
 }
 
 static function X2AbilityTemplate Magnum()
