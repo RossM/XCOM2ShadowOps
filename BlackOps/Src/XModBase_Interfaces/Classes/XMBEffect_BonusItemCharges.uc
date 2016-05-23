@@ -1,4 +1,4 @@
-class XMBEffect_BonusItemCharges extends X2Effect_Persistent;
+class XMBEffect_BonusItemCharges extends X2Effect;
 
 var array<EInventorySlot> ApplyToSlots;
 var int PerItemBonus;
@@ -52,6 +52,5 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 
 defaultproperties
 {
-	EffectName = "BonusItemCharges";
 	PerItemBonus = 1;
 }

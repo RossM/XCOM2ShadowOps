@@ -562,7 +562,8 @@ static function X2AbilityTemplate Packmaster()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local XMBEffect_BonusItemCharges             ItemChargesEffect;
+	local XMBEffect_BonusItemCharges            ItemChargesEffect;
+	local X2Effect_Persistent					PersistentEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Packmaster');
 
@@ -582,12 +583,15 @@ static function X2AbilityTemplate Packmaster()
 	Template.AbilityTriggers.AddItem(Trigger);
 
 	ItemChargesEffect = new class'XMBEffect_BonusItemCharges';
-	ItemChargesEffect.EffectName = 'Packmaster';
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_Utility);
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_GrenadePocket);
-	ItemChargesEffect.BuildPersistentEffect(1, true, true, true);
-	ItemChargesEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(ItemChargesEffect);
+
+	PersistentEffect = new class'X2Effect_Persistent';
+	PersistentEffect.EffectName = 'Packmaster';
+	PersistentEffect.BuildPersistentEffect(1, true, true, true);
+	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Template.AddTargetEffect(PersistentEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
