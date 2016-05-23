@@ -8,7 +8,7 @@ General changes
   * Increased compatibility with some mods by removing X2TacticalGameRuleset overide.
   * Many abilities have expanded popup text.
 Ability changes
-  * Breach now has a reduced radius of 2 when used with a rifle. It still has its previous radius of 3 when used with a shotgun.
+  * Breach now has a radius of 2 when used with a rifle. It still has its previous radius of 3 when used with a shotgun.
   * Flush now forces the target to move even if the shot misses.
   * Returning AWC ability: Hip Fire. Fire your primary weapon at a target. This attack does not cost an action. 3 turn cooldown.
   * New AWC ability: Anatomist. You get a +5 crit bonus for each enemy of the same type you have killed, to a max of +30.
