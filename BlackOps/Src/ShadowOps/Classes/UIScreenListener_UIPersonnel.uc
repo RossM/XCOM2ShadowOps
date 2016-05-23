@@ -1,14 +1,42 @@
-class UIPersonnel_SoldierListItem_BO extends UIPersonnel_SoldierListItem;
+class UIScreenListener_UIPersonnel extends UIScreenListener;
 
-// Modified to display subclass name
-simulated function UpdateData()
+event OnInit(UIScreen Screen)
+{
+	RefreshVisuals(Screen);
+}
+
+event OnReceiveFocus(UIScreen Screen)
+{
+	RefreshVisuals(Screen);
+}
+
+function RefreshVisuals(UIScreen Screen)
+{
+	local UIPersonnel_SoldierListItem	ListItem; 
+	local UIPersonnel					Personnel;
+	local int							i;
+
+	Personnel = UIPersonnel(Screen);
+
+	for(i = 0; i < Personnel.m_kList.ItemCount; i++)
+	{
+		ListItem = UIPersonnel_SoldierListItem(Personnel.m_kList.GetItem(i));
+
+		if (ListItem != none)
+		{
+			UpdateData(ListItem);
+		}
+	}
+}
+
+function UpdateData(UIPersonnel_SoldierListItem ListItem)
 {
 	local XComGameState_Unit Unit;
 	local string UnitLoc, status, statusTimeLabel, statusTimeValue, classIcon, rankIcon, flagIcon;	
 	local int iRank;
 	local X2SoldierClassTemplate SoldierClass;
 	
-	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
+	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ListItem.UnitRef.ObjectID));
 
 	iRank = Unit.GetRank();
 
@@ -28,7 +56,7 @@ simulated function UpdateData()
 	else
 		UnitLoc = "";
 
-	AS_UpdateDataSoldier(Caps(Unit.GetName(eNameType_Full)),
+	ListItem.AS_UpdateDataSoldier(Caps(Unit.GetName(eNameType_Full)),
 					Caps(Unit.GetName(eNameType_Nick)),
 					Caps(`GET_RANK_ABBRV(Unit.GetRank(), SoldierClass.DataName)),
 					rankIcon,
@@ -41,4 +69,10 @@ simulated function UpdateData()
 					false, //todo: is disabled 
 					Unit.ShowPromoteIcon(),
 					false); // psi soldiers can't rank up via missions
+}
+
+
+defaultproperties
+{
+	ScreenClass = class'UIPersonnel'
 }
