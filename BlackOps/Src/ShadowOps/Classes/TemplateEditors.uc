@@ -270,42 +270,40 @@ static function AddAllPostActivationEvents()
 	}
 }
 
-static function FixSimpleStandardAim(name AbilityName)
+static function FixAllSimpleStandardAims()
 {
 	local X2AbilityTemplateManager				AbilityManager;
 	local array<X2AbilityTemplate>				TemplateAllDifficulties;
 	local X2AbilityTemplate						Template;
 	local X2AbilityToHitCalc					ToHitCalc;
 	local X2AbilityToHitCalc_StandardAim_XModBase		NewToHitCalc;
+	local array<name>							TemplateNames;
+	local name									AbilityName;
 
 	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
-	AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
-	foreach TemplateAllDifficulties(Template)
-	{
-		ToHitCalc = Template.AbilityToHitCalc;
-		if (ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim') && !ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim_XModBase'))
-		{
-			NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
-			Template.AbilityToHitCalc = NewToHitCalc;
-		}
 
-		ToHitCalc = Template.AbilityToHitOwnerOnMissCalc;
-		if (ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim') && !ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim_XModBase'))
+	AbilityManager.GetTemplateNames(TemplateNames);
+
+	foreach TemplateNames(AbilityName)
+	{
+		AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
+		foreach TemplateAllDifficulties(Template)
 		{
-			NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
-			Template.AbilityToHitOwnerOnMissCalc = NewToHitCalc;
+			ToHitCalc = Template.AbilityToHitCalc;
+			if (ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
+			{
+				NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
+				Template.AbilityToHitCalc = NewToHitCalc;
+			}
+
+			ToHitCalc = Template.AbilityToHitOwnerOnMissCalc;
+			if (ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
+			{
+				NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
+				Template.AbilityToHitOwnerOnMissCalc = NewToHitCalc;
+			}
 		}
 	}
-}
-
-static function FixAllSimpleStandardAims()
-{
-	FixSimpleStandardAim('StandardShot');
-	FixSimpleStandardAim('PistolStandardShot');
-	FixSimpleStandardAim('SniperStandardFire');
-	FixSimpleStandardAim('AnimaGate');
-	FixSimpleStandardAim('LightningHands');
-	
 }
 
 static function ChangeToGrenadeActionPoints(name AbilityName)
