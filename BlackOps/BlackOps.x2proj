@@ -185,6 +185,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Condition_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Condition_SwapAmmo.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_TookDamage.uc">
       <SubType>Content</SubType>
     </Content>

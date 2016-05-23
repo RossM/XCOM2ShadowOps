@@ -27,6 +27,7 @@ static function EditTemplates()
 	AddAllPostActivationEvents();
 	ChangeAllToGrenadeActionPoints();
 	AddAllSuppressionConditions();
+	AddSwapAmmoAbilities();
 
 	CreateCompatAbilities();
 
@@ -397,6 +398,34 @@ static function CreateCompatAbilities()
 				NewTemplate.SetTemplateName(NewTemplateName);
 				AbilityManager.AddAbilityTemplate(NewTemplate);
 			}
+		}
+	}
+}
+
+static function AddSwapAmmoAbilities()
+{
+	local X2ItemTemplateManager			ItemManager;
+	local Array<name>					TemplateNames;
+	local name							ItemName;
+	local array<X2DataTemplate>			DataTemplateAllDifficulties;
+	local X2DataTemplate				DataTemplate;
+	local X2AmmoTemplate				Template;
+
+	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	ItemManager.GetTemplateNames(TemplateNames);
+
+	foreach TemplateNames(ItemName)
+	{
+		ItemManager.FindDataTemplateAllDifficulties(ItemName, DataTemplateAllDifficulties);
+		foreach DataTemplateAllDifficulties(DataTemplate)
+		{
+			Template = X2AmmoTemplate(DataTemplate);
+
+			if (Template == none)
+				continue;
+
+			if (Template.Abilities.Find('ShadowOps_SwapAmmo') == INDEX_NONE)
+				Template.Abilities.AddItem('ShadowOps_SwapAmmo');
 		}
 	}
 }
