@@ -130,7 +130,7 @@ static function X2AbilityTemplate Breach()
 static function X2AbilityTemplate BreachBonusRadius()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_BonusRadius                  Effect;
+	local XMBEffect_BonusRadius                  Effect;
 	local X2Condition_UnitInventory				Condition;
 
 	// Icon Properties
@@ -150,7 +150,7 @@ static function X2AbilityTemplate BreachBonusRadius()
 	Condition.RequireWeaponCategory = 'shotgun';
 	Template.AbilityTargetConditions.AddItem(Condition);
 
-	Effect = new class'X2Effect_BonusRadius';
+	Effect = new class'XMBEffect_BonusRadius';
 	Effect.fBonusRadius = default.BreachShotgunRadius - default.BreachRadius;
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, false,,Template.AbilitySourceName);
@@ -642,7 +642,7 @@ static function X2AbilityTemplate DenseSmoke()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_BonusRadius					RadiusEffect;
+	local XMBEffect_BonusRadius					RadiusEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DenseSmoke');
 
@@ -661,7 +661,7 @@ static function X2AbilityTemplate DenseSmoke()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	RadiusEffect = new class'X2Effect_BonusRadius';
+	RadiusEffect = new class'XMBEffect_BonusRadius';
 	RadiusEffect.EffectName = 'DenseSmokeRadius';
 	RadiusEffect.fBonusRadius = class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
 	RadiusEffect.AllowedTemplateNames.AddItem('SmokeGrenade');

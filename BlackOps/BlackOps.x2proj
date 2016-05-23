@@ -2251,7 +2251,7 @@ Beta version v0.1
     <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_BonusItemCharges.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_BonusRadius.uc">
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusRadius.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_Persistent.uc">

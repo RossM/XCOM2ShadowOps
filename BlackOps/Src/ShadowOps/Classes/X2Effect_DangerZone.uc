@@ -1,4 +1,4 @@
-class X2Effect_DangerZone extends X2Effect_BonusRadius;
+class X2Effect_DangerZone extends XMBEffect_BonusRadius;
 
 var float fBreachBonusRadius;
 
