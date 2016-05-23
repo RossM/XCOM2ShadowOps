@@ -5,6 +5,12 @@ class X2DownloadableContentInfo_XModBase extends X2DownloadableContentInfo;
 /// </summary>
 static event OnPostTemplatesCreated()
 {
+	AddUniversalAbilities();
+	FixAllSimpleStandardAims();
+}
+
+static function AddUniversalAbilities()
+{
 	local X2DataTemplate DataTemplate;
 	local X2CharacterTemplate Template;
 	local array<X2DataTemplate> DataTemplateAllDifficulties;
@@ -32,3 +38,40 @@ static event OnPostTemplatesCreated()
 		}
 	}
 }
+
+static function FixAllSimpleStandardAims()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local X2AbilityToHitCalc					ToHitCalc;
+	local X2AbilityToHitCalc_StandardAim_XModBase		NewToHitCalc;
+	local array<name>							TemplateNames;
+	local name									AbilityName;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+
+	AbilityManager.GetTemplateNames(TemplateNames);
+
+	foreach TemplateNames(AbilityName)
+	{
+		AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
+		foreach TemplateAllDifficulties(Template)
+		{
+			ToHitCalc = Template.AbilityToHitCalc;
+			if (ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
+			{
+				NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
+				Template.AbilityToHitCalc = NewToHitCalc;
+			}
+
+			ToHitCalc = Template.AbilityToHitOwnerOnMissCalc;
+			if (ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
+			{
+				NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
+				Template.AbilityToHitOwnerOnMissCalc = NewToHitCalc;
+			}
+		}
+	}
+}
+
