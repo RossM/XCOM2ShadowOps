@@ -1,4 +1,4 @@
-class TemplateEditors_Strategy extends UIScreenListener;
+class UIScreenListener_UIAvengerHUD extends UIScreenListener;
 
 var int LastGameIndex;
 
