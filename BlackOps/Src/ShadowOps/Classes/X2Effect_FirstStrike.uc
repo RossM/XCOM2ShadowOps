@@ -1,4 +1,4 @@
-class X2Effect_FirstStrike extends X2Effect_XModBase;
+class X2Effect_FirstStrike extends XMBEffect_Persistent;
 
 var int BonusDamage;
 

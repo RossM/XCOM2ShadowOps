@@ -1,4 +1,4 @@
-class X2Effect_Universal_BO extends X2Effect_XModBase config(GameCore);
+class X2Effect_Universal_BO extends XMBEffect_Persistent config(GameCore);
 
 var localized string LowHitChanceCritModifier;
 
