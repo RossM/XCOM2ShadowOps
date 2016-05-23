@@ -6,6 +6,6 @@ simulated function GoToUtilityItem()
 
 	if (CannotEditSlots.Find(eInvSlot_Utility) == INDEX_NONE)
 	{
-		UIArmory_Loadout(Movie.Stack.GetScreen(class'UIArmory_Loadout_BO')).SelectItemSlot(SlotType, SlotIndex);
+		UIArmory_Loadout(Movie.Stack.GetFirstInstanceOf(class'UIArmory_Loadout')).SelectItemSlot(SlotType, SlotIndex);
 	}
 }

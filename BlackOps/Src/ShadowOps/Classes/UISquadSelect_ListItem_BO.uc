@@ -6,7 +6,7 @@ simulated function GoToPrimaryWeapon()
 	
 	if (CannotEditSlots.Find(eInvSlot_PrimaryWeapon) == INDEX_NONE)
 	{
-		UIArmory_Loadout(Movie.Stack.GetScreen(class'UIArmory_Loadout_BO')).SelectWeapon(eInvSlot_PrimaryWeapon);
+		UIArmory_Loadout(Movie.Stack.GetFirstInstanceOf(class'UIArmory_Loadout')).SelectWeapon(eInvSlot_PrimaryWeapon);
 	}
 }
 
@@ -16,6 +16,6 @@ simulated function GoToHeavyWeapon()
 
 	if (CannotEditSlots.Find(eInvSlot_HeavyWeapon) == INDEX_NONE)
 	{
-		UIArmory_Loadout(Movie.Stack.GetScreen(class'UIArmory_Loadout_BO')).SelectWeapon(eInvSlot_HeavyWeapon);
+		UIArmory_Loadout(Movie.Stack.GetFirstInstanceOf(class'UIArmory_Loadout')).SelectWeapon(eInvSlot_HeavyWeapon);
 	}
 }
