@@ -21,7 +21,6 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 {
 	local XComGameState_Unit NewUnit;
 	local XComGameState_Item ItemState;
-	local XComGameState_Ability AbilityState;
 	local XComGameStateHistory History;
 	local int i, modifier;
 
