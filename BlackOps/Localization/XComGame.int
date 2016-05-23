@@ -482,8 +482,8 @@ LocFlyOverText="Devil's Luck"
 ; === Other abilities ===]
 [ShadowOps_SwapAmmo X2AbilityTemplate]
 LocFriendlyName="Swap Ammo"
-LocLongDescription="Reload your weapons with your other ammo type."
-LocHelpText="Reload your weapons with your other ammo type."
+LocLongDescription="Reload your weapons with <Ability:AssociatedWeapon/>."
+LocHelpText="Reload your weapons with <Ability:AssociatedWeapon/>."
 
 ; === Class templates ===
 
