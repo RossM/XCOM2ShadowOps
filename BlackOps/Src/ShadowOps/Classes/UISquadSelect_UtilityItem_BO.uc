@@ -2,7 +2,7 @@ class UISquadSelect_UtilityItem_BO extends UISquadSelect_UtilityItem;
 
 simulated function GoToUtilityItem()
 {
-	`HQPRES.UIArmory_Loadout(UISquadSelect_ListItem(GetParent(class'UISquadSelect_ListItem')).GetUnitRef(), CannotEditSlots);
+	`HQPRES.UIArmory_Loadout(UISquadSelect_ListItem(GetParent(class'UISquadSelect_ListItem', true)).GetUnitRef(), CannotEditSlots);
 
 	if (CannotEditSlots.Find(eInvSlot_Utility) == INDEX_NONE)
 	{
