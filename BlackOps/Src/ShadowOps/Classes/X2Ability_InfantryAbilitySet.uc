@@ -87,7 +87,7 @@ static function X2AbilityTemplate Magnum()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_PersistentBonus              MagnumEffect;
+	local XMBEffect_PersistentBonus              MagnumEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Magnum');
 
@@ -106,7 +106,7 @@ static function X2AbilityTemplate Magnum()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	MagnumEffect = new class'X2Effect_PersistentBonus';
+	MagnumEffect = new class'XMBEffect_PersistentBonus';
 	MagnumEffect.BuildPersistentEffect(1, true, true, true);
 	MagnumEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	MagnumEffect.bRequireAbilityWeapon = true;

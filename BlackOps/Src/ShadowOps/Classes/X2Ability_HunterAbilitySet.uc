@@ -418,7 +418,7 @@ static function X2AbilityTemplate Precision()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_PersistentBonus              PrecisionEffect;
+	local XMBEffect_PersistentBonus              PrecisionEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Precision');
 
@@ -437,7 +437,7 @@ static function X2AbilityTemplate Precision()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	PrecisionEffect = new class'X2Effect_PersistentBonus';
+	PrecisionEffect = new class'XMBEffect_PersistentBonus';
 	PrecisionEffect.BuildPersistentEffect(1, true, true, true);
 	PrecisionEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	PrecisionEffect.AllowedCoverTypes.AddItem(CT_Standing);
@@ -457,7 +457,7 @@ static function X2AbilityTemplate LowProfile()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local X2Effect_PersistentBonus              LowProfileEffect;
+	local XMBEffect_PersistentBonus              LowProfileEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_LowProfile');
 
@@ -476,7 +476,7 @@ static function X2AbilityTemplate LowProfile()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	LowProfileEffect = new class'X2Effect_PersistentBonus';
+	LowProfileEffect = new class'XMBEffect_PersistentBonus';
 	LowProfileEffect.BuildPersistentEffect(1, true, true, true);
 	LowProfileEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	LowProfileEffect.AllowedCoverTypes.AddItem(CT_MidLevel);

@@ -252,9 +252,6 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_MaybeApplyDirectionalWorldDamage.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_PersistentBonus.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_RangerStealth_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2246,6 +2243,9 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_PersistentBonus.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusItemCharges.uc">

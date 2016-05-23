@@ -1,4 +1,4 @@
-class X2Effect_PersistentBonus extends X2Effect_Persistent;
+class XMBEffect_PersistentBonus extends X2Effect_Persistent;
 
 var protectedwrite array<ShotModifierInfo> ToHitModifiers;
 var protectedwrite array<ShotModifierInfo> ToHitAsTargetModifiers;

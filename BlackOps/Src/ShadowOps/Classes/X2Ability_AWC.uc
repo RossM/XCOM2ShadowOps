@@ -178,7 +178,7 @@ static function X2AbilityTemplate ScroungerTrigger()
 static function X2AbilityTemplate Weaponmaster()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_PersistentBonus              Effect;
+	local XMBEffect_PersistentBonus              Effect;
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Weaponmaster');
@@ -192,7 +192,7 @@ static function X2AbilityTemplate Weaponmaster()
 	Template.AbilityTargetStyle = default.SelfTarget;
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
-	Effect = new class'X2Effect_PersistentBonus';
+	Effect = new class'XMBEffect_PersistentBonus';
 	Effect.AddDamageModifier(default.WeaponmasterBonusDamage);
 	Effect.bRequireAbilityWeapon = true;
 	Effect.BuildPersistentEffect(1, true, false, false);
@@ -210,7 +210,7 @@ static function X2AbilityTemplate Weaponmaster()
 static function X2AbilityTemplate AbsolutelyCritical()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_PersistentBonus              Effect;
+	local XMBEffect_PersistentBonus              Effect;
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AbsolutelyCritical');
@@ -224,7 +224,7 @@ static function X2AbilityTemplate AbsolutelyCritical()
 	Template.AbilityTargetStyle = default.SelfTarget;
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
-	Effect = new class'X2Effect_PersistentBonus';
+	Effect = new class'XMBEffect_PersistentBonus';
 	Effect.AllowedCoverTypes.AddItem(CT_NONE);
 	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
 	Effect.BuildPersistentEffect(1, true, false, false);
