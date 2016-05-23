@@ -113,6 +113,12 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIPersonnel.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIPersonnel_SquadSelect.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\UIScreenListener_UISquadSelect.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\UISoldierHeader_BO.uc">
       <SubType>Content</SubType>
     </Content>

@@ -71,7 +71,6 @@ function UpdateData(UIPersonnel_SoldierListItem ListItem)
 					false); // psi soldiers can't rank up via missions
 }
 
-
 defaultproperties
 {
 	ScreenClass = class'UIPersonnel'
