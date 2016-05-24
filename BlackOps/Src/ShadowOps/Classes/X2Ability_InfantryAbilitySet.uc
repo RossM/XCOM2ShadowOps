@@ -116,7 +116,7 @@ static function X2AbilityTemplate SwapAmmo()
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_ShowIfAvailable;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_ammo_ap";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_swapammo";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.RELOAD_PRIORITY;
 	Template.bDisplayInUITooltip = false;
 	Template.bDisplayInUITacticalText = false;
