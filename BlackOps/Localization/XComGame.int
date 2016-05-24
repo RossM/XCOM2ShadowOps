@@ -125,10 +125,10 @@ LocFlyOverText="Adrenaline Surge"
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
 LocFriendlyName="Shield Protocol"
-LocLongDescription="Give a friendly unit an energy shield which will absorb three points of damage. More advanced GREMLINs will increase the damage absorbed."
-LocHelpText="Give a friendly unit an energy shield which absorbs damage."
+LocLongDescription="Give a friendly unit an energy shield which will absorb <Ability:ShieldProtocolValue/> points of damage. The shield lasts until the end of the mission or until it is destroyed, and also grants poison immunity."
+LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:ShieldProtocolValue/> points of damage."
 LocFlyOverText="Shield Protocol""
-LocPromotionPopupText="<Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield is lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
+LocPromotionPopupText="<Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
 ; HeavyArmor and Finesse are in ShadowOps.int
 
