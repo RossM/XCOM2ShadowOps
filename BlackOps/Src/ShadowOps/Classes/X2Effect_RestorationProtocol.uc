@@ -34,6 +34,10 @@ function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out
 
 	OldTargetState = XComGameState_Unit(History.GetGameStateForObjectID(ApplyEffectParameters.TargetStateObjectRef.ObjectID));
 
+	// Don't affect dead units
+	if (!OldTargetState.IsAlive())
+		return false;
+
 	ModifiedHealAmount = HealAmount;
 	ModifiedMaxHealAmount = MaxHealAmount;
 

@@ -1,4 +1,4 @@
-class X2Effect_BonusRadius extends X2Effect_Persistent;
+class XMBEffect_BonusRadius extends X2Effect_Persistent;
 
 var float fBonusRadius;					// Amount to increase the radius, in meters. One tile equals 1.5 meters.
 var array<name> AllowedTemplateNames;	// Ammo types (grenades) which the bonus will apply to. If empty, it applies to everything.

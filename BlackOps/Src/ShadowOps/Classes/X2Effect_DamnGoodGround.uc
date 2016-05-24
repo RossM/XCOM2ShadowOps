@@ -1,4 +1,4 @@
-class X2Effect_DamnGoodGround extends X2Effect_XModBase;
+class X2Effect_DamnGoodGround extends XMBEffect_Persistent;
 
 var int AimMod, DefenseMod;
 

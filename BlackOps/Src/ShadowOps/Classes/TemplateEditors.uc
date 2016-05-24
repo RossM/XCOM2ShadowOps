@@ -1,21 +1,38 @@
 // This is an Unreal Script
 class TemplateEditors extends Object config(GameCore);
 
+struct TemplateEdit
+{
+	var name ItemName;
+	var array<name> RequiredTechs;
+	var StrategyCost Cost;
+	var int TradingPostValue;
+	var int Tier;
+};
+
 var config array<name> ExtraStartingItems, DisabledItems;
 var config array<name> GrenadeAbilities, SuppressionBlockedAbilities;
+var config array<TemplateEdit> BuildableItems;
 
 static function EditTemplates()
 {
 	local name DataName;
+	local TemplateEdit Edit;
+	local X2AbilityTag_BO AbilityTag;
+	local XComEngine Engine;
+	local int idx;
+
+	Engine = `XENGINE;
 
 	// Strategy
 	AddGtsUnlocks();
 
 	// Tactical
 	AddAllDoNotConsumeAllAbilities();
-	FixAllSimpleStandardAims();
+	AddAllPostActivationEvents();
 	ChangeAllToGrenadeActionPoints();
 	AddAllSuppressionConditions();
+	AddSwapAmmoAbilities();
 
 	CreateCompatAbilities();
 
@@ -28,10 +45,20 @@ static function EditTemplates()
 	{
 		DisableItem(DataName);
 	}
-	EditPlatedVest('PlatedVest');
+	foreach default.BuildableItems(Edit)
+	{
+		ApplyTemplateEdit(Edit);
+	}
+
 	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
 
 	UpgradeAbilityVisualization('LaunchGrenade');
+
+	AbilityTag = new class'X2AbilityTag_BO';
+	AbilityTag.WrappedTag = Engine.AbilityTag;
+	idx = Engine.LocalizeContext.LocalizeTags.Find(Engine.AbilityTag);
+	Engine.AbilityTag = AbilityTag;
+	Engine.LocalizeContext.LocalizeTags[idx] = AbilityTag;
 }
 
 // --- Strategy ---
@@ -75,41 +102,31 @@ static function ChangeToStartingItem(name ItemName)
 
 		Template.bInfiniteItem = true;
 		Template.StartingItem = true;
+		Template.TradingPostValue = 0;
 	}
 }
 
-static function EditPlatedVest(name ItemName)
+static function ApplyTemplateEdit(TemplateEdit Edit)
 {
 	local X2ItemTemplateManager			ItemManager;
 	local array<X2DataTemplate>			DataTemplateAllDifficulties;
 	local X2DataTemplate				DataTemplate;
 	local X2EquipmentTemplate			Template;
-	local ArtifactCost					Resources, Artifacts;
 	
-	DisableItem(ItemName);
+	DisableItem(Edit.ItemName);
 
 	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
-	ItemManager.FindDataTemplateAllDifficulties(ItemName, DataTemplateAllDifficulties);
+	ItemManager.FindDataTemplateAllDifficulties(Edit.ItemName, DataTemplateAllDifficulties);
 	foreach DataTemplateAllDifficulties(DataTemplate)
 	{
 		Template = X2EquipmentTemplate(DataTemplate);
 
 		Template.CanBeBuilt = true;
-		Template.TradingPostValue = 15;
+		Template.TradingPostValue = Edit.TradingPostValue;
 		Template.PointsToComplete = 0;
-		Template.Tier = 1;
-
-		// Requirements
-		Template.Requirements.RequiredTechs.AddItem('HybridMaterials');
-
-		// Cost
-		Resources.ItemTemplateName = 'Supplies';
-		Resources.Quantity = 30;
-		Template.Cost.ResourceCosts.AddItem(Resources);
-
-		Artifacts.ItemTemplateName = 'CorpseAdventTrooper';
-		Artifacts.Quantity = 4;
-		Template.Cost.ArtifactCosts.AddItem(Artifacts);
+		Template.Tier = Edit.Tier;
+		Template.Requirements.RequiredTechs = Edit.RequiredTechs;
+		Template.Cost = Edit.Cost;
 	}
 }
 
@@ -118,7 +135,8 @@ static function DisableItem(name ItemName)
 	local X2ItemTemplateManager			ItemManager;
 	local array<X2DataTemplate>			DataTemplateAllDifficulties;
 	local X2DataTemplate				DataTemplate;
-	local X2ItemTemplate				Template, BaseTemplate;
+	local X2ItemTemplate				Template;
+	local name							BaseItem;
 	
 	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 	ItemManager.FindDataTemplateAllDifficulties(ItemName, DataTemplateAllDifficulties);
@@ -127,7 +145,7 @@ static function DisableItem(name ItemName)
 		Template = X2ItemTemplate(DataTemplate);
 
 		if (Template.BaseItem != '')
-			BaseTemplate = ItemManager.FindItemTemplate(Template.BaseItem);
+			BaseItem = Template.BaseItem;
 
 		Template.StartingItem = false;
 		Template.CanBeBuilt = false;
@@ -137,10 +155,16 @@ static function DisableItem(name ItemName)
 		Template.Cost.ResourceCosts.Length = 0;
 		Template.Cost.ArtifactCosts.Length = 0;
 		Template.Requirements.RequiredTechs.Length = 0;
+	}
 
-		if (BaseTemplate != none)
+	if (BaseItem != '')
+	{
+		ItemManager.FindDataTemplateAllDifficulties(BaseItem, DataTemplateAllDifficulties);
+		foreach DataTemplateAllDifficulties(DataTemplate)
 		{
-			BaseTemplate.HideIfResearched = '';
+			Template = X2ItemTemplate(DataTemplate);
+
+			Template.HideIfResearched = '';
 		}
 	}
 }
@@ -231,42 +255,30 @@ static function AddAllDoNotConsumeAllAbilities()
 	AddDoNotConsumeAllAbility('HunkerDown', 'ShadowOps_Entrench');
 }
 
-static function FixSimpleStandardAim(name AbilityName)
+static function AddPostActivationEvent(name AbilityName, name EventName)
 {
-	local X2AbilityTemplateManager				AbilityManager;
-	local array<X2AbilityTemplate>				TemplateAllDifficulties;
-	local X2AbilityTemplate						Template;
-	local X2AbilityToHitCalc					ToHitCalc;
-	local X2AbilityToHitCalc_StandardAim_XModBase		NewToHitCalc;
+	local X2AbilityTemplateManager		AbilityManager;
+	local array<X2AbilityTemplate>		TemplateAllDifficulties;
+	local X2AbilityTemplate				Template;
 
 	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 	AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
 	foreach TemplateAllDifficulties(Template)
 	{
-		ToHitCalc = Template.AbilityToHitCalc;
-		if (ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim') && !ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim_XModBase'))
-		{
-			NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
-			Template.AbilityToHitCalc = NewToHitCalc;
-		}
-
-		ToHitCalc = Template.AbilityToHitOwnerOnMissCalc;
-		if (ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim') && !ToHitCalc.IsA('X2AbilityToHitCalc_StandardAim_XModBase'))
-		{
-			NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
-			Template.AbilityToHitOwnerOnMissCalc = NewToHitCalc;
-		}
+		if (Template.PostActivationEvents.Find(EventName) == INDEX_NONE)
+			Template.PostActivationEvents.AddItem(EventName);
 	}
 }
 
-static function FixAllSimpleStandardAims()
+static function AddAllPostActivationEvents()
 {
-	FixSimpleStandardAim('StandardShot');
-	FixSimpleStandardAim('PistolStandardShot');
-	FixSimpleStandardAim('SniperStandardFire');
-	FixSimpleStandardAim('AnimaGate');
-	FixSimpleStandardAim('LightningHands');
-	
+	local name DataName;
+
+	// Fastball
+	foreach default.GrenadeAbilities(DataName)
+	{
+		AddPostActivationEvent(DataName, 'GrenadeUsed');
+	}
 }
 
 static function ChangeToGrenadeActionPoints(name AbilityName)
@@ -397,6 +409,34 @@ static function CreateCompatAbilities()
 				NewTemplate.SetTemplateName(NewTemplateName);
 				AbilityManager.AddAbilityTemplate(NewTemplate);
 			}
+		}
+	}
+}
+
+static function AddSwapAmmoAbilities()
+{
+	local X2ItemTemplateManager			ItemManager;
+	local Array<name>					TemplateNames;
+	local name							ItemName;
+	local array<X2DataTemplate>			DataTemplateAllDifficulties;
+	local X2DataTemplate				DataTemplate;
+	local X2AmmoTemplate				Template;
+
+	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	ItemManager.GetTemplateNames(TemplateNames);
+
+	foreach TemplateNames(ItemName)
+	{
+		ItemManager.FindDataTemplateAllDifficulties(ItemName, DataTemplateAllDifficulties);
+		foreach DataTemplateAllDifficulties(DataTemplate)
+		{
+			Template = X2AmmoTemplate(DataTemplate);
+
+			if (Template == none)
+				continue;
+
+			if (Template.Abilities.Find('ShadowOps_SwapAmmo') == INDEX_NONE)
+				Template.Abilities.AddItem('ShadowOps_SwapAmmo');
 		}
 	}
 }

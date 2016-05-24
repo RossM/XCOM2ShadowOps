@@ -2,6 +2,37 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.6.0
+General changes
+  * More of the item changes made by the mod can be configured in XComGameCore.ini.
+  * Increased compatibility with other mods by removing many class overrides.
+  * Many abilities have expanded popup text.
+Class changes
+  * Infantry can now equip two ammo items, one in their ammo slot and one in a regular utility slot. They start battle with the ammo in their ammo slot active.
+  * Infantry have a new "Swap Ammo" ability that switches their active ammo and reloads their weapon. Activating it costs an action but does not end the turn if used as the first action.
+Ability changes
+  * Breach now has a radius of 2 when used with a rifle. It still has its previous radius of 3 when used with a shotgun.
+  * Flush now forces the target to move even if the shot misses.
+  * Returning AWC ability: Hip Fire. Fire your primary weapon at a target. This attack does not cost an action. 3 turn cooldown.
+  * New AWC ability: Anatomist. You get a +10 Crit chance bonus for each enemy of the same type you have killed, to a max of +30.
+  * New AWC ability: Scrounger. There is a chance of an extra loot drop whenever you are on a mission.
+  * New AWC ability: Weaponmaster. Your primary weapon attacks deal +2 damage.
+  * New AWC ability: Absolutely Critical. You get an additional +50 Crit chance against flanked or uncovered targets.
+  * New AWC ability: Hit and Run. You can take a move action after using a single-action ability as your first action that would normally end your turn.
+  * New AWC ability: Devil's Luck. Your Hit chance is increased by 10% and Crit chance is increased by 20%. These bonuses are doubled when you are flanked or out of cover.
+Bugfixes
+  * Renewal Protocol can no longer bring the dead back to life.
+  * Assorted minor fixes.
+
+Beta version v0.5.5
+Item changes
+  * Hollow-Point Rounds can no longer be sold at the black market.
+  * Flechette rounds sell for less at the black market.
+Bugfixes
+  * Fracture now works.
+  * Fixed a conflict with Richard's Engineer mod.
+  * Assorted minor fixes.
+
 Beta version v0.5.4
 Item changes
   * The Advanced Grenade Launcher has been restored to its previous stats.

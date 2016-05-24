@@ -95,31 +95,28 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\AcademyUnlocks.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\EvilUnitStateHack.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\TemplateEditors.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\TemplateEditors_Strategy.uc">
+    <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIAvengerHUD.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\UIAfterAction_ListItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\UIArmory_Loadout_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIPersonnel.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\UIPersonnel_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIPersonnel_SquadSelect.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\UIPersonnel_SoldierListItem_BO.uc">
+    <Content Include="Src\ShadowOps\Classes\UIScreenListener_UISquadSelect.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\UISoldierHeader_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\UISquadSelect_ListItem_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\UISquadSelect_UtilityItem_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\UIUtilities_Strategy_BO.uc">
@@ -131,10 +128,16 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2AbilityTag_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityTemplate_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Ability_AWC.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_BO.uc">
@@ -176,6 +179,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Condition_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Condition_SwapAmmo.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_TookDamage.uc">
       <SubType>Content</SubType>
     </Content>
@@ -184,6 +190,9 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Aggression.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Anatomist.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Assassin.uc">
@@ -199,6 +208,12 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_DangerZone.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_DevilsLuck.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_DropLoot.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Fade.uc">
@@ -222,6 +237,9 @@ Beta version v0.1
     <Content Include="Src\ShadowOps\Classes\X2Effect_HeavyArmor.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_HitAndRun.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_HunkerDown.uc">
       <SubType>Content</SubType>
     </Content>
@@ -229,9 +247,6 @@ Beta version v0.1
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_MaybeApplyDirectionalWorldDamage.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_PersistentBonus.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_RangerStealth_BO.uc">
@@ -2218,7 +2233,7 @@ Beta version v0.1
     <Content Include="Src\XModBase\Classes\X2AbilityToHitCalc_StandardAim_XModBase.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase\Classes\X2TacticalGameRuleset_XModBase.uc">
+    <Content Include="Src\XModBase\Classes\X2DownloadableContentInfo_XModBase.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase\Classes\X2TargetingMethod_Grenade_XModBase.uc">
@@ -2227,13 +2242,16 @@ Beta version v0.1
     <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_BonusItemCharges.uc">
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_PersistentBonus.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_BonusRadius.uc">
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusItemCharges.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_XModBase.uc">
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusRadius.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_Persistent.uc">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>

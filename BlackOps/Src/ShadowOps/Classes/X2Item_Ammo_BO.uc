@@ -28,7 +28,7 @@ static function X2AmmoTemplate CreateFlechetteRounds()
 	Template.Abilities.AddItem('FlechetteRounds');
 	DamageValue.Damage = default.FlechetteDamageModifier;
 	Template.AddAmmoDamageModifier(none, DamageValue);
-	Template.TradingPostValue = 30;
+	Template.TradingPostValue = 10;
 	Template.PointsToComplete = 0;
 	Template.Tier = 0;
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
@@ -60,7 +60,6 @@ static function X2DataTemplate CreateHollowPointRounds()
 	Template.strImage = "img:///UILibrary_StrategyImages.X2InventoryIcons.Inv_Needle_Rounds";
 	Template.Abilities.AddItem('HollowPointRounds');
 	Template.CanBeBuilt = false;
-	Template.TradingPostValue = 30;
 	Template.PointsToComplete = 0;
 	Template.Tier = 0;
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
@@ -69,6 +68,7 @@ static function X2DataTemplate CreateHollowPointRounds()
 
 	Template.StartingItem = true;
 	Template.CanBeBuilt = false;
+	Template.bInfiniteItem = true;
 		
 	//FX Reference
 	Template.GameArchetype = "Ammo_Talon.PJ_Talon";

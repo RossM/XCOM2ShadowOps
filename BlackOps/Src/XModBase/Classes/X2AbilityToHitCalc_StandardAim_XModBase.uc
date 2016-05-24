@@ -1,7 +1,7 @@
 class X2AbilityToHitCalc_StandardAim_XModBase extends X2AbilityToHitCalc_StandardAim config(GameCore);
 
 // This class overrides X2AbilityToHitCalc_StandardAim to have it call the methods in
-// X2Effect_XModBase.
+// XMBEffect_Persistent.
 
 // Copied from X2AbilityToHitCalc and modified.
 protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTarget kTarget, optional bool bDebugLog=false)
@@ -22,7 +22,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	local array<XComGameState_Effect> StatMods;
 	local array<float> StatModValues;
 	local X2Effect_Persistent PersistentEffect;
-	local X2Effect_XModBase XModBaseEffect;
+	local XMBEffect_Persistent XModBaseEffect;
 	local array<X2Effect_Persistent> UniqueToHitEffects;
 	local float FinalAdjust, CoverValue, AngleToCoverModifier, Alpha;
 	local bool bShouldAddAngleToCoverBonus;
@@ -91,7 +91,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 					{
 						EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
 						PersistentEffect = EffectState.GetX2Effect();
-						XModBaseEffect = X2Effect_XModBase(PersistentEffect);
+						XModBaseEffect = XMBEffect_Persistent(PersistentEffect);
 						if (XModBaseEffect != none)
 						{
 							if (XModBaseEffect.IgnoreSquadsightPenalty(kAbility, UnitState, TargetState))
@@ -342,7 +342,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 				}
 	
 				// XModBase: Check for crit immunity.			
-				XModBaseEffect = X2Effect_XModBase(PersistentEffect);
+				XModBaseEffect = XMBEffect_Persistent(PersistentEffect);
 				if (XModBaseEffect != none)
 				{
 					if (XModBaseEffect.CannotBeCrit(kAbility, UnitState, TargetState))
@@ -396,7 +396,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 		if (UniqueToHitEffects.Find(PersistentEffect) != INDEX_NONE)
 			continue;
 
-		XModBaseEffect = X2Effect_XModBase(PersistentEffect);
+		XModBaseEffect = XMBEffect_Persistent(PersistentEffect);
 		if (XModBaseEffect != none)
 		{
 			XModBaseEffect.GetFinalToHitModifiers(EffectState, UnitState, TargetState, kAbility, self.Class, bMeleeAttack, bFlanking, bIndirectFire, m_ShotBreakdown, EffectModifiers);
@@ -433,7 +433,7 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 	local XComGameStateHistory History;
 	local StateObjectReference EffectRef;
 	local XComGameState_Effect EffectState;
-	local X2Effect_XModBase	XModBaseEffect;
+	local XMBEffect_Persistent	XModBaseEffect;
 	local bool bRolledResultIsAMiss, bModHitRoll;
 	local bool HitsAreCrits;
 	local string LogMsg;
@@ -531,7 +531,7 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 			EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
 			if (EffectState != none)
 			{
-				XModBaseEffect = X2Effect_XModBase(EffectState.GetX2Effect());
+				XModBaseEffect = XMBEffect_Persistent(EffectState.GetX2Effect());
 				if (XModBaseEffect != none)
 				{
 					Luck += XModBaseEffect.GetLuckModifier(EffectState, UnitState, TargetState, kAbility, Result);

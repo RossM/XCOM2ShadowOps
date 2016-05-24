@@ -1,4 +1,4 @@
-class X2Effect_XModBase extends X2Effect_Persistent;
+class XMBEffect_Persistent extends X2Effect_Persistent;
 
 // This class adds some extra methods to X2Effect_Persistent which can be overridden in a
 // subclass to create new effects.

@@ -20,18 +20,16 @@ function bool ChangeHitResultForAttacker(XComGameState_Unit Attacker, XComGameSt
 {
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityToHitCalc_StandardAim StandardAim;
-	local XComGameState_Effect EffectState;
-
-	EffectState = Attacker.GetUnitAffectedByEffectState(EffectName);
-	if (EffectState == none)
-		return false;
+	local UnitValue CountUnitValue;
 
 	AbilityTemplate = AbilityState.GetMyTemplate();
 	StandardAim = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
 
 	if (StandardAim != none && StandardAim.bReactionFire)
 	{
-		if (EffectState.iStacks <= 0)
+		Attacker.GetUnitValue(FocusValueName, CountUnitValue);
+
+		if (CountUnitValue.fValue <= 0)
 		{
 			if (class'XComGameStateContext_Ability'.static.IsHitResultMiss(CurrentResult))
 			{
@@ -48,10 +46,11 @@ function static EventListenerReturn FocusListener(Object EventData, Object Event
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameState_Unit SourceUnit;
-	local XComGameState_Effect EffectState, NewEffectState;
+	local XComGameState_Effect EffectState;
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityToHitCalc_StandardAim StandardAim;
 	local XComGameState NewGameState;
+	local UnitValue CountUnitValue;
 
 	SourceUnit = XComGameState_Unit(EventSource);
 	if (SourceUnit == none)
@@ -72,9 +71,11 @@ function static EventListenerReturn FocusListener(Object EventData, Object Event
 	{
 		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState(string(GetFuncName()));
 
-		NewEffectState = XComGameState_Effect(NewGameState.CreateStateObject(EffectState.Class, EffectState.ObjectID));
-		NewEffectState.iStacks++;
-		NewGameState.AddStateObject(NewEffectState);
+		SourceUnit.GetUnitValue(default.FocusValueName, CountUnitValue);
+
+		SourceUnit = XComGameState_Unit(NewGameState.CreateStateObject(SourceUnit.Class, SourceUnit.ObjectID));
+		SourceUnit.SetUnitFloatValue(default.FocusValueName, CountUnitValue.fValue + 1, eCleanup_BeginTurn);
+		NewGameState.AddStateObject(SourceUnit);
 
 		`TACTICALRULES.SubmitGameState(NewGameState);
 	}

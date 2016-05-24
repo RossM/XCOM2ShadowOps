@@ -1,11 +1,15 @@
 class X2Effect_Tracking extends X2Effect_Persistent;
 
 var float LookAtDuration;
+var bool bRevealConcealed;
 
 function EffectAddedCallback(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState)
 {
 	local X2EventManager EventMan;
 	local XComGameState_Unit UnitState;
+
+	if (!bRevealConcealed)
+		return;
 
 	EventMan = `XEVENTMGR;
 	UnitState = XComGameState_Unit(kNewTargetState);
@@ -67,4 +71,5 @@ DefaultProperties
 	DuplicateResponse=eDupe_Ignore
 	EffectAddedFn=EffectAddedCallback
 	LookAtDuration=1.0f
+	bRevealConcealed=false
 }

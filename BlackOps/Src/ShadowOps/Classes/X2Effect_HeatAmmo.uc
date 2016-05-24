@@ -1,4 +1,4 @@
-class X2Effect_HeatAmmo extends X2Effect_XModBase config(GameData_SoldierSkills);
+class X2Effect_HeatAmmo extends XMBEffect_Persistent config(GameData_SoldierSkills);
 
 var config float DamageMultiplier;
 

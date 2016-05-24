@@ -1,8 +1,8 @@
-class X2Effect_PersistentBonus extends X2Effect_Persistent;
+class XMBEffect_PersistentBonus extends X2Effect_Persistent;
 
 var protectedwrite array<ShotModifierInfo> ToHitModifiers;
 var protectedwrite array<ShotModifierInfo> ToHitAsTargetModifiers;
-var int BonusDamage;
+var protectedwrite array<ShotModifierInfo> DamageModifiers;
 
 var bool bRequireAbilityWeapon;
 var array<ECoverType> AllowedCoverTypes;
@@ -27,6 +27,16 @@ function AddToHitAsTargetModifier(int Value, optional EAbilityHitResult ModType 
 	ToHitAsTargetModifiers.AddItem(ModInfo);
 }	
 
+function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_Success)
+{
+	local ShotModifierInfo ModInfo;
+
+	ModInfo.ModType = ModType;
+	ModInfo.Reason = FriendlyName;
+	ModInfo.Value = Value;
+	DamageModifiers.AddItem(ModInfo);
+}	
+
 function private bool ValidAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
 	local GameRulesCache_VisibilityInfo VisInfo;
@@ -49,11 +59,20 @@ function private bool ValidAttack(XComGameState_Effect EffectState, XComGameStat
 
 function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, optional XComGameState NewGameState)
 {
-	if (!class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult))
-		return 0;
+	local ShotModifierInfo ModInfo;
+	local int BonusDamage;
 
 	if (!ValidAttack(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState))
 		return 0;
+
+	foreach DamageModifiers(ModInfo)
+	{
+		if ((ModInfo.ModType == eHit_Success && class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult)) ||
+			ModInfo.ModType == AppliedData.AbilityResultContext.HitResult)
+		{
+			BonusDamage += ModInfo.Value;
+		}
+	}
 
 	return BonusDamage;
 }
