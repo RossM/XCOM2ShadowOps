@@ -345,14 +345,14 @@ LocFriendlyName="Dense Smoke"
 LocLongDescription="Your smoke grenades have an increased radius and provide an additional +20 Defense."
 LocHelpText="Your smoke grenades have an increased radius and provide an additional +20 Defense."
 LocFlyOverText="Dense Smoke"
-LocPromotionPopupText="<Bullet/> Smoke grenades with Dense Smoke provide the same defensive bonus as full cover, but you are still vulnerable to critical hits if you get flanked. <br/><Bullet/> The total bonus from a Dense Smoke grenade is +40 defense. The added defense will also reduce your chance of being critically hit by 20. <br/><Bullet/> Smoke grenades come with two charges and can be equipped even if you're carrying two other grenades. There's no reason not to take one on every mission. <br/>"
+LocPromotionPopupText="<Bullet/> Smoke grenades with Dense Smoke provide the same defensive bonus as full cover, but you are still vulnerable to critical hits if you get flanked. <br/><Bullet/> The total bonus from a Dense Smoke grenade is +40 defense. The added defense will also reduce your chance of being critically hit by 20. <br/>"
 
 [ShadowOps_SmokeAndMirrors X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
 LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocHelpText="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocFlyOverText="Smoke and Mirrors"
-LocPromotionPopupText=""
+LocPromotionPopupText="<Bullet/> Smoke grenades provide a +20 Defense bonus to all units in an area that lasts for 2 turns. Each grenade has 2 charges. <br/><Bullet/> Get your Combat Engineer into a good position before starting a fight, so they can use their first action to protect your other soldiers with smoke. <br/><Bullet/> Smoke grenades can be equipped even if you're carrying other grenades. There's no reason not to take one on every mission. <br/>"
 
 [ShadowOps_Breach X2AbilityTemplate]
 LocFriendlyName="Breach"
