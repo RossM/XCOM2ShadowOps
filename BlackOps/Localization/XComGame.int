@@ -128,7 +128,7 @@ LocFriendlyName="Shield Protocol"
 LocLongDescription="Give a friendly unit an energy shield which will absorb <Ability:ShieldProtocolValue/> points of damage. The shield lasts until the end of the mission or until it is destroyed, and also grants poison immunity."
 LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:ShieldProtocolValue/> points of damage."
 LocFlyOverText="Shield Protocol""
-LocPromotionPopupText="<Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
+LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
 ; HeavyArmor and Finesse are in ShadowOps.int
 
@@ -154,15 +154,15 @@ LocFlyOverText="Barrage"
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
 LocFriendlyName="Shields Up"
-LocLongDescription="All squad members begin play with an energy shield that will absorb damage based on the equipped GREMLIN."
-LocHelpText="All squad members begin play with an energy shield which absorbs damage."
+LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:ShieldsUpValue/> damage."
+LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:ShieldsUpValue/> damage."
 LocFlyOverText="Shields Up"
-LocPromotionPopupText="<Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
+LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
 
 [ShadowOps_ShieldsUpTrigger X2AbilityTemplate]
 LocFriendlyName="Shields Up"
-LocLongDescription="All squad members begin play with an energy shield that will absorb damage based on the equipped GREMLIN."
-LocHelpText="All squad members begin play with an energy shield which absorbs damage."
+LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:ShieldsUpValue/> damage."
+LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:ShieldsUpValue/> damage."
 LocFlyOverText="Shields Up"
 
 [ShadowOps_ECM X2AbilityTemplate]
@@ -200,8 +200,8 @@ LocFlyOverText="Vanish"
 
 [ShadowOps_RestorationProtocol X2AbilityTemplate]
 LocFriendlyName="Renewal Protocol"
-LocLongDescription="Grants a unit HP regeneration every turn. Also stabilizes and revives bleeding out or unconscious units and removes some debuffs."
-LocHelpText="Grants a unit HP regeneration every turn. Also stabilizes and revives bleeding out or unconscious units and removes some debuffs."
+LocLongDescription="Grants a unit <Ability:RestorationProtocolHealAmount/> points of HP regeneration every turn, to a maximum of <Ability:RestorationProtocolMaxHealAmount/> points. Also stabilizes and revives bleeding out or unconscious units and removes some debuffs."
+LocHelpText="Grants a unit HP regeneration every turn, and stabilizes and revives bleeding out or unconscious units."
 LocFlyOverText="Renewal Protocol"
 LocPromotionPopupText="<Bullet/> Renewal Protocol will get a unit that is bleeding out or unconscious up and back into the fight. Try to save it for a unit that really needs it.<br/><Bullet/> Renewal Protocol restores 2 HP per turn, to a maximum of 8 HP. The first tick of healing is applied immediately when it is used.<br/><Bullet/> The Battlefield Medicine foundry project will increase the amount to 3 HP per turn. <br/><Bullet/> Advanced GREMLINs will heal more total HP.  <br/><Bullet/> Restoration Protocol has one charge per mission. <br/>"
 
