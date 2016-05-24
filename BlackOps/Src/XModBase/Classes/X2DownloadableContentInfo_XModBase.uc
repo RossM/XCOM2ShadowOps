@@ -59,14 +59,14 @@ static function FixAllSimpleStandardAims()
 		foreach TemplateAllDifficulties(Template)
 		{
 			ToHitCalc = Template.AbilityToHitCalc;
-			if (ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
+			if (ToHitCalc != none && ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
 			{
 				NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
 				Template.AbilityToHitCalc = NewToHitCalc;
 			}
 
 			ToHitCalc = Template.AbilityToHitOwnerOnMissCalc;
-			if (ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
+			if (ToHitCalc != none && ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
 			{
 				NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
 				Template.AbilityToHitOwnerOnMissCalc = NewToHitCalc;
