@@ -37,6 +37,9 @@ event ExpandHandler(string InString, out string OutString)
 			break;
 
 		default:
+			WrappedTag.ParseObj = ParseObj;
+			WrappedTag.StrategyParseObj = StrategyParseObj;
+			WrappedTag.GameState = GameState;
 			WrappedTag.ExpandHandler(InString, OutString);
 			return;
 	}
