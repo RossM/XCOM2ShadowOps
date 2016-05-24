@@ -210,11 +210,11 @@ LocFriendlyName="Stasis Field"
 LocLongDescription="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage."
 LocHelpText="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage."
 LocFlyOverText="Stasis Field"
-LocPromotionPopupText="<Bullet/> Stasis Field has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Stasis Field affects both allied and enemy units.<br/><Bullet/> Stasis Field has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_PuppetProtocol X2AbilityTemplate]
 LocFriendlyName="Puppet Protocol"
-LocLongDescription="Takes permanent control of an enemy robotic unit. You can only puppet one unit per mission."
+LocLongDescription="Takes permanent control of an enemy robotic unit. You can only puppet one unit per mission. Using this ability will not break individual concealment if it succeeds."
 LocHelpText="Takes permanent control of an enemy robotic unit. You can only puppet one unit per mission."
 LocFlyOverText="Puppet Protocol"
 LocPromotionPopupText="<Bullet/> Using Puppet Protocol will only break concealment if the attempt fails.<br/><Bullet/> A failed Puppet Protocol attempt does not use a charge. <br/><Bullet/> Puppet Protocol has a <Ability:SelfCooldown/> turn cooldown.<br/>"
@@ -353,10 +353,10 @@ LocPromotionPopupText=""
 
 [ShadowOps_Breach X2AbilityTemplate]
 LocFriendlyName="Breach"
-LocLongDescription="Fire a shot that destroys cover and shreds armor in a small area, but deals reduced damage and can't get critical hits."
-LocHelpText="Fire a shot that destroys cover and shreds armor in a small area, but deals reduced damage and can't get critical hits."
+LocLongDescription="Fire a shot that destroys cover and shreds <Ability:BreachShred/> armor in a small area, but deals reduced damage and can't get critical hits."
+LocHelpText="Fire a shot that destroys cover and shreds <Ability:BreachShred/> armor in a small area, but deals reduced damage and can't get critical hits."
 LocFlyOverText="Breach"
-LocPromotionPopupText="<Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> Breach deals more damage and has a larger radius when used with a shotgun rather than an assault rifle. <br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> More advanced weapons will deal more damage and shred more armor.<br/><Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> Breach deals more damage and has a larger radius when used with a shotgun rather than an assault rifle. <br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Fastball X2AbilityTemplate]
 LocFriendlyName="Fastball"
@@ -367,15 +367,15 @@ LocPromotionPopupText="<Bullet/> Fastball effectively lets you use a grenade wit
 
 [ShadowOps_Fracture X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds armor and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that shreds armor and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that shreds <Ability:FractureShred/> armor and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that shreds <Ability:FractureShred/> parmor and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
-LocPromotionPopupText="<Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Don't wait to use Fracture until you need both the shredding and the bonus damage. It's still a good ability even when it only does one of those things. <br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> More advanced weapons will shred more armor.<br/><Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Don't wait to use Fracture until you need both the shredding and the bonus damage. It's still a good ability even when it only does one of those things. <br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_FractureDamage X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds armor and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that shreds armor and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that shreds <Ability:FractureShred/> armor and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that shreds <Ability:FractureShred/> parmor and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 
 [ShadowOps_Packmaster X2AbilityTemplate]
@@ -479,7 +479,8 @@ LocLongDescription="Your Hit chance is increased by 10% and Crit chance is incre
 LocHelpText="Your Hit chance is increased by 10% and Crit chance is increased by 20%. These bonuses are doubled when you are flanked or out of cover."
 LocFlyOverText="Devil's Luck"
 
-; === Other abilities ===]
+; === Other abilities ===
+
 [ShadowOps_SwapAmmo X2AbilityTemplate]
 LocFriendlyName="Swap Ammo"
 LocLongDescription="Reload your weapons with <Ability:AssociatedWeapon/>."

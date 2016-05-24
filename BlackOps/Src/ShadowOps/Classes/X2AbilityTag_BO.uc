@@ -10,6 +10,7 @@ event ExpandHandler(string InString, out string OutString)
 	local XComGameState_Item ItemState;
 	local X2ItemTemplate ItemTemplate;
 	local X2GremlinTemplate GremlinTemplate;
+	local X2WeaponTemplate WeaponTemplate;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 
@@ -35,6 +36,56 @@ event ExpandHandler(string InString, out string OutString)
 			else
 			{
 				OutString = "item";
+			}
+			break;
+
+		case 'BreachShred':
+			OutString = string(class'X2Effect_Breach'.default.ConventionalDamageValue.Shred);
+			EffectState = XComGameState_Effect(ParseObj);
+			AbilityState = XComGameState_Ability(ParseObj);
+			if (EffectState != none)
+			{
+				ItemState = XComGameState_Item(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.ItemStateObjectRef.ObjectID));				
+			}
+			else if (AbilityState != none)
+			{
+				ItemState = AbilityState.GetSourceWeapon();
+			}
+			if (ItemState != none)
+			{
+				WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+				if (WeaponTemplate != none)
+				{
+					if (WeaponTemplate.WeaponTech == 'magnetic')
+						OutString = string(class'X2Effect_Breach'.default.MagneticDamageValue.Shred);
+					else if (WeaponTemplate.WeaponTech == 'beam')
+						OutString = string(class'X2Effect_Breach'.default.BeamDamageValue.Shred);
+				}
+			}
+			break;
+
+		case 'FractureShred':
+			OutString = string(class'X2Effect_FractureDamage'.default.ConventionalBonusShred);
+			EffectState = XComGameState_Effect(ParseObj);
+			AbilityState = XComGameState_Ability(ParseObj);
+			if (EffectState != none)
+			{
+				ItemState = XComGameState_Item(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.ItemStateObjectRef.ObjectID));				
+			}
+			else if (AbilityState != none)
+			{
+				ItemState = AbilityState.GetSourceWeapon();
+			}
+			if (ItemState != none)
+			{
+				WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+				if (WeaponTemplate != none)
+				{
+					if (WeaponTemplate.WeaponTech == 'magnetic')
+						OutString = string(class'X2Effect_FractureDamage'.default.MagneticBonusShred);
+					else if (WeaponTemplate.WeaponTech == 'beam')
+						OutString = string(class'X2Effect_FractureDamage'.default.BeamBonusShred);
+				}
 			}
 			break;
 
