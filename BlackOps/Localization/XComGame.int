@@ -23,7 +23,7 @@ LocFriendlyName="Bandolier"
 LocLongDescription="Grants an extra utility item slot only usable for ammo."
 LocHelpText="Grants an extra utility item slot only usable for ammo."
 LocFlyOverText="Bandolier"
-LocPromotionPopupText="<Bullet/> A soldier can only benefit from one ammo type at a time, so Infantry are unable to equip ammo in standard utility slots.<br/><Bullet/> Consider which ammo you should take on each mission. Infantry become much more powerful when equipped with an ammo type appropriate to the situation.<br/>"
+LocPromotionPopupText="<Bullet/> Infantry can equip two different ammo items at the same time, but can only benefit from one at a time. If two ammo items are equipped the Infantry will gain a "Swap Ammo" ability that allows them to change the active ammo type.<br/><Bullet/> Consider which ammo you should take on each mission. Infantry become much more powerful when equipped with an ammo type appropriate to the situation.<br/>"
 
 [ShadowOps_Magnum X2AbilityTemplate]
 LocFriendlyName="Magnum"
