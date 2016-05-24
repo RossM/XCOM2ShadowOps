@@ -17,6 +17,8 @@ event ExpandHandler(string InString, out string OutString)
 	Type = name(InString);
 	History = `XCOMHISTORY;
 
+	OutString = "";
+
 	switch (Type)
 	{
 		case 'AssociatedWeapon':
@@ -167,6 +169,56 @@ event ExpandHandler(string InString, out string OutString)
 						OutString = string(class'X2Ability_DragoonAbilitySet'.default.MagneticShieldsUp);
 					else if (GremlinTemplate.WeaponTech == 'beam')
 						OutString = string(class'X2Ability_DragoonAbilitySet'.default.BeamShieldsUp);
+				}
+			}
+			break;
+
+		case 'VitalPointDamage':
+			OutString = string(class'X2Effect_VitalPoint'.default.ConventionalBonusDamage);
+			EffectState = XComGameState_Effect(ParseObj);
+			AbilityState = XComGameState_Ability(ParseObj);
+			if (EffectState != none)
+			{
+				ItemState = XComGameState_Item(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.ItemStateObjectRef.ObjectID));				
+			}
+			else if (AbilityState != none)
+			{
+				ItemState = AbilityState.GetSourceWeapon();
+			}
+			if (ItemState != none)
+			{
+				WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+				if (WeaponTemplate != none)
+				{
+					if (WeaponTemplate.WeaponTech == 'magnetic')
+						OutString = string(class'X2Effect_VitalPoint'.default.MagneticBonusDamage);
+					else if (WeaponTemplate.WeaponTech == 'beam')
+						OutString = string(class'X2Effect_VitalPoint'.default.BeamBonusDamage);
+				}
+			}
+			break;
+
+		case 'VitalPointShred':
+			OutString = string(class'X2Effect_VitalPoint'.default.ConventionalBonusShred);
+			EffectState = XComGameState_Effect(ParseObj);
+			AbilityState = XComGameState_Ability(ParseObj);
+			if (EffectState != none)
+			{
+				ItemState = XComGameState_Item(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.ItemStateObjectRef.ObjectID));				
+			}
+			else if (AbilityState != none)
+			{
+				ItemState = AbilityState.GetSourceWeapon();
+			}
+			if (ItemState != none)
+			{
+				WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+				if (WeaponTemplate != none)
+				{
+					if (WeaponTemplate.WeaponTech == 'magnetic')
+						OutString = string(class'X2Effect_VitalPoint'.default.MagneticBonusShred);
+					else if (WeaponTemplate.WeaponTech == 'beam')
+						OutString = string(class'X2Effect_VitalPoint'.default.BeamBonusShred);
 				}
 			}
 			break;
