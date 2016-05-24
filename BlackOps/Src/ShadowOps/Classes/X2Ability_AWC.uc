@@ -35,7 +35,7 @@ static function X2AbilityTemplate HipFire()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HipFire');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_lightninghands";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.DisplayTargetHitChance = true;
@@ -108,7 +108,7 @@ static function X2AbilityTemplate Anatomist()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Anatomist');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -137,7 +137,7 @@ static function X2AbilityTemplate Scrounger()
 {
 	local X2AbilityTemplate						Template;
 	
-	Template = PurePassive('ShadowOps_Scrounger', "img:///UILibrary_PerkIcons.UIPerk_deeppockets", true);
+	Template = PurePassive('ShadowOps_Scrounger', "img:///UILibrary_BlackOps.UIPerk_AWC", true);
 	Template.AdditionalAbilities.AddItem('ShadowOps_ScroungerTrigger');
 
 	return Template;
@@ -150,7 +150,7 @@ static function X2AbilityTemplate ScroungerTrigger()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ScroungerTrigger');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_deeppockets"; // TODO
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -182,7 +182,7 @@ static function X2AbilityTemplate Weaponmaster()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Weaponmaster');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays"; //TODO
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -214,7 +214,7 @@ static function X2AbilityTemplate AbsolutelyCritical()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AbsolutelyCritical');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays"; // TODO
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -246,7 +246,7 @@ static function X2AbilityTemplate HitAndRun()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HitAndRun');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_runandgun"; // TODO
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -276,7 +276,7 @@ static function X2AbilityTemplate DevilsLuck()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DevilsLuck');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_xenobiology_overlays"; // TODO
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
