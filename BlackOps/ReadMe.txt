@@ -11,7 +11,7 @@ Class changes
   * Infantry
     * Can now equip two ammo items, one in their ammo slot and one in a regular utility slot. They start battle with the ammo in their ammo slot active.
     * New "Swap Ammo" ability that switches their active ammo and reloads their weapon. Activating it costs an action but does not end the turn if used as the first action.
-  * Combat Engineers
+  * Combat Engineer
     * Lightning Reflexes is removed.
     * New Lieutenant ability: Moving Target. You get an additional +40 Defense and +100 Dodge against reaction fire.
 Ability changes
