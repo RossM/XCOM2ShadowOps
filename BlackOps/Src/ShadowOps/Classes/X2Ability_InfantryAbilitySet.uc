@@ -8,6 +8,7 @@ var config int FullAutoHitModifier;
 var config int ZeroInOffenseBonus;
 var config int FlushHitModifier;
 var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, AdrenalineSurgeCooldown;
+var config int FortressDefenseModifier;
 
 var config name FreeAmmoForPocket;
 
@@ -39,6 +40,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Resilience());
 	Templates.AddItem(AdrenalineSurge());
 	Templates.AddItem(AdrenalineSurgeTrigger());
+	Templates.AddItem(Fortify());
+	Templates.AddItem(FortifyTrigger());
 
 	return Templates;
 }
@@ -1204,6 +1207,55 @@ static function X2AbilityTemplate AdrenalineSurgeTrigger()
 	Template.bSkipPerkActivationActions = true;
 
 	Template.Hostility = eHostility_Neutral;
+
+	return Template;
+}
+
+static function X2AbilityTemplate Fortify()
+{
+	local X2AbilityTemplate         Template;
+
+	Template = PurePassive('ShadowOps_Fortify', "img:///UILibrary_BlackOps.UIPerk_fortify");
+	Template.AdditionalAbilities.AddItem('ShadowOps_FortifyTrigger');
+
+	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate FortifyTrigger()
+{
+	local X2AbilityTemplate					Template;
+	local XMBEffect_PersistentBonus			Effect;
+	local X2AbilityTrigger_EventListener	Trigger;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FortifyTrigger');
+
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fortify";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+
+	Trigger = new class'X2AbilityTrigger_EventListener';
+	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
+	Trigger.ListenerData.EventID = 'OverwatchUsed';
+	Trigger.ListenerData.Filter = eFilter_Unit;
+	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Effect = new class'XMBEffect_PersistentBonus';
+	Effect.AddToHitAsTargetModifier(-default.FortressDefenseModifier);
+	Effect.BuildPersistentEffect(1, false, true,, eGameRule_PlayerTurnBegin);
+	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, ,,Template.AbilitySourceName);
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bShowActivation = true;
+	Template.bSkipFireAction = true;
 
 	return Template;
 }

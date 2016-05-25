@@ -121,6 +121,19 @@ LocLongDescription="When you get a kill, you and nearby friendly units get +10 C
 LocHelpText="+10 Crit chance and +3 Mobility until the end of your turn."
 LocFlyOverText="Adrenaline Surge"
 
+[ShadowOps_Fortify X2AbilityTemplate]
+LocFriendlyName="Fortify"
+LocLongDescription="Whenever you enter overwatch or use suppression, you gain +20 Defense until the start of your next turn."
+LocHelpText="Whenever you enter overwatch or use suppression, you gain +20 Defense until the start of your next turn."
+LocFlyOverText="Fortify"
+LocPromotionPopupText="<Bullet/> Fortify will activate on any ability that gives you reaction shots, including Ready for Anything and Zone of Control. <br/>"
+
+[ShadowOps_FortifyTrigger X2AbilityTemplate]
+LocFriendlyName="Fortify"
+LocLongDescription="+20 Defense until the start of your next turn."
+LocHelpText="+20 Defense until the start of your next turn."
+LocFlyOverText="Fortify"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]

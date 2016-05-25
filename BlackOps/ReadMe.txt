@@ -9,14 +9,16 @@ General changes
   * Many abilities have expanded popup text.
 Class changes
   * Infantry
+	* Covering Fire is removed.
+	* New Lieutenant ability: Fortify. Whenever you enter overwatch or use suppression, you gain +20 Defense until the start of your next turn.
+    * Flush now forces the target to move even if the shot misses.
     * Can now equip two ammo items, one in their ammo slot and one in a regular utility slot. They start battle with the ammo in their ammo slot active.
-    * New "Swap Ammo" ability that switches their active ammo and reloads their weapon. Activating it costs an action but does not end the turn if used as the first action.
+    * New ability: Swap Ammo. Reload your weapons with your other equipped ammo. Costs an action but doesn't end turn as first ability.
   * Combat Engineer
     * Lightning Reflexes is removed.
     * New Lieutenant ability: Moving Target. You get an additional +40 Defense and +100 Dodge against reaction fire.
-Ability changes
-  * Breach now has a radius of 2 when used with a rifle. It still has its previous radius of 3 when used with a shotgun.
-  * Flush now forces the target to move even if the shot misses.
+    * Breach now has a radius of 2 when used with a rifle. It still has its previous radius of 3 when used with a shotgun.
+Other changes
   * Returning AWC ability: Hip Fire. Fire your primary weapon at a target. This attack does not cost an action. 3 turn cooldown.
   * New AWC ability: Anatomist. You get a +10 Crit chance bonus for each enemy of the same type you have killed, to a max of +30.
   * New AWC ability: Scrounger. There is a chance of an extra loot drop whenever you are on a mission.
