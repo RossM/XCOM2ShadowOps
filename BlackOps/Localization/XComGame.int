@@ -472,7 +472,7 @@ LocHelpText="You get an additional +50 Crit chance against flanked or uncovered 
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Hit and Run"
-LocLongDescription="You can take a move action after using a single-action ability as your first action that would normally end your turn."
+LocLongDescription="You can take a move action after using a single-action ability as your first action that would normally end your turn. This doesn't apply to abilities that reserve actions for the enemy turn, such as Overwatch and Suppression."
 LocHelpText="You can take a move action after using a single-action ability as your first action that would normally end your turn."
 LocFlyOverText="Hit and Run"
 
