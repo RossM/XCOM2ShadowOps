@@ -5,6 +5,7 @@ var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGren
 var config int BreachEnvironmentalDamage;
 var config float BreachRange, BreachRadius, BreachShotgunRadius;
 var config float DangerZoneBonusRadius, DangerZoneBreachBonusRadius;
+var config int MovingTargetDefenseBonus, MovingTargetDodgeBonus;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -31,6 +32,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ChainReaction());
 	Templates.AddItem(ChainReactionFuse());
 	Templates.AddItem(HeatAmmo());
+	Templates.AddItem(MovingTarget());
 
 	return Templates;
 }
@@ -715,6 +717,46 @@ static function X2AbilityTemplate HeatAmmo()
 	//  NOTE: No visualization on purpose!
 
 	Template.bCrossClassEligible = true;
+
+	return Template;
+}
+
+static function X2AbilityTemplate MovingTarget()
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTargetStyle                  TargetStyle;
+	local X2AbilityTrigger						Trigger;
+	local XMBEffect_PersistentBonus             Effect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_MovingTarget');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_movingtarget";
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	TargetStyle = new class'X2AbilityTarget_Self';
+	Template.AbilityTargetStyle = TargetStyle;
+
+	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Effect = new class'XMBEffect_PersistentBonus';
+	Effect.BuildPersistentEffect(1, true, true, true);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	Effect.bReactionFireOnly = true;
+	Effect.AddToHitAsTargetModifier(-default.MovingTargetDefenseBonus);
+	Effect.AddToHitAsTargetModifier(default.MovingTargetDodgeBonus, eHit_Graze);
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	//  NOTE: No visualization on purpose!
+
+	Template.bCrossClassEligible = false;
 
 	return Template;
 }

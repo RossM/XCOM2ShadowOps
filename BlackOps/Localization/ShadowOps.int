@@ -25,3 +25,10 @@ LocLongDescription="Gain +10 Aim and +3 Mobility while equipped with a rifle."
 LocHelpText="Gain +10 Aim and +3 Mobility while equipped with a rifle."
 LocFlyOverText="Finesse"
 LocPromotionPopupText="<Bullet/> The extra mobility from Finesse can help you to get a flank or to reach the objective quickly, but be careful you don't get too far ahead of the rest of the squad.<br/><Bullet> The bonuses from Finesse are lost if you equip a cannon. Weapons that can be equipped by any unit that can equip a rifle, such as the Boltcaster, count as rifles for Finesse.<br/><Bullet/> Learning Finesse will automatically equip the highest-level rifle in your inventory.<br/>"
+
+; === Upgrade info ===
+
+[X2DownloadableContentInfo_BlackOps]
+ModUpgradeLabel="Shadow Ops Class Pack beta v0.6"
+ModUpgradeSummary="Shadow Ops Class Pack has been updated to beta version 0.6. Important changes: <br/><br/><Bullet/> Covering Fire removed from Infantry and replaced with Fortify.<br/><Bullet/> Lightning Reflexes removed from Combat Engineer and replaced with Moving Target.<br/><Bullet/> Infantry can now equip two ammo types, and switch between them during battle. <br/><Bullet/> Seven new AWC-only abilities are available in the AWC. You may need to start a new game for them to appear. <br/><br/>For more complete change notes, see readme.txt."
+ModUpgradeAcceptLabel="Got it"

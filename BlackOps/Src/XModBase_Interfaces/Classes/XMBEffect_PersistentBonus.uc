@@ -4,7 +4,7 @@ var protectedwrite array<ShotModifierInfo> ToHitModifiers;
 var protectedwrite array<ShotModifierInfo> ToHitAsTargetModifiers;
 var protectedwrite array<ShotModifierInfo> DamageModifiers;
 
-var bool bRequireAbilityWeapon;
+var bool bRequireAbilityWeapon, bReactionFireOnly;
 var array<ECoverType> AllowedCoverTypes;
 
 function AddToHitModifier(int Value, optional EAbilityHitResult ModType = eHit_Success)
@@ -40,6 +40,8 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 function private bool ValidAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
 	local GameRulesCache_VisibilityInfo VisInfo;
+	local X2AbilityTemplate AbilityTemplate;
+	local X2AbilityToHitCalc_StandardAim StandardAim;
 
 	if (!bAsTarget && bRequireAbilityWeapon && AbilityState.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
 		return false;
@@ -51,6 +53,14 @@ function private bool ValidAttack(XComGameState_Effect EffectState, XComGameStat
 		if (!`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(Attacker.ObjectID, Target.ObjectID, VisInfo))
 			return false;
 		if (AllowedCoverTypes.Find(VisInfo.TargetCover) == INDEX_NONE)
+			return false;
+	}
+
+	if (bReactionFireOnly)
+	{
+		AbilityTemplate = AbilityState.GetMyTemplate();
+		StandardAim = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
+		if (StandardAim == none || !StandardAim.bReactionFire)
 			return false;
 	}
 

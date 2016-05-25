@@ -2,6 +2,27 @@ class XComGameState_ShadowOpsUpgradeInfo extends XComGameState_BaseObject;
 
 var array<name> UpgradesPerformed;
 
+var name ModVersion;
+
+function bool ShowUpgradePopupIfNeeded()
+{
+	local TDialogueBoxData kDialogData;
+
+	if (ModVersion == class'X2DownloadableContentInfo_BlackOps'.default.ModVersion)
+		return false;
+
+	kDialogData.eType = eDialog_Normal;
+	kDialogData.strTitle = class'X2DownloadableContentInfo_BlackOps'.default.ModUpgradeLabel;
+	kDialogData.strText = class'X2DownloadableContentInfo_BlackOps'.default.ModUpgradeSummary;
+	kDialogData.strAccept = class'X2DownloadableContentInfo_BlackOps'.default.ModUpgradeAcceptLabel;
+
+	`HQPRES.UIRaiseDialog(kDialogData);
+
+	ModVersion = class'X2DownloadableContentInfo_BlackOps'.default.ModVersion;
+
+	return true;
+}
+
 function InitializeForNewGame()
 {
 	UpgradesPerformed.AddItem('RenameSoldierClasses');

@@ -92,6 +92,13 @@ function TypicalAbility_BuildVisualization(XComGameState VisualizeGameState, out
 			if (AbilityTemplate.bUseLaunchedGrenadeEffects)
 			{
 				GrenadeTemplate = X2GrenadeTemplate(SourceWeapon.GetLoadedAmmoTemplate(AbilityState));
+
+				// Use launch sound cue instead of throw except for smoke/flashbang
+				if (GrenadeTemplate != none && (GrenadeTemplate.OnThrowBarkSoundCue == 'ThrowGrenade' ||
+												GrenadeTemplate.OnThrowBarkSoundCue == ''))
+				{
+					GrenadeTemplate = none;
+				}
 			}
 			else
 			{

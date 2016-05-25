@@ -121,6 +121,19 @@ LocLongDescription="When you get a kill, you and nearby friendly units get +10 C
 LocHelpText="+10 Crit chance and +3 Mobility until the end of your turn."
 LocFlyOverText="Adrenaline Surge"
 
+[ShadowOps_Fortify X2AbilityTemplate]
+LocFriendlyName="Fortify"
+LocLongDescription="Whenever you enter overwatch or use suppression, you gain +20 Defense until the start of your next turn."
+LocHelpText="Whenever you enter overwatch or use suppression, you gain +20 Defense until the start of your next turn."
+LocFlyOverText="Fortify"
+LocPromotionPopupText="<Bullet/> Fortify will activate on any ability that gives you reaction shots, including Ready for Anything and Zone of Control. <br/>"
+
+[ShadowOps_FortifyTrigger X2AbilityTemplate]
+LocFriendlyName="Fortify"
+LocLongDescription="+20 Defense until the start of your next turn."
+LocHelpText="+20 Defense until the start of your next turn."
+LocFlyOverText="Fortify"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
@@ -345,14 +358,14 @@ LocFriendlyName="Dense Smoke"
 LocLongDescription="Your smoke grenades have an increased radius and provide an additional +20 Defense."
 LocHelpText="Your smoke grenades have an increased radius and provide an additional +20 Defense."
 LocFlyOverText="Dense Smoke"
-LocPromotionPopupText="<Bullet/> Smoke grenades with Dense Smoke provide the same defensive bonus as full cover, but you are still vulnerable to critical hits if you get flanked. <br/><Bullet/> The total bonus from a Dense Smoke grenade is +40 defense. The added defense will also reduce your chance of being critically hit by 20. <br/><Bullet/> Smoke grenades come with two charges and can be equipped even if you're carrying two other grenades. There's no reason not to take one on every mission. <br/>"
+LocPromotionPopupText="<Bullet/> Smoke grenades with Dense Smoke provide the same defensive bonus as full cover, but you are still vulnerable to critical hits if you get flanked. <br/><Bullet/> The total bonus from a Dense Smoke grenade is +40 defense. The added defense will also reduce your chance of being critically hit by 20. <br/>"
 
 [ShadowOps_SmokeAndMirrors X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
 LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocHelpText="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocFlyOverText="Smoke and Mirrors"
-LocPromotionPopupText=""
+LocPromotionPopupText="<Bullet/> Smoke grenades provide a +20 Defense bonus to all units in an area that lasts for 2 turns. Each grenade has 2 charges. <br/><Bullet/> Get your Combat Engineer into a good position before starting a fight, so they can use their first action to protect your other soldiers with smoke. <br/><Bullet/> Smoke grenades can be equipped even if you're carrying other grenades. There's no reason not to take one on every mission. <br/>"
 
 [ShadowOps_Breach X2AbilityTemplate]
 LocFriendlyName="Breach"
@@ -441,6 +454,13 @@ LocHelpText="Confers +50% damage against robotic enemies."
 LocFlyOverText="HEAT Ammo"
 LocPromotionPopupText="<Bullet/> HEAT Ammo provides a substantial damage increase against robotic enemies such as MECs and Sectopods. <br/><Bullet/> The damage increase happens before damage is reduced by Armor. <br/><Bullet/> Combining HEAT Ammo with Bluescreen Rounds will deal devastating damage to any robotic enemy. <br/><Bullet/> HEAT Ammo affects all damage sources, including explosives. <br/>"
 
+[ShadowOps_MovingTarget X2AbilityTemplate]
+LocFriendlyName="Moving Target"
+LocLongDescription="You get an additional +40 Defense and +100 Dodge against reaction fire."
+LocHelpText="You get an additional +40 Defense and +100 Dodge against reaction fire."
+LocFlyOverText="Moving Target"
+LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Moving Target is a good choice. <br/>"
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]
@@ -472,7 +492,7 @@ LocHelpText="You get an additional +50 Crit chance against flanked or uncovered 
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Hit and Run"
-LocLongDescription="You can take a move action after using a single-action ability as your first action that would normally end your turn."
+LocLongDescription="You can take a move action after using a single-action ability as your first action that would normally end your turn. This doesn't apply to abilities that reserve actions for the enemy turn, such as Overwatch and Suppression."
 LocHelpText="You can take a move action after using a single-action ability as your first action that would normally end your turn."
 LocFlyOverText="Hit and Run"
 
