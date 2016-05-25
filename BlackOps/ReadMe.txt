@@ -8,8 +8,12 @@ General changes
   * Increased compatibility with other mods by removing many class overrides.
   * Many abilities have expanded popup text.
 Class changes
-  * Infantry can now equip two ammo items, one in their ammo slot and one in a regular utility slot. They start battle with the ammo in their ammo slot active.
-  * Infantry have a new "Swap Ammo" ability that switches their active ammo and reloads their weapon. Activating it costs an action but does not end the turn if used as the first action.
+  * Infantry
+    * Can now equip two ammo items, one in their ammo slot and one in a regular utility slot. They start battle with the ammo in their ammo slot active.
+    * New "Swap Ammo" ability that switches their active ammo and reloads their weapon. Activating it costs an action but does not end the turn if used as the first action.
+  * Combat Engineers
+    * Lightning Reflexes is removed.
+    * New Lieutenant ability: Moving Target. You get an additional +40 Defense and +100 Dodge against reaction fire.
 Ability changes
   * Breach now has a radius of 2 when used with a rifle. It still has its previous radius of 3 when used with a shotgun.
   * Flush now forces the target to move even if the shot misses.

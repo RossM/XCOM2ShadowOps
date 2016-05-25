@@ -441,6 +441,13 @@ LocHelpText="Confers +50% damage against robotic enemies."
 LocFlyOverText="HEAT Ammo"
 LocPromotionPopupText="<Bullet/> HEAT Ammo provides a substantial damage increase against robotic enemies such as MECs and Sectopods. <br/><Bullet/> The damage increase happens before damage is reduced by Armor. <br/><Bullet/> Combining HEAT Ammo with Bluescreen Rounds will deal devastating damage to any robotic enemy. <br/><Bullet/> HEAT Ammo affects all damage sources, including explosives. <br/>"
 
+[ShadowOps_MovingTarget X2AbilityTemplate]
+LocFriendlyName="Moving Target"
+LocLongDescription="You get an additional +40 Defense and +100 Dodge against reaction fire."
+LocHelpText="You get an additional +40 Defense and +100 Dodge against reaction fire."
+LocFlyOverText="Moving Target"
+LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Moving Target is a good choice. <br/>"
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]
