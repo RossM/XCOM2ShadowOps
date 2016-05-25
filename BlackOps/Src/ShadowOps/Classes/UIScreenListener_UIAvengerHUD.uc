@@ -42,6 +42,8 @@ function PerformUpgrades()
 		bChanged = true;
 	if (UpgradeInfo.PerformUpgrade('RenameAWCAbilities', NewGameState))
 		bChanged = true;
+	if (UpgradeInfo.ShowUpgradePopupIfNeeded())
+		bChanged = true;
 
 	if (bChanged)
 		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
