@@ -748,7 +748,7 @@ static function X2AbilityTemplate MovingTarget()
 	Effect = new class'XMBEffect_PersistentBonus';
 	Effect.BuildPersistentEffect(1, true, true, true);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	Effect.bReactionFireOnly = true;
+	Effect.SelfConditions.AddItem(new class'X2Condition_ReactionFire');
 	Effect.AddToHitAsTargetModifier(-default.MovingTargetDefenseBonus);
 	Effect.AddToHitAsTargetModifier(default.MovingTargetDodgeBonus, eHit_Graze);
 	Template.AddTargetEffect(Effect);

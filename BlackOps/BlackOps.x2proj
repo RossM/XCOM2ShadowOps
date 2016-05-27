@@ -154,6 +154,9 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_NotVisibleToEnemies.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Condition_ReactionFire.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>

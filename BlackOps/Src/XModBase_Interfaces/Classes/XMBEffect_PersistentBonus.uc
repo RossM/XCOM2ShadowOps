@@ -41,21 +41,11 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 
 function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
-	local X2AbilityTemplate AbilityTemplate;
-	local X2AbilityToHitCalc_StandardAim StandardAim;
 	local X2Condition kCondition;
 	local name AvailableCode;
 
 	if (!bAsTarget && bRequireAbilityWeapon && AbilityState.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
 		return 'AA_UnknownError';
-
-	if (bReactionFireOnly)
-	{
-		AbilityTemplate = AbilityState.GetMyTemplate();
-		StandardAim = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
-		if (StandardAim == none || !StandardAim.bReactionFire)
-			return 'AA_UnknownError';
-	}
 
 	if (!bAsTarget)
 	{

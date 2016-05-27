@@ -2,7 +2,7 @@ class X2Condition_Cover extends X2Condition;
 
 var array<ECoverType> AllowedCoverTypes;
 
-function name MeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGameState_BaseObject kSource)
+event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGameState_BaseObject kSource)
 {
 	local GameRulesCache_VisibilityInfo VisInfo;
 
