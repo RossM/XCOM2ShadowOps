@@ -7,6 +7,9 @@ var protectedwrite array<ShotModifierInfo> DamageModifiers;
 var bool bRequireAbilityWeapon, bReactionFireOnly;
 var array<ECoverType> AllowedCoverTypes;
 
+var array<X2Condition> SelfConditions;
+var array<X2Condition> OtherConditions;
+
 function AddToHitModifier(int Value, optional EAbilityHitResult ModType = eHit_Success)
 {
 	local ShotModifierInfo ModInfo;
@@ -37,23 +40,25 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 	DamageModifiers.AddItem(ModInfo);
 }	
 
-function private bool ValidAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
+function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
 	local GameRulesCache_VisibilityInfo VisInfo;
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityToHitCalc_StandardAim StandardAim;
+	local X2Condition kCondition;
+	local name AvailableCode;
 
 	if (!bAsTarget && bRequireAbilityWeapon && AbilityState.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
-		return false;
+		return 'AA_UnknownError';
 
 	if (AllowedCoverTypes.Length > 0)
 	{
 		if (Target == none)
-			return false;
+			return 'AA_UnknownError';
 		if (!`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(Attacker.ObjectID, Target.ObjectID, VisInfo))
-			return false;
+			return 'AA_UnknownError';
 		if (AllowedCoverTypes.Find(VisInfo.TargetCover) == INDEX_NONE)
-			return false;
+			return 'AA_UnknownError';
 	}
 
 	if (bReactionFireOnly)
@@ -61,10 +66,59 @@ function private bool ValidAttack(XComGameState_Effect EffectState, XComGameStat
 		AbilityTemplate = AbilityState.GetMyTemplate();
 		StandardAim = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
 		if (StandardAim == none || !StandardAim.bReactionFire)
-			return false;
+			return 'AA_UnknownError';
 	}
 
-	return true;
+	if (!bAsTarget)
+	{
+		foreach OtherConditions(kCondition)
+		{
+			AvailableCode = kCondition.AbilityMeetsCondition(AbilityState, Target);
+			if (AvailableCode != 'AA_Success')
+				return AvailableCode;
+
+			AvailableCode = kCondition.MeetsCondition(Target);
+			if (AvailableCode != 'AA_Success')
+				return AvailableCode;
+		
+			AvailableCode = kCondition.MeetsConditionWithSource(Target, Attacker);
+			if (AvailableCode != 'AA_Success')
+				return AvailableCode;
+		}
+
+		foreach SelfConditions(kCondition)
+		{
+			AvailableCode = kCondition.MeetsCondition(Attacker);
+			if (AvailableCode != 'AA_Success')
+				return AvailableCode;
+		}
+	}
+	else
+	{
+		foreach SelfConditions(kCondition)
+		{
+			AvailableCode = kCondition.AbilityMeetsCondition(AbilityState, Target);
+			if (AvailableCode != 'AA_Success')
+				return AvailableCode;
+
+			AvailableCode = kCondition.MeetsCondition(Target);
+			if (AvailableCode != 'AA_Success')
+				return AvailableCode;
+		
+			AvailableCode = kCondition.MeetsConditionWithSource(Target, Attacker);
+			if (AvailableCode != 'AA_Success')
+				return AvailableCode;
+		}
+
+		foreach TargetConditions(kCondition)
+		{
+			AvailableCode = kCondition.MeetsCondition(Attacker);
+			if (AvailableCode != 'AA_Success')
+				return AvailableCode;
+		}
+	}
+
+	return 'AA_Success';
 }
 
 function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, optional XComGameState NewGameState)
@@ -72,7 +126,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 	local ShotModifierInfo ModInfo;
 	local int BonusDamage;
 
-	if (!ValidAttack(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState))
+	if (ValidateAttack(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState) != 'AA_Success')
 		return 0;
 
 	foreach DamageModifiers(ModInfo)
@@ -91,7 +145,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 {
 	local ShotModifierInfo ModInfo;
 
-	if (!ValidAttack(EffectState, Attacker, Target, AbilityState))
+	if (ValidateAttack(EffectState, Attacker, Target, AbilityState) != 'AA_Success')
 		return;
 	
 	foreach ToHitModifiers(ModInfo)
@@ -105,7 +159,7 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 {
 	local ShotModifierInfo ModInfo;
 
-	if (!ValidAttack(EffectState, Attacker, Target, AbilityState, true))
+	if (ValidateAttack(EffectState, Attacker, Target, AbilityState, true) != 'AA_Success')
 		return;
 	
 	foreach ToHitAsTargetModifiers(ModInfo)
