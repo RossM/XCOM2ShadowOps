@@ -154,6 +154,9 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_HasGrenade.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Condition_HeightAdvantage.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_NotVisibleToEnemies.uc">
       <SubType>Content</SubType>
     </Content>
@@ -189,9 +192,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_ChainReaction.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_DamnGoodGround.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_DangerZone.uc">

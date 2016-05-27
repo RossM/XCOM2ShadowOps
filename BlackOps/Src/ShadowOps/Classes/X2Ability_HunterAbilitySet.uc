@@ -900,11 +900,23 @@ static function X2AbilityTemplate FirstStrike()
 
 static function X2AbilityTemplate DamnGoodGround()
 {
-	local X2Effect_DamnGoodGround				Effect;
+	local XMBEffect_PersistentBonus Effect;
+	local X2Condition_HeightAdvantage Condition;
 
-	Effect = new class'X2Effect_DamnGoodGround';
-	Effect.AimMod = default.DamnGoodGroundOffenseBonus;
-	Effect.DefenseMod = default.DamnGoodGroundDefenseBonus;
+	Effect = new class'XMBEffect_PersistentBonus';
+	Effect.EffectName = 'DamnGoodGround';
+	Effect.AddToHitModifier(default.DamnGoodGroundOffenseBonus);
+	Effect.AddToHitAsTargetModifier(-default.DamnGoodGroundDefenseBonus);
+
+	// This condition applies when the unit is the target
+	Condition = new class'X2Condition_HeightAdvantage';
+	Condition.bRequireHeightAdvantage = true;
+	Effect.SelfConditions.AddItem(Condition);
+
+	// This condition applies when the unit is the attacker
+	Condition = new class'X2Condition_HeightAdvantage';
+	Condition.bRequireHeightDisadvantage = true;
+	Effect.OtherConditions.AddItem(Condition);
 
 	return Passive('ShadowOps_DamnGoodGround', "img:///UILibrary_BlackOps.UIPerk_damngoodground", true, Effect);
 }
