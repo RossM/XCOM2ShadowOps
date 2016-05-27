@@ -55,93 +55,18 @@ static function X2AbilityTemplate SnapShot()
 static function X2AbilityTemplate SnapShotShot()
 {
 	local X2AbilityTemplate					Template;
-	local X2AbilityCost_ActionPoints		ActionPointCost;
-	local X2AbilityCost_Ammo				AmmoCost;
-	local X2Condition_Visibility            TargetVisibilityCondition;
-	local array<name>                       SkipExclusions;
-	local X2Effect_Knockback				KnockbackEffect;
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 
-	//Macro to do localisation and stuffs
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SnapShotShot');
+	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('ShadowOps_SnapShotShot');
 
-	// Icon Properties
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_snapshot_shot";
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY;
-	Template.DisplayTargetHitChance = true;
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideIfOtherAvailable;
 	Template.HideIfAvailable.AddItem('SniperStandardFire');
-	Template.AbilitySourceName = 'eAbilitySource_Standard';                                       // color of the icon
-	// Activated by a button press; additionally, tells the AI this is an activatable
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-	Template.bDisplayInUITooltip = false;
-	Template.bDisplayInUITacticalText = false;
-	
-	// *** VALIDITY CHECKS *** //
-	// Status condtions that do *not* prohibit this action.
-	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
-	SkipExclusions.AddItem(class'X2StatusEffects'.default.BurningName);
-	Template.AddShooterEffectExclusions(SkipExclusions);
 
-	// *** TARGETING PARAMETERS *** //
-	// Can only shoot visible enemies
-	TargetVisibilityCondition = new class'X2Condition_Visibility';
-	TargetVisibilityCondition.bRequireGameplayVisible = true;
-	TargetVisibilityCondition.bAllowSquadsight = true;
-	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
-	// Can't target dead; Can't target friendlies
-	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
-	// Can't shoot while dead
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	// Only at single targets that are in range.
-	Template.AbilityTargetStyle = default.SimpleSingleTarget;
-
-	// Action Point
-	ActionPointCost = new class 'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;                                               // Consume all points
-	Template.AbilityCosts.AddItem(ActionPointCost);
-
-	// Ammo
-	AmmoCost = new class'X2AbilityCost_Ammo';
-	AmmoCost.iAmmo = 1;
-	Template.AbilityCosts.AddItem(AmmoCost);
-	Template.bAllowAmmoEffects = true;
-	Template.bAllowBonusWeaponEffects = true;
-
-	// Weapon Upgrade Compatibility
-	Template.bAllowFreeFireWeaponUpgrade = true;                                            // Flag that permits action to become 'free action' via 'Hair Trigger' or similar upgrade / effects
-
-	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
-	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
-	//  Various Soldier ability specific effects - effects check for the ability before applying	
-	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
-
-	// Damage Effect
-	Template.AddTargetEffect(default.WeaponUpgradeMissDamage);
-
-	// Hit Calculation (Different weapons now have different calculations for range)
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
 	ToHitCalc.BuiltInHitMod = default.SnapShotHitModifier;
 	Template.AbilityToHitCalc = ToHitCalc;
 	Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
-
-	// Targeting Method
-	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
-	Template.bUsesFiringCamera = true;
-	Template.CinescriptCameraType = "StandardGunFiring";
-
-	// MAKE IT LIVE!
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
-
-	KnockbackEffect = new class'X2Effect_Knockback';
-	KnockbackEffect.KnockbackDistance = 2;
-	KnockbackEffect.bUseTargetLocation = true;
-	Template.AddTargetEffect(KnockbackEffect);
-
-	Template.bCrossClassEligible = false;
 
 	return Template;
 }
