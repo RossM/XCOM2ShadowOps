@@ -1,4 +1,4 @@
-class X2Ability_DragoonAbilitySet extends X2Ability
+class X2Ability_DragoonAbilitySet extends XMBAbility
 	config(GameData_SoldierSkills);
 
 var config array<name> ShieldProtocolImmunities;
@@ -1025,40 +1025,12 @@ static function X2AbilityTemplate Rocketeer()
 
 static function X2AbilityTemplate TacticalSense()
 {
-	local X2AbilityTemplate						Template;
-	local X2AbilityTargetStyle                  TargetStyle;
-	local X2AbilityTrigger						Trigger;
-	local X2Effect_TacticalSense				Effect;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TacticalSense');
-
-	// Icon Properties
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_tacticalsense";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	Template.AbilityTriggers.AddItem(Trigger);
+	local X2Effect_TacticalSense Effect;
 
 	Effect = new class'X2Effect_TacticalSense';
 	Effect.DodgeModifier = default.TacticalSenseDodgeBonus;
 	Effect.MaxDodgeModifier = default.TacticalSenseMaxDodgeBonus;
-	Effect.BuildPersistentEffect(1, true, true, true);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = false;
-
-	return Template;
+	return Passive('ShadowOps_TacticalSense', "img:///UILibrary_PerkIcons.UIPerk_tacticalsense", false, Effect);
 }
 
