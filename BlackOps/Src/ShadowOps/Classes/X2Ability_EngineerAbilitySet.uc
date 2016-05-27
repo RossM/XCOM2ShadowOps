@@ -1,4 +1,4 @@
-class X2Ability_EngineerAbilitySet extends X2Ability
+class X2Ability_EngineerAbilitySet extends XMBAbility
 	config(GameData_SoldierSkills);
 
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
@@ -357,35 +357,15 @@ static function X2AbilityTemplate FractureDamage()
 
 static function X2AbilityTemplate Aggression()
 {
-	local X2AbilityTemplate						Template;
-	local X2Effect_Aggression                   Effect;
-
-	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Aggression');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_aggression";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
+	local X2Effect_Aggression Effect;
 
 	Effect = new class'X2Effect_Aggression';
+	Effect.EffectName = 'Aggression';
 	Effect.CritModifier = default.AggressionCritModifier;
 	Effect.MaxCritModifier = default.AggressionMaxCritModifier;
 	Effect.GrenadeCritDamage = default.AggressionGrenadeCritDamage;
-	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_Aggression', "img:///UILibrary_BlackOps.UIPerk_aggression", true, Effect);
 }
 
 static function X2AbilityTemplate SlamFire()
@@ -599,165 +579,53 @@ static function X2AbilityTemplate Packmaster()
 	//  NOTE: No visualization on purpose!
 
 	Template.bCrossClassEligible = true;
-
+	
 	return Template;
 }
 
 static function X2AbilityTemplate DangerZone()
 {
-	local X2AbilityTemplate						Template;
-	local X2AbilityTargetStyle                  TargetStyle;
-	local X2AbilityTrigger						Trigger;
-	local X2Effect_DangerZone					RadiusEffect;
+	local X2Effect_DangerZone Effect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DangerZone');
+	Effect = new class'X2Effect_DangerZone';
+	Effect.EffectName = 'DangerZone';
+	Effect.fBonusRadius = default.DangerZoneBonusRadius;
+	Effect.fBreachBonusRadius = default.DangerZoneBreachBonusRadius;
 
-	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_dangerzone";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	Template.AbilityTriggers.AddItem(Trigger);
-
-	RadiusEffect = new class'X2Effect_DangerZone';
-	RadiusEffect.EffectName = 'DangerZone';
-	RadiusEffect.fBonusRadius = default.DangerZoneBonusRadius;
-	RadiusEffect.fBreachBonusRadius = default.DangerZoneBreachBonusRadius;
-	RadiusEffect.BuildPersistentEffect(1, true, true, true);
-	RadiusEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	Template.AddTargetEffect(RadiusEffect);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_DangerZone', "img:///UILibrary_BlackOps.UIPerk_dangerzone", true, Effect);
 }
 
 static function X2AbilityTemplate DenseSmoke()
 {
-	local X2AbilityTemplate						Template;
-	local X2AbilityTargetStyle                  TargetStyle;
-	local X2AbilityTrigger						Trigger;
-	local XMBEffect_BonusRadius					RadiusEffect;
+	local XMBEffect_BonusRadius Effect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DenseSmoke');
+	Effect = new class'XMBEffect_BonusRadius';
+	Effect.EffectName = 'DenseSmokeRadius';
+	Effect.fBonusRadius = class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
+	Effect.AllowedTemplateNames.AddItem('SmokeGrenade');
+	Effect.AllowedTemplateNames.AddItem('SmokeGrenadeMk2');
 
-	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_densesmoke";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	Template.AbilityTriggers.AddItem(Trigger);
-
-	RadiusEffect = new class'XMBEffect_BonusRadius';
-	RadiusEffect.EffectName = 'DenseSmokeRadius';
-	RadiusEffect.fBonusRadius = class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
-	RadiusEffect.AllowedTemplateNames.AddItem('SmokeGrenade');
-	RadiusEffect.AllowedTemplateNames.AddItem('SmokeGrenadeMk2');
-	RadiusEffect.BuildPersistentEffect(1, true, true, true);
-	RadiusEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	Template.AddTargetEffect(RadiusEffect);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_DenseSmoke', "img:///UILibrary_BlackOps.UIPerk_densesmoke", true, Effect);
 }
 
 static function X2AbilityTemplate HeatAmmo()
 {
-	local X2AbilityTemplate						Template;
-	local X2AbilityTargetStyle                  TargetStyle;
-	local X2AbilityTrigger						Trigger;
-	local X2Effect_HeatAmmo						HeatEffect;
+	local X2Effect_HeatAmmo Effect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HeatAmmo');
+	Effect = new class'X2Effect_HeatAmmo';
 
-	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_heatammo";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	Template.AbilityTriggers.AddItem(Trigger);
-
-	HeatEffect = new class'X2Effect_HeatAmmo';
-	HeatEffect.BuildPersistentEffect(1, true, true, true);
-	HeatEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	Template.AddTargetEffect(HeatEffect);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_HeatAmmo', "img:///UILibrary_BlackOps.UIPerk_heatammo", true, Effect);
 }
 
 static function X2AbilityTemplate MovingTarget()
 {
-	local X2AbilityTemplate						Template;
-	local X2AbilityTargetStyle                  TargetStyle;
-	local X2AbilityTrigger						Trigger;
 	local XMBEffect_PersistentBonus             Effect;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_MovingTarget');
-
-	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_movingtarget";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	Template.AbilityTriggers.AddItem(Trigger);
-
 	Effect = new class'XMBEffect_PersistentBonus';
-	Effect.BuildPersistentEffect(1, true, true, true);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
 	Effect.SelfConditions.AddItem(new class'X2Condition_ReactionFire');
 	Effect.AddToHitAsTargetModifier(-default.MovingTargetDefenseBonus);
 	Effect.AddToHitAsTargetModifier(default.MovingTargetDodgeBonus, eHit_Graze);
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = false;
-
-	return Template;
+	return Passive('ShadowOps_MovingTarget', "img:///UILibrary_BlackOps.UIPerk_movingtarget", false, Effect);
 }
 

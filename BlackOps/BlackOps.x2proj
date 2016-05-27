@@ -2223,6 +2223,9 @@
     <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBAbility.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_PersistentBonus.uc">
       <SubType>Content</SubType>
     </Content>
