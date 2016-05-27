@@ -35,6 +35,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZeroIn());
 	Templates.AddItem(BulletSweep()); // Unused
 	Templates.AddItem(Flush());
+	Templates.AddItem(FlushShot());
 	Templates.AddItem(RifleSuppression());
 	Templates.AddItem(Focus());
 	Templates.AddItem(Resilience());
@@ -666,15 +667,18 @@ static function X2AbilityTemplate Flush()
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2AbilityCost_ActionPoints        ActionPointCost;
-	local X2Effect_Knockback				KnockbackEffect;
 	local X2Condition_Visibility            VisibilityCondition;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2Effect_Flush					FlushEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
+	local X2Effect_AddReservedActionPoints	ReservePointsEffect;
+	local X2Effect_SaveHitResult			SaveHitResultEffect;
+	local X2Effect_PreviewDamage			PreviewDamageEffect;
 
 	// Macro to do localisation and stuffs
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Flush');
+	Template.AdditionalAbilities.AddItem('ShadowOps_FlushShot');
 
 	// Icon Properties
 	Template.bDontDisplayInAbilitySummary = true;
@@ -715,6 +719,7 @@ static function X2AbilityTemplate Flush()
 	// Ammo
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 1;
+	AmmoCost.bFreeCost = true;  // Will be used by the actual shot
 	Template.AbilityCosts.AddItem(AmmoCost);
 	Template.bAllowAmmoEffects = true;
 	Template.bAllowBonusWeaponEffects = true;
@@ -726,10 +731,18 @@ static function X2AbilityTemplate Flush()
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
 	StandardAim.BuiltInHitMod = default.FlushHitModifier;
 	Template.AbilityToHitCalc = StandardAim;
-		
-	// Weapon Upgrade Compatibility
-	Template.bAllowFreeFireWeaponUpgrade = true;                        // Flag that permits action to become 'free action' via 'Hair Trigger' or similar upgrade / effects
 
+	ReservePointsEffect = new class'X2Effect_AddReservedActionPoints';
+	ReservePointsEffect.ReserveType = 'Flush';
+	ReservePointsEffect.bApplyOnHit = true;
+	ReservePointsEffect.bApplyOnMiss = true;
+	Template.AddShooterEffect(ReservePointsEffect);
+
+	SaveHitResultEffect = new class'X2Effect_SaveHitResult';
+	SaveHitResultEffect.bApplyOnHit = true;
+	SaveHitResultEffect.bApplyOnMiss = true;
+	Template.AddShooterEffect(SaveHitResultEffect);
+			
 	ActionPointEffect = new class'X2Effect_GrantActionPoints';
 	ActionPointEffect.NumActionPoints = 1;
 	ActionPointEffect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
@@ -742,37 +755,82 @@ static function X2AbilityTemplate Flush()
 	FlushEffect.bApplyOnMiss = true;
 	Template.AddTargetEffect(FlushEffect);
 
-	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
-	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
-	//  Various Soldier ability specific effects - effects check for the ability before applying	
-	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
-	
-	// Damage Effect
-	Template.AddTargetEffect(default.WeaponUpgradeMissDamage);
+	PreviewDamageEffect = new class'X2Effect_PreviewDamage';
+	PreviewDamageEffect.WrappedEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
+	Template.AddTargetEffect(PreviewDamageEffect);
 
-	// Targeting Method
 	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
-	Template.bUsesFiringCamera = true;
-	Template.CinescriptCameraType = "StandardGunFiring";	
-
-	Template.AssociatedPassives.AddItem('HoloTargeting');
 
 	// MAKE IT LIVE!
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;	
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
+	Template.bSkipFireAction = true;
+
 	Template.bDisplayInUITooltip = false;
 	Template.bDisplayInUITacticalText = false;
-
-	KnockbackEffect = new class'X2Effect_Knockback';
-	KnockbackEffect.KnockbackDistance = 2;
-	KnockbackEffect.bUseTargetLocation = true;
-	Template.AddTargetEffect(KnockbackEffect);
 
 	Template.bCrossClassEligible = true;
 
 	return Template;	
+}
+
+static function X2AbilityTemplate FlushShot()
+{
+	local X2AbilityTemplate                 Template;
+	local X2AbilityCost_Ammo				AmmoCost;
+	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
+	local X2AbilityTarget_Single            SingleTarget;
+	local X2AbilityTrigger_Event	        Trigger;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FlushShot');
+
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+
+	ReserveActionPointCost = new class'X2AbilityCost_ReserveActionPoints';
+	ReserveActionPointCost.iNumPoints = 1;
+	ReserveActionPointCost.AllowedTypes.AddItem('Flush');
+	Template.AbilityCosts.AddItem(ReserveActionPointCost);
+
+	Template.AbilityToHitCalc = new class'X2AbilityToHitCalc_UseSavedHitResult';
+
+	// No ability conditions - if Flush fired, always take the shot
+
+	SingleTarget = new class'X2AbilityTarget_Single';
+	SingleTarget.OnlyIncludeTargetsInsideWeaponRange = true;
+	Template.AbilityTargetStyle = SingleTarget;
+
+	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+
+	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
+
+	//Trigger on movement - interrupt the move
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_MovementObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_AttackObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_overwatch";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;
 }
 
 static function X2AbilityTemplate BulletSweep()

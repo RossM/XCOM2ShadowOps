@@ -112,6 +112,9 @@
     <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_UseSavedHitResult.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_AWC.uc">
       <SubType>Content</SubType>
     </Content>
@@ -167,6 +170,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
+    <Content Include="Src\ShadowOps\Classes\X2Effect_AddReservedActionPoints.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_AdrenalineSurge.uc">
       <SubType>Content</SubType>
     </Content>
@@ -230,6 +236,9 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_MaybeApplyDirectionalWorldDamage.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_PreviewDamage.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_RangerStealth_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -237,6 +246,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_RestorationProtocol.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_SaveHitResult.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_ShieldProtocol.uc">
