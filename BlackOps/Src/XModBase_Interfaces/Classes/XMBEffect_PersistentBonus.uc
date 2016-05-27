@@ -5,7 +5,6 @@ var protectedwrite array<ShotModifierInfo> ToHitAsTargetModifiers;
 var protectedwrite array<ShotModifierInfo> DamageModifiers;
 
 var bool bRequireAbilityWeapon, bReactionFireOnly;
-var array<ECoverType> AllowedCoverTypes;
 
 var array<X2Condition> SelfConditions;
 var array<X2Condition> OtherConditions;
@@ -42,7 +41,6 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 
 function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
-	local GameRulesCache_VisibilityInfo VisInfo;
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityToHitCalc_StandardAim StandardAim;
 	local X2Condition kCondition;
@@ -50,16 +48,6 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 
 	if (!bAsTarget && bRequireAbilityWeapon && AbilityState.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
 		return 'AA_UnknownError';
-
-	if (AllowedCoverTypes.Length > 0)
-	{
-		if (Target == none)
-			return 'AA_UnknownError';
-		if (!`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(Attacker.ObjectID, Target.ObjectID, VisInfo))
-			return 'AA_UnknownError';
-		if (AllowedCoverTypes.Find(VisInfo.TargetCover) == INDEX_NONE)
-			return 'AA_UnknownError';
-	}
 
 	if (bReactionFireOnly)
 	{

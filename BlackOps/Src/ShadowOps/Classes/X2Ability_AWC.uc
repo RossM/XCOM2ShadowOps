@@ -210,7 +210,8 @@ static function X2AbilityTemplate Weaponmaster()
 static function X2AbilityTemplate AbsolutelyCritical()
 {
 	local X2AbilityTemplate						Template;
-	local XMBEffect_PersistentBonus              Effect;
+	local XMBEffect_PersistentBonus             Effect;
+	local X2Condition_Cover						Condition;
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AbsolutelyCritical');
@@ -224,8 +225,11 @@ static function X2AbilityTemplate AbsolutelyCritical()
 	Template.AbilityTargetStyle = default.SelfTarget;
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
+	Condition = new class'X2Condition_Cover';
+	Condition.AllowedCoverTypes.AddItem(CT_NONE);
+
 	Effect = new class'XMBEffect_PersistentBonus';
-	Effect.AllowedCoverTypes.AddItem(CT_NONE);
+	Effect.OtherConditions.AddItem(Condition);
 	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);

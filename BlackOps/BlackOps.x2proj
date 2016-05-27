@@ -145,6 +145,9 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_AlwaysReady.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Condition_Cover.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_HasGrenade.uc">
       <SubType>Content</SubType>
     </Content>

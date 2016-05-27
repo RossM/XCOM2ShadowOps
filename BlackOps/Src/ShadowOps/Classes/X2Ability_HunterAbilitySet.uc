@@ -418,7 +418,8 @@ static function X2AbilityTemplate Precision()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local XMBEffect_PersistentBonus              PrecisionEffect;
+	local XMBEffect_PersistentBonus             PrecisionEffect;
+	local X2Condition_Cover						Condition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Precision');
 
@@ -437,10 +438,13 @@ static function X2AbilityTemplate Precision()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
+	Condition = new class'X2Condition_Cover';
+	Condition.AllowedCoverTypes.AddItem(CT_Standing);
+
 	PrecisionEffect = new class'XMBEffect_PersistentBonus';
 	PrecisionEffect.BuildPersistentEffect(1, true, true, true);
 	PrecisionEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	PrecisionEffect.AllowedCoverTypes.AddItem(CT_Standing);
+	PrecisionEffect.OtherConditions.AddItem(Condition);
 	PrecisionEffect.AddToHitModifier(default.PrecisionOffenseBonus);
 	Template.AddTargetEffect(PrecisionEffect);
 
@@ -457,7 +461,8 @@ static function X2AbilityTemplate LowProfile()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local XMBEffect_PersistentBonus              LowProfileEffect;
+	local XMBEffect_PersistentBonus             LowProfileEffect;
+	local X2Condition_Cover						Condition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_LowProfile');
 
@@ -476,10 +481,13 @@ static function X2AbilityTemplate LowProfile()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
+	Condition = new class'X2Condition_Cover';
+	Condition.AllowedCoverTypes.AddItem(CT_MidLevel);
+
 	LowProfileEffect = new class'XMBEffect_PersistentBonus';
 	LowProfileEffect.BuildPersistentEffect(1, true, true, true);
 	LowProfileEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
-	LowProfileEffect.AllowedCoverTypes.AddItem(CT_MidLevel);
+	LowProfileEffect.SelfConditions.AddItem(Condition);
 	LowProfileEffect.AddToHitAsTargetModifier(-default.LowProfileDefenseBonus);
 	Template.AddTargetEffect(LowProfileEffect);
 
