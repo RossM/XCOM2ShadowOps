@@ -181,9 +181,9 @@ simulated function XComGameState SwapAmmo_BuildGameState( XComGameStateContext C
 
 static function X2AbilityTemplate Magnum()
 {
-	local XMBEffect_PersistentBonus              MagnumEffect;
+	local XMBEffect_ConditionalBonus              MagnumEffect;
 
-	MagnumEffect = new class'XMBEffect_PersistentBonus';
+	MagnumEffect = new class'XMBEffect_ConditionalBonus';
 	MagnumEffect.bRequireAbilityWeapon = true;
 	MagnumEffect.AddDamageModifier(default.MagnumDamageBonus);
 	MagnumEffect.AddToHitModifier(default.MagnumOffenseBonus);
@@ -1159,7 +1159,7 @@ static function X2AbilityTemplate Fortify()
 static function X2AbilityTemplate FortifyTrigger()
 {
 	local X2AbilityTemplate					Template;
-	local XMBEffect_PersistentBonus			Effect;
+	local XMBEffect_ConditionalBonus			Effect;
 	local X2AbilityTrigger_EventListener	Trigger;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FortifyTrigger');
@@ -1179,7 +1179,7 @@ static function X2AbilityTemplate FortifyTrigger()
 	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	Effect = new class'XMBEffect_PersistentBonus';
+	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddToHitAsTargetModifier(-default.FortressDefenseModifier);
 	Effect.BuildPersistentEffect(1, false, true,, eGameRule_PlayerTurnBegin);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, ,,Template.AbilitySourceName);

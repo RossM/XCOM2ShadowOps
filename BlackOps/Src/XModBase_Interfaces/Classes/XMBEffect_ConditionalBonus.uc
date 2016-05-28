@@ -1,4 +1,4 @@
-class XMBEffect_PersistentBonus extends XMBEffect_Persistent;
+class XMBEffect_ConditionalBonus extends XMBEffect_Persistent;
 
 var protectedwrite array<ShotModifierInfo> ToHitModifiers;
 var protectedwrite array<ShotModifierInfo> ToHitAsTargetModifiers;

@@ -2238,7 +2238,7 @@
     <Content Include="Src\XModBase_Interfaces\Classes\XMBAbility.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_PersistentBonus.uc">
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_ConditionalBonus.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusItemCharges.uc">

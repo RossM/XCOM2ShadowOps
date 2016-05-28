@@ -619,9 +619,9 @@ static function X2AbilityTemplate HeatAmmo()
 
 static function X2AbilityTemplate MovingTarget()
 {
-	local XMBEffect_PersistentBonus             Effect;
+	local XMBEffect_ConditionalBonus             Effect;
 
-	Effect = new class'XMBEffect_PersistentBonus';
+	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.SelfConditions.AddItem(new class'X2Condition_ReactionFire');
 	Effect.AddToHitAsTargetModifier(-default.MovingTargetDefenseBonus);
 	Effect.AddToHitAsTargetModifier(default.MovingTargetDodgeBonus, eHit_Graze);

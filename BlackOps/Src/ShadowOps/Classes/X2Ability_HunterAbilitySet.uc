@@ -312,13 +312,13 @@ static function X2AbilityTemplate VitalPoint()
 
 static function X2AbilityTemplate Precision()
 {
-	local XMBEffect_PersistentBonus             PrecisionEffect;
+	local XMBEffect_ConditionalBonus             PrecisionEffect;
 	local X2Condition_Cover						Condition;
 
 	Condition = new class'X2Condition_Cover';
 	Condition.AllowedCoverTypes.AddItem(CT_Standing);
 
-	PrecisionEffect = new class'XMBEffect_PersistentBonus';
+	PrecisionEffect = new class'XMBEffect_ConditionalBonus';
 	PrecisionEffect.OtherConditions.AddItem(Condition);
 	PrecisionEffect.AddToHitModifier(default.PrecisionOffenseBonus);
 
@@ -327,13 +327,13 @@ static function X2AbilityTemplate Precision()
 
 static function X2AbilityTemplate LowProfile()
 {
-	local XMBEffect_PersistentBonus             LowProfileEffect;
+	local XMBEffect_ConditionalBonus             LowProfileEffect;
 	local X2Condition_Cover						Condition;
 
 	Condition = new class'X2Condition_Cover';
 	Condition.AllowedCoverTypes.AddItem(CT_MidLevel);
 
-	LowProfileEffect = new class'XMBEffect_PersistentBonus';
+	LowProfileEffect = new class'XMBEffect_ConditionalBonus';
 	LowProfileEffect.SelfConditions.AddItem(Condition);
 	LowProfileEffect.AddToHitAsTargetModifier(-default.LowProfileDefenseBonus);
 
@@ -890,10 +890,10 @@ static function RattledVisualization(XComGameState VisualizeGameState, out Visua
 
 static function X2AbilityTemplate FirstStrike()
 {
-	local XMBEffect_PersistentBonus Effect;
+	local XMBEffect_ConditionalBonus Effect;
 	local X2Condition_IsConcealed Condition;
 
-	Effect = new class'XMBEffect_PersistentBonus';
+	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.FirstStrikeDamageBonus);
 	Effect.bIgnoreSquadSightPenalty = true;
 
@@ -905,10 +905,10 @@ static function X2AbilityTemplate FirstStrike()
 
 static function X2AbilityTemplate DamnGoodGround()
 {
-	local XMBEffect_PersistentBonus Effect;
+	local XMBEffect_ConditionalBonus Effect;
 	local X2Condition_HeightAdvantage Condition;
 
-	Effect = new class'XMBEffect_PersistentBonus';
+	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.EffectName = 'DamnGoodGround';
 	Effect.AddToHitModifier(default.DamnGoodGroundOffenseBonus);
 	Effect.AddToHitAsTargetModifier(-default.DamnGoodGroundDefenseBonus);
