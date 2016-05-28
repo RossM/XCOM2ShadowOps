@@ -16,7 +16,7 @@ var bool bIgnoreSquadsightPenalty;
 // Conditions //
 ////////////////
 
-var bool bRequireAbilityWeapon, bReactionFireOnly;
+var bool bRequireAbilityWeapon;
 
 var array<X2Condition> SelfConditions;
 var array<X2Condition> OtherConditions;
