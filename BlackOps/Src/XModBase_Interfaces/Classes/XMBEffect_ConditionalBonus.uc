@@ -1,15 +1,30 @@
 class XMBEffect_ConditionalBonus extends XMBEffect_Persistent;
 
+
+/////////////
+// Bonuses //
+/////////////
+
 var protectedwrite array<ShotModifierInfo> ToHitModifiers;
 var protectedwrite array<ShotModifierInfo> ToHitAsTargetModifiers;
 var protectedwrite array<ShotModifierInfo> DamageModifiers;
 
 var bool bIgnoreSquadsightPenalty;
 
+
+////////////////
+// Conditions //
+////////////////
+
 var bool bRequireAbilityWeapon, bReactionFireOnly;
 
 var array<X2Condition> SelfConditions;
 var array<X2Condition> OtherConditions;
+
+
+/////////////
+// Setters //
+/////////////
 
 function AddToHitModifier(int Value, optional EAbilityHitResult ModType = eHit_Success)
 {
@@ -40,6 +55,11 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 	ModInfo.Value = Value;
 	DamageModifiers.AddItem(ModInfo);
 }	
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
