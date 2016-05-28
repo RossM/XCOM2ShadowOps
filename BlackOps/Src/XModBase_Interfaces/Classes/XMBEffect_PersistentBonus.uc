@@ -1,8 +1,10 @@
-class XMBEffect_PersistentBonus extends X2Effect_Persistent;
+class XMBEffect_PersistentBonus extends XMBEffect_Persistent;
 
 var protectedwrite array<ShotModifierInfo> ToHitModifiers;
 var protectedwrite array<ShotModifierInfo> ToHitAsTargetModifiers;
 var protectedwrite array<ShotModifierInfo> DamageModifiers;
+
+var bool bIgnoreSquadsightPenalty;
 
 var bool bRequireAbilityWeapon, bReactionFireOnly;
 
@@ -147,3 +149,13 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 	}	
 }
 
+function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState) 
+{
+	if (!bIgnoreSquadsightPenalty)
+		return false;
+
+	if (ValidateAttack(EffectState, Attacker, Target, AbilityState) != 'AA_Success')
+		return false;
+
+	return true;
+}

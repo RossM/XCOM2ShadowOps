@@ -1,6 +1,6 @@
 class X2Effect_Resilience extends XMBEffect_Persistent;
 
-function bool CannotBeCrit(XComGameState_Ability AbilityState, XComGameState_Unit Attacker, XComGameState_Unit Target) { return true; }
+function bool CannotBeCrit(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState) { return true; }
 
 defaultproperties
 {

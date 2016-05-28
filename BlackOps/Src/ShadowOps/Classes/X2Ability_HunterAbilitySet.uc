@@ -890,12 +890,17 @@ static function RattledVisualization(XComGameState VisualizeGameState, out Visua
 
 static function X2AbilityTemplate FirstStrike()
 {
-	local X2Effect_FirstStrike					FirstStrikeEffect;
+	local XMBEffect_PersistentBonus Effect;
+	local X2Condition_IsConcealed Condition;
 
-	FirstStrikeEffect = new class'X2Effect_FirstStrike';
-	FirstStrikeEffect.BonusDamage = default.FirstStrikeDamageBonus;
+	Effect = new class'XMBEffect_PersistentBonus';
+	Effect.AddDamageModifier(default.FirstStrikeDamageBonus);
+	Effect.bIgnoreSquadSightPenalty = true;
 
-	return Passive('ShadowOps_FirstStrike', "img:///UILibrary_BlackOps.UIPerk_firststrike", true, FirstStrikeEffect);
+	Condition = new class'X2Condition_IsConcealed';
+	Effect.SelfConditions.AddItem(Condition);
+
+	return Passive('ShadowOps_FirstStrike', "img:///UILibrary_BlackOps.UIPerk_firststrike", true, Effect);
 }
 
 static function X2AbilityTemplate DamnGoodGround()

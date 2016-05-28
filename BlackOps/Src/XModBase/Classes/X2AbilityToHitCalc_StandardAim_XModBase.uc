@@ -94,7 +94,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 						XModBaseEffect = XMBEffect_Persistent(PersistentEffect);
 						if (XModBaseEffect != none)
 						{
-							if (XModBaseEffect.IgnoreSquadsightPenalty(kAbility, UnitState, TargetState))
+							if (XModBaseEffect.IgnoreSquadsightPenalty(EffectState, UnitState, TargetState, kAbility))
 							{
 								bSquadsight = false;
 								break;
@@ -345,7 +345,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 				XModBaseEffect = XMBEffect_Persistent(PersistentEffect);
 				if (XModBaseEffect != none)
 				{
-					if (XModBaseEffect.CannotBeCrit(kAbility, UnitState, TargetState))
+					if (XModBaseEffect.CannotBeCrit(EffectState, UnitState, TargetState, kAbility))
 					{
 						bIgnoreCrit = true;
 						IgnoreCritReason = PersistentEffect.FriendlyName;

@@ -4,11 +4,11 @@ class XMBEffect_Persistent extends X2Effect_Persistent;
 // subclass to create new effects.
 
 // If true, the unit with this effect is immune to critical hits.
-function bool CannotBeCrit(XComGameState_Ability AbilityState, XComGameState_Unit Attacker, XComGameState_Unit Target) { return false; }
+function bool CannotBeCrit(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState) { return false; }
 
 // If true, the unit with this effect doesn't take penalties to hit and crit chance for using 
 // squadsight.
-function bool IgnoreSquadsightPenalty(XComGameState_Ability AbilityState, XComGameState_Unit Attacker, XComGameState_Unit Target) { return false; }
+function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState) { return false; }
 
 // This function can add new hit modifiers after all other hit calculations are done. Importantly,
 // it gets access to the complete shot breakdown so far, so it can inspect the chance of a hit, 
