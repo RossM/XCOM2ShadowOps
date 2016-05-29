@@ -8,6 +8,8 @@ class XMBEffect_ConditionalBonus extends XMBEffect_Persistent;
 var protectedwrite array<ShotModifierInfo> ToHitModifiers;
 var protectedwrite array<ShotModifierInfo> ToHitAsTargetModifiers;
 var protectedwrite array<ShotModifierInfo> DamageModifiers;
+var protectedwrite array<ShotModifierInfo> ShredModifiers;
+var protectedwrite array<ShotModifierInfo> ArmorPiercingModifiers;
 
 var bool bIgnoreSquadsightPenalty;
 
@@ -54,6 +56,26 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 	ModInfo.Reason = FriendlyName;
 	ModInfo.Value = Value;
 	DamageModifiers.AddItem(ModInfo);
+}	
+
+function AddShredModifier(int Value, optional EAbilityHitResult ModType = eHit_Success)
+{
+	local ShotModifierInfo ModInfo;
+
+	ModInfo.ModType = ModType;
+	ModInfo.Reason = FriendlyName;
+	ModInfo.Value = Value;
+	ShredModifiers.AddItem(ModInfo);
+}	
+
+function AddArmorPiercingModifier(int Value, optional EAbilityHitResult ModType = eHit_Success)
+{
+	local ShotModifierInfo ModInfo;
+
+	ModInfo.ModType = ModType;
+	ModInfo.Reason = FriendlyName;
+	ModInfo.Value = Value;
+	ArmorPiercingModifiers.AddItem(ModInfo);
 }	
 
 
@@ -139,6 +161,46 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 	}
 
 	return BonusDamage;
+}
+
+function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData)
+{
+	local ShotModifierInfo ModInfo;
+	local int BonusShred;
+
+	if (ValidateAttack(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState) != 'AA_Success')
+		return 0;
+
+	foreach ShredModifiers(ModInfo)
+	{
+		if ((ModInfo.ModType == eHit_Success && class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult)) ||
+			ModInfo.ModType == AppliedData.AbilityResultContext.HitResult)
+		{
+			BonusShred += ModInfo.Value;
+		}
+	}
+
+	return BonusShred;
+}
+
+function int GetExtraArmorPiercing(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData)
+{
+	local ShotModifierInfo ModInfo;
+	local int BonusArmorPiercing;
+
+	if (ValidateAttack(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState) != 'AA_Success')
+		return 0;
+
+	foreach ArmorPiercingModifiers(ModInfo)
+	{
+		if ((ModInfo.ModType == eHit_Success && class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult)) ||
+			ModInfo.ModType == AppliedData.AbilityResultContext.HitResult)
+		{
+			BonusArmorPiercing += ModInfo.Value;
+		}
+	}
+
+	return BonusArmorPiercing;
 }
 
 function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
