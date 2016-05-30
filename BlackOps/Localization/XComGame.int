@@ -340,8 +340,8 @@ LocPromotionPopupText="<Bullet/> Bullseye is good for weakening tough enemies wh
 
 [ShadowOps_FirstStrike X2AbilityTemplate]
 LocFriendlyName="First Strike"
-LocLongDescription="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
-LocHelpText="While concealed, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocLongDescription="While concealed or flanking your target, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocHelpText="While concealed or flanking your target, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
 LocFlyOverText="First Strike"
 LocPromotionPopupText="<Bullet/> First Strike can provide a decisive advantage in an ambush by taking out a tough enemy in one shot.<br/><Bullet/> The soldier with First Strike must initiate the ambush to get the bonus. It doesn't affect concealed overwatch."
 

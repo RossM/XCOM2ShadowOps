@@ -157,7 +157,7 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_HeightAdvantage.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Condition_IsConcealed.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Condition_FirstStrike.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_NotVisibleToEnemies.uc">

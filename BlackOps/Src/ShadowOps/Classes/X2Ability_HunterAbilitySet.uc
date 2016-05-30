@@ -893,14 +893,14 @@ static function RattledVisualization(XComGameState VisualizeGameState, out Visua
 static function X2AbilityTemplate FirstStrike()
 {
 	local XMBEffect_ConditionalBonus Effect;
-	local X2Condition_IsConcealed Condition;
+	local X2Condition_FirstStrike Condition;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.FirstStrikeDamageBonus);
 	Effect.bIgnoreSquadSightPenalty = true;
 
-	Condition = new class'X2Condition_IsConcealed';
-	Effect.SelfConditions.AddItem(Condition);
+	Condition = new class'X2Condition_FirstStrike';
+	Effect.OtherConditions.AddItem(Condition);
 
 	return Passive('ShadowOps_FirstStrike', "img:///UILibrary_BlackOps.UIPerk_firststrike", true, Effect);
 }
