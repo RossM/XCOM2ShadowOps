@@ -12,6 +12,7 @@ var config int BullseyeOffensePenalty, BullseyeDefensePenalty, BullseyeWillPenal
 var config int FirstStrikeDamageBonus;
 var config int DamnGoodGroundOffenseBonus, DamnGoodGroundDefenseBonus;
 var config float TrackingRadius;
+var config array<ExtShotModifierInfo> VitalPointModifiers;
 
 var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
 
@@ -303,11 +304,12 @@ function HunterMark_BuildVisualization(XComGameState VisualizeGameState, out arr
 
 static function X2AbilityTemplate VitalPoint()
 {
-	local X2Effect_VitalPoint VitalPointEffect;
+	local XMBEffect_ConditionalBonus Effect;
 
-	VitalPointEffect = new class'X2Effect_VitalPoint';
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.Modifiers = default.VitalPointModifiers;
 
-	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_BlackOps.UIPerk_vitalpoint", false, VitalPointEffect);
+	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_BlackOps.UIPerk_vitalpoint", false, Effect);
 }
 
 static function X2AbilityTemplate Precision()

@@ -174,7 +174,6 @@ event ExpandHandler(string InString, out string OutString)
 			break;
 
 		case 'VitalPointDamage':
-			OutString = string(class'X2Effect_VitalPoint'.default.ConventionalBonusDamage);
 			EffectState = XComGameState_Effect(ParseObj);
 			AbilityState = XComGameState_Ability(ParseObj);
 			if (EffectState != none)
@@ -185,21 +184,10 @@ event ExpandHandler(string InString, out string OutString)
 			{
 				ItemState = AbilityState.GetSourceWeapon();
 			}
-			if (ItemState != none)
-			{
-				WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
-				if (WeaponTemplate != none)
-				{
-					if (WeaponTemplate.WeaponTech == 'magnetic')
-						OutString = string(class'X2Effect_VitalPoint'.default.MagneticBonusDamage);
-					else if (WeaponTemplate.WeaponTech == 'beam')
-						OutString = string(class'X2Effect_VitalPoint'.default.BeamBonusDamage);
-				}
-			}
+			OutString = string(int(class'XMBEffect_ConditionalBonus'.static.GetWeaponValue('Damage', ItemState, class'X2Ability_HunterAbilitySet'.default.VitalPointModifiers)));
 			break;
 
 		case 'VitalPointShred':
-			OutString = string(class'X2Effect_VitalPoint'.default.ConventionalBonusShred);
 			EffectState = XComGameState_Effect(ParseObj);
 			AbilityState = XComGameState_Ability(ParseObj);
 			if (EffectState != none)
@@ -210,17 +198,7 @@ event ExpandHandler(string InString, out string OutString)
 			{
 				ItemState = AbilityState.GetSourceWeapon();
 			}
-			if (ItemState != none)
-			{
-				WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
-				if (WeaponTemplate != none)
-				{
-					if (WeaponTemplate.WeaponTech == 'magnetic')
-						OutString = string(class'X2Effect_VitalPoint'.default.MagneticBonusShred);
-					else if (WeaponTemplate.WeaponTech == 'beam')
-						OutString = string(class'X2Effect_VitalPoint'.default.BeamBonusShred);
-				}
-			}
+			OutString = string(int(class'XMBEffect_ConditionalBonus'.static.GetWeaponValue('Shred', ItemState, class'X2Ability_HunterAbilitySet'.default.VitalPointModifiers)));
 			break;
 
 		default:

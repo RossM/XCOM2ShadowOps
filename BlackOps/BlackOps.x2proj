@@ -275,9 +275,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_Universal_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_VitalPoint.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_ZeroIn.uc">
       <SubType>Content</SubType>
     </Content>

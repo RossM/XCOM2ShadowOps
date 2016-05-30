@@ -1,10 +1,10 @@
 class XMBEffect_ConditionalBonus extends XMBEffect_Persistent;
 
-
 struct ExtShotModifierInfo
 {
 	var ShotModifierInfo ModInfo;
-	var name Tech;
+	var name WeaponTech;
+	var name Type;
 };
 
 
@@ -12,11 +12,7 @@ struct ExtShotModifierInfo
 // Bonuses //
 /////////////
 
-var protectedwrite array<ExtShotModifierInfo> ToHitModifiers;
-var protectedwrite array<ExtShotModifierInfo> ToHitAsTargetModifiers;
-var protectedwrite array<ExtShotModifierInfo> DamageModifiers;
-var protectedwrite array<ExtShotModifierInfo> ShredModifiers;
-var protectedwrite array<ExtShotModifierInfo> ArmorPiercingModifiers;
+var array<ExtShotModifierInfo> Modifiers;
 
 var bool bIgnoreSquadsightPenalty;
 
@@ -42,8 +38,9 @@ function AddToHitModifier(int Value, optional EAbilityHitResult ModType = eHit_S
 	ExtModInfo.ModInfo.ModType = ModType;
 	ExtModInfo.ModInfo.Reason = FriendlyName;
 	ExtModInfo.ModInfo.Value = Value;
-	ExtModInfo.Tech = WeaponTech;
-	ToHitModifiers.AddItem(ExtModInfo);
+	ExtModInfo.WeaponTech = WeaponTech;
+	ExtModInfo.Type = 'ToHit';
+	Modifiers.AddItem(ExtModInfo);
 }	
 
 function AddToHitAsTargetModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
@@ -53,8 +50,9 @@ function AddToHitAsTargetModifier(int Value, optional EAbilityHitResult ModType 
 	ExtModInfo.ModInfo.ModType = ModType;
 	ExtModInfo.ModInfo.Reason = FriendlyName;
 	ExtModInfo.ModInfo.Value = Value;
-	ExtModInfo.Tech = WeaponTech;
-	ToHitAsTargetModifiers.AddItem(ExtModInfo);
+	ExtModInfo.WeaponTech = WeaponTech;
+	ExtModInfo.Type = 'ToHitAsTarget';
+	Modifiers.AddItem(ExtModInfo);
 }	
 
 function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
@@ -64,8 +62,9 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 	ExtModInfo.ModInfo.ModType = ModType;
 	ExtModInfo.ModInfo.Reason = FriendlyName;
 	ExtModInfo.ModInfo.Value = Value;
-	ExtModInfo.Tech = WeaponTech;
-	DamageModifiers.AddItem(ExtModInfo);
+	ExtModInfo.WeaponTech = WeaponTech;
+	ExtModInfo.Type = 'Damage';
+	Modifiers.AddItem(ExtModInfo);
 }	
 
 function AddShredModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
@@ -75,8 +74,9 @@ function AddShredModifier(int Value, optional EAbilityHitResult ModType = eHit_S
 	ExtModInfo.ModInfo.ModType = ModType;
 	ExtModInfo.ModInfo.Reason = FriendlyName;
 	ExtModInfo.ModInfo.Value = Value;
-	ExtModInfo.Tech = WeaponTech;
-	ShredModifiers.AddItem(ExtModInfo);
+	ExtModInfo.WeaponTech = WeaponTech;
+	ExtModInfo.Type = 'Shred';
+	Modifiers.AddItem(ExtModInfo);
 }	
 
 function AddArmorPiercingModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
@@ -86,8 +86,9 @@ function AddArmorPiercingModifier(int Value, optional EAbilityHitResult ModType 
 	ExtModInfo.ModInfo.ModType = ModType;
 	ExtModInfo.ModInfo.Reason = FriendlyName;
 	ExtModInfo.ModInfo.Value = Value;
-	ExtModInfo.Tech = WeaponTech;
-	ArmorPiercingModifiers.AddItem(ExtModInfo);
+	ExtModInfo.WeaponTech = WeaponTech;
+	ExtModInfo.Type = 'ArmorPiercing';
+	Modifiers.AddItem(ExtModInfo);
 }	
 
 
@@ -155,19 +156,17 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 	return 'AA_Success';
 }
 
-function name ValidateWeapon(ExtShotModifierInfo ExtModInfo, XComGameState_Ability AbilityState)
+static function name ValidateWeapon(ExtShotModifierInfo ExtModInfo, XComGameState_Item SourceWeapon)
 {
-	local XComGameState_Item SourceWeapon;
 	local X2WeaponTemplate WeaponTemplate;
 
-	if (ExtModInfo.Tech != '')
+	if (ExtModInfo.WeaponTech != '')
 	{
-		SourceWeapon = AbilityState.GetSourceWeapon();
 		if (SourceWeapon == none)
 			return 'AA_WeaponIncompatible';
 
 		WeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
-		if (WeaponTemplate == none || WeaponTemplate.WeaponTech != ExtModInfo.Tech)
+		if (WeaponTemplate == none || WeaponTemplate.WeaponTech != ExtModInfo.WeaponTech)
 			return 'AA_WeaponIncompatible';
 	}
 
@@ -182,9 +181,12 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 	if (ValidateAttack(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState) != 'AA_Success')
 		return 0;
 
-	foreach DamageModifiers(ExtModInfo)
+	foreach Modifiers(ExtModInfo)
 	{
-		if (ValidateWeapon(ExtModInfo, AbilityState) != 'AA_Success')
+		if (ExtModInfo.Type != 'Damage')
+			continue;
+
+		if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
 			continue;
 
 		if ((ExtModInfo.ModInfo.ModType == eHit_Success && class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult)) ||
@@ -205,9 +207,12 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 	if (ValidateAttack(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState) != 'AA_Success')
 		return 0;
 
-	foreach ShredModifiers(ExtModInfo)
+	foreach Modifiers(ExtModInfo)
 	{
-		if (ValidateWeapon(ExtModInfo, AbilityState) != 'AA_Success')
+		if (ExtModInfo.Type != 'Shred')
+			continue;
+
+		if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
 			continue;
 
 		if ((ExtModInfo.ModInfo.ModType == eHit_Success && class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult)) ||
@@ -228,9 +233,12 @@ function int GetExtraArmorPiercing(XComGameState_Effect EffectState, XComGameSta
 	if (ValidateAttack(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState) != 'AA_Success')
 		return 0;
 
-	foreach ArmorPiercingModifiers(ExtModInfo)
+	foreach Modifiers(ExtModInfo)
 	{
-		if (ValidateWeapon(ExtModInfo, AbilityState) != 'AA_Success')
+		if (ExtModInfo.Type != 'ArmorPiercing')
+			continue;
+
+		if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
 			continue;
 
 		if ((ExtModInfo.ModInfo.ModType == eHit_Success && class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult)) ||
@@ -250,9 +258,12 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	if (ValidateAttack(EffectState, Attacker, Target, AbilityState) != 'AA_Success')
 		return;
 	
-	foreach ToHitModifiers(ExtModInfo)
+	foreach Modifiers(ExtModInfo)
 	{
-		if (ValidateWeapon(ExtModInfo, AbilityState) != 'AA_Success')
+		if (ExtModInfo.Type != 'ToHit')
+			continue;
+
+		if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
 			continue;
 
 		ExtModInfo.ModInfo.Reason = FriendlyName;
@@ -267,9 +278,12 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 	if (ValidateAttack(EffectState, Attacker, Target, AbilityState, true) != 'AA_Success')
 		return;
 	
-	foreach ToHitAsTargetModifiers(ExtModInfo)
+	foreach Modifiers(ExtModInfo)
 	{
-		if (ValidateWeapon(ExtModInfo, AbilityState) != 'AA_Success')
+		if (ExtModInfo.Type != 'ToHitAsTarget')
+			continue;
+
+		if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
 			continue;
 
 		ExtModInfo.ModInfo.Reason = FriendlyName;
@@ -286,4 +300,29 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 		return false;
 
 	return true;
+}
+
+
+/////////////
+// Utility //
+/////////////
+
+static function float GetWeaponValue(name Type, XComGameState_Item ItemState, out array<ExtShotModifierInfo> TestModifiers)
+{
+	local float Result;
+
+	local ExtShotModifierInfo ExtModInfo;
+
+	foreach TestModifiers(ExtModInfo)
+	{
+		if (ExtModInfo.Type != Type)
+			continue;
+
+		if (ValidateWeapon(ExtModInfo, ItemSTate) != 'AA_Success')
+			continue;
+
+		Result += ExtModInfo.ModInfo.Value;
+	}
+
+	return Result;
 }
