@@ -2,6 +2,15 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.7.0
+  * Smoke and Mirrors now provides a bonus smoke grenade use (even if there is no smoke grenade equipped).
+  * First Strike applies when flanking or concealed.
+  * Packmaster only applies to standard utility slots.
+  * Depleted Elerium Rounds shred reduced to 2.
+  * Vanish has 2 round cooldown.
+Bugfixes
+  * GTS unlocks now cost 200 on Legendary difficulty.
+
 Beta version v0.6.0
 General changes
   * More of the item changes made by the mod can be configured in XComGameCore.ini.
