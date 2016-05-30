@@ -16,7 +16,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(DeepPockets());
 	Templates.AddItem(DenseSmoke());
-	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_BlackOps.UIPerk_smokeandmirrors", false));
+	Templates.AddItem(SmokeAndMirrors());
 	Templates.AddItem(Breach());
 	Templates.AddItem(BreachBonusRadius());
 	Templates.AddItem(Fastball());
@@ -35,6 +35,17 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(MovingTarget());
 
 	return Templates;
+}
+
+static function X2AbilityTemplate SmokeAndMirrors()
+{
+	local X2Effect_AddTempItem Effect;
+
+	Effect = new class'X2Effect_AddTempItem';
+	Effect.DataName = 'SmokeGrenade';
+	Effect.Quantity = 1;
+
+	return Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_BlackOps.UIPerk_smokeandmirrors", false, Effect);
 }
 
 static function X2AbilityTemplate DeepPockets()
