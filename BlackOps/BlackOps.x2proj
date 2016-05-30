@@ -46,6 +46,9 @@
     <Content Include="Config\XComModOptions.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\XComStrategyTuning.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Content\FX_ShadowOps_Dragoon.upk">
       <SubType>Content</SubType>
     </Content>

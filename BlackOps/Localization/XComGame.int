@@ -501,6 +501,12 @@ LocLongDescription="Your Hit chance is increased by 10% and Crit chance is incre
 LocHelpText="Your Hit chance is increased by 10% and Crit chance is increased by 20%. These bonuses are doubled when you are flanked or out of cover."
 LocFlyOverText="Devil's Luck"
 
+[ShadowOps_Lightfoot X2AbilityTemplate]
+LocFriendlyName="Lightfoot"
+LocLongDescription="You have +4 Mobility."
+LocHelpText="You have +4 Mobility."
+LocFlyOverText="Lightfoot"
+
 ; === Other abilities ===
 
 [ShadowOps_SwapAmmo X2AbilityTemplate]
