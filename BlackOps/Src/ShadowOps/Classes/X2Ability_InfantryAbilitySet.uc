@@ -13,8 +13,7 @@ var config int FortressDefenseModifier;
 var config name FreeAmmoForPocket;
 
 var config int FullAutoActions;
-var config int FullAutoCooldown, ZoneOfControlCooldown, FlushCooldown, BulletSweepCooldown;
-var config int BulletSweepAmmo;
+var config int FullAutoCooldown, ZoneOfControlCooldown, FlushCooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -33,7 +32,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZoneOfControlShot());
 	Templates.AddItem(ZoneOfControlPistolShot());
 	Templates.AddItem(ZeroIn());
-	Templates.AddItem(BulletSweep()); // Unused
 	Templates.AddItem(Flush());
 	Templates.AddItem(FlushShot());
 	Templates.AddItem(RifleSuppression());
@@ -831,82 +829,6 @@ static function X2AbilityTemplate FlushShot()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 
 	return Template;
-}
-
-static function X2AbilityTemplate BulletSweep()
-{
-	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
-	local X2AbilityTarget_Cursor            CursorTarget;
-	local X2AbilityMultiTarget_Cone         ConeMultiTarget;
-	local X2Condition_UnitProperty          UnitPropertyCondition;
-	local X2AbilityToHitCalc_StandardAim    StandardAim;
-	local X2AbilityCooldown                 Cooldown;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_BulletSweep');
-	
-	AmmoCost = new class'X2AbilityCost_Ammo';	
-	AmmoCost.iAmmo = default.BulletSweepAmmo;
-	Template.AbilityCosts.AddItem(AmmoCost);
-	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
-
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.BulletSweepCooldown;
-	Template.AbilityCooldown = Cooldown;
-	
-	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
-	StandardAim.bMultiTargetOnly = true;
-	Template.AbilityToHitCalc = StandardAim;
-	
-	Template.AddMultiTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
-	Template.bOverrideAim = true;
-
-	CursorTarget = new class'X2AbilityTarget_Cursor';
-	Template.AbilityTargetStyle = CursorTarget;	
-
-	ConeMultiTarget = new class'X2AbilityMultiTarget_Cone';
-	ConeMultiTarget.bExcludeSelfAsTargetIfWithinRadius = true;
-	ConeMultiTarget.ConeEndDiameter = class'X2Ability_GrenadierAbilitySet'.default.SATURATION_TILE_WIDTH * class'XComWorldData'.const.WORLD_StepSize;
-	ConeMultiTarget.bUseWeaponRangeForLength = true;
-	ConeMultiTarget.fTargetRadius = 99;     //  large number to handle weapon range - targets will get filtered according to cone constraints
-	ConeMultiTarget.bIgnoreBlockingCover = false;
-	Template.AbilityMultiTargetStyle = ConeMultiTarget;
-
-	UnitPropertyCondition = new class'X2Condition_UnitProperty';
-	UnitPropertyCondition.ExcludeDead = true;
-	Template.AbilityShooterConditions.AddItem(UnitPropertyCondition);
-
-	UnitPropertyCondition = new class'X2Condition_UnitProperty';
-	UnitPropertyCondition.ExcludeDead = true;
-	UnitPropertyCondition.ExcludeFriendlyToSource = true;
-	Template.AbilityTargetConditions.AddItem(UnitPropertyCondition);
-
-	Template.AddShooterEffectExclusions();
-
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-	
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_saturationfire";
-	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
-
-	Template.ActionFireClass = class'X2Action_Fire_SaturationFire';
-
-	Template.TargetingMethod = class'X2TargetingMethod_Cone';
-
-	Template.ActivationSpeech = 'SaturationFire';
-	Template.CinescriptCameraType = "Grenadier_SaturationFire";
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-
-	return Template;	
 }
 
 static function X2AbilityTemplate RifleSuppression()
