@@ -12,6 +12,7 @@ var config float ECMDetectionModifier;
 var config int TacticalSenseDodgeBonus, TacticalSenseMaxDodgeBonus;
 var config int RestorationHealAmount, RestorationMaxHealAmount, RestorationIncreasedHealAmount, RestorationHealingBonusMultiplier;
 var config name RestorationIncreasedHealProject;
+var config int VanishCooldown;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -692,6 +693,7 @@ static function X2AbilityTemplate VanishTrigger()
 	local X2Effect_RangerStealth                StealthEffect;
 	local X2Condition_NotVisibleToEnemies		VisibilityCondition;
 	local X2AbilityTrigger_EventListener		EventListener;
+	local X2AbilityCooldown						Cooldown;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_VanishTrigger');
 
@@ -702,6 +704,10 @@ static function X2AbilityTemplate VanishTrigger()
 
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SelfTarget;
+
+	Cooldown = new class'X2AbilityCooldown';
+	Cooldown.iNumTurns = default.VanishCooldown;
+	Template.AbilityCooldown = Cooldown;
 
 	EventListener = new class'X2AbilityTrigger_EventListener';
 	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;

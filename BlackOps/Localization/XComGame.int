@@ -203,7 +203,7 @@ LocFriendlyName="Vanish"
 LocLongDescription="If you begin your turn with no enemies able to see you, you gain concealment."
 LocHelpText="If you begin your turn with no enemies able to see you, you gain concealment."
 LocFlyOverText="Vanish"
-LocPromotionPopupText="<Bullet/> Units with Vanish make excellent scouts. If they get spotted, just retreat and regain concealment.<br/><Bullet/> There's no limit to the number of times a unit can regain concealment using Vanish.<br/>"
+LocPromotionPopupText="<Bullet/> Units with Vanish make excellent scouts. If they get spotted, just retreat and regain concealment.<br/><Bullet/> There's no limit to the number of times a unit can regain concealment using Vanish.<br/><Bullet/> Vanish has a 2 turn cooldown. <br/>"
 
 [ShadowOps_VanishTrigger X2AbilityTemplate]
 LocFriendlyName="Vanish"
