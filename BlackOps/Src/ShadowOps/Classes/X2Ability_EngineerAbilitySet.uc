@@ -566,7 +566,6 @@ static function X2AbilityTemplate Packmaster()
 
 	ItemChargesEffect = new class'XMBEffect_BonusItemCharges';
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_Utility);
-	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_GrenadePocket);
 	Template.AddTargetEffect(ItemChargesEffect);
 
 	PersistentEffect = new class'X2Effect_Persistent';

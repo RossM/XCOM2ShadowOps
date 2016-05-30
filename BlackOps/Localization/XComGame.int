@@ -396,10 +396,9 @@ LocFlyOverText="Fracture"
 
 [ShadowOps_Packmaster X2AbilityTemplate]
 LocFriendlyName="Packmaster"
-LocLongDescription="All your utility items, including grenades, gain a bonus use."
-LocHelpText="All your utility items, including grenades, gain a bonus use."
+LocLongDescription="All your limited-use items in utility slots gain a bonus use. This does not include grenades in your grenade-only slot."
+LocHelpText="All your limited-use items in utility slots gain a bonus use. This does not include grenades in your grenade-only slot."
 LocFlyOverText="Packmaster"
-LocPromotionPopupText="<Bullet/> Utility items include grenades in your grenade-only slot, but don't include heavy weapons. <br/>"
 
 [ShadowOps_Entrench X2AbilityTemplate]
 LocFriendlyName="Entrench"
