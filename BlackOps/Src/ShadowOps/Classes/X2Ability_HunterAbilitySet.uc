@@ -308,6 +308,7 @@ static function X2AbilityTemplate VitalPoint()
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.Modifiers = default.VitalPointModifiers;
+	Effect.bRequireAbilityWeapon = true;
 
 	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_BlackOps.UIPerk_vitalpoint", false, Effect);
 }
