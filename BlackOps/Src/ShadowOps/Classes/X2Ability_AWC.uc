@@ -1,4 +1,4 @@
-class X2Ability_AWC extends X2Ability
+class X2Ability_AWC extends XMBAbility
 	config(GameData_SoldierSkills);
 
 var config int HipFireHitModifier;
@@ -103,34 +103,13 @@ static function X2AbilityTemplate HipFire()
 
 static function X2AbilityTemplate Anatomist()
 {
-	local X2AbilityTemplate						Template;
 	local X2Effect_Anatomist                    Effect;
-
-	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Anatomist');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
 	Effect = new class'X2Effect_Anatomist';
 	Effect.CritModifier = default.AnatomistCritModifier;
 	Effect.MaxCritModifier = default.AnatomistMaxCritModifier;
-	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_Anatomist', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate Scrounger()
@@ -177,53 +156,19 @@ static function X2AbilityTemplate ScroungerTrigger()
 
 static function X2AbilityTemplate Weaponmaster()
 {
-	local X2AbilityTemplate						Template;
 	local XMBEffect_ConditionalBonus              Effect;
-
-	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Weaponmaster');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.WeaponmasterBonusDamage);
 	Effect.bRequireAbilityWeapon = true;
-	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_Weaponmaster', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate AbsolutelyCritical()
 {
-	local X2AbilityTemplate						Template;
 	local XMBEffect_ConditionalBonus             Effect;
 	local X2Condition_Cover						Condition;
-
-	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AbsolutelyCritical');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
 	Condition = new class'X2Condition_Cover';
 	Condition.AllowedCoverTypes.AddItem(CT_NONE);
@@ -231,77 +176,27 @@ static function X2AbilityTemplate AbsolutelyCritical()
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.OtherConditions.AddItem(Condition);
 	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
-	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate HitAndRun()
 {
-	local X2AbilityTemplate						Template;
 	local X2Effect_HitAndRun                    Effect;
 
-	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HitAndRun');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
-
 	Effect = new class'X2Effect_HitAndRun';
-	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate DevilsLuck()
 {
-	local X2AbilityTemplate						Template;
 	local X2Effect_DevilsLuck                   Effect;
-
-	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_DevilsLuck');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
 	Effect = new class'X2Effect_DevilsLuck';
 	Effect.HitChanceMultiplier = default.DevilsLuckHitChanceMultiplier;
 	Effect.CritChanceMultiplier = default.DevilsLuckCritChanceMultiplier;
-	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
+	return Passive('ShadowOps_DevilsLuck', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
