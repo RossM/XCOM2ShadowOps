@@ -507,6 +507,12 @@ LocLongDescription="You have +4 Mobility."
 LocHelpText="You have +4 Mobility."
 LocFlyOverText="Lightfoot"
 
+[ShadowOps_Pyromaniac X2AbilityTemplate]
+LocFriendlyName="Pyromaniac"
+LocLongDescription="Your fire attacks deal +2 damage, and your burn effects deal +2 damage per turn."
+LocHelpText="Your fire attacks deal +2 damage, and your burn effects deal +2 damage per turn."
+LocFlyOverText="Pyromaniac"
+
 ; === Other abilities ===
 
 [ShadowOps_SwapAmmo X2AbilityTemplate]

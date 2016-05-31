@@ -8,6 +8,7 @@ var config int WeaponmasterBonusDamage;
 var config int AbsolutelyCriticalCritBonus;
 var config float DevilsLuckHitChanceMultiplier, DevilsLuckCritChanceMultiplier;
 var config int LightfoodMobilityBonus;
+var config float PyromaniacDamageBonus;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -21,6 +22,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(AbsolutelyCritical());
 	Templates.AddItem(HitAndRun());
 	Templates.AddItem(DevilsLuck());
+	Templates.AddItem(Lightfoot());
+	Templates.AddItem(Pyromaniac());
 
 	return Templates;
 }
@@ -172,4 +175,15 @@ static function X2AbilityTemplate Lightfoot()
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.LightfoodMobilityBonus);
 
 	return Template;
+}
+
+static function X2AbilityTemplate Pyromaniac()
+{
+	local X2Effect_Pyromaniac Effect;
+
+	Effect = new class'X2Effect_Pyromaniac';
+	Effect.RequiredDamageTypes.AddItem('fire');
+	Effect.DamageBonus = default.PyromaniacDamageBonus;
+
+	return Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
