@@ -135,9 +135,9 @@ static function X2AbilityTemplate Weaponmaster()
 static function X2AbilityTemplate AbsolutelyCritical()
 {
 	local XMBEffect_ConditionalBonus             Effect;
-	local X2Condition_Cover						Condition;
+	local XMBCondition_CoverType						Condition;
 
-	Condition = new class'X2Condition_Cover';
+	Condition = new class'XMBCondition_CoverType';
 	Condition.AllowedCoverTypes.AddItem(CT_NONE);
 
 	Effect = new class'XMBEffect_ConditionalBonus';

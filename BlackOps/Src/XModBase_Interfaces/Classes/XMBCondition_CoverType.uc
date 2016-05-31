@@ -1,4 +1,4 @@
-class X2Condition_Cover extends X2Condition;
+class XMBCondition_CoverType extends X2Condition;
 
 var array<ECoverType> AllowedCoverTypes;
 

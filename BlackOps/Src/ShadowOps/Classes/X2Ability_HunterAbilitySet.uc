@@ -316,9 +316,9 @@ static function X2AbilityTemplate VitalPoint()
 static function X2AbilityTemplate Precision()
 {
 	local XMBEffect_ConditionalBonus             PrecisionEffect;
-	local X2Condition_Cover						Condition;
+	local XMBCondition_CoverType						Condition;
 
-	Condition = new class'X2Condition_Cover';
+	Condition = new class'XMBCondition_CoverType';
 	Condition.AllowedCoverTypes.AddItem(CT_Standing);
 
 	PrecisionEffect = new class'XMBEffect_ConditionalBonus';
@@ -331,9 +331,9 @@ static function X2AbilityTemplate Precision()
 static function X2AbilityTemplate LowProfile()
 {
 	local XMBEffect_ConditionalBonus             LowProfileEffect;
-	local X2Condition_Cover						Condition;
+	local XMBCondition_CoverType						Condition;
 
-	Condition = new class'X2Condition_Cover';
+	Condition = new class'XMBCondition_CoverType';
 	Condition.AllowedCoverTypes.AddItem(CT_MidLevel);
 
 	LowProfileEffect = new class'XMBEffect_ConditionalBonus';
