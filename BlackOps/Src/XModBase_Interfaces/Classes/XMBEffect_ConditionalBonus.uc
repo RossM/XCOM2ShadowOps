@@ -1,3 +1,8 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_ConditionalBonus.uc
+//  AUTHOR:  xylthixlm
+//---------------------------------------------------------------------------------------
+
 class XMBEffect_ConditionalBonus extends XMBEffect_Persistent;
 
 struct ExtShotModifierInfo
@@ -12,19 +17,19 @@ struct ExtShotModifierInfo
 // Bonuses //
 /////////////
 
-var array<ExtShotModifierInfo> Modifiers;
+var array<ExtShotModifierInfo> Modifiers;	// Modifiers to attacks made by (or at) the unit with the effect
 
-var bool bIgnoreSquadsightPenalty;
+var bool bIgnoreSquadsightPenalty;			// Negates squadsight penalties. Requires XMBEffect_Persistent.
 
 
 ////////////////
 // Conditions //
 ////////////////
 
-var bool bRequireAbilityWeapon;
+var bool bRequireAbilityWeapon;				// Require that the weapon used matches the weapon associated with the ability
 
-var array<X2Condition> SelfConditions;
-var array<X2Condition> OtherConditions;
+var array<X2Condition> SelfConditions;		// Conditions applied to the unit with the effect (usually the shooter)
+var array<X2Condition> OtherConditions;		// Conditions applied to the other unit involved (usually the target)
 
 
 /////////////
