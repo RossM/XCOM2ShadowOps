@@ -175,9 +175,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
-    <Content Include="Src\ShadowOps\Classes\X2Effect_AddTempItem.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_AdrenalineSurge.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2238,6 +2235,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_Persistent.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddGrenade.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddReservedActionPoints.uc">

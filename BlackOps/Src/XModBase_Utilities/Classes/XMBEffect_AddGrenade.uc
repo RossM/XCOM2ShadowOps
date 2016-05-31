@@ -1,4 +1,4 @@
-class X2Effect_AddTempItem extends X2Effect_Persistent;
+class XMBEffect_AddGrenade extends X2Effect_Persistent;
 
 var name DataName;
 var int Quantity;

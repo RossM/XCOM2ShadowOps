@@ -39,9 +39,9 @@ static function array<X2DataTemplate> CreateTemplates()
 
 static function X2AbilityTemplate SmokeAndMirrors()
 {
-	local X2Effect_AddTempItem Effect;
+	local XMBEffect_AddGrenade Effect;
 
-	Effect = new class'X2Effect_AddTempItem';
+	Effect = new class'XMBEffect_AddGrenade';
 	Effect.DataName = 'SmokeGrenade';
 	Effect.Quantity = 1;
 
