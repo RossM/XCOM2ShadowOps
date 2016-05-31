@@ -1,4 +1,4 @@
-class X2Effect_Rage extends X2Effect_RunBehaviorTree;
+class XMGEffect_AIControl extends X2Effect_RunBehaviorTree;
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
