@@ -25,6 +25,7 @@ event ExpandHandler(string InString, out string OutString)
 
 	EffectState = XComGameState_Effect(ParseObj);
 	AbilityState = XComGameState_Ability(ParseObj);
+	AbilityTemplate = X2AbilityTemplate(ParseObj);
 		
 	if (EffectState != none)
 	{
@@ -33,6 +34,9 @@ event ExpandHandler(string InString, out string OutString)
 	if (AbilityState != none)
 	{
 		AbilityTemplate = AbilityState.GetMyTemplate();
+	}
+	if (AbilityTemplate != none)
+	{
 		foreach AbilityTemplate.AbilityTargetEffects(EffectTemplate)
 		{
 			EffectInterface = XMBEffectInterface(EffectTemplate);
@@ -205,34 +209,6 @@ event ExpandHandler(string InString, out string OutString)
 						OutString = string(class'X2Ability_DragoonAbilitySet'.default.BeamShieldsUp);
 				}
 			}
-			break;
-
-		case 'VitalPointDamage':
-			EffectState = XComGameState_Effect(ParseObj);
-			AbilityState = XComGameState_Ability(ParseObj);
-			if (EffectState != none)
-			{
-				ItemState = XComGameState_Item(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.ItemStateObjectRef.ObjectID));				
-			}
-			else if (AbilityState != none)
-			{
-				ItemState = AbilityState.GetSourceWeapon();
-			}
-			OutString = string(int(class'XMBEffect_ConditionalBonus'.static.GetWeaponValue('Damage', ItemState, class'X2Ability_HunterAbilitySet'.default.VitalPointModifiers)));
-			break;
-
-		case 'VitalPointShred':
-			EffectState = XComGameState_Effect(ParseObj);
-			AbilityState = XComGameState_Ability(ParseObj);
-			if (EffectState != none)
-			{
-				ItemState = XComGameState_Item(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.ItemStateObjectRef.ObjectID));				
-			}
-			else if (AbilityState != none)
-			{
-				ItemState = AbilityState.GetSourceWeapon();
-			}
-			OutString = string(int(class'XMBEffect_ConditionalBonus'.static.GetWeaponValue('Shred', ItemState, class'X2Ability_HunterAbilitySet'.default.VitalPointModifiers)));
 			break;
 
 		default:

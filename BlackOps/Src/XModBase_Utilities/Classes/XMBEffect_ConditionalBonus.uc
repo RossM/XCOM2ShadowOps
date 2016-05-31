@@ -312,47 +312,39 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 // Utility //
 /////////////
 
-static function float GetWeaponValue(name Type, XComGameState_Item ItemState, out array<ExtShotModifierInfo> TestModifiers)
-{
-	local float Result;
-
-	local ExtShotModifierInfo ExtModInfo;
-
-	foreach TestModifiers(ExtModInfo)
-	{
-		if (ExtModInfo.Type != Type)
-			continue;
-
-		if (ValidateWeapon(ExtModInfo, ItemState) != 'AA_Success')
-			continue;
-
-		Result += ExtModInfo.ModInfo.Value;
-	}
-
-	return Result;
-}
-
 function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
 {
-	local float Result;
+	local float Result, ConventionalResult;
 	local XComGameState_Item ItemState;
 	local ExtShotModifierInfo ExtModInfo;
+	local int ValidModifiers;
 
 	if (Modifiers.Find('Type', Tag) == INDEX_NONE)
 		return false;
 
-	ItemState = AbilityState.GetSourceWeapon();
+	if (AbilityState != none)
+	{
+		ItemState = AbilityState.GetSourceWeapon();
+	}
 
 	foreach Modifiers(ExtModInfo)
 	{
 		if (ExtModInfo.Type != Tag)
 			continue;
 
+		if (ExtModInfo.WeaponTech == 'conventional')
+			ConventionalResult += ExtModInfo.ModInfo.Value;
+
 		if (ValidateWeapon(ExtModInfo, ItemState) != 'AA_Success')
 			continue;
 
+		ValidModifiers++;
+
 		Result += ExtModInfo.ModInfo.Value;
 	}
+
+	if (ValidModifiers == 0)
+		Result = ConventionalResult;
 
 	TagValue = string(int(Result));
 	return true;
