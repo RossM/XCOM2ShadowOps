@@ -183,9 +183,9 @@ static function X2AbilityTemplate Lightfoot()
 
 static function X2AbilityTemplate Pyromaniac()
 {
-	local X2Effect_Pyromaniac Effect;
+	local XMBEffect_BonusDamageByDamageType Effect;
 
-	Effect = new class'X2Effect_Pyromaniac';
+	Effect = new class'XMBEffect_BonusDamageByDamageType';
 	Effect.RequiredDamageTypes.AddItem('fire');
 	Effect.DamageBonus = default.PyromaniacDamageBonus;
 
@@ -194,11 +194,11 @@ static function X2AbilityTemplate Pyromaniac()
 
 static function X2AbilityTemplate SnakeBlood()
 {
-	local X2Effect_Pyromaniac Effect;
+	local XMBEffect_BonusDamageByDamageType Effect;
 	local X2Effect_DamageImmunity ImmunityEffect;
 	local X2AbilityTemplate Template;
 
-	Effect = new class'X2Effect_Pyromaniac';
+	Effect = new class'XMBEffect_BonusDamageByDamageType';
 	Effect.RequiredDamageTypes.AddItem('poison');
 	Effect.DamageBonus = default.SnakeBloodDamageBonus;
 

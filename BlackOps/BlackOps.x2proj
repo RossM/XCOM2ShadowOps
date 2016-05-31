@@ -2241,7 +2241,7 @@
     <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_Pyromaniac.uc">
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusDamageByDamageType.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBAbility.uc">
