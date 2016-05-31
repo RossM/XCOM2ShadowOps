@@ -12,6 +12,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 
 	ListenerObj = self;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', RageListener, ELD_OnVisualizationBlockCompleted, , UnitState);	
+	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', RageListener, ELD_OnVisualizationBlockCompleted, , UnitState);	
 }
 
 function EventListenerReturn RageListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)

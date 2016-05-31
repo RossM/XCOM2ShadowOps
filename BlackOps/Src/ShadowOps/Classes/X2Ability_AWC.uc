@@ -10,7 +10,7 @@ var config float DevilsLuckHitChanceMultiplier, DevilsLuckCritChanceMultiplier;
 var config int LightfoodMobilityBonus;
 var config int PyromaniacDamageBonus;
 var config int SnakeBloodDamageBonus;
-var config int RageDuration;
+var config int RageDuration, RageCharges;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -220,6 +220,8 @@ static function X2AbilityTemplate Rage()
 	local X2Effect_Serial				SerialEffect;
 	local X2Effect_RunBehaviorTree		BehaviorTreeEffect;
 	local X2AbilityTemplateManager		AbilityTemplateManager;
+	local X2AbilityCharges              Charges;
+	local X2AbilityCost_Charges         ChargeCost;
 
 	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
@@ -233,6 +235,14 @@ static function X2AbilityTemplate Rage()
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 
+	Charges = new class 'X2AbilityCharges';
+	Charges.InitialCharges = default.RageCharges;
+	Template.AbilityCharges = Charges;
+
+	ChargeCost = new class'X2AbilityCost_Charges';
+	ChargeCost.NumCharges = 1;
+	Template.AbilityCosts.AddItem(ChargeCost);
+	
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 2;
 	ActionPointCost.bFreeCost = true;
@@ -252,25 +262,25 @@ static function X2AbilityTemplate Rage()
 	ImplacableEffect = new class'X2Effect_Implacable';
 	EffectTemplate = AbilityTemplateManager.FindAbilityTemplate('Implacable');
 	ImplacableEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
-	ImplacableEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), Template.IconImage, true, , EffectTemplate.AbilitySourceName);
+	ImplacableEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), EffectTemplate.IconImage, true, , EffectTemplate.AbilitySourceName);
 	Template.AddTargetEffect(ImplacableEffect);
 
 	UntouchableEffect = new class'X2Effect_Untouchable';
 	EffectTemplate = AbilityTemplateManager.FindAbilityTemplate('Untouchable');
 	UntouchableEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
-	UntouchableEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), Template.IconImage, true, , EffectTemplate.AbilitySourceName);
+	UntouchableEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), EffectTemplate.IconImage, true, , EffectTemplate.AbilitySourceName);
 	Template.AddTargetEffect(UntouchableEffect);
 
 	SerialEffect = new class'X2Effect_Serial';
 	EffectTemplate = AbilityTemplateManager.FindAbilityTemplate('Serial');
 	SerialEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
-	SerialEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), Template.IconImage, true, , EffectTemplate.AbilitySourceName);
+	SerialEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), EffectTemplate.IconImage, true, , EffectTemplate.AbilitySourceName);
 	Template.AddTargetEffect(SerialEffect);
 
 	Template.AbilityTargetStyle = default.SelfTarget;	
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 	
-	Template.bShowActivation = true;
+	Template.bShowActivation = false;
 	Template.bSkipFireAction = true;
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
