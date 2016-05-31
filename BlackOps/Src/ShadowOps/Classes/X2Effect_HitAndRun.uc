@@ -50,7 +50,7 @@ function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStat
 	local X2AbilityCost Cost;
 	local X2AbilityCost_ActionPoints ActionPointCost;
 
-	if (PreCostActionPoints.Length >= 2 && SourceUnit.ActionPoints.Length == 0 && SourceUnit.ReserveActionPoints.Length == 0)
+	if (PreCostActionPoints.Length >= 2 && SourceUnit.ActionPoints.Length == 0)
 	{
 		if (IsDashMovement(AbilityContext, kAbility, SourceUnit))
 			return false;
