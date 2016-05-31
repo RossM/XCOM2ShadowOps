@@ -15,6 +15,9 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 	local X2Effect Effect;
 	local X2Effect_Persistent PersistentEffect;
 
+	if (!class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult))
+		return 0;
+
 	History = `XCOMHISTORY;
 
 	Ability = AbilityState.GetMyTemplate();
