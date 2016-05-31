@@ -27,8 +27,8 @@ LocPromotionPopupText="<Bullet/> Infantry can equip two different ammo items at 
 
 [ShadowOps_Magnum X2AbilityTemplate]
 LocFriendlyName="Magnum"
-LocLongDescription="Your pistol attacks get +10 Aim and deal +1 damage."
-LocHelpText="Your pistol attacks get +10 Aim and deal +1 damage."
+LocLongDescription="Your pistol attacks get +10 Aim and deal +<Ability:Damage/> damage."
+LocHelpText="Your pistol attacks get +10 Aim and deal +<Ability:Damage/> damage."
 LocFlyOverText="Magnum"
 LocPromotionPopupText="<Bullet/> Even without Magnum, your pistol is more accurate than your rifle at close range.<br/><Bullet/> Combining Magnum with ammo that adds extra damage will give you guaranteed kills on ADVENT Troopers at point-blank range."
 
@@ -340,8 +340,8 @@ LocPromotionPopupText="<Bullet/> Bullseye is good for weakening tough enemies wh
 
 [ShadowOps_FirstStrike X2AbilityTemplate]
 LocFriendlyName="First Strike"
-LocLongDescription="While concealed or flanking your target, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
-LocHelpText="While concealed or flanking your target, you deal +3 damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocLongDescription="While concealed or flanking your target, you deal +<Ability:Damage/> damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocHelpText="While concealed or flanking your target, you deal +<Ability:Damage/> damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
 LocFlyOverText="First Strike"
 LocPromotionPopupText="<Bullet/> First Strike can provide a decisive advantage in an ambush by taking out a tough enemy in one shot.<br/><Bullet/> The soldier with First Strike must initiate the ambush to get the bonus. It doesn't affect concealed overwatch."
 
@@ -481,8 +481,8 @@ LocHelpText="There is a chance of an extra loot drop whenever you are on a missi
 
 [ShadowOps_Weaponmaster X2AbilityTemplate]
 LocFriendlyName="Weaponmaster"
-LocLongDescription="Your <Ability:WeaponName/> attacks deal +2 damage."
-LocHelpText="Your <Ability:WeaponName/> attacks deal +2 damage."
+LocLongDescription="Your <Ability:WeaponName/> attacks deal +<Ability:Damage/> damage."
+LocHelpText="Your <Ability:WeaponName/> attacks deal +<Ability:Damage/> damage."
 
 [ShadowOps_AbsolutelyCritical X2AbilityTemplate]
 LocFriendlyName="Absolutely Critical"
