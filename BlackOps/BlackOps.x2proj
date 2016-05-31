@@ -156,9 +156,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_HasGrenade.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Condition_HeightAdvantage.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_FirstStrike.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2244,6 +2241,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_Persistent.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_HeightAdvantage.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_CoverType.uc">

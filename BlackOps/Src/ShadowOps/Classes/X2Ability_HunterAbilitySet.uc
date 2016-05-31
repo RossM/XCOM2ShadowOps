@@ -909,7 +909,7 @@ static function X2AbilityTemplate FirstStrike()
 static function X2AbilityTemplate DamnGoodGround()
 {
 	local XMBEffect_ConditionalBonus Effect;
-	local X2Condition_HeightAdvantage Condition;
+	local XMBCondition_HeightAdvantage Condition;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.EffectName = 'DamnGoodGround';
@@ -917,12 +917,12 @@ static function X2AbilityTemplate DamnGoodGround()
 	Effect.AddToHitAsTargetModifier(-default.DamnGoodGroundDefenseBonus);
 
 	// This condition applies when the unit is the target
-	Condition = new class'X2Condition_HeightAdvantage';
+	Condition = new class'XMBCondition_HeightAdvantage';
 	Condition.bRequireHeightAdvantage = true;
 	Effect.SelfConditions.AddItem(Condition);
 
 	// This condition applies when the unit is the attacker
-	Condition = new class'X2Condition_HeightAdvantage';
+	Condition = new class'XMBCondition_HeightAdvantage';
 	Condition.bRequireHeightDisadvantage = true;
 	Effect.OtherConditions.AddItem(Condition);
 

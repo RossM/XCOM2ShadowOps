@@ -1,4 +1,4 @@
-class X2Condition_HeightAdvantage extends X2Condition;
+class XMBCondition_HeightAdvantage extends X2Condition;
 
 var bool bRequireHeightAdvantage, bRequireHeightDisadvantage;
 
