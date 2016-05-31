@@ -1,5 +1,11 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBAbility.uc
+//  AUTHOR:  xylthixlm
+//---------------------------------------------------------------------------------------
+
 class XMBAbility extends X2Ability;
 
+// Helper method for quickly defining a non-pure passive.
 static function X2AbilityTemplate Passive(name DataName, string IconImage, bool bCrossClassEligible, X2Effect_Persistent Effect)
 {
 	local X2AbilityTemplate						Template;
