@@ -11,8 +11,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
 	ListenerObj = self;
-	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', RageListener, ELD_OnStateSubmitted, , UnitState);	
-	// EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', RageListener, ELD_OnStateSubmitted, , UnitState);	
+	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', RageListener, ELD_OnVisualizationBlockCompleted, , UnitState);	
 }
 
 function EventListenerReturn RageListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
@@ -24,6 +23,9 @@ function EventListenerReturn RageListener(Object EventData, Object EventSource, 
 	if (UnitState == none)
 		return ELR_NoInterrupt;
 
+	if (UnitState.IsMindControlled())
+		return ELR_NoInterrupt;
+
 	if (UnitState.ActionPoints.Length > 0 && !`BEHAVIORTREEMGR.IsQueued(UnitState.ObjectID))	
 	{
 		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState(string(GetFuncName()), true);
@@ -32,7 +34,7 @@ function EventListenerReturn RageListener(Object EventData, Object EventSource, 
 		// Kick off panic behavior tree.
 		// Delayed behavior tree kick-off.  Points must be added and game state submitted before the behavior tree can 
 		// update, since it requires the ability cache to be refreshed with the new action points.
-		UnitState.AutoRunBehaviorTree(BehaviorTreeName, NumActions, `XCOMHISTORY.GetCurrentHistoryIndex(), false, bInitFromPlayer);
+		UnitState.AutoRunBehaviorTree(BehaviorTreeName, NumActions, `XCOMHISTORY.GetCurrentHistoryIndex() + 1, false, bInitFromPlayer);
 
 		// Mark the last event chain history index when the behavior tree was kicked off, 
 		// to prevent multiple BTs from kicking off from a single event chain.
@@ -51,10 +53,13 @@ function bool RageEffectTicked(X2Effect_Persistent PersistentEffect, const out E
 
 	UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', ApplyEffectParameters.TargetStateObjectRef.ObjectID));	
 
+	if (UnitState.IsMindControlled())
+		return false;
+
 	// Kick off panic behavior tree.
 	// Delayed behavior tree kick-off.  Points must be added and game state submitted before the behavior tree can 
 	// update, since it requires the ability cache to be refreshed with the new action points.
-	UnitState.AutoRunBehaviorTree(BehaviorTreeName, NumActions, `XCOMHISTORY.GetCurrentHistoryIndex(), false, bInitFromPlayer);
+	UnitState.AutoRunBehaviorTree(BehaviorTreeName, NumActions, `XCOMHISTORY.GetCurrentHistoryIndex() + 1, false, bInitFromPlayer);
 
 	// Mark the last event chain history index when the behavior tree was kicked off, 
 	// to prevent multiple BTs from kicking off from a single event chain.
