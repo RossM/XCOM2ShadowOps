@@ -14,15 +14,17 @@
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
     <Folder Include="Src\" />
+    <Folder Include="Src\XModBase_Interfaces" />
     <Folder Include="Src\XModBase" />
     <Folder Include="Src\XModBase\Classes" />
-    <Folder Include="Src\XModBase_Interfaces" />
+    <Folder Include="Src\XModBase_Interfaces\Classes" />
+    <Folder Include="Src\XModBase_Utilities" />
     <Folder Include="Src\ShadowOps\Classes\" />
     <Folder Include="Src\XComGame\" />
     <Folder Include="Src\XComGame\Classes\" />
     <Folder Include="Src\ShadowOps" />
     <Folder Include="Src\ShadowOps\Classes" />
-    <Folder Include="Src\XModBase_Interfaces\Classes" />
+    <Folder Include="Src\XModBase_Utilities\Classes" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\XComAI.ini">
@@ -2238,25 +2240,25 @@
     <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\XMBCondition_CoverType.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusDamageByDamageType.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\XMBAbility.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_ConditionalBonus.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusItemCharges.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusRadius.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_Persistent.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_CoverType.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_BonusDamageByDamageType.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBAbility.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_ConditionalBonus.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_BonusItemCharges.uc">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
