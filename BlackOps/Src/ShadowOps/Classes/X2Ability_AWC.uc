@@ -8,7 +8,8 @@ var config int WeaponmasterBonusDamage;
 var config int AbsolutelyCriticalCritBonus;
 var config float DevilsLuckHitChanceMultiplier, DevilsLuckCritChanceMultiplier;
 var config int LightfoodMobilityBonus;
-var config float PyromaniacDamageBonus;
+var config int PyromaniacDamageBonus;
+var config int SnakeBloodDamageBonus;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -24,6 +25,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Lightfoot());
 	Templates.AddItem(Pyromaniac());
+	Templates.AddItem(SnakeBlood());
 
 	return Templates;
 }
@@ -186,4 +188,23 @@ static function X2AbilityTemplate Pyromaniac()
 	Effect.DamageBonus = default.PyromaniacDamageBonus;
 
 	return Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+}
+
+static function X2AbilityTemplate SnakeBlood()
+{
+	local X2Effect_Pyromaniac Effect;
+	local X2Effect_DamageImmunity ImmunityEffect;
+	local X2AbilityTemplate Template;
+
+	Effect = new class'X2Effect_Pyromaniac';
+	Effect.RequiredDamageTypes.AddItem('poison');
+	Effect.DamageBonus = default.SnakeBloodDamageBonus;
+
+	Template = Passive('ShadowOps_SnakeBlood', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+
+	ImmunityEffect = new class'X2Effect_DamageImmunity';
+	ImmunityEffect.ImmuneTypes.AddItem('poison');
+	Template.AddTargetEffect(ImmunityEffect);
+
+	return Template;
 }

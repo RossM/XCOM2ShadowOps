@@ -513,6 +513,12 @@ LocLongDescription="Your fire attacks deal +2 damage, and your burn effects deal
 LocHelpText="Your fire attacks deal +2 damage, and your burn effects deal +2 damage per turn."
 LocFlyOverText="Pyromaniac"
 
+[ShadowOps_SnakeBlood X2AbilityTemplate]
+LocFriendlyName="Snake Blood"
+LocLongDescription="Your poison attacks deal +1 damage, and your poison effects deal +1 damage per turn. You are immune to poison."
+LocHelpText="Your poison attacks deal +1 damage, and your poison effects deal +1 damage per turn. You are immune to poison."
+LocFlyOverText="Snake Blood"
+
 ; === Other abilities ===
 
 [ShadowOps_SwapAmmo X2AbilityTemplate]
