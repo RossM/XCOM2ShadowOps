@@ -519,6 +519,12 @@ LocLongDescription="Your poison attacks deal +1 damage, and your poison effects 
 LocHelpText="Your poison attacks deal +1 damage, and your poison effects deal +1 damage per turn. You are immune to poison."
 LocFlyOverText="Snake Blood"
 
+[ShadowOps_Rage X2AbilityTemplate]
+LocFriendlyName="Rage"
+LocLongDescription="You gain Implacable, Untouchable, and Serial for 3 turns, but you can't choose your own actions."
+LocHelpText="You gain Implacable, Untouchable, and Serial for 3 turns, but you can't choose your own actions."
+LocFlyOverText="Rage"
+
 ; === Other abilities ===
 
 [ShadowOps_SwapAmmo X2AbilityTemplate]

@@ -10,6 +10,7 @@ var config float DevilsLuckHitChanceMultiplier, DevilsLuckCritChanceMultiplier;
 var config int LightfoodMobilityBonus;
 var config int PyromaniacDamageBonus;
 var config int SnakeBloodDamageBonus;
+var config int RageDuration;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -26,6 +27,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Lightfoot());
 	Templates.AddItem(Pyromaniac());
 	Templates.AddItem(SnakeBlood());
+	Templates.AddItem(Rage());
 
 	return Templates;
 }
@@ -205,6 +207,76 @@ static function X2AbilityTemplate SnakeBlood()
 	ImmunityEffect = new class'X2Effect_DamageImmunity';
 	ImmunityEffect.ImmuneTypes.AddItem('poison');
 	Template.AddTargetEffect(ImmunityEffect);
+
+	return Template;
+}
+
+static function X2AbilityTemplate Rage()
+{
+	local X2AbilityTemplate				Template, EffectTemplate;
+	local X2AbilityCost_ActionPoints    ActionPointCost;
+	local X2Effect_Implacable			ImplacableEffect;
+	local X2Effect_Untouchable			UntouchableEffect;
+	local X2Effect_Serial				SerialEffect;
+	local X2Effect_RunBehaviorTree		BehaviorTreeEffect;
+	local X2AbilityTemplateManager		AbilityTemplateManager;
+
+	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Rage');
+
+	// Icon Properties
+	Template.DisplayTargetHitChance = false;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';                                       // color of the icon
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
+	Template.Hostility = eHostility_Neutral;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 2;
+	ActionPointCost.bFreeCost = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Template.AbilityToHitCalc = default.DeadEye;
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	Template.AddShooterEffectExclusions();
+
+	BehaviorTreeEffect = new class'X2Effect_Rage';
+	BehaviorTreeEffect.BehaviorTreeName = 'ShadowOps_Rage';
+	BehaviorTreeEffect.NumActions = 1;
+	BehaviorTreeEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	Template.AddTargetEffect(BehaviorTreeEffect);
+
+	ImplacableEffect = new class'X2Effect_Implacable';
+	EffectTemplate = AbilityTemplateManager.FindAbilityTemplate('Implacable');
+	ImplacableEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	ImplacableEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), Template.IconImage, true, , EffectTemplate.AbilitySourceName);
+	Template.AddTargetEffect(ImplacableEffect);
+
+	UntouchableEffect = new class'X2Effect_Untouchable';
+	EffectTemplate = AbilityTemplateManager.FindAbilityTemplate('Untouchable');
+	UntouchableEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	UntouchableEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), Template.IconImage, true, , EffectTemplate.AbilitySourceName);
+	Template.AddTargetEffect(UntouchableEffect);
+
+	SerialEffect = new class'X2Effect_Serial';
+	EffectTemplate = AbilityTemplateManager.FindAbilityTemplate('Serial');
+	SerialEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	SerialEffect.SetDisplayInfo(ePerkBuff_Bonus, EffectTemplate.LocFriendlyName, EffectTemplate.GetMyHelpText(), Template.IconImage, true, , EffectTemplate.AbilitySourceName);
+	Template.AddTargetEffect(SerialEffect);
+
+	Template.AbilityTargetStyle = default.SelfTarget;	
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+	
+	Template.bShowActivation = true;
+	Template.bSkipFireAction = true;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	Template.bCrossClassEligible = true;
 
 	return Template;
 }
