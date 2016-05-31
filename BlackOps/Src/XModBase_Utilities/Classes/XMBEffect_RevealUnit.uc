@@ -1,4 +1,4 @@
-class X2Effect_Tracking extends X2Effect_Persistent;
+class XMBEffect_RevealUnit extends X2Effect_Persistent;
 
 var float LookAtDuration;
 var bool bRevealConcealed;
@@ -26,7 +26,7 @@ function EffectAddedCallback(X2Effect_Persistent PersistentEffect, const out Eff
 
 simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, name EffectApplyResult)
 {
-	local X2Action_UpdateTracked OutlineAction;
+	local XMBAction_ForceVisibility OutlineAction;
 	local X2Action_PlaySoundAndFlyOver FlyOver;
 	local X2AbilityTemplate AbilityTemplate;
 	local XComGameState_Unit UnitState;
@@ -34,7 +34,7 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 	UnitState = XComGameState_Unit(BuildTrack.StateObject_NewState);
 	if (EffectApplyResult == 'AA_Success' && UnitState != none)
 	{
-		OutlineAction = X2Action_UpdateTracked(class'X2Action_UpdateTracked'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
+		OutlineAction = XMBAction_ForceVisibility(class'XMBAction_ForceVisibility'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
 		OutlineAction.bEnableOutline = true;
 
 		if (UnitState.GetTeam() == eTeam_Alien && !class'X2TacticalVisibilityHelpers'.static.CanSquadSeeTarget(`TACTICALRULES.GetLocalClientPlayerObjectID(), UnitState.ObjectID))
@@ -50,17 +50,17 @@ simulated function AddX2ActionsForVisualization_Removed(XComGameState VisualizeG
 {
 	if (XComGameState_Unit(BuildTrack.StateObject_NewState) != none)
 	{
-		class'X2Action_UpdateTracked'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext());
+		class'XMBAction_ForceVisibility'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext());
 	}
 }
 
 simulated function AddX2ActionsForVisualization_Sync( XComGameState VisualizeGameState, out VisualizationTrack BuildTrack )
 {
-	local X2Action_UpdateTracked OutlineAction;
+	local XMBAction_ForceVisibility OutlineAction;
 
 	if (XComGameState_Unit(BuildTrack.StateObject_NewState) != none)
 	{
-		OutlineAction = X2Action_UpdateTracked( class'X2Action_UpdateTracked'.static.AddToVisualizationTrack( BuildTrack, VisualizeGameState.GetContext( ) ) );
+		OutlineAction = XMBAction_ForceVisibility( class'XMBAction_ForceVisibility'.static.AddToVisualizationTrack( BuildTrack, VisualizeGameState.GetContext( ) ) );
 		OutlineAction.bEnableOutline = true;
 	}
 }

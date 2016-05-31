@@ -1,4 +1,4 @@
-class X2Action_UpdateTracked extends X2Action;
+class XMBAction_ForceVisibility extends X2Action;
 
 var bool bEnableOutline;
 
