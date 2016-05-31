@@ -245,9 +245,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_PreviewDamage.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_Pyromaniac.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Rage.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2242,6 +2239,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\X2Effect_Pyromaniac.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBAbility.uc">
