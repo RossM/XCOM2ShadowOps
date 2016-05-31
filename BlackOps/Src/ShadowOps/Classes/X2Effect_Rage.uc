@@ -12,7 +12,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 
 	ListenerObj = self;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', RageListener, ELD_OnStateSubmitted, , UnitState);	
-	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', RageListener, ELD_OnStateSubmitted, , UnitState);	
+	// EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', RageListener, ELD_OnStateSubmitted, , UnitState);	
 }
 
 function EventListenerReturn RageListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
@@ -24,7 +24,7 @@ function EventListenerReturn RageListener(Object EventData, Object EventSource, 
 	if (UnitState == none)
 		return ELR_NoInterrupt;
 
-	if (UnitState.ActionPoints.Length > 0)	
+	if (UnitState.ActionPoints.Length > 0 && !`BEHAVIORTREEMGR.IsQueued(UnitState.ObjectID))	
 	{
 		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState(string(GetFuncName()), true);
 		UnitState = XComGameState_Unit(NewGameState.CreateStateObject(UnitState.Class, UnitState.ObjectID));
