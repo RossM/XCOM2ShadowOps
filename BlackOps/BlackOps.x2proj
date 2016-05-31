@@ -2222,6 +2222,9 @@
     <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffectInterface.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusRadius.uc">
       <SubType>Content</SubType>
     </Content>

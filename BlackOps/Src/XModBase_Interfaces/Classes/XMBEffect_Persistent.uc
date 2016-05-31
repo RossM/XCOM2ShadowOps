@@ -1,4 +1,4 @@
-class XMBEffect_Persistent extends X2Effect_Persistent;
+class XMBEffect_Persistent extends X2Effect_Persistent implements(XMBEffectInterface);
 
 // This class adds some extra methods to X2Effect_Persistent which can be overridden in a
 // subclass to create new effects.
@@ -33,3 +33,5 @@ function GetFinalToHitModifiers(XComGameState_Effect EffectState, XComGameState_
 //
 // Please use this sparingly.
 function int GetLuckModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, EAbilityHitResult Result) { return 0; }
+
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }

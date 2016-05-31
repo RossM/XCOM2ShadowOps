@@ -11,13 +11,47 @@ event ExpandHandler(string InString, out string OutString)
 	local X2ItemTemplate ItemTemplate;
 	local X2GremlinTemplate GremlinTemplate;
 	local X2WeaponTemplate WeaponTemplate;
+	local X2AbilityTemplate AbilityTemplate;
+	local X2Effect EffectTemplate;
+	local XMBEffectInterface EffectInterface;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 
-	Type = name(InString);
 	History = `XCOMHISTORY;
 
 	OutString = "";
+
+	Type = name(InString);
+
+	EffectState = XComGameState_Effect(ParseObj);
+	AbilityState = XComGameState_Ability(ParseObj);
+		
+	if (EffectState != none)
+	{
+		AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.AbilityStateObjectRef.ObjectID));
+	}
+	if (AbilityState != none)
+	{
+		AbilityTemplate = AbilityState.GetMyTemplate();
+		foreach AbilityTemplate.AbilityTargetEffects(EffectTemplate)
+		{
+			EffectInterface = XMBEffectInterface(EffectTemplate);
+			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+				return;
+		}
+		foreach AbilityTemplate.AbilityMultiTargetEffects(EffectTemplate)
+		{
+			EffectInterface = XMBEffectInterface(EffectTemplate);
+			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+				return;
+		}
+		foreach AbilityTemplate.AbilityShooterEffects(EffectTemplate)
+		{
+			EffectInterface = XMBEffectInterface(EffectTemplate);
+			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+				return;
+		}
+	}
 
 	switch (Type)
 	{

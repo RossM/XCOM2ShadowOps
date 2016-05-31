@@ -273,8 +273,8 @@ LocFriendlyName="Keen Edge"
 ; For some reason, putting two different <Ability:X> tags doesn't work for effects such as X2Effect_VitalPoint.
 ;LocLongDescription="Your sword attacks shred <Ability:VitalPointShred/> armor and deal +<Ability:VitalPointDamage/> damage."
 ;LocHelpText="Your sword attacks shred <Ability:VitalPointShred/> armor and deal +<Ability:VitalPointDamage/> damage."
-LocLongDescription="Your sword attacks shred <Ability:VitalPointShred/> armor and deal additional damage."
-LocHelpText="Your sword attacks shred <Ability:VitalPointShred/> armor and deal additional damage."
+LocLongDescription="Your sword attacks shred <Ability:Shred/> armor and deal additional damage."
+LocHelpText="Your sword attacks shred <Ability:Shred/> armor and deal additional damage."
 LocFlyOverText="Keen Edge"
 LocPromotionPopupText="<Bullet/> More advanced swords will shred more armor and deal extra bonus damage.<br/><Bullet/> Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet/> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
 
