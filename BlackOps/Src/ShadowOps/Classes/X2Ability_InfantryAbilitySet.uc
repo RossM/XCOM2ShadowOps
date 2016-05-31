@@ -670,7 +670,7 @@ static function X2AbilityTemplate Flush()
 	local X2Effect_Flush					FlushEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
-	local X2Effect_AddReservedActionPoints	ReservePointsEffect;
+	local XMBEffect_AddReservedActionPoints	ReservePointsEffect;
 	local X2Effect_SaveHitResult			SaveHitResultEffect;
 	local X2Effect_PreviewDamage			PreviewDamageEffect;
 
@@ -730,7 +730,7 @@ static function X2AbilityTemplate Flush()
 	StandardAim.BuiltInHitMod = default.FlushHitModifier;
 	Template.AbilityToHitCalc = StandardAim;
 
-	ReservePointsEffect = new class'X2Effect_AddReservedActionPoints';
+	ReservePointsEffect = new class'XMBEffect_AddReservedActionPoints';
 	ReservePointsEffect.ReserveType = 'Flush';
 	ReservePointsEffect.bApplyOnHit = true;
 	ReservePointsEffect.bApplyOnMiss = true;

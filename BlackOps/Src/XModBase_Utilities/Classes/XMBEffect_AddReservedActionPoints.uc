@@ -1,4 +1,4 @@
-class X2Effect_AddReservedActionPoints extends X2Effect;
+class XMBEffect_AddReservedActionPoints extends X2Effect;
 
 var name ReserveType;       //  type of action point to reserve
 var int NumPoints;          //  number of points to reserve
