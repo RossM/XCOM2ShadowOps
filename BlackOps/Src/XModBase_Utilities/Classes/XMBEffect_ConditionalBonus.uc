@@ -31,7 +31,6 @@ var bool bRequireAbilityWeapon;				// Require that the weapon used matches the w
 var array<X2Condition> SelfConditions;		// Conditions applied to the unit with the effect (usually the shooter)
 var array<X2Condition> OtherConditions;		// Conditions applied to the other unit involved (usually the target)
 
-
 /////////////
 // Setters //
 /////////////
@@ -314,14 +313,17 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 
 function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
 {
-	local float Result, ConventionalResult;
+	local float Result;
+	local array<float> TechResults;
 	local XComGameState_Item ItemState;
 	local ExtShotModifierInfo ExtModInfo;
-	local int ValidModifiers;
+	local int ValidModifiers, ValidTechModifiers;
 	local EAbilityHitResult HitResult;
 	local float ResultMultiplier;
+	local int idx;
 
 	ResultMultiplier = 1;
+	TechResults.Length = class'X2ItemTemplateManager'.default.WeaponTechCategories.Length;
 
 	switch (Tag)
 	{
@@ -361,8 +363,12 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		if (ExtModInfo.ModInfo.ModType != HitResult)
 			continue;
 
-		if (ExtModInfo.WeaponTech == 'conventional')
-			ConventionalResult += ExtModInfo.ModInfo.Value;
+		idx = class'X2ItemTemplateManager'.default.WeaponTechCategories.Find(ExtModInfo.WeaponTech);
+		if (idx != INDEX_NONE)
+		{
+			TechResults[idx] += ExtModInfo.ModInfo.Value;
+			ValidTechModifiers++;
+		}
 
 		if (ValidateWeapon(ExtModInfo, ItemState) != 'AA_Success')
 			continue;
@@ -372,8 +378,16 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		Result += ExtModInfo.ModInfo.Value;
 	}
 
-	if (ValidModifiers == 0)
-		Result = ConventionalResult;
+	if (ValidModifiers == 0 && ValidTechModifiers > 0)
+	{
+		TagValue = "";
+		for (idx = 0; idx < TechResults.Length && idx < 3; idx++)  // HACK
+		{
+			if (idx > 0) TagValue $= "/";
+			TagValue $= string(int(TechResults[idx] * ResultMultiplier));
+		}
+		return true;
+	}
 
 	TagValue = string(int(Result * ResultMultiplier));
 	return true;
