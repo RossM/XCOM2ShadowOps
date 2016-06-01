@@ -52,8 +52,8 @@ LocFlyOverText="Pistol Overwatch: Ready for Anything"
 
 [ShadowOps_FullAuto X2AbilityTemplate]
 LocFriendlyName="Full Auto"
-LocLongDescription="Take a shot with an aim penalty of -20. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo."
-LocHelpText="Take shots with an aim penalty of -20 until you miss or run out of ammo. Costs both actions."
+LocLongDescription="Take a shot with an aim penalty of <Ability:ToHit/>. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo."
+LocHelpText="Take shots with an aim penalty of <Ability:ToHit/> until you miss or run out of ammo. Costs both actions."
 LocFlyOverText="Full Auto"
 LocPromotionPopupText="<Bullet/> Full Auto can deal enormous amounts of damage with a full magazine and the right ammo.<br/><Bullet/> This ability costs both actions to use. <br/><Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
@@ -83,8 +83,8 @@ LocPromotionPopupText="<Bullet/> Zero In can help compensate for not being able 
 
 [ShadowOps_Flush X2AbilityTemplate]
 LocFriendlyName="Flush"
-LocLongDescription="Fire a shot that has a high chance to hit and forces the target to move to new cover."
-LocHelpText="Fire a shot that has a high chance to hit and forces the target to move to new cover."
+LocLongDescription="Fire a shot that has +<Ability:ToHit/> Aim and forces the target to move to new cover."
+LocHelpText="Fire a shot that has +<Ability:ToHit/> Aim and forces the target to move to new cover."
 LocFlyOverText="Flush"
 LocPromotionPopupText="<Bullet/> Flush can force an enemy to trigger your other soldiers' reaction fire.<br/><Bullet/> The shot has a +20 Aim modifier, and does full damage. <br/><Bullet/> Flush has a <Ability:SelfCooldown/> turn cooldown. <br/>"
 
@@ -154,15 +154,15 @@ LocPromotionPopupText="<Bullet/> Stealth Protocol can be used on any soldier, so
 
 [ShadowOps_BurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage"
-LocLongDescription="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
-LocHelpText="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
+LocLongDescription="Attack all targets in a straight line. The attack has +<Ability:ToHit/> Aim and may damage or destroy cover."
+LocHelpText="Attack all targets in a straight line. The attack has +<Ability:ToHit/> Aim and may damage or destroy cover."
 LocFlyOverText="Barrage"
 LocPromotionPopupText="<Bullet/> Barrage can hit multiple enemies if you position yourself correctly, but it's okay to use it on just one.<br/><Bullet/> Be aware of what Barrage is going to destroy before you fire, including whatever is behind the target.<br/><Bullet/> Be careful when aiming Barrage from full cover. The soldier may \"step out\", causing Barrage to hit a different line than you expected.<br/><Bullet/> Barrage is less likely to destroy cover when used with an assault rifle. <br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_RifleBurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage (Rifle)"
-LocLongDescription="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
-LocHelpText="Attack all targets in a straight line. The attack has +20 Aim and may damage or destroy cover."
+LocLongDescription="Attack all targets in a straight line. The attack has +<Ability:ToHit/> Aim and may damage or destroy cover."
+LocHelpText="Attack all targets in a straight line. The attack has +<Ability:ToHit/> Aim and may damage or destroy cover."
 LocFlyOverText="Barrage"
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
@@ -242,21 +242,21 @@ LocFlyOverText="Tactical Sense"
 
 [ShadowOps_SnapShot X2AbilityTemplate]
 LocFriendlyName="Snap Shot"
-LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a -10 Aim penalty."
+LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a <Ability:ToHit:ShadowOps_SnapShotShot/> Aim penalty."
 LocHelpText="Fire your <Ability:WeaponName/> as a single action with a small Aim penalty."
 LocFlyOverText="Snap Shot"
 LocPromotionPopupText="<Bullet/> Snap Shot is most useful on Hunters that move with the rest of the squad rather than staying in a single place.<br/><Bullet/> Your sniper rifle has an aim penalty at close range. A sword attack will usually be more effective than a close-range flank shot.<br/>"
 
 [ShadowOps_SnapShotShot X2AbilityTemplate]
 LocFriendlyName="Snap Shot"
-LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a -10 Aim penalty."
+LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a <Ability:ToHit/> Aim penalty."
 LocHelpText="Fire your <Ability:WeaponName/> as a single action with a small Aim penalty."
 LocFlyOverText="Snap Shot"
 
 [ShadowOps_SnapShotOverwatch X2AbilityTemplate]
 LocFriendlyName="Overwatch"
 LocFriendlyNameWhenConcealed="Overwatch (Concealed)"
-LocLongDescription="Overwatch with your <Ability:WeaponName/> as a single action with a -10 Aim penalty."
+LocLongDescription="Overwatch with your <Ability:WeaponName/> as a single action with a <Ability:ToHit:ShadowOps_SnapShotShot/> Aim penalty."
 LocHelpText="Fire on the first enemy that moves within your line of sight, with a penalty to aim."
 LocLongDescriptionWhenConcealed="Fire on the first enemy that moves within your line of sight, but only if revealed."
 LocFlyOverText="Overwatch: Snap Shot"
@@ -380,15 +380,15 @@ LocPromotionPopupText="<Bullet/> Fastball effectively lets you use a grenade wit
 
 [ShadowOps_Fracture X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds <Ability:Shred/> armor and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that shreds <Ability:Shred/> armor and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that shreds <Ability:Shred:ShadowOps_FractureDamage/> armor and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that shreds <Ability:Shred:ShadowOps_FractureDamage/> armor and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 LocPromotionPopupText="<Bullet/> More advanced weapons will shred more armor.<br/><Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Don't wait to use Fracture until you need both the shredding and the bonus damage. It's still a good ability even when it only does one of those things. <br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_FractureDamage X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds <Ability:FractureShred/> armor and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that shreds <Ability:FractureShred/> parmor and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that shreds <Ability:Shred/> armor and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that shreds <Ability:Shred/> parmor and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 
 [ShadowOps_Packmaster X2AbilityTemplate]

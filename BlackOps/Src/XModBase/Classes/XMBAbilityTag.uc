@@ -10,6 +10,7 @@ event ExpandHandler(string InString, out string OutString)
 	local XComGameState_Item ItemState;
 	local X2ItemTemplate ItemTemplate;
 	local X2AbilityTemplate AbilityTemplate;
+	local X2AbilityToHitCalc_StandardAim ToHitCalc;
 	local X2Effect EffectTemplate;
 	local XMBEffectInterface EffectInterface;
 	local XComGameStateHistory History;
@@ -91,6 +92,24 @@ event ExpandHandler(string InString, out string OutString)
 			else
 			{
 				OutString = "item";
+			}
+			break;
+
+		case 'ToHit':
+		case 'BaseToHit':
+			ToHitCalc = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
+			if (ToHitCalc != none)
+			{
+				OutString = string(ToHitCalc.BuiltInHitMod);
+			}
+			break;
+
+		case 'Crit':
+		case 'BaseCrit':
+			ToHitCalc = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
+			if (ToHitCalc != none)
+			{
+				OutString = string(ToHitCalc.BuiltInCritMod);
 			}
 			break;
 
