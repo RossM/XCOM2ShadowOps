@@ -1,4 +1,4 @@
-class XMBEffect_ConditionalAbilityCostRefund extends X2Effect_Persistent config(GameData_SoldierSkills);
+class XMBEffect_AbilityCostRefund extends X2Effect_Persistent config(GameData_SoldierSkills);
 
 var bool bRequireAbilityWeapon, bRequireKill;
 var array<EAbilityHitResult> AllowedHitResults;
