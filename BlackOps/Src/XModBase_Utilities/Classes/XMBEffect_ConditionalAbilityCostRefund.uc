@@ -1,6 +1,6 @@
 class XMBEffect_ConditionalAbilityCostRefund extends X2Effect_Persistent config(GameData_SoldierSkills);
 
-var bool bRequireMatchingWeapon;
+var bool bRequireMatchingWeapon, bRequireKill;
 var array<EAbilityHitResult> AllowedHitResults;
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
@@ -21,12 +21,18 @@ function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStat
 {
 	local X2EventManager EventMgr;
 	local XComGameState_Ability AbilityState;
+	local XComGameState_Unit TargetUnit;
+
+	TargetUnit = XComGameState_Unit(GameState.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
 
 	//  match the weapon associated with Serial to the attacking weapon
 	if (bRequireMatchingWeapon && kAbility.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
 		return false;
 
 	if (AllowedHitResults.Length > 0 && AllowedHitResults.Find(AbilityContext.ResultContext.HitResult) == INDEX_NONE)
+		return false;
+
+	if (bRequireKill && (TargetUnit == none || !TargetUnit.IsDead()))
 		return false;
 
 	//  restore the pre cost action points to fully refund this action
