@@ -1,4 +1,4 @@
-class X2Effect_SlamFire extends X2Effect_Persistent config(GameData_SoldierSkills);
+class XMBEffect_ConditionalAbilityCostRefund extends X2Effect_Persistent config(GameData_SoldierSkills);
 
 var bool bRequireMatchingWeapon;
 var array<EAbilityHitResult> AllowedHitResults;

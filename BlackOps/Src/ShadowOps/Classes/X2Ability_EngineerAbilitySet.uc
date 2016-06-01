@@ -383,7 +383,7 @@ static function X2AbilityTemplate SlamFire()
 {
 	local X2AbilityTemplate				Template;
 	local X2AbilityCooldown				Cooldown;
-	local X2Effect_SlamFire             SlamFireEffect;
+	local XMBEffect_ConditionalAbilityCostRefund             SlamFireEffect;
 	local X2AbilityCost_ActionPoints    ActionPointCost;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SlamFire');
@@ -412,7 +412,7 @@ static function X2AbilityTemplate SlamFire()
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
 
-	SlamFireEffect = new class'X2Effect_SlamFire';
+	SlamFireEffect = new class'XMBEffect_ConditionalAbilityCostRefund';
 	SlamFireEffect.bRequireMatchingWeapon = true;
 	SlamFireEffect.AllowedHitResults.AddItem(eHit_Crit);
 	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
