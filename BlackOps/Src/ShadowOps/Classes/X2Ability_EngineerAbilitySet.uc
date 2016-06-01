@@ -166,7 +166,7 @@ static function X2AbilityTemplate BreachBonusRadius()
 	Effect = new class'XMBEffect_BonusRadius';
 	Effect.fBonusRadius = default.BreachShotgunRadius - default.BreachRadius;
 	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, false,,Template.AbilitySourceName);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, false,,Template.AbilitySourceName);
 	Template.AddTargetEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -213,7 +213,7 @@ static function X2AbilityTemplate Fastball()
 	FastballEffect = new class'X2Effect_Persistent';
 	FastballEffect.EffectName = 'Fastball';
 	FastballEffect.BuildPersistentEffect(1,,,,eGameRule_PlayerTurnEnd);
-	FastballEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyLongDescription(), "img:///UILibrary_PerkIcons.UIPerk_bombard", true);
+	FastballEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, "img:///UILibrary_PerkIcons.UIPerk_bombard", true);
 	Template.AddTargetEffect(FastballEffect);
 
 	ActionPointEffect = new class'X2Effect_GrantActionPoints';
@@ -357,7 +357,7 @@ static function X2AbilityTemplate FractureDamage()
 
 	DamageEffect = new class'X2Effect_FractureDamage';
 	DamageEffect.BuildPersistentEffect(1, true, false, false);
-	DamageEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, false,,Template.AbilitySourceName);
+	DamageEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, false,,Template.AbilitySourceName);
 	Template.AddTargetEffect(DamageEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -452,7 +452,7 @@ static function X2AbilityTemplate ChainReaction()
 
 	Effect = new class'X2Effect_ChainReaction';
 	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true,,Template.AbilitySourceName);
 	Template.AddTargetEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -582,7 +582,7 @@ static function X2AbilityTemplate Packmaster()
 	PersistentEffect = new class'X2Effect_Persistent';
 	PersistentEffect.EffectName = 'Packmaster';
 	PersistentEffect.BuildPersistentEffect(1, true, true, true);
-	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(PersistentEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;

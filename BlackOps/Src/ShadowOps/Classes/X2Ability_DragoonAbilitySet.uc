@@ -91,7 +91,7 @@ static function X2AbilityTemplate ShieldProtocol()
 	EffectsCondition.AddExcludeEffect('ShieldProtocol', 'AA_UnitIsImmune');
 	Template.AbilityTargetConditions.AddItem(EffectsCondition);
 
-	Template.AddTargetEffect(ShieldProtocolEffect(Template.LocFriendlyName, Template.GetMyLongDescription()));
+	Template.AddTargetEffect(ShieldProtocolEffect(Template.LocFriendlyName, Template.LocLongDescription));
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
@@ -152,7 +152,7 @@ static function X2AbilityTemplate HeavyArmor()
 	HeavyArmorEffect.Base = default.HeavyArmorBase;
 	HeavyArmorEffect.Bonus = default.HeavyArmorBonus;
 	HeavyArmorEffect.BuildPersistentEffect(1, true, true, true);
-	HeavyArmorEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	HeavyArmorEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(HeavyArmorEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -202,7 +202,7 @@ static function X2AbilityTemplate Finesse()
 	FinesseEffect = new class'X2Effect_PersistentStatChange';
 	FinesseEffect.EffectName = 'Finesse';
 	FinesseEffect.BuildPersistentEffect(1, true, true, true);
-	FinesseEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	FinesseEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage,,,Template.AbilitySourceName);
 	FinesseEffect.AddPersistentStatChange(eStat_Offense, default.FinesseOffenseBonus);
 	FinesseEffect.AddPersistentStatChange(eStat_Mobility, default.FinesseMobilityBonus);
 	Template.AddTargetEffect(FinesseEffect);
@@ -345,7 +345,7 @@ static function X2AbilityTemplate StealthProtocol()
 	Template.AbilityTargetConditions.AddItem(EffectsCondition);
 	Template.AbilityTargetConditions.AddItem(new class'X2Condition_Stealth');
 
-	Template.AddTargetEffect(StealthProtocolEffect(Template.LocFriendlyName, Template.GetMyLongDescription()));
+	Template.AddTargetEffect(StealthProtocolEffect(Template.LocFriendlyName, Template.LocLongDescription));
 
 	Template.AddTargetEffect(class'X2Effect_Spotted'.static.CreateUnspottedEffect());
 
@@ -596,7 +596,7 @@ static function X2AbilityTemplate ShieldsUpTrigger()
 	MultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
 	Template.AbilityMultiTargetStyle = MultiTargetStyle;
 
-	Template.AddMultiTargetEffect(ShieldsUpEffect(Template.LocFriendlyName, Template.GetMyLongDescription()));
+	Template.AddMultiTargetEffect(ShieldsUpEffect(Template.LocFriendlyName, Template.LocLongDescription));
 
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
@@ -653,7 +653,7 @@ static function X2AbilityTemplate ECMTrigger()
 	MultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
 	Template.AbilityMultiTargetStyle = MultiTargetStyle;
 
-	Template.AddMultiTargetEffect(ECMEffect(Template.LocFriendlyName, Template.GetMyLongDescription()));
+	Template.AddMultiTargetEffect(ECMEffect(Template.LocFriendlyName, Template.LocLongDescription));
 
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
@@ -800,7 +800,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	RestorationEffect.IncreasedHealProject = default.RestorationIncreasedHealProject;
 	RestorationEffect.IncreasedAmountToHeal = default.RestorationIncreasedHealAmount;
 	RestorationEffect.HealingBonusMultiplier = default.RestorationHealingBonusMultiplier;
-	RestorationEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true);
+	RestorationEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true);
 	Template.AddTargetEffect(RestorationEffect);
 
 	RemoveEffects = new class'X2Effect_RemoveEffects';
@@ -1018,7 +1018,7 @@ static function X2AbilityTemplate Rocketeer()
 	PersistentEffect = new class'X2Effect_Persistent';
 	PersistentEffect.EffectName = 'Rocketeer';
 	PersistentEffect.BuildPersistentEffect(1, true, true, true);
-	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage,,,Template.AbilitySourceName);
+	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage,,,Template.AbilitySourceName);
 	Template.AddTargetEffect(PersistentEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;

@@ -270,7 +270,6 @@ LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns wh
 
 [ShadowOps_VitalPoint X2AbilityTemplate]
 LocFriendlyName="Keen Edge"
-; For some reason, putting two different <Ability:X> tags doesn't work for effects such as X2Effect_VitalPoint.
 LocLongDescription="Your sword attacks shred <Ability:Shred/> armor and deal +<Ability:Damage/> damage."
 LocHelpText="Your sword attacks shred <Ability:Shred/> armor and deal +<Ability:Damage/> damage."
 LocFlyOverText="Keen Edge"

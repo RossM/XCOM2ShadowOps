@@ -87,7 +87,7 @@ static function X2AbilityTemplate ReinforcedVestBonusAbility()
 
 	PersistentStatChangeEffect = new class'X2Effect_PersistentStatChange';
 	PersistentStatChangeEffect.BuildPersistentEffect(1, true, false, false);
-	PersistentStatChangeEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, false, , Template.AbilitySourceName);
+	PersistentStatChangeEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, false, , Template.AbilitySourceName);
 	PersistentStatChangeEffect.AddPersistentStatChange(eStat_ArmorChance, class 'X2Item_Armor_BO'.default.ReinforcedVestMitigationChance);
 	PersistentStatChangeEffect.AddPersistentStatChange(eStat_ArmorMitigation, class 'X2Item_Armor_BO'.default.ReinforcedVestMitigationAmount);
 	Template.AddTargetEffect(PersistentStatChangeEffect);
