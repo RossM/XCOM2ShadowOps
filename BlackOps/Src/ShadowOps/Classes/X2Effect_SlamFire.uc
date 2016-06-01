@@ -1,5 +1,8 @@
 class X2Effect_SlamFire extends X2Effect_Persistent config(GameData_SoldierSkills);
 
+var bool bRequireMatchingWeapon;
+var array<EAbilityHitResult> AllowedHitResults;
+
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
 	local X2EventManager EventMgr;
@@ -20,26 +23,27 @@ function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStat
 	local XComGameState_Ability AbilityState;
 
 	//  match the weapon associated with Serial to the attacking weapon
-	if (kAbility.SourceWeapon == EffectState.ApplyEffectParameters.ItemStateObjectRef)
+	if (bRequireMatchingWeapon && kAbility.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
+		return false;
+
+	if (AllowedHitResults.Length > 0 && AllowedHitResults.Find(AbilityContext.ResultContext.HitResult) == INDEX_NONE)
+		return false;
+
+	//  restore the pre cost action points to fully refund this action
+	if (SourceUnit.ActionPoints.Length != PreCostActionPoints.Length)
 	{
-		if (AbilityContext.ResultContext.HitResult == eHit_Crit)
+		AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.AbilityStateObjectRef.ObjectID));
+		if (AbilityState != none)
 		{
-			//  restore the pre cost action points to fully refund this action
-			if (SourceUnit.ActionPoints.Length != PreCostActionPoints.Length)
-			{
-				AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.AbilityStateObjectRef.ObjectID));
-				if (AbilityState != none)
-				{
-					SourceUnit.ActionPoints = PreCostActionPoints;
+			SourceUnit.ActionPoints = PreCostActionPoints;
 
-					EventMgr = `XEVENTMGR;
-					EventMgr.TriggerEvent('SlamFire', AbilityState, SourceUnit, NewGameState);
+			EventMgr = `XEVENTMGR;
+			EventMgr.TriggerEvent('SlamFire', AbilityState, SourceUnit, NewGameState);
 
-					return true;
-				}
-			}
+			return true;
 		}
 	}
+
 	return false;
 }
 
