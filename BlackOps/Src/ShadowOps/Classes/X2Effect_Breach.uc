@@ -1,4 +1,4 @@
-class X2Effect_Breach extends X2Effect_ApplyWeaponDamage
+class X2Effect_Breach extends X2Effect_ApplyWeaponDamage implements(XMBEffectInterface)
 	config(GameData_SoldierSkills);
 
 var config WeaponDamageValue ConventionalDamageValue, MagneticDamageValue, BeamDamageValue;
@@ -30,3 +30,37 @@ function WeaponDamageValue GetBonusEffectDamageValue(XComGameState_Ability Abili
 
 	return DamageValue;
 }
+
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
+{
+	local XComGameState_Item SourceItem;
+	local X2WeaponTemplate WeaponTemplate;
+
+	if (AbilityState != none)
+	{
+		SourceItem = AbilityState.GetSourceWeapon();
+	}
+
+	switch (tag)
+	{
+	case 'Shred':
+		if (SourceItem != none)
+		{
+			WeaponTemplate = X2WeaponTemplate(SourceItem.GetMyTemplate());
+			if (WeaponTemplate != none)
+			{
+				TagValue = string(ConventionalDamageValue.Shred);
+				if (WeaponTemplate.WeaponTech == 'magnetic')
+					TagValue = string(MagneticDamageValue.Shred);
+				else if (WeaponTemplate.WeaponTech == 'beam')
+					TagValue = string(BeamDamageValue.Shred);
+				return true;
+			}
+		}
+		TagValue = ConventionalDamageValue.Shred$"/"$MagneticDamageValue.Shred$"/"$BeamDamageValue.Shred;
+		return true;
+	}
+
+	return false;
+}
+

@@ -1,4 +1,4 @@
-class X2Effect_ShieldProtocol extends X2Effect_ModifyStats;
+class X2Effect_ShieldProtocol extends X2Effect_ModifyStats implements(XMBEffectInterface);
 
 var int ConventionalAmount, MagneticAmount, BeamAmount;
 var array<name> ImmuneTypes;
@@ -54,16 +54,38 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	super.OnEffectAdded(ApplyEffectParameters, kNewTargetState, NewGameState, NewEffectState);
 }
 
-//simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, name EffectApplyResult)
-//{
-	//local XComGameStateContext_Ability  Context;
-	//local X2Action_PlayAnimation PlayAnimationAction;
-//
-	//Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
-//
-	//PlayAnimationAction = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, Context));
-	//PlayAnimationAction.Params.AnimName = 'HL_EnergyShield';
-//}
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
+{
+	local XComGameState_Item SourceItem;
+	local X2GremlinTemplate GremlinTemplate;
+
+	if (AbilityState != none)
+	{
+		SourceItem = AbilityState.GetSourceWeapon();
+	}
+
+	switch (tag)
+	{
+	case 'Shield':
+		if (SourceItem != none)
+		{
+			GremlinTemplate = X2GremlinTemplate(SourceItem.GetMyTemplate());
+			if (GremlinTemplate != none)
+			{
+				TagValue = string(ConventionalAmount);
+				if (GremlinTemplate.WeaponTech == 'magnetic')
+					TagValue = string(MagneticAmount);
+				else if (GremlinTemplate.WeaponTech == 'beam')
+					TagValue = string(BeamAmount);
+				return true;
+			}
+		}
+		TagValue = ConventionalAmount$"/"$MagneticAmount$"/"$BeamAmount;
+		return true;
+	}
+
+	return false;
+}
 
 defaultproperties
 {

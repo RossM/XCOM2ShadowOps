@@ -7,6 +7,22 @@ static event OnPostTemplatesCreated()
 {
 	AddUniversalAbilities();
 	FixAllSimpleStandardAims();
+	ChainAbilityTag();
+}
+
+static function ChainAbilityTag()
+{
+	local XComEngine Engine;
+	local XMBAbilityTag AbilityTag;
+	local int idx;
+
+	Engine = `XENGINE;
+
+	AbilityTag = new class'XMBAbilityTag';
+	AbilityTag.WrappedTag = Engine.AbilityTag;
+	idx = Engine.LocalizeContext.LocalizeTags.Find(Engine.AbilityTag);
+	Engine.AbilityTag = AbilityTag;
+	Engine.LocalizeContext.LocalizeTags[idx] = AbilityTag;
 }
 
 static function AddUniversalAbilities()

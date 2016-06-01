@@ -138,8 +138,8 @@ LocFlyOverText="Fortify"
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
 LocFriendlyName="Shield Protocol"
-LocLongDescription="Give a friendly unit an energy shield which will absorb <Ability:ShieldProtocolValue/> points of damage. The shield lasts until the end of the mission or until it is destroyed, and also grants poison immunity."
-LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:ShieldProtocolValue/> points of damage."
+LocLongDescription="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. The shield lasts until the end of the mission or until it is destroyed, and also grants poison immunity."
+LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage."
 LocFlyOverText="Shield Protocol""
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
@@ -167,15 +167,15 @@ LocFlyOverText="Barrage"
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
 LocFriendlyName="Shields Up"
-LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:ShieldsUpValue/> damage."
-LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:ShieldsUpValue/> damage."
+LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:Shield:ShadowOps_ShieldsUpTrigger/> damage."
+LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:Shield:ShadowOps_ShieldsUpTrigger/> damage."
 LocFlyOverText="Shields Up"
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
 
 [ShadowOps_ShieldsUpTrigger X2AbilityTemplate]
 LocFriendlyName="Shields Up"
-LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:ShieldsUpValue/> damage."
-LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:ShieldsUpValue/> damage."
+LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
+LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
 LocFlyOverText="Shields Up"
 
 [ShadowOps_ECM X2AbilityTemplate]
@@ -213,7 +213,7 @@ LocFlyOverText="Vanish"
 
 [ShadowOps_RestorationProtocol X2AbilityTemplate]
 LocFriendlyName="Renewal Protocol"
-LocLongDescription="Grants a unit <Ability:RestorationProtocolHealAmount/> points of HP regeneration every turn, to a maximum of <Ability:RestorationProtocolMaxHealAmount/> points. Also stabilizes and revives bleeding out or unconscious units and removes some debuffs."
+LocLongDescription="Grants a unit <Ability:Heal/> points of HP regeneration every turn, to a maximum of <Ability:MaxHeal/> points. Also stabilizes and revives bleeding out or unconscious units and removes some debuffs."
 LocHelpText="Grants a unit HP regeneration every turn, and stabilizes and revives bleeding out or unconscious units."
 LocFlyOverText="Renewal Protocol"
 LocPromotionPopupText="<Bullet/> Renewal Protocol will get a unit that is bleeding out or unconscious up and back into the fight. Try to save it for a unit that really needs it.<br/><Bullet/> Renewal Protocol restores 2 HP per turn, to a maximum of 8 HP. The first tick of healing is applied immediately when it is used.<br/><Bullet/> The Battlefield Medicine foundry project will increase the amount to 3 HP per turn. <br/><Bullet/> Advanced GREMLINs will heal more total HP.  <br/><Bullet/> Restoration Protocol has one charge per mission. <br/>"
@@ -366,8 +366,8 @@ LocPromotionPopupText="<Bullet/> Smoke grenades provide a +20 Defense bonus to a
 
 [ShadowOps_Breach X2AbilityTemplate]
 LocFriendlyName="Breach"
-LocLongDescription="Fire a shot that destroys cover and shreds <Ability:BreachShred/> armor in a small area, but deals reduced damage and can't get critical hits."
-LocHelpText="Fire a shot that destroys cover and shreds <Ability:BreachShred/> armor in a small area, but deals reduced damage and can't get critical hits."
+LocLongDescription="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits."
+LocHelpText="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits."
 LocFlyOverText="Breach"
 LocPromotionPopupText="<Bullet/> More advanced weapons will deal more damage and shred more armor.<br/><Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> Breach deals more damage and has a larger radius when used with a shotgun rather than an assault rifle. <br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
@@ -380,8 +380,8 @@ LocPromotionPopupText="<Bullet/> Fastball effectively lets you use a grenade wit
 
 [ShadowOps_Fracture X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds <Ability:FractureShred/> armor and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that shreds <Ability:FractureShred/> parmor and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that shreds <Ability:Shred/> armor and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that shreds <Ability:Shred/> armor and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 LocPromotionPopupText="<Bullet/> More advanced weapons will shred more armor.<br/><Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Don't wait to use Fracture until you need both the shredding and the bonus damage. It's still a good ability even when it only does one of those things. <br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 

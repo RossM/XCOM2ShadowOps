@@ -108,9 +108,6 @@
     <Content Include="Src\ShadowOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2AbilityTag_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityTemplate_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2208,6 +2205,9 @@
     <Content Include="Src\XComGame\Classes\XLocalizedData.uc" />
     <Content Include="Src\XComGame\Classes\XpEventData.uc" />
     <Content Include="Src\XModBase\Classes\X2AbilityMultiTarget_SoldierBonusRadius_XModBase.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase\Classes\XMBAbilityTag.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase\Classes\X2AbilityToHitCalc_StandardAim_XModBase.uc">

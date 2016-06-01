@@ -18,11 +18,6 @@ static function EditTemplates()
 {
 	local name DataName;
 	local TemplateEdit Edit;
-	local X2AbilityTag_BO AbilityTag;
-	local XComEngine Engine;
-	local int idx;
-
-	Engine = `XENGINE;
 
 	// Strategy
 	AddGtsUnlocks();
@@ -53,12 +48,6 @@ static function EditTemplates()
 	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
 
 	UpgradeAbilityVisualization('LaunchGrenade');
-
-	AbilityTag = new class'X2AbilityTag_BO';
-	AbilityTag.WrappedTag = Engine.AbilityTag;
-	idx = Engine.LocalizeContext.LocalizeTags.Find(Engine.AbilityTag);
-	Engine.AbilityTag = AbilityTag;
-	Engine.LocalizeContext.LocalizeTags[idx] = AbilityTag;
 }
 
 // --- Strategy ---

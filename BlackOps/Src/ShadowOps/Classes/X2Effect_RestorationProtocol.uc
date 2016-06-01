@@ -1,4 +1,4 @@
-class X2Effect_RestorationProtocol extends X2Effect_Regeneration;
+class X2Effect_RestorationProtocol extends X2Effect_Regeneration implements(XMBEffectInterface);
 
 var name IncreasedHealProject;
 var int IncreasedAmountToHeal;
@@ -100,6 +100,46 @@ function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out
 		}
 	}
 
+	return false;
+}
+
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
+{
+	local XComGameState_Item SourceItem;
+	local X2GremlinTemplate GremlinTemplate;
+	local XComGameState_HeadquartersXCom XComHQ;
+	local XComGameStateHistory History;
+
+	if (AbilityState != none)
+	{
+		SourceItem = AbilityState.GetSourceWeapon();
+	}
+
+	History = `XCOMHISTORY;
+
+	switch (tag)
+	{
+	case 'Heal':
+		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom', true));
+		if (XComHQ != None && XComHQ.IsTechResearched(IncreasedHealProject))
+			TagValue = string(IncreasedAmountToHeal);
+		else
+			TagValue = string(HealAmount);
+		return true;
+
+	case 'MaxHeal':
+		if (SourceItem != none)
+		{
+			GremlinTemplate = X2GremlinTemplate(SourceItem.GetMyTemplate());
+			if (GremlinTemplate != none)
+			{
+				TagValue = string(MaxHealAmount + GremlinTemplate.HealingBonus * HealingBonusMultiplier);
+				return true;
+			}
+		}
+		TagValue = MaxHealAmount$"/"$(MaxHealAmount + HealingBonusMultiplier)$"/"$(MaxHealAmount + 2 * HealingBonusMultiplier);
+		return true;
+	}
 	return false;
 }
 

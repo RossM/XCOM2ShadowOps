@@ -1,4 +1,4 @@
-class X2Effect_FractureDamage extends X2Effect_Persistent config(GameData_SoldierSkills);
+class X2Effect_FractureDamage extends X2Effect_Persistent implements(XMBEffectInterface) config(GameData_SoldierSkills);
 
 var config int ConventionalBonusShred, MagneticBonusShred, BeamBonusShred;
 
@@ -42,4 +42,37 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 		}
 	}
 	return int(ExtraShred);
+}
+
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
+{
+	local XComGameState_Item SourceItem;
+	local X2WeaponTemplate WeaponTemplate;
+
+	if (AbilityState != none)
+	{
+		SourceItem = AbilityState.GetSourceWeapon();
+	}
+
+	switch (tag)
+	{
+	case 'Shred':
+		if (SourceItem != none)
+		{
+			WeaponTemplate = X2WeaponTemplate(SourceItem.GetMyTemplate());
+			if (WeaponTemplate != none)
+			{
+				TagValue = string(ConventionalBonusShred);
+				if (WeaponTemplate.WeaponTech == 'magnetic')
+					TagValue = string(MagneticBonusShred);
+				else if (WeaponTemplate.WeaponTech == 'beam')
+					TagValue = string(BeamBonusShred);
+				return true;
+			}
+		}
+		TagValue = ConventionalBonusShred$"/"$MagneticBonusShred$"/"$BeamBonusShred;
+		return true;
+	}
+
+	return false;
 }
