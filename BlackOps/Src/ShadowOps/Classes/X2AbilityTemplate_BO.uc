@@ -74,6 +74,12 @@ function int GetUIBonusStatMarkup(ECharStatType Stat, XComGameState_Item Item)
 	return 0;
 }
 
+// Evil hack
+static function SetAbilityTargetEffects(X2AbilityTemplate Template, out array<X2Effect> TargetEffects)
+{
+	Template.AbilityTargetEffects = TargetEffects;
+}
+
 defaultproperties
 {
 	ApplyToWeaponSlot = eInvSlot_Unknown;

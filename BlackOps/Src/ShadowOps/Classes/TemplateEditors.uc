@@ -28,6 +28,7 @@ static function EditTemplates()
 	ChangeAllToGrenadeActionPoints();
 	AddSwapAmmoAbilities();
 	FixHotloadAmmo();
+	FixHunkerDown();
 
 	if (class'ModConfig'.default.bEnableRulesTweaks)
 	{
@@ -204,9 +205,11 @@ static function AddDoNotConsumeAllAbility(name AbilityName, name PassiveAbilityN
 		foreach Template.AbilityCosts(AbilityCost)
 		{
 			ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
-			if (ActionPointCost != none && ActionPointCost.DoNotConsumeAllSoldierAbilities.Find(PassiveAbilityName) == INDEX_NONE)
+			if (ActionPointCost != none && ActionPointCost.bConsumeAllPoints && ActionPointCost.DoNotConsumeAllSoldierAbilities.Find(PassiveAbilityName) == INDEX_NONE)
 			{
 				ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem(PassiveAbilityName);
+				if (ActionPointCost.iNumPoints == 0)
+					ActionPointCost.iNumPoints = 1;
 			}
 		}
 	}
@@ -227,9 +230,11 @@ static function AddDoNotConsumeAllEffect(name AbilityName, name EffectName)
 		foreach Template.AbilityCosts(AbilityCost)
 		{
 			ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
-			if (ActionPointCost != none && ActionPointCost.DoNotConsumeAllEffects.Find(EffectName) == INDEX_NONE)
+			if (ActionPointCost != none && ActionPointCost.bConsumeAllPoints && ActionPointCost.DoNotConsumeAllEffects.Find(EffectName) == INDEX_NONE)
 			{
 				ActionPointCost.DoNotConsumeAllEffects.AddItem(EffectName);
+				if (ActionPointCost.iNumPoints == 0)
+					ActionPointCost.iNumPoints = 1;
 			}
 		}
 	}
@@ -456,6 +461,28 @@ static function FixHotloadAmmo()
 	foreach TemplateAllDifficulties(Template)
 	{
 		Template.BuildNewGameStateFn = class'X2AbilityOverrides_BO'.static.HotLoadAmmo_BuildGameState;
+	}
+}
+
+static function FixHunkerDown()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local array<X2Effect>						Effects;
+	local int idx;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('HunkerDown', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		Effects = Template.AbilityTargetEffects;
+		for (idx = 0; idx < Effects.Length; idx++)
+		{
+			if (Effects[idx].class == class'X2Effect_PersistentStatChange')
+				Effects[idx] = new class'X2Effect_HunkerDown'(Effects[idx]);
+		}
+		class'X2AbilityTemplate_BO'.static.SetAbilityTargetEffects(Template, Effects);
 	}
 }
 
