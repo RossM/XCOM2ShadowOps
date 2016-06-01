@@ -436,31 +436,9 @@ static function X2AbilityTemplate SlamFire()
 static function X2AbilityTemplate ChainReaction()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_ChainReaction                Effect;
 
-	// Icon Properties
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ChainReaction');
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_fuse";
+	Template = PurePassive('ShadowOps_ChainReaction', "img:///UILibrary_PerkIcons.UIPerk_fuse", false);
 	Template.AdditionalAbilities.AddItem('ShadowOps_ChainReactionFuse');
-	//Template.AdditionalAbilities.AddItem('FusePostActivationConcealmentBreaker');
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
-
-	Effect = new class'X2Effect_ChainReaction';
-	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = false;
 
 	return Template;
 }
@@ -468,6 +446,7 @@ static function X2AbilityTemplate ChainReaction()
 static function X2AbilityTemplate ChainReactionFuse()
 {
 	local X2AbilityTemplate					Template;
+	local X2AbilityTrigger_EventListener	EventListener;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ChainReactionFuse');
 
@@ -476,15 +455,18 @@ static function X2AbilityTemplate ChainReactionFuse()
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Offensive;
 
-	Template.AbilityTriggers.AddItem(new class'X2AbilityTrigger_Placeholder');
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'KillMail';
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.VoidRiftInsanityListener;
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	Template.AbilityTriggers.AddItem(EventListener);
 
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 	Template.AbilityToHitCalc = default.DeadEye;
 
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);	
-	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
+	Template.AbilityTargetConditions.AddItem(new class'X2Condition_KilledByExplosion');	
 	Template.AbilityTargetConditions.AddItem(new class'X2Condition_FuseTarget');	
-	Template.AddShooterEffectExclusions();
 
 	Template.PostActivationEvents.AddItem(class'X2ABility_PsiOperativeAbilitySet'.default.FuseEventName);
 	//Template.PostActivationEvents.AddItem(class'X2ABility_PsiOperativeAbilitySet'.default.FusePostEventName);
@@ -526,7 +508,8 @@ simulated function ChainReactionFuseVisualization(XComGameState VisualizeGameSta
 	class'X2Action_SyncVisualizer'.static.AddToVisualizationTrack(BuildTrack, Context);
 
 	DelayAction = X2Action_Delay(class 'X2Action_Delay'.static.AddToVisualizationTrack(BuildTrack, Context));
-	DelayAction.Duration = 6.0;
+	DelayAction.bIgnoreZipMode = true;
+	DelayAction.Duration = 1.2;
 
 	// Send an intertrack message to trigger the fuse explosion
 	SendMessageAction = X2Action_SendInterTrackMessage(class'X2Action_SendInterTrackMessage'.static.AddToVisualizationTrack(BuildTrack, Context));
