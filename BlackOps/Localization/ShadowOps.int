@@ -21,8 +21,8 @@ LocPromotionPopupText="<Bullet/> A Dragoon with Tank and an EXO or WAR suit can 
 
 [ShadowOps_Finesse X2AbilityTemplate_BO]
 LocFriendlyName="Finesse"
-LocLongDescription="Gain +10 Aim and +3 Mobility while equipped with a rifle."
-LocHelpText="Gain +10 Aim and +3 Mobility while equipped with a rifle."
+LocLongDescription="Gain +<Ability:ToHit/> Aim and +<Ability:Mobility/> Mobility while equipped with a rifle."
+LocHelpText="Gain +<Ability:ToHit/> Aim and +<Ability:Mobility/> Mobility while equipped with a rifle."
 LocFlyOverText="Finesse"
 LocPromotionPopupText="<Bullet/> The extra mobility from Finesse can help you to get a flank or to reach the objective quickly, but be careful you don't get too far ahead of the rest of the squad.<br/><Bullet> The bonuses from Finesse are lost if you equip a cannon. Weapons that can be equipped by any unit that can equip a rifle, such as the Boltcaster, count as rifles for Finesse.<br/><Bullet/> Learning Finesse will automatically equip the highest-level rifle in your inventory.<br/>"
 

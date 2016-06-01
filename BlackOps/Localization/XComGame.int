@@ -76,8 +76,8 @@ LocFriendlyName="Zone of Control Shot"
 
 [ShadowOps_ZeroIn X2AbilityTemplate]
 LocFriendlyName="Zero In"
-LocLongDescription="When you miss an attack, you get +20 Aim on your next attack."
-LocHelpText="When you miss an attack, you get +20 Aim on your next attack."
+LocLongDescription="When you miss an attack, you get +<Ability:ToHit/> Aim on your next attack."
+LocHelpText="When you miss an attack, you get +<Ability:ToHit/> Aim on your next attack."
 LocFlyOverText="Zero In"
 LocPromotionPopupText="<Bullet/> Zero In can help compensate for not being able to move to get a better shot while using Bullet Swarm. It makes it much more likely that at least one shot in a turn will hit.<br/><Bullet/> Zero In doesn't apply to reaction shots.<br/>"
 
@@ -111,14 +111,14 @@ LocPromotionPopupText="<Bullet/> Resilience is useful for controlling the amount
 
 [ShadowOps_AdrenalineSurge X2AbilityTemplate]
 LocFriendlyName="Adrenaline Surge"
-LocLongDescription="When you get a kill, you and nearby friendly units get +10 Crit chance and +3 Mobility until the end of your turn."
-LocHelpText="+10 Crit chance and +3 Mobility until the end of your turn."
+LocLongDescription="When you get a kill, you and nearby friendly units get +<Ability:Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and +<Ability:Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
+LocHelpText="+<Ability:Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and +<Ability:Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
 LocFlyOverText="Adrenaline Surge"
 
 [ShadowOps_AdrenalineSurgeTrigger X2AbilityTemplate]
 LocFriendlyName="Adrenaline Surge"
-LocLongDescription="When you get a kill, you and nearby friendly units get +10 Crit chance and +3 Mobility until the end of your turn."
-LocHelpText="+10 Crit chance and +3 Mobility until the end of your turn."
+LocLongDescription="When you get a kill, you and nearby friendly units get +<Ability:Crit/> Crit chance and +<Ability:Mobility/> Mobility until the end of your turn."
+LocHelpText="+<Ability:Crit/> Crit chance and +<Ability:Mobility/> Mobility until the end of your turn."
 LocFlyOverText="Adrenaline Surge"
 
 [ShadowOps_Fortify X2AbilityTemplate]
@@ -130,8 +130,8 @@ LocPromotionPopupText="<Bullet/> Fortify will activate on any ability that gives
 
 [ShadowOps_FortifyTrigger X2AbilityTemplate]
 LocFriendlyName="Fortify"
-LocLongDescription="+20 Defense until the start of your next turn."
-LocHelpText="+20 Defense until the start of your next turn."
+LocLongDescription="+<Ability:Defense/> Defense until the start of your next turn."
+LocHelpText="+<Ability:Defense/> Defense until the start of your next turn."
 LocFlyOverText="Fortify"
 
 ; === Dragoon abilities ===
@@ -234,8 +234,8 @@ LocPromotionPopupText="<Bullet/> Using Puppet Protocol will only break concealme
 
 [ShadowOps_TacticalSense X2AbilityTemplate]
 LocFriendlyName="Tactical Sense"
-LocLongDescription="You get +10 Dodge for each enemy you can see, to a max of +50."
-LocHelpText="You get +10 Dodge for each enemy you can see, to a max of +50."
+LocLongDescription="You get +<Ability:Dodge/> Dodge for each enemy you can see, to a max of +<Ability:MaxDodge/>."
+LocHelpText="You get +<Ability:Dodge/> Dodge for each enemy you can see, to a max of +<Ability:MaxDodge/>."
 LocFlyOverText="Tactical Sense"
 
 ; === Hunter abilities ===
@@ -263,8 +263,8 @@ LocFlyOverText="Overwatch: Snap Shot"
 
 [ShadowOps_HunterMark X2AbilityTemplate]
 LocFriendlyName="Mark"
-LocLongDescription="Mark a target, giving all friendly units +15 Aim on shots against it. The bonus lasts until you mark another target. Using this ability will not break concealment."
-LocHelpText="Mark a target, giving all friendly units +15 Aim on shots against it."
+LocLongDescription="Mark a target, giving all friendly units +<Ability:ToHit/> Aim on shots against it. The bonus lasts until you mark another target. Using this ability will not break concealment."
+LocHelpText="Mark a target, giving all friendly units +<Ability:ToHit/> Aim on shots against it."
 LocFlyOverText="Mark"
 LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns where you have to move or reload your sniper rifle.<br/><Bullet/> Use Mark on dangerous enemies before triggering an ambush.<br/><Bullet/> Mark followed by Snap Shot is more accurage than a standard sniper rifle shot, and also helps the rest of the squad.<br/><Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
@@ -406,8 +406,8 @@ LocPromotionPopupText="<Bullet/> Hunkering down provides large bonuses to Defens
 
 [ShadowOps_Aggression X2AbilityTemplate]
 LocFriendlyName="Aggression"
-LocLongDescription="All of your attacks get +10 Crit chance for each enemy you can see, to a max of +30."
-LocHelpText="All of your attacks get +10 Crit chance for each enemy you can see, to a max of +30."
+LocLongDescription="All of your attacks get +<Ability:Crit/> Crit chance for each enemy you can see, to a max of +<Ability:MaxCrit/>."
+LocHelpText="All of your attacks get +<Ability:Crit/> Crit chance for each enemy you can see, to a max of +<Ability:MaxCrit/>."
 LocFlyOverText="Aggression"
 LocPromotionPopupText="<Bullet/> Aggression even affects attacks that can't normally crit, such as grenades and Breach. <br/>"
 
@@ -500,8 +500,8 @@ LocFlyOverText="Devil's Luck"
 
 [ShadowOps_Lightfoot X2AbilityTemplate]
 LocFriendlyName="Lightfoot"
-LocLongDescription="You have +4 Mobility."
-LocHelpText="You have +4 Mobility."
+LocLongDescription="You have +<Ability:Mobility/> Mobility."
+LocHelpText="You have +<Ability:Mobility/> Mobility."
 LocFlyOverText="Lightfoot"
 
 [ShadowOps_Pyromaniac X2AbilityTemplate]

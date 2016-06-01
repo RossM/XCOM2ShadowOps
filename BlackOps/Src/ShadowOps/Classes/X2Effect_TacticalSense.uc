@@ -1,4 +1,4 @@
-class X2Effect_TacticalSense extends X2Effect_Persistent;
+class X2Effect_TacticalSense extends X2Effect_Persistent implements(XMBEffectInterface);
 
 var int DodgeModifier, MaxDodgeModifier;
 
@@ -15,3 +15,17 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 	ShotModifiers.AddItem(ModInfo);
 }
 
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
+{
+	switch (tag)
+	{
+	case 'Dodge':
+		TagValue = string(DodgeModifier);
+		return true;
+	case 'MaxDodge':
+		TagValue = string(MaxDodgeModifier);
+		return true;
+	}
+
+	return false;
+}

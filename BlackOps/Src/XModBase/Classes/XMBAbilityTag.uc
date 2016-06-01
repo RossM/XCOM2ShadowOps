@@ -71,6 +71,22 @@ event ExpandHandler(string InString, out string OutString)
 				return;
 			}
 		}
+
+		switch (Type)
+		{
+		case 'ToHit':
+			if (FindStatBonus(AbilityTemplate, eStat_Offense, OutString))
+				return;
+			break;
+		case 'Mobility':
+			if (FindStatBonus(AbilityTemplate, eStat_Mobility, OutString))
+				return;
+			break;
+		case 'Crit':
+			if (FindStatBonus(AbilityTemplate, eStat_CritChance, OutString))
+				return;
+			break;
+		}
 	}
 
 	switch (Type)
@@ -127,4 +143,56 @@ event ExpandHandler(string InString, out string OutString)
 		`RedScreenOnce(`location $ ": Unhandled localization tag: '"$Tag$":"$InString$"'");
 		OutString = "<Ability:"$InString$"/>";
 	}
+}
+
+function bool FindStatBonus(X2AbilityTemplate AbilityTemplate, ECharStatType StatType, out string OutString)
+{
+	local X2Effect EffectTemplate;
+	local X2Effect_PersistentStatChange StatChangeEffect;
+	local int idx;
+
+	if (AbilityTemplate == none)
+		return false;
+
+	foreach AbilityTemplate.AbilityTargetEffects(EffectTemplate)
+	{
+		StatChangeEffect = X2Effect_PersistentStatChange(EffectTemplate);
+		if (StatChangeEffect != none)
+		{
+			idx = StatChangeEffect.m_aStatChanges.Find('StatType', StatType);
+			if (idx != INDEX_NONE)
+			{
+				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount));
+				return true;
+			}
+		}
+	}
+	foreach AbilityTemplate.AbilityMultiTargetEffects(EffectTemplate)
+	{
+		StatChangeEffect = X2Effect_PersistentStatChange(EffectTemplate);
+		if (StatChangeEffect != none)
+		{
+			idx = StatChangeEffect.m_aStatChanges.Find('StatType', StatType);
+			if (idx != INDEX_NONE)
+			{
+				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount));
+				return true;
+			}
+		}
+	}
+	foreach AbilityTemplate.AbilityShooterEffects(EffectTemplate)
+	{
+		StatChangeEffect = X2Effect_PersistentStatChange(EffectTemplate);
+		if (StatChangeEffect != none)
+		{
+			idx = StatChangeEffect.m_aStatChanges.Find('StatType', StatType);
+			if (idx != INDEX_NONE)
+			{
+				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount));
+				return true;
+			}
+		}
+	}
+
+	return false;
 }

@@ -1,4 +1,4 @@
-class X2Effect_ZeroIn extends X2Effect_Persistent;
+class X2Effect_ZeroIn extends X2Effect_Persistent implements(XMBEffectInterface);
 
 var int AccuracyBonus;
 var name ZeroInUnitValueName;
@@ -67,6 +67,18 @@ function static EventListenerReturn ZeroInListener(Object EventData, Object Even
 	}
 
 	return ELR_NoInterrupt;
+}
+
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
+{
+	switch (tag)
+	{
+	case 'ToHit':
+		TagValue = string(AccuracyBonus);
+		return true;
+	}
+
+	return false;
 }
 
 DefaultProperties

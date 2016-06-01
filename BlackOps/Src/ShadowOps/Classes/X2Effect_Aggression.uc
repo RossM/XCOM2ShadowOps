@@ -1,4 +1,4 @@
-class X2Effect_Aggression extends X2Effect_Persistent config(GameData_SoldierSkills);
+class X2Effect_Aggression extends X2Effect_Persistent implements(XMBEffectInterface) config(GameData_SoldierSkills);
 
 var int CritModifier, MaxCritModifier;
 var int GrenadeCritDamage;
@@ -32,3 +32,17 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	ShotModifiers.AddItem(ModInfo);
 }
 
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
+{
+	switch (tag)
+	{
+	case 'Crit':
+		TagValue = string(CritModifier);
+		return true;
+	case 'MaxCrit':
+		TagValue = string(MaxCritModifier);
+		return true;
+	}
+
+	return false;
+}
