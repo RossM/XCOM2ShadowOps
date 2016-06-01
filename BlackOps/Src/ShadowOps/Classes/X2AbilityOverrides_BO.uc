@@ -9,10 +9,12 @@ static function array<X2DataTemplate> CreateTemplates()
 	local array<X2DataTemplate> Templates;
 
 	Templates.AddItem(AddHunkerDownAbility());
-	Templates.AddItem(SuppressionShot());
-	Templates.AddItem(HotLoadAmmo());
-	Templates.AddItem(AddPanicAbility_Damage());
-	Templates.AddItem(AddPanicAbility_UnitPanicked());
+
+	if (class'ModConfig'.default.bEnableRulesTweaks)
+	{
+		Templates.AddItem(AddPanicAbility_Damage());
+		Templates.AddItem(AddPanicAbility_UnitPanicked());
+	}
 
 	return Templates;
 }
@@ -96,121 +98,7 @@ static function X2AbilityTemplate AddHunkerDownAbility()
 	return Template;
 }
 
-// Given an Aim bonus
-static function X2AbilityTemplate SuppressionShot()
-{
-	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
-	local X2AbilityToHitCalc_StandardAim    StandardAim;
-	local X2Condition_Visibility            TargetVisibilityCondition;
-	local X2AbilityTrigger_Event	        Trigger;
-	local array<name>                       SkipExclusions;
-	local X2Condition_UnitEffectsWithAbilitySource TargetEffectCondition;
-	local X2Effect_RemoveEffects            RemoveSuppression;
-	local X2Effect                          ShotEffect;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'SuppressionShot');
-
-	Template.bDontDisplayInAbilitySummary = true;
-	ReserveActionPointCost = new class'X2AbilityCost_ReserveActionPoints';
-	ReserveActionPointCost.iNumPoints = 1;
-	ReserveActionPointCost.AllowedTypes.AddItem('Suppression');
-	Template.AbilityCosts.AddItem(ReserveActionPointCost);
-	
-	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
-	StandardAim.bReactionFire = true;
-	StandardAim.BuiltInHitMod = default.SuppressionHitModifier;
-	Template.AbilityToHitCalc = StandardAim;
-	Template.AbilityToHitOwnerOnMissCalc = StandardAim;
-
-	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
-
-	TargetEffectCondition = new class'X2Condition_UnitEffectsWithAbilitySource';
-	TargetEffectCondition.AddRequireEffect(class'X2Effect_Suppression'.default.EffectName, 'AA_UnitIsNotSuppressed');
-	Template.AbilityTargetConditions.AddItem(TargetEffectCondition);
-
-	TargetVisibilityCondition = new class'X2Condition_Visibility';	
-	TargetVisibilityCondition.bRequireGameplayVisible = true;
-	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-
-	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
-	Template.AddShooterEffectExclusions(SkipExclusions);
-	Template.bAllowAmmoEffects = true;
-	Template.bAllowBonusWeaponEffects = true;
-
-	RemoveSuppression = new class'X2Effect_RemoveEffects';
-	RemoveSuppression.EffectNamesToRemove.AddItem(class'X2Effect_Suppression'.default.EffectName);
-	RemoveSuppression.bCheckSource = true;
-	RemoveSuppression.SetupEffectOnShotContextResult(true, true);
-	Template.AddShooterEffect(RemoveSuppression);
-	
-	Template.AbilityTargetStyle = default.SimpleSingleTarget;
-
-	//Trigger on movement - interrupt the move
-	Trigger = new class'X2AbilityTrigger_Event';
-	Trigger.EventObserverClass = class'X2TacticalGameRuleset_MovementObserver';
-	Trigger.MethodName = 'InterruptGameState';
-	Template.AbilityTriggers.AddItem(Trigger);
-	
-	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_supression";
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
-	Template.bDisplayInUITooltip = false;
-	Template.bDisplayInUITacticalText = false;
-
-	//don't want to exit cover, we are already in suppression/alert mode.
-	Template.bSkipExitCoverWhenFiring = true;
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bAllowFreeFireWeaponUpgrade = true;	
-
-	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
-	ShotEffect = class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect();
-	ShotEffect.TargetConditions.AddItem(class'X2Ability_DefaultAbilitySet'.static.OverwatchTargetEffectsCondition());
-	Template.AddTargetEffect(ShotEffect);
-	//  Various Soldier ability specific effects - effects check for the ability before applying	
-	ShotEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
-	ShotEffect.TargetConditions.AddItem(class'X2Ability_DefaultAbilitySet'.static.OverwatchTargetEffectsCondition());
-	Template.AddTargetEffect(ShotEffect);
-	
-	return Template;	
-}
-
-
-static function X2DataTemplate HotLoadAmmo()
-{
-	local X2AbilityTemplate                 Template;
-	local X2AbilityTrigger_UnitPostBeginPlay PostBeginPlayTrigger;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'HotLoadAmmo');
-
-	Template.bDontDisplayInAbilitySummary = true;
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	Template.AbilityTargetStyle = default.SelfTarget;
-
-	PostBeginPlayTrigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	PostBeginPlayTrigger.Priority -= 10;        // Lower priority to guarantee ammo modifying effects (e.g. Deep Pockets) already run.
-	Template.AbilityTriggers.AddItem(PostBeginPlayTrigger);
-
-	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.BuildNewGameStateFn = HotLoadAmmo_BuildGameState;
-	Template.BuildVisualizationFn = none;
-
-	Template.bDisplayInUITooltip = false;
-	Template.bDisplayInUITacticalText = false;
-
-	return Template;
-}
-
-simulated function XComGameState HotLoadAmmo_BuildGameState(XComGameStateContext Context)
+simulated static function XComGameState HotLoadAmmo_BuildGameState(XComGameStateContext Context)
 {
 	local XComGameState NewGameState;
 	local XComGameState_Unit UnitState;

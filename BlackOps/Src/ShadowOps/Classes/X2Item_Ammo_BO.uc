@@ -34,7 +34,7 @@ static function X2AmmoTemplate CreateFlechetteRounds()
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
 	Template.StartingItem = false;
-	Template.CanBeBuilt = true;
+	Template.CanBeBuilt = class'ModConfig'.default.bEnableNewItems;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.DamageBonusLabel, , default.FlechetteDamageModifier);
 
@@ -42,7 +42,8 @@ static function X2AmmoTemplate CreateFlechetteRounds()
 	Template.GameArchetype = "Ammo_Flechette.PJ_Flechette";
 	
 	// Requirements
-	Template.Requirements.RequiredTechs.AddItem('ModularWeapons');
+	if (class'ModConfig'.default.bEnableNewItems)
+		Template.Requirements.RequiredTechs.AddItem('ModularWeapons');
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
@@ -59,14 +60,13 @@ static function X2DataTemplate CreateHollowPointRounds()
 	`CREATE_X2TEMPLATE(class'X2AmmoTemplate', Template, 'HollowPointRounds');
 	Template.strImage = "img:///UILibrary_StrategyImages.X2InventoryIcons.Inv_Needle_Rounds";
 	Template.Abilities.AddItem('HollowPointRounds');
-	Template.CanBeBuilt = false;
 	Template.PointsToComplete = 0;
 	Template.Tier = 0;
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.CriticalDamageLabel, , default.HollowPointCritDamageModifier);
 
-	Template.StartingItem = true;
+	Template.StartingItem = class'ModConfig'.default.bEnableNewItems;
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
 		
@@ -92,7 +92,7 @@ static function X2DataTemplate CreateTigerRounds()
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
 	Template.StartingItem = false;
-	Template.CanBeBuilt = true;
+	Template.CanBeBuilt = class'ModConfig'.default.bEnableNewItems;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ShredLabel, , default.TigerShred);
 
@@ -100,7 +100,8 @@ static function X2DataTemplate CreateTigerRounds()
 	Template.GameArchetype = "Ammo_Incendiary.PJ_Incendiary";
 
 	// Requirements
-	Template.Requirements.RequiredTechs.AddItem('HybridMaterials');
+	if (class'ModConfig'.default.bEnableNewItems)
+		Template.Requirements.RequiredTechs.AddItem('HybridMaterials');
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';
@@ -127,7 +128,7 @@ static function X2DataTemplate CreateDepletedEleriumRounds()
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
 	Template.StartingItem = false;
-	Template.CanBeBuilt = true;
+	Template.CanBeBuilt = class'ModConfig'.default.bEnableNewItems;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.DamageBonusLabel, , default.DepletedEleriumDamageModifier);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ShredLabel, , default.DepletedEleriumShred);
@@ -136,7 +137,8 @@ static function X2DataTemplate CreateDepletedEleriumRounds()
 	Template.GameArchetype = "Ammo_Talon.PJ_Talon";
 
 	// Requirements
-	Template.Requirements.RequiredTechs.AddItem('Tech_Elerium');
+	if (class'ModConfig'.default.bEnableNewItems)
+		Template.Requirements.RequiredTechs.AddItem('Tech_Elerium');
 
 	// Cost
 	Resources.ItemTemplateName = 'Supplies';

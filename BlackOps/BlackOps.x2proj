@@ -75,6 +75,9 @@
     <Content Include="Src\ShadowOps\Classes\AcademyUnlocks.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\ModConfig.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\EvilUnitStateHack.uc">
       <SubType>Content</SubType>
     </Content>

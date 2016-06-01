@@ -26,23 +26,32 @@ static function EditTemplates()
 	AddAllDoNotConsumeAllAbilities();
 	AddAllPostActivationEvents();
 	ChangeAllToGrenadeActionPoints();
-	AddAllSuppressionConditions();
 	AddSwapAmmoAbilities();
+	FixHotloadAmmo();
+
+	if (class'ModConfig'.default.bEnableRulesTweaks)
+	{
+		AddAllSuppressionConditions();
+		AddSuppressionAimModifier();
+	}
 
 	CreateCompatAbilities();
 
 	// Items
-	foreach default.ExtraStartingItems(DataName)
+	if (class'ModConfig'.default.bEnableNewItems)
 	{
-		ChangeToStartingItem(DataName);
-	}
-	foreach default.DisabledItems(DataName)
-	{
-		DisableItem(DataName);
-	}
-	foreach default.BuildableItems(Edit)
-	{
-		ApplyTemplateEdit(Edit);
+		foreach default.ExtraStartingItems(DataName)
+		{
+			ChangeToStartingItem(DataName);
+		}
+		foreach default.DisabledItems(DataName)
+		{
+			DisableItem(DataName);
+		}
+		foreach default.BuildableItems(Edit)
+		{
+			ApplyTemplateEdit(Edit);
+		}
 	}
 
 	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
@@ -433,5 +442,37 @@ static function AddSwapAmmoAbilities()
 			if (Template.Abilities.Find('ShadowOps_SwapAmmo') == INDEX_NONE)
 				Template.Abilities.AddItem('ShadowOps_SwapAmmo');
 		}
+	}
+}
+
+static function FixHotloadAmmo()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('HotLoadAmmo', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		Template.BuildNewGameStateFn = class'X2AbilityOverrides_BO'.static.HotLoadAmmo_BuildGameState;
+	}
+}
+
+static function AddSuppressionAimModifier()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local X2AbilityToHitCalc_StandardAim		ToHitCalc;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('SuppressionShot', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		ToHitCalc = new class'X2AbilityToHitCalc_StandardAim'(Template.AbilityToHitCalc);
+		ToHitCalc.BuiltInHitMod = class'X2AbilityOverrides_BO'.default.SuppressionHitModifier;
+		Template.AbilityToHitCalc = ToHitCalc;
+		Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 	}
 }
