@@ -15,6 +15,7 @@ event ExpandHandler(string InString, out string OutString)
 	local XMBEffectInterface EffectInterface;
 	local XComGameStateHistory History;
 	local array<string> Split;
+	local int idx;
 
 	History = `XCOMHISTORY;
 
@@ -72,20 +73,10 @@ event ExpandHandler(string InString, out string OutString)
 			}
 		}
 
-		switch (Type)
+		idx = class'XModBase_Config'.default.m_aCharStatTags.Find(Type);
+		if (idx != INDEX_NONE && FindStatBonus(AbilityTemplate, ECharStatType(idx), OutString))
 		{
-		case 'ToHit':
-			if (FindStatBonus(AbilityTemplate, eStat_Offense, OutString))
-				return;
-			break;
-		case 'Mobility':
-			if (FindStatBonus(AbilityTemplate, eStat_Mobility, OutString))
-				return;
-			break;
-		case 'Crit':
-			if (FindStatBonus(AbilityTemplate, eStat_CritChance, OutString))
-				return;
-			break;
+			return;
 		}
 	}
 
