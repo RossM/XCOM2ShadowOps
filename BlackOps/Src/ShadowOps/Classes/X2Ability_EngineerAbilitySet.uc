@@ -413,7 +413,7 @@ static function X2AbilityTemplate SlamFire()
 	Template.AddShooterEffectExclusions();
 
 	SlamFireEffect = new class'XMBEffect_ConditionalAbilityCostRefund';
-	SlamFireEffect.bRequireMatchingWeapon = true;
+	SlamFireEffect.bRequireAbilityWeapon = true;
 	SlamFireEffect.AllowedHitResults.AddItem(eHit_Crit);
 	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
 	SlamFireEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true, , Template.AbilitySourceName);
