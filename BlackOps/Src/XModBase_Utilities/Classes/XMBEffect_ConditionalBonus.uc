@@ -318,6 +318,32 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	local XComGameState_Item ItemState;
 	local ExtShotModifierInfo ExtModInfo;
 	local int ValidModifiers;
+	local EAbilityHitResult HitResult;
+	local float ResultMultiplier;
+
+	ResultMultiplier = 1;
+
+	switch (Tag)
+	{
+	case 'Crit':
+		Tag = 'ToHit';
+		HitResult = eHit_Crit;
+		break;
+	case 'Defense':
+		Tag = 'ToHitAsTarget';
+		HitResult = eHit_Success;
+		ResultMultiplier = -1;
+		break;
+	case 'Dodge':
+		Tag = 'ToHitAsTarget';
+		HitResult = eHit_Graze;
+		break;
+	case 'CritDefense':
+		Tag = 'ToHitAsTarget';
+		HitResult = eHit_Crit;
+		ResultMultiplier = -1;
+		break;
+	}
 
 	if (Modifiers.Find('Type', Tag) == INDEX_NONE)
 		return false;
@@ -330,6 +356,9 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	foreach Modifiers(ExtModInfo)
 	{
 		if (ExtModInfo.Type != Tag)
+			continue;
+
+		if (ExtModInfo.ModInfo.ModType != HitResult)
 			continue;
 
 		if (ExtModInfo.WeaponTech == 'conventional')
@@ -346,6 +375,6 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	if (ValidModifiers == 0)
 		Result = ConventionalResult;
 
-	TagValue = string(int(Result));
+	TagValue = string(int(Result * ResultMultiplier));
 	return true;
 }

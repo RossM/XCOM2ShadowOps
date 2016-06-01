@@ -27,8 +27,8 @@ LocPromotionPopupText="<Bullet/> Infantry can equip two different ammo items at 
 
 [ShadowOps_Magnum X2AbilityTemplate]
 LocFriendlyName="Magnum"
-LocLongDescription="Your pistol attacks get +10 Aim and deal +<Ability:Damage/> damage."
-LocHelpText="Your pistol attacks get +10 Aim and deal +<Ability:Damage/> damage."
+LocLongDescription="Your pistol attacks get +<Ability:ToHit/> Aim and deal +<Ability:Damage/> damage."
+LocHelpText="Your pistol attacks get +<Ability:ToHit/> Aim and deal +<Ability:Damage/> damage."
 LocFlyOverText="Magnum"
 LocPromotionPopupText="<Bullet/> Even without Magnum, your pistol is more accurate than your rifle at close range.<br/><Bullet/> Combining Magnum with ammo that adds extra damage will give you guaranteed kills on ADVENT Troopers at point-blank range."
 
@@ -123,8 +123,8 @@ LocFlyOverText="Adrenaline Surge"
 
 [ShadowOps_Fortify X2AbilityTemplate]
 LocFriendlyName="Fortify"
-LocLongDescription="Whenever you enter overwatch or use suppression, you gain +20 Defense until the start of your next turn."
-LocHelpText="Whenever you enter overwatch or use suppression, you gain +20 Defense until the start of your next turn."
+LocLongDescription="Whenever you enter overwatch or use suppression, you gain +<Ability:Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
+LocHelpText="Whenever you enter overwatch or use suppression, you gain +<Ability:Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
 LocFlyOverText="Fortify"
 LocPromotionPopupText="<Bullet/> Fortify will activate on any ability that gives you reaction shots, including Ready for Anything and Zone of Control. <br/>"
 
@@ -271,24 +271,22 @@ LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns wh
 [ShadowOps_VitalPoint X2AbilityTemplate]
 LocFriendlyName="Keen Edge"
 ; For some reason, putting two different <Ability:X> tags doesn't work for effects such as X2Effect_VitalPoint.
-;LocLongDescription="Your sword attacks shred <Ability:VitalPointShred/> armor and deal +<Ability:VitalPointDamage/> damage."
-;LocHelpText="Your sword attacks shred <Ability:VitalPointShred/> armor and deal +<Ability:VitalPointDamage/> damage."
-LocLongDescription="Your sword attacks shred <Ability:Shred/> armor and deal additional damage."
-LocHelpText="Your sword attacks shred <Ability:Shred/> armor and deal additional damage."
+LocLongDescription="Your sword attacks shred <Ability:Shred/> armor and deal +<Ability:Damage/> damage."
+LocHelpText="Your sword attacks shred <Ability:Shred/> armor and deal +<Ability:Damage/> damage."
 LocFlyOverText="Keen Edge"
 LocPromotionPopupText="<Bullet/> More advanced swords will shred more armor and deal extra bonus damage.<br/><Bullet/> Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet/> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
 
 [ShadowOps_Precision X2AbilityTemplate]
 LocFriendlyName="Precision"
-LocLongDescription="You get +20 Aim against targets in full cover."
-LocHelpText="You get +20 Aim against targets in full cover."
+LocLongDescription="You get +<Ability:ToHit/> Aim against targets in full cover."
+LocHelpText="You get +<Ability:ToHit/> Aim against targets in full cover."
 LocFlyOverText="Precision"
 LocPromotionPopupText=""
 
 [ShadowOps_LowProfile X2AbilityTemplate]
 LocFriendlyName="Low Profile"
-LocLongDescription="You get +20 Defense while in half cover."
-LocHelpText="You get +20 Defense while in half cover."
+LocLongDescription="You get +<Ability:Defense/> Defense while in half cover."
+LocHelpText="You get +<Ability:Defense/> Defense while in half cover."
 LocFlyOverText="Low Profile"
 LocPromotionPopupText="<Bullet/> The bonus is lost if the attacker is flanking you.<br/>"
 
@@ -347,8 +345,8 @@ LocPromotionPopupText="<Bullet/> First Strike can provide a decisive advantage i
 
 [ShadowOps_DamnGoodGround X2AbilityTemplate]
 LocFriendlyName="Damn Good Ground"
-LocLongDescription="You get an additional +10 Aim and +10 Defense against targets at lower elevation."
-LocHelpText="You get an additional +10 Aim and +10 Defense against targets at lower elevation."
+LocLongDescription="You get an additional +<Ability:ToHit/> Aim and +<Ability:Defense/> Defense against targets at lower elevation."
+LocHelpText="You get an additional +<Ability:ToHit/> Aim and +<Ability:Defense/> Defense against targets at lower elevation."
 LocFlyOverText="Damn Good Ground"
 
 ; === Engineer abilities ===
@@ -455,8 +453,8 @@ LocPromotionPopupText="<Bullet/> HEAT Ammo provides a substantial damage increas
 
 [ShadowOps_MovingTarget X2AbilityTemplate]
 LocFriendlyName="Moving Target"
-LocLongDescription="You get an additional +40 Defense and +100 Dodge against reaction fire."
-LocHelpText="You get an additional +40 Defense and +100 Dodge against reaction fire."
+LocLongDescription="You get an additional +<Ability:Defense/> Defense and +<Ability:Dodge/> Dodge against reaction fire."
+LocHelpText="You get an additional +<Ability:Defense/> Defense and +<Ability:Dodge/> Dodge against reaction fire."
 LocFlyOverText="Moving Target"
 LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Moving Target is a good choice. <br/>"
 
@@ -486,8 +484,8 @@ LocHelpText="Your <Ability:WeaponName/> attacks deal +<Ability:Damage/> damage."
 
 [ShadowOps_AbsolutelyCritical X2AbilityTemplate]
 LocFriendlyName="Absolutely Critical"
-LocLongDescription="You get an additional +50 Crit chance against flanked or uncovered targets."
-LocHelpText="You get an additional +50 Crit chance against flanked or uncovered targets."
+LocLongDescription="You get an additional +<Ability:Crit> Crit chance against flanked or uncovered targets."
+LocHelpText="You get an additional +<Ability:Crit> Crit chance against flanked or uncovered targets."
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Hit and Run"

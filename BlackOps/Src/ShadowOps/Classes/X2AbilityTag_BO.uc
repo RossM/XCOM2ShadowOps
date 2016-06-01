@@ -16,12 +16,15 @@ event ExpandHandler(string InString, out string OutString)
 	local XMBEffectInterface EffectInterface;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
+	local array<string> Split;
 
 	History = `XCOMHISTORY;
 
 	OutString = "";
 
-	Type = name(InString);
+	Split = SplitString(InString, ":");
+
+	Type = name(Split[0]);
 
 	EffectState = XComGameState_Effect(ParseObj);
 	AbilityState = XComGameState_Ability(ParseObj);
@@ -35,25 +38,40 @@ event ExpandHandler(string InString, out string OutString)
 	{
 		AbilityTemplate = AbilityState.GetMyTemplate();
 	}
+
+	if (Split.Length == 2)
+	{
+		AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(name(Split[1]));
+	}
+
 	if (AbilityTemplate != none)
 	{
 		foreach AbilityTemplate.AbilityTargetEffects(EffectTemplate)
 		{
 			EffectInterface = XMBEffectInterface(EffectTemplate);
 			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+			{
+				//`RedScreen(AbilityTemplate.DataName @ "'"$InString$"':'"$OutString$"'");
 				return;
+			}
 		}
 		foreach AbilityTemplate.AbilityMultiTargetEffects(EffectTemplate)
 		{
 			EffectInterface = XMBEffectInterface(EffectTemplate);
 			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+			{
+				//`RedScreen(AbilityTemplate.DataName @ "'"$InString$"':'"$OutString$"'");
 				return;
+			}
 		}
 		foreach AbilityTemplate.AbilityShooterEffects(EffectTemplate)
 		{
 			EffectInterface = XMBEffectInterface(EffectTemplate);
 			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+			{
+				//`RedScreen(AbilityTemplate.DataName @ "'"$InString$"':'"$OutString$"'");
 				return;
+			}
 		}
 	}
 
