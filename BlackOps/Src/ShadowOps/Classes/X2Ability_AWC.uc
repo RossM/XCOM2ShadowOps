@@ -7,7 +7,8 @@ var config float AnatomistCritModifier, AnatomistMaxCritModifier;
 var config int WeaponmasterBonusDamage;
 var config int AbsolutelyCriticalCritBonus;
 var config float DevilsLuckHitChanceMultiplier, DevilsLuckCritChanceMultiplier;
-var config int LightfoodMobilityBonus;
+var config int LightfootMobilityBonus;
+var config float LightfootDetectionModifier;
 var config int PyromaniacDamageBonus;
 var config int SnakeBloodDamageBonus;
 var config int RageDuration, RageCharges;
@@ -173,10 +174,11 @@ static function X2AbilityTemplate Lightfoot()
 	local X2AbilityTemplate Template;
 
 	Effect = new class'X2Effect_PersistentStatChange';
-	Effect.AddPersistentStatChange(eStat_Mobility, default.LightfoodMobilityBonus);
+	Effect.AddPersistentStatChange(eStat_Mobility, default.LightfootMobilityBonus);
+	Effect.AddPersistentStatChange(eStat_DetectionModifier, default.LightfootDetectionModifier);
 
 	Template = Passive('ShadowOps_Lightfoot', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.LightfoodMobilityBonus);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.LightfootMobilityBonus);
 
 	return Template;
 }

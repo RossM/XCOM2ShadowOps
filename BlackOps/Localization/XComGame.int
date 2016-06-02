@@ -500,8 +500,8 @@ LocFlyOverText="Devil's Luck"
 
 [ShadowOps_Lightfoot X2AbilityTemplate]
 LocFriendlyName="Lightfoot"
-LocLongDescription="You have +<Ability:Mobility/> Mobility."
-LocHelpText="You have +<Ability:Mobility/> Mobility."
+LocLongDescription="You have +<Ability:Mobility/> Mobility and are harder to detect while concealed."
+LocHelpText="You have +<Ability:Mobility/> Mobility and are harder to detect while concealed."
 LocFlyOverText="Lightfoot"
 
 [ShadowOps_Pyromaniac X2AbilityTemplate]
