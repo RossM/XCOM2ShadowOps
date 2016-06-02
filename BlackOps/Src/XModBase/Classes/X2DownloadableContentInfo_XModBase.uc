@@ -61,7 +61,7 @@ static function FixAllSimpleStandardAims()
 	local array<X2AbilityTemplate>				TemplateAllDifficulties;
 	local X2AbilityTemplate						Template;
 	local X2AbilityToHitCalc					ToHitCalc;
-	local X2AbilityToHitCalc_StandardAim_XModBase		NewToHitCalc;
+	local XMBAbilityToHitCalc_StandardAim		NewToHitCalc;
 	local array<name>							TemplateNames;
 	local name									AbilityName;
 
@@ -77,14 +77,14 @@ static function FixAllSimpleStandardAims()
 			ToHitCalc = Template.AbilityToHitCalc;
 			if (ToHitCalc != none && ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
 			{
-				NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
+				NewToHitCalc = new class'XMBAbilityToHitCalc_StandardAim'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
 				Template.AbilityToHitCalc = NewToHitCalc;
 			}
 
 			ToHitCalc = Template.AbilityToHitOwnerOnMissCalc;
 			if (ToHitCalc != none && ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
 			{
-				NewToHitCalc = new class'X2AbilityToHitCalc_StandardAim_XModBase'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
+				NewToHitCalc = new class'XMBAbilityToHitCalc_StandardAim'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
 				Template.AbilityToHitOwnerOnMissCalc = NewToHitCalc;
 			}
 		}

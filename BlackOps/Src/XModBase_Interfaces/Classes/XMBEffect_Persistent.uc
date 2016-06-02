@@ -23,15 +23,132 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 // breakdown, so they won't see the effects of other GetFinalToHitModifiers overrides.
 function GetFinalToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, ShotBreakdown ShotBreakdown, out array<ShotModifierInfo> ShotModifiers);
 
-// Luck gives a final chance to affect the to-hit chance of a unit in a way that doesn't show up in
-// the shot breakdown the player sees, exactly like the aim assist bonuses that players get on
-// lower difficulty levels. After the results of a shot are determined, luck is added to the
-// overall hit chance, and the roll is compared against hit chance + luck. If the comparison gives
-// the same result as the unmodified hit chance, the original result is kept. If the comparison
-// gives a different result, the shot becomes either a miss or a standard hit. (Yes, luck can turn
-// a shot with a 100% crit chance into a normal hit.)
-//
-// Please use this sparingly.
-function int GetLuckModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, EAbilityHitResult Result) { return 0; }
-
 function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
+
+////////////////////
+// Implementation //
+////////////////////
+
+function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
+{
+	local X2AbilityTemplate AbilityTemplate;
+	local X2AbilityToHitCalc_StandardAim ToHitCalc, SubToHitCalc;
+	local ShotBreakdown Breakdown;
+	local ShotModifierInfo Modifier;
+	local AvailableTarget kTarget;
+	local int idx;
+
+	AbilityTemplate = AbilityState.GetMyTemplate();
+	ToHitCalc = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
+
+	if (ToHitCalc == none)
+		return;
+
+	// We want to make sure that other XMBEffect_Persistent's effects are not included in our calculation.
+	// Luckily, A2AbilityToHitCalc.HitModifiers is unused, so we use it as a flag to indicate we are in a sub-calculation.
+	if (ToHitCalc.IsA('XMBAbilityToHitCalc_StandardAim'))
+		return;
+	if (ToHitCalc.HitModifiers.Length > 0)
+		return;
+	ToHitCalc.HitModifiers.Length = 1;
+
+	// We do something very strange and magical here: we do the entire hit calc ahead of time, so we can set up exactly the modifiers we want.
+
+	// We need to allocate a new ToHitCalc to avoid clobbering the breakdown of the one being calculated.
+	`Log(`location @ "1");
+	SubToHitCalc = new ToHitCalc.Class(ToHitCalc);
+	`Log(`location @ "2");
+
+	`Log(`location @ "3");
+	kTarget.PrimaryTarget = Target.GetReference();
+	`Log(`location @ "4");
+	SubToHitCalc.GetShotBreakdown(AbilityState, kTarget, Breakdown);
+	`Log(`location @ "5");
+
+	// Recalculate raw shot breakdown table
+	for (idx = 0; idx < eHit_MAX; idx++)
+		Breakdown.ResultTable[idx] = 0;
+
+	foreach Breakdown.Modifiers(Modifier)
+		Breakdown.ResultTable[Modifier.ModType] += Modifier.Value;
+
+	// Add in our own modifiers if this is a call to super.GetToHitModifiers
+	foreach ShotModifiers(Modifier)
+		Breakdown.ResultTable[Modifier.ModType] += Modifier.Value;
+
+	// If we are supposed to be ignoring squadsight modifiers, find the squadsight modifiers and cancel them
+	if (IgnoreSquadsightPenalty(EffectState, Attacker, Target, AbilityState))
+	{
+		foreach Breakdown.Modifiers(Modifier)
+		{
+			// Kind of a hacky way to check, since it depends on localization, but nothing should localize some other skill to "squadsight"
+			if (Modifier.Reason == class'XLocalizedData'.default.SquadsightMod)
+			{
+				// Cancel out the modifier and remove it from the result table
+				Modifier.Value *= -1;
+				Modifier.Reason = FriendlyName;
+				ShotModifiers.AddItem(Modifier);
+				Breakdown.ResultTable[Modifier.ModType] += Modifier.Value;
+			}
+		}
+	}
+
+	// Apply final to-hit modifiers
+	GetFinalToHitModifiers(EffectState, Attacker, Target, AbilityState, ToHitType, bMelee, bFlanking, bIndirectFire, Breakdown, ShotModifiers);
+
+	ToHitCalc.HitModifiers.Length = 0;
+}
+
+function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
+{
+	local X2AbilityTemplate AbilityTemplate;
+	local X2AbilityToHitCalc_StandardAim ToHitCalc, SubToHitCalc;
+	local ShotBreakdown Breakdown;
+	local ShotModifierInfo Modifier;
+	local AvailableTarget kTarget;
+	local int idx;
+
+	AbilityTemplate = AbilityState.GetMyTemplate();
+	ToHitCalc = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
+
+	if (ToHitCalc == none)
+		return;
+
+	// We want to make sure that other XMBEffect_Persistent's effects are not included in our calculation.
+	// Luckily, A2AbilityToHitCalc.HitModifiers is unused, so we use it as a flag to indicate we are in a sub-calculation.
+	if (ToHitCalc.IsA('XMBAbilityToHitCalc_StandardAim'))
+		return;
+	if (ToHitCalc.HitModifiers.Length > 0)
+		return;
+	ToHitCalc.HitModifiers.Length = 1;
+
+	// We do something very strange and magical here: we do the entire hit calc ahead of time, so we can set up exactly the modifiers we want.
+
+	// We need to allocate a new ToHitCalc to avoid clobbering the breakdown of the one being calculated.
+	SubToHitCalc = new ToHitCalc.Class(ToHitCalc);
+	SubToHitCalc.HitModifiers.Length = 1;
+
+	kTarget.PrimaryTarget = Target.GetReference();
+	SubToHitCalc.GetShotBreakdown(AbilityState, kTarget, Breakdown);
+
+	// Recalculate raw shot breakdown table
+	for (idx = 0; idx < eHit_MAX; idx++)
+		Breakdown.ResultTable[idx] = 0;
+
+	foreach Breakdown.Modifiers(Modifier)
+		Breakdown.ResultTable[Modifier.ModType] += Modifier.Value;
+
+	// Add in our own modifiers if this is a call to super.GetToHitAsTargetModifiers
+	foreach ShotModifiers(Modifier)
+		Breakdown.ResultTable[Modifier.ModType] += Modifier.Value;
+
+	if (CannotBeCrit(EffectState, Attacker, Target, AbilityState))
+	{
+		Modifier.ModType = eHit_Crit;
+		Modifier.Value = -max(Breakdown.ResultTable[eHit_Crit], 0);
+		Modifier.Reason = FriendlyName;
+		ShotModifiers.AddItem(Modifier);
+	}
+
+	ToHitCalc.HitModifiers.Length = 0;
+}

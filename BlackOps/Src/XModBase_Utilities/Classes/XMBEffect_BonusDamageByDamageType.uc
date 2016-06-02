@@ -1,4 +1,4 @@
-class XMBEffect_BonusDamageByDamageType extends XMBEffect_Persistent config(GameData_SoldierSkills);
+class XMBEffect_BonusDamageByDamageType extends X2Effect_Persistent config(GameData_SoldierSkills);
 
 var array<name> RequiredDamageTypes;
 var int DamageBonus;

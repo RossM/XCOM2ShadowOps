@@ -259,40 +259,44 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 {
 	local ExtShotModifierInfo ExtModInfo;
 
-	if (ValidateAttack(EffectState, Attacker, Target, AbilityState) != 'AA_Success')
-		return;
+	if (ValidateAttack(EffectState, Attacker, Target, AbilityState) == 'AA_Success')
+	{	
+		foreach Modifiers(ExtModInfo)
+		{
+			if (ExtModInfo.Type != 'ToHit')
+				continue;
+
+			if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
+				continue;
+
+			ExtModInfo.ModInfo.Reason = FriendlyName;
+			ShotModifiers.AddItem(ExtModInfo.ModInfo);
+		}
+	}
 	
-	foreach Modifiers(ExtModInfo)
-	{
-		if (ExtModInfo.Type != 'ToHit')
-			continue;
-
-		if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
-			continue;
-
-		ExtModInfo.ModInfo.Reason = FriendlyName;
-		ShotModifiers.AddItem(ExtModInfo.ModInfo);
-	}	
+	super.GetToHitModifiers(EffectState, Attacker, Target, AbilityState, ToHitType, bMelee, bFlanking, bIndirectFire, ShotModifiers);	
 }
 
 function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {
 	local ExtShotModifierInfo ExtModInfo;
 
-	if (ValidateAttack(EffectState, Attacker, Target, AbilityState, true) != 'AA_Success')
-		return;
-	
-	foreach Modifiers(ExtModInfo)
+	if (ValidateAttack(EffectState, Attacker, Target, AbilityState, true) == 'AA_Success')
 	{
-		if (ExtModInfo.Type != 'ToHitAsTarget')
-			continue;
+		foreach Modifiers(ExtModInfo)
+		{
+			if (ExtModInfo.Type != 'ToHitAsTarget')
+				continue;
 
-		if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
-			continue;
+			if (ValidateWeapon(ExtModInfo, AbilityState.GetSourceWeapon()) != 'AA_Success')
+				continue;
 
-		ExtModInfo.ModInfo.Reason = FriendlyName;
-		ShotModifiers.AddItem(ExtModInfo.ModInfo);
-	}	
+			ExtModInfo.ModInfo.Reason = FriendlyName;
+			ShotModifiers.AddItem(ExtModInfo.ModInfo);
+		}	
+	}
+	
+	super.GetToHitAsTargetModifiers(EffectState, Attacker, Target, AbilityState, ToHitType, bMelee, bFlanking, bIndirectFire, ShotModifiers);	
 }
 
 function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState) 
