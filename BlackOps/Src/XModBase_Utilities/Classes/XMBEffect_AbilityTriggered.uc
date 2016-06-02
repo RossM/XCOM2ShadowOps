@@ -11,14 +11,11 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
 	local X2EventManager EventMgr;
 	local XComGameState_Unit UnitState;
-	local Object EffectObj;
 	local Object ListenerObj;
 
 	EventMgr = `XEVENTMGR;
 
-	EffectObj = EffectGameState;
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
-	EventMgr.RegisterForEvent(EffectObj, 'Assassin', EffectGameState.TriggerAbilityFlyover, ELD_OnStateSubmitted, , UnitState);
 
 	ListenerObj = EffectGameState;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AssassinListener, ELD_OnStateSubmitted, , UnitState);	
