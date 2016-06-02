@@ -41,10 +41,10 @@ LocPromotionPopupText="<Bullet/> This ability gets more useful in the late game,
 
 [ShadowOps_AlwaysReady X2AbilityTemplate]
 LocFriendlyName="Ready for Anything"
-LocLongDescription="If you did not attack this turn, you are granted an automatic pistol overwatch shot at the end of the turn."
-LocHelpText="Automatically activate Pistol Overwatch if you didn't attack this turn."
+LocLongDescription="Automatically activate Pistol Overwatch at the end of every turn."
+LocHelpText="Automatically activate Pistol Overwatch at the end of every turn."
 LocFlyOverText="Pistol Overwatch: Ready for Anything"
-LocPromotionPopupText="<Bullet/> Ready for Anything won't trigger if you fire or use an overwatch ability.<br/><Bullet/> Non-offensive actions like Reload can still be performed without invalidating Ready for Anything.<br/>"
+LocPromotionPopupText="<Bullet/> Ready for Anything won't trigger if you use an overwatch ability.<br/>"
 
 [ShadowOps_AlwaysReadyTrigger X2AbilityTemplate]
 LocFriendlyName="Ready for Anything"
@@ -126,7 +126,7 @@ LocFriendlyName="Fortify"
 LocLongDescription="Whenever you enter overwatch or use suppression, you gain +<Ability:Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
 LocHelpText="Whenever you enter overwatch or use suppression, you gain +<Ability:Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
 LocFlyOverText="Fortify"
-LocPromotionPopupText="<Bullet/> Fortify will activate on any ability that gives you reaction shots, including Ready for Anything and Zone of Control. <br/>"
+LocPromotionPopupText="<Bullet/> Fortify will work with any activated ability that gives you reaction shots, including Zone of Control. <br/>"
 
 [ShadowOps_FortifyTrigger X2AbilityTemplate]
 LocFriendlyName="Fortify"
