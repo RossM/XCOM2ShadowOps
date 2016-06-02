@@ -756,14 +756,16 @@ static function X2AbilityTemplate Flush()
 	PreviewDamageEffect.WrappedEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
 	Template.AddTargetEffect(PreviewDamageEffect);
 
-	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
+	// Use top-down targeting to reduce switches between top-down and shooter as the enemy runs
+	Template.TargetingMethod = class'X2TargetingMethod_TopDown';
 
 	// MAKE IT LIVE!
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;	
-	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.CinescriptCameraType = "StandardSuppression";
 
-	Template.bSkipFireAction = true;
+	// This is supposed to play a miss animation for the initial shot before the target leaves cover
+	Template.ActionFireClass = class'X2Action_Fire_Miss';
 
 	Template.bDisplayInUITooltip = false;
 	Template.bDisplayInUITacticalText = false;
@@ -826,6 +828,7 @@ static function X2AbilityTemplate FlushShot()
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.CinescriptCameraType = "StandardGunFiring";
 
 	return Template;
 }
