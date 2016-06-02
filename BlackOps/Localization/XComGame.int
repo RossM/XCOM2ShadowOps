@@ -83,8 +83,8 @@ LocPromotionPopupText="<Bullet/> Zero In can help compensate for not being able 
 
 [ShadowOps_Flush X2AbilityTemplate]
 LocFriendlyName="Flush"
-LocLongDescription="Fire a shot that has +<Ability:ToHit/> Aim and forces the target to move to new cover."
-LocHelpText="Fire a shot that has +<Ability:ToHit/> Aim and forces the target to move to new cover."
+LocLongDescription="Fire a pistol shot that automatically hits and forces the target to move to new cover."
+LocHelpText="Fire a pistol shot that automatically hits and forces the target to move to new cover."
 LocFlyOverText="Flush"
 LocPromotionPopupText="<Bullet/> Flush can force an enemy to trigger your other soldiers' reaction fire.<br/><Bullet/> The shot has a +20 Aim modifier, and does full damage. <br/><Bullet/> Flush has a <Ability:SelfCooldown/> turn cooldown. <br/>"
 

@@ -6,7 +6,6 @@ var name AlwaysReadyEffectName;
 var config int MagnumDamageBonus, MagnumOffenseBonus;
 var config int FullAutoHitModifier;
 var config int ZeroInOffenseBonus;
-var config int FlushHitModifier;
 var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, AdrenalineSurgeCooldown;
 var config int FortressDefenseModifier;
 
@@ -727,7 +726,7 @@ static function X2AbilityTemplate Flush()
 	Template.AbilityCooldown = Cooldown;
 	
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
-	StandardAim.BuiltInHitMod = default.FlushHitModifier;
+	StandardAim.bGuaranteedHit = true;
 	Template.AbilityToHitCalc = StandardAim;
 
 	ReservePointsEffect = new class'XMBEffect_AddReservedActionPoints';
@@ -769,7 +768,7 @@ static function X2AbilityTemplate Flush()
 	Template.bDisplayInUITooltip = false;
 	Template.bDisplayInUITacticalText = false;
 
-	Template.bCrossClassEligible = true;
+	Template.bCrossClassEligible = false;
 
 	return Template;	
 }
