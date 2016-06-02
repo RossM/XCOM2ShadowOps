@@ -1,4 +1,4 @@
-class X2Effect_Assassin extends X2Effect_Persistent;
+class XMBEffect_AbilityTriggered extends X2Effect_Persistent;
 
 var bool bRequireAbilityWeapon, bRequireKill;
 var array<EAbilityHitResult> AllowedHitResults;
@@ -31,7 +31,7 @@ function static EventListenerReturn AssassinListener(Object EventData, Object Ev
 	local XComGameState_Unit SourceUnit, TargetUnit;
 	local XComGameState_Effect EffectState;
 	local X2EventManager EventMgr;
-	local X2Effect_Assassin AssassinEffect;
+	local XMBEffect_AbilityTriggered AssassinEffect;
 
 	SourceUnit = XComGameState_Unit(EventSource);
 	if (SourceUnit == none)
@@ -53,7 +53,7 @@ function static EventListenerReturn AssassinListener(Object EventData, Object Ev
 	if (TargetUnit == none || TargetUnit.ObjectID == SourceUnit.ObjectID)
 		return ELR_NoInterrupt;
 
-	AssassinEffect = X2Effect_Assassin(EffectState.GetX2Effect());
+	AssassinEffect = XMBEffect_AbilityTriggered(EffectState.GetX2Effect());
 	if (AssassinEffect == none)
 		return ELR_NoInterrupt;
 

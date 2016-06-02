@@ -393,13 +393,13 @@ static function X2AbilityTemplate Sprint()
 static function X2AbilityTemplate Assassin()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_Assassin						Effect;
+	local XMBEffect_AbilityTriggered						Effect;
 	local XMBCondition_CoverType				Condition;
 
 	Condition = new class'XMBCondition_CoverType';
 	Condition.AllowedCoverTypes.AddItem(CT_None);
 
-	Effect = new class'X2Effect_Assassin';
+	Effect = new class'XMBEffect_AbilityTriggered';
 	Effect.bRequireAbilityWeapon = true;
 	Effect.bRequireKill = true;
 	Effect.AbilityTargetConditions.AddItem(Condition);
