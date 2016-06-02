@@ -63,7 +63,7 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 	local X2Condition kCondition;
 	local name AvailableCode;
 
-	if (!bRequireAbilityWeapon && AbilityState.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
+	if (bRequireAbilityWeapon && AbilityState.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
 		return 'AA_UnknownError';
 
 	if (bRequireKill && (Target == none || !Target.IsDead()))

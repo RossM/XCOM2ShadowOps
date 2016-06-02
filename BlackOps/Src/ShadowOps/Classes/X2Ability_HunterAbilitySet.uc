@@ -393,11 +393,18 @@ static function X2AbilityTemplate Sprint()
 static function X2AbilityTemplate Assassin()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_Persistent					PersistentEffect;
+	local X2Effect_Assassin						Effect;
+	local XMBCondition_CoverType				Condition;
 
-	PersistentEffect = new class'X2Effect_Assassin';
+	Condition = new class'XMBCondition_CoverType';
+	Condition.AllowedCoverTypes.AddItem(CT_None);
 
-	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_PerkIcons.UIPerk_executioner", true, PersistentEffect);
+	Effect = new class'X2Effect_Assassin';
+	Effect.bRequireAbilityWeapon = true;
+	Effect.bRequireKill = true;
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_PerkIcons.UIPerk_executioner", true, Effect);
 	Template.AdditionalAbilities.AddItem('ShadowOps_AssassinTrigger');
 
 	return Template;
