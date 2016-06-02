@@ -57,7 +57,6 @@ function static EventListenerReturn AssassinListener(Object EventData, Object Ev
 	if (AssassinEffect == none)
 		return ELR_NoInterrupt;
 
-	`Log("AssassinEffect:" @ AssassinEffect @ "TargetUnit:" @ TargetUnit);
 	if (AssassinEffect.ValidateAttack(EffectState, SourceUnit, TargetUnit, AbilityState) != 'AA_Success')
 		return ELR_NoInterrupt;
 
@@ -81,17 +80,14 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 	foreach AbilityTargetConditions(kCondition)
 	{
 		AvailableCode = kCondition.AbilityMeetsCondition(AbilityState, Target);
-		`RedScreen("AbilityMeetsCondition:" @ AvailableCode);
 		if (AvailableCode != 'AA_Success')
 			return AvailableCode;
 
 		AvailableCode = kCondition.MeetsCondition(Target);
-		`RedScreen("MeetsCondition:" @ AvailableCode);
 		if (AvailableCode != 'AA_Success')
 			return AvailableCode;
 		
 		AvailableCode = kCondition.MeetsConditionWithSource(Target, Attacker);
-		`RedScreen("MeetsConditionWithSource:" @ AvailableCode);
 		if (AvailableCode != 'AA_Success')
 			return AvailableCode;
 	}
