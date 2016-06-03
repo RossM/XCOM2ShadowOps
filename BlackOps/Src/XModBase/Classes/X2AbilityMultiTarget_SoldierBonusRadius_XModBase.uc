@@ -20,7 +20,7 @@ simulated function CalculateRadiusModifier(const XComGameState_Ability Ability)
 	local XComGameState_Unit SourceUnit;
 	local StateObjectReference EffectRef;
 	local XComGameState_Effect EffectState;
-	local XMBEffect_BonusRadius BonusRadiusEffect;
+	local XMBEffectInterface BonusRadiusEffect;
 	local XComGameStateHistory History;
 
 	fRadiusModifier = 0;
@@ -31,10 +31,10 @@ simulated function CalculateRadiusModifier(const XComGameState_Ability Ability)
 	foreach SourceUnit.AffectedByEffects(EffectRef)
 	{
 		EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
-		BonusRadiusEffect = XMBEffect_BonusRadius(EffectState.GetX2Effect());
+		BonusRadiusEffect = XMBEffectInterface(EffectState.GetX2Effect());
 		if (BonusRadiusEffect != none)
 		{
-			fRadiusModifier += BonusRadiusEffect.GetRadiusModifier(Ability, SourceUnit, fTargetRadius);
+			fRadiusModifier += BonusRadiusEffect.GetExtValue('BonusRadius', EffectState, SourceUnit, none, Ability, fTargetRadius);
 		}
 	}
 }
