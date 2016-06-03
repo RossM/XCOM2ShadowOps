@@ -31,6 +31,8 @@ function WeaponDamageValue GetBonusEffectDamageValue(XComGameState_Ability Abili
 	return DamageValue;
 }
 
+// XMBEffectInterface
+
 function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
 {
 	local XComGameState_Item SourceItem;
@@ -64,3 +66,5 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	return false;
 }
 
+function float GetExtValue(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, float fBaseValue) { return 0; }
+function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, ShotBreakdown ShotBreakdown, out array<ShotModifierInfo> ShotModifiers) { return false; }
