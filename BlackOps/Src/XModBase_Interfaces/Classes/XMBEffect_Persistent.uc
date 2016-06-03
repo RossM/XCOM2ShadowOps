@@ -23,16 +23,30 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 // breakdown, so they won't see the effects of other GetFinalToHitModifiers overrides.
 function GetFinalToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, ShotBreakdown ShotBreakdown, out array<ShotModifierInfo> ShotModifiers);
 
-// XMBEffectInterface
-
-function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
-
-function float GetExtValue(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, float fBaseValue) { return 0; }
-function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, ShotBreakdown ShotBreakdown, out array<ShotModifierInfo> ShotModifiers) { return false; }
-
 ////////////////////
 // Implementation //
 ////////////////////
+
+// XMBEffectInterface
+
+function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
+function float GetExtValue(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, float fBaseValue) { return 0; }
+
+function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, ShotBreakdown ShotBreakdown, out array<ShotModifierInfo> ShotModifiers)
+{
+	switch (Type)
+	{
+	case 'CannotBeCrit':
+		return CannotBeCrit(EffectState, Attacker, Target, AbilityState);
+
+	case 'IgnoreSquadsightPenalty':
+		return IgnoreSquadsightPenalty(EffectState, Attacker, Target, AbilityState);
+
+	case 'FinalToHitModifiers':
+		GetFinalToHitModifiers(EffectState, Attacker, Target, AbilityState, ToHitType, bMelee, bFlanking, bIndirectFire, ShotBreakdown, ShotModifiers);
+		return true;
+	}
+}
 
 function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {

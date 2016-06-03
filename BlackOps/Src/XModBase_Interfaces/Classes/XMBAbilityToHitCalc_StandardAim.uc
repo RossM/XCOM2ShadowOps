@@ -22,7 +22,7 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	local array<XComGameState_Effect> StatMods;
 	local array<float> StatModValues;
 	local X2Effect_Persistent PersistentEffect;
-	local XMBEffect_Persistent XModBaseEffect;
+	local XMBEffectInterface XModBaseEffect;
 	local array<X2Effect_Persistent> UniqueToHitEffects;
 	local float FinalAdjust, CoverValue, AngleToCoverModifier, Alpha;
 	local bool bShouldAddAngleToCoverBonus;
@@ -91,10 +91,10 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 					{
 						EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
 						PersistentEffect = EffectState.GetX2Effect();
-						XModBaseEffect = XMBEffect_Persistent(PersistentEffect);
+						XModBaseEffect = XMBEffectInterface(PersistentEffect);
 						if (XModBaseEffect != none)
 						{
-							if (XModBaseEffect.IgnoreSquadsightPenalty(EffectState, UnitState, TargetState, kAbility))
+							if (XModBaseEffect.GetExtModifiers('IgnoreSquadsightPenalty', EffectState, UnitState, TargetState, kAbility, self.Class, bMeleeAttack, bFlanking, bIndirectFire))
 							{
 								bSquadsight = false;
 								break;
@@ -342,10 +342,10 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 				}
 	
 				// XModBase: Check for crit immunity.			
-				XModBaseEffect = XMBEffect_Persistent(PersistentEffect);
+				XModBaseEffect = XMBEffectInterface(PersistentEffect);
 				if (XModBaseEffect != none)
 				{
-					if (XModBaseEffect.CannotBeCrit(EffectState, UnitState, TargetState, kAbility))
+					if (XModBaseEffect.GetExtModifiers('CannotBeCrit', EffectState, UnitState, TargetState, kAbility, self.Class, bMeleeAttack, bFlanking, bIndirectFire))
 					{
 						bIgnoreCrit = true;
 						IgnoreCritReason = PersistentEffect.FriendlyName;
@@ -396,10 +396,10 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 		if (UniqueToHitEffects.Find(PersistentEffect) != INDEX_NONE)
 			continue;
 
-		XModBaseEffect = XMBEffect_Persistent(PersistentEffect);
+		XModBaseEffect = XMBEffectInterface(PersistentEffect);
 		if (XModBaseEffect != none)
 		{
-			XModBaseEffect.GetFinalToHitModifiers(EffectState, UnitState, TargetState, kAbility, self.Class, bMeleeAttack, bFlanking, bIndirectFire, m_ShotBreakdown, EffectModifiers);
+			XModBaseEffect.GetExtModifiers('FinalToHitModifiers', EffectState, UnitState, TargetState, kAbility, self.Class, bMeleeAttack, bFlanking, bIndirectFire, m_ShotBreakdown, EffectModifiers);
 			if (EffectModifiers.Length > 0)
 			{
 				if (PersistentEffect.UniqueToHitAsTargetModifiers())
