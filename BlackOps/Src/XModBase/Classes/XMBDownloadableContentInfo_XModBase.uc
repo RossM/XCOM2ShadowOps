@@ -1,12 +1,14 @@
 class XMBDownloadableContentInfo_XModBase extends X2DownloadableContentInfo;
 
+var const int MajorVersion, MinorVersion, PatchVersion;
+
 /// <summary>
 /// Called after the Templates have been created (but before they are validated) while this DLC / Mod is installed.
 /// </summary>
 static event OnPostTemplatesCreated()
 {
 	AddUniversalAbilities();
-	FixAllSimpleStandardAims();
+	ReplaceStandardAims();
 	ChainAbilityTag();
 }
 
@@ -55,13 +57,51 @@ static function AddUniversalAbilities()
 	}
 }
 
-static function FixAllSimpleStandardAims()
+static function bool UpdateStandardAim(out X2AbilityToHitCalc ToHitCalc)
+{
+	local XMBOverrideInterface Override;
+	local XMBAbilityToHitCalc_StandardAim NewToHitCalc;
+	local int Major, Minor, Patch;
+
+	Override = XMBOverrideInterface(ToHitCalc);
+
+	if (Override != none)
+	{
+		// If the current hit calc isn't overriding the correct class, don't change it
+		if (Override.GetOverrideBaseClass() != class'X2AbilityToHitCalc_StandardAim')
+			return false;
+
+		Override.GetOverrideVersion(Major, Minor, Patch);
+
+		// If the current hit calc is a newer version, don't change it
+		if (Major > default.MajorVersion ||
+			(Major == default.MajorVersion && Minor > default.MinorVersion) ||
+			(Major == default.MajorVersion && Minor == default.MinorVersion && Patch >= default.PatchVersion))
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (ToHitCalc.Class != class'X2AbilityToHitCalc_StandardAim')
+			return false;
+	}
+
+	NewToHitCalc = new class'XMBAbilityToHitCalc_StandardAim'(ToHitCalc);
+	NewToHitCalc.MajorVersion = default.MajorVersion;
+	NewToHitCalc.MinorVersion = default.MinorVersion;
+	NewToHitCalc.PatchVersion = default.PatchVersion;
+
+	ToHitCalc = NewToHitCalc;
+	return true;
+}
+
+static function ReplaceStandardAims()
 {
 	local X2AbilityTemplateManager				AbilityManager;
 	local array<X2AbilityTemplate>				TemplateAllDifficulties;
 	local X2AbilityTemplate						Template;
 	local X2AbilityToHitCalc					ToHitCalc;
-	local XMBAbilityToHitCalc_StandardAim		NewToHitCalc;
 	local array<name>							TemplateNames;
 	local name									AbilityName;
 
@@ -75,19 +115,23 @@ static function FixAllSimpleStandardAims()
 		foreach TemplateAllDifficulties(Template)
 		{
 			ToHitCalc = Template.AbilityToHitCalc;
-			if (ToHitCalc != none && ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
+			if (ToHitCalc != none && UpdateStandardAim(ToHitCalc))
 			{
-				NewToHitCalc = new class'XMBAbilityToHitCalc_StandardAim'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
-				Template.AbilityToHitCalc = NewToHitCalc;
+				Template.AbilityToHitCalc = ToHitCalc;
 			}
 
 			ToHitCalc = Template.AbilityToHitOwnerOnMissCalc;
-			if (ToHitCalc != none && ToHitCalc.Class == class'X2AbilityToHitCalc_StandardAim')
+			if (ToHitCalc != none && UpdateStandardAim(ToHitCalc))
 			{
-				NewToHitCalc = new class'XMBAbilityToHitCalc_StandardAim'(X2AbilityToHitCalc_StandardAim(ToHitCalc));
-				Template.AbilityToHitOwnerOnMissCalc = NewToHitCalc;
+				Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 			}
 		}
 	}
 }
 
+defaultproperties
+{
+	MajorVersion = 0
+	MinorVersion = 1
+	PatchVersion = 0
+}
