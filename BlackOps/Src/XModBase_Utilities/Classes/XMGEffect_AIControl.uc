@@ -3,12 +3,9 @@ class XMGEffect_AIControl extends X2Effect_RunBehaviorTree;
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
 	local X2EventManager EventMgr;
-	local XComGameState_Unit UnitState;
 	local Object ListenerObj;
 
 	EventMgr = `XEVENTMGR;
-
-	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
 	ListenerObj = self;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', RageListener, ELD_OnVisualizationBlockCompleted);	
