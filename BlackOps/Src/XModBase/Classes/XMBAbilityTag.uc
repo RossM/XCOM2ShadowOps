@@ -1,6 +1,9 @@
-class XMBAbilityTag extends X2AbilityTag;
+class XMBAbilityTag extends X2AbilityTag implements(XMBOverrideInterface);
 
 var X2AbilityTag WrappedTag;
+
+// XModBase version
+var int MajorVersion, MinorVersion, PatchVersion;
 
 event ExpandHandler(string InString, out string OutString)
 {
@@ -187,3 +190,24 @@ function bool FindStatBonus(X2AbilityTemplate AbilityTemplate, ECharStatType Sta
 
 	return false;
 }
+
+// XMBOverrideInterace
+
+function class GetOverrideBaseClass() 
+{ 
+	return class'X2AbilityTag';
+}
+
+function GetOverrideVersion(out int Major, out int Minor, out int Patch)
+{
+	Major = MajorVersion;
+	Minor = MinorVersion;
+	Patch = PatchVersion;
+}
+
+function bool GetExtObjectValue(name Type, out object Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtObjectValue(name Type, object Value, optional object Data1 = none, optional object Data2 = none);
+function bool GetExtFloatValue(name Type, out float Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtFloatValue(name Type, float Value, optional object Data1 = none, optional object Data2 = none);
+function bool GetExtStringValue(name Type, out string Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtStringValue(name Type, string Value, optional object Data1 = none, optional object Data2 = none);

@@ -1,4 +1,8 @@
-class X2AbilityMultiTarget_SoldierBonusRadius_XModBase extends X2AbilityMultiTarget_SoldierBonusRadius;
+class X2AbilityMultiTarget_SoldierBonusRadius_XModBase extends X2AbilityMultiTarget_SoldierBonusRadius
+	implements(XMBOverrideInterface);
+
+// XModBase version
+var int MajorVersion, MinorVersion, PatchVersion;
 
 // This is similar to the vanilla X2AbilityMultiTarget_SoldierBonusRadius, but that class only
 // allows one radius-boosting effect, which is used by Volatile Mix. This class extends that
@@ -45,3 +49,24 @@ simulated function float GetTargetRadius(const XComGameState_Ability Ability)
 
 	return super.GetTargetRadius(Ability);
 }
+
+// XMBOverrideInterface
+
+function class GetOverrideBaseClass() 
+{ 
+	return class'X2AbilityMultiTarget_SoldierBonusRadius';
+}
+
+function GetOverrideVersion(out int Major, out int Minor, out int Patch)
+{
+	Major = MajorVersion;
+	Minor = MinorVersion;
+	Patch = PatchVersion;
+}
+
+function bool GetExtObjectValue(name Type, out object Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtObjectValue(name Type, object Value, optional object Data1 = none, optional object Data2 = none);
+function bool GetExtFloatValue(name Type, out float Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtFloatValue(name Type, float Value, optional object Data1 = none, optional object Data2 = none);
+function bool GetExtStringValue(name Type, out string Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtStringValue(name Type, string Value, optional object Data1 = none, optional object Data2 = none);

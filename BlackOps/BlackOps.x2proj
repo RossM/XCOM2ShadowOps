@@ -2231,6 +2231,9 @@
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_Persistent.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase_Interfaces\Classes\XMBOverrideInterface.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AbilityTriggered.uc">
       <SubType>Content</SubType>
     </Content>

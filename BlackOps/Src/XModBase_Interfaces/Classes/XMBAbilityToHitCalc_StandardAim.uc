@@ -1,4 +1,7 @@
-class XMBAbilityToHitCalc_StandardAim extends X2AbilityToHitCalc_StandardAim;
+class XMBAbilityToHitCalc_StandardAim extends X2AbilityToHitCalc_StandardAim implements(XMBOverrideInterface);
+
+// XModBase version
+var int MajorVersion, MinorVersion, PatchVersion;
 
 // Copied from X2AbilityToHitCalc and modified.
 protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTarget kTarget, optional bool bDebugLog=false)
@@ -418,3 +421,24 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	m_bDebugModifiers = false;
 	return m_ShotBreakdown.FinalHitChance;
 }
+
+// XMBOverrideInterace
+
+function class GetOverrideBaseClass() 
+{ 
+	return class'X2AbilityToHitCalc_StandardAim';
+}
+
+function GetOverrideVersion(out int Major, out int Minor, out int Patch)
+{
+	Major = MajorVersion;
+	Minor = MinorVersion;
+	Patch = PatchVersion;
+}
+
+function bool GetExtObjectValue(name Type, out object Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtObjectValue(name Type, object Value, optional object Data1 = none, optional object Data2 = none);
+function bool GetExtFloatValue(name Type, out float Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtFloatValue(name Type, float Value, optional object Data1 = none, optional object Data2 = none);
+function bool GetExtStringValue(name Type, out string Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function SetExtStringValue(name Type, string Value, optional object Data1 = none, optional object Data2 = none);
