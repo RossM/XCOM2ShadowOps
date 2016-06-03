@@ -205,7 +205,18 @@ function GetOverrideVersion(out int Major, out int Minor, out int Patch)
 	Patch = PatchVersion;
 }
 
-function bool GetExtObjectValue(name Type, out object Value, optional object Data1 = none, optional object Data2 = none) { return false; }
+function bool GetExtObjectValue(name Type, out object Value, optional object Data1 = none, optional object Data2 = none)
+{
+	switch (Type)
+	{
+	case 'WrappedTag':
+		Value = WrappedTag;
+		return true;
+	}
+
+	return false;
+}
+
 function SetExtObjectValue(name Type, object Value, optional object Data1 = none, optional object Data2 = none);
 function bool GetExtFloatValue(name Type, out float Value, optional object Data1 = none, optional object Data2 = none) { return false; }
 function SetExtFloatValue(name Type, float Value, optional object Data1 = none, optional object Data2 = none);

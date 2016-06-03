@@ -12,16 +12,47 @@ static event OnPostTemplatesCreated()
 	ChainAbilityTag();
 }
 
+static function bool IsNewer(XMBOverrideInterface Override)
+{
+	local int Major, Minor, Patch;
+
+	Override.GetOverrideVersion(Major, Minor, Patch);
+
+	return (Major > default.MajorVersion ||
+		(Major == default.MajorVersion && Minor > default.MinorVersion) ||
+		(Major == default.MajorVersion && Minor == default.MinorVersion && Patch >= default.PatchVersion));
+}
+
 static function ChainAbilityTag()
 {
 	local XComEngine Engine;
 	local XMBAbilityTag AbilityTag;
+	local X2AbilityTag OldAbilityTag;
 	local int idx;
+	local XMBOverrideInterface Override;
+	local object OldAbilityTagObj;
 
 	Engine = `XENGINE;
 
+	OldAbilityTag = Engine.AbilityTag;
+	Override = XMBOverrideInterface(OldAbilityTag);
+
+	if (Override != none)
+	{
+		// If the current hit calc is a newer version, don't change it
+		if (IsNewer(Override))
+			return;
+
+		if (Override.GetExtObjectValue('WrappedTag', OldAbilityTagObj))
+			OldAbilityTag = X2AbilityTag(OldAbilityTagObj);
+	}
+
 	AbilityTag = new class'XMBAbilityTag';
-	AbilityTag.WrappedTag = Engine.AbilityTag;
+	AbilityTag.WrappedTag = OldAbilityTag;
+	AbilityTag.MajorVersion = default.MajorVersion;
+	AbilityTag.MinorVersion = default.MinorVersion;
+	AbilityTag.PatchVersion = default.PatchVersion;
+
 	idx = Engine.LocalizeContext.LocalizeTags.Find(Engine.AbilityTag);
 	Engine.AbilityTag = AbilityTag;
 	Engine.LocalizeContext.LocalizeTags[idx] = AbilityTag;
@@ -61,7 +92,6 @@ static function bool UpdateStandardAim(out X2AbilityToHitCalc ToHitCalc)
 {
 	local XMBOverrideInterface Override;
 	local XMBAbilityToHitCalc_StandardAim NewToHitCalc;
-	local int Major, Minor, Patch;
 
 	Override = XMBOverrideInterface(ToHitCalc);
 
@@ -71,15 +101,9 @@ static function bool UpdateStandardAim(out X2AbilityToHitCalc ToHitCalc)
 		if (Override.GetOverrideBaseClass() != class'X2AbilityToHitCalc_StandardAim')
 			return false;
 
-		Override.GetOverrideVersion(Major, Minor, Patch);
-
 		// If the current hit calc is a newer version, don't change it
-		if (Major > default.MajorVersion ||
-			(Major == default.MajorVersion && Minor > default.MinorVersion) ||
-			(Major == default.MajorVersion && Minor == default.MinorVersion && Patch >= default.PatchVersion))
-		{
+		if (IsNewer(Override))
 			return false;
-		}
 	}
 	else
 	{
