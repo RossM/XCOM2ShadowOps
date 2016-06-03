@@ -2204,22 +2204,22 @@
     <Content Include="Src\XComGame\Classes\XGWeapon.uc" />
     <Content Include="Src\XComGame\Classes\XLocalizedData.uc" />
     <Content Include="Src\XComGame\Classes\XpEventData.uc" />
-    <Content Include="Src\XModBase\Classes\X2AbilityMultiTarget_SoldierBonusRadius_XModBase.uc">
+    <Content Include="Src\XModBase\Classes\XMBAbilityMultiTarget_SoldierBonusRadius.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase\Classes\XMBAbilityTag.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase\Classes\X2DownloadableContentInfo_XModBase.uc">
+    <Content Include="Src\XModBase\Classes\XMBDownloadableContentInfo_XModBase.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase\Classes\X2TargetingMethod_Grenade_XModBase.uc">
+    <Content Include="Src\XModBase\Classes\XMBTargetingMethod_Grenade.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase\Classes\XMBAbilityToHitCalc_StandardAim.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
+    <Content Include="Src\XModBase\Classes\XMBConfig.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffectInterface.uc">

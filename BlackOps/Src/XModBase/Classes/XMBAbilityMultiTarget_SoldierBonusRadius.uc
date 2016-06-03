@@ -1,4 +1,4 @@
-class X2AbilityMultiTarget_SoldierBonusRadius_XModBase extends X2AbilityMultiTarget_SoldierBonusRadius
+class XMBAbilityMultiTarget_SoldierBonusRadius extends X2AbilityMultiTarget_SoldierBonusRadius
 	implements(XMBOverrideInterface);
 
 // XModBase version

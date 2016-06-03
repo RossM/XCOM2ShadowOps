@@ -76,7 +76,7 @@ event ExpandHandler(string InString, out string OutString)
 			}
 		}
 
-		idx = class'XModBase_Config'.default.m_aCharStatTags.Find(Type);
+		idx = class'XMBConfig'.default.m_aCharStatTags.Find(Type);
 		if (idx != INDEX_NONE && FindStatBonus(AbilityTemplate, ECharStatType(idx), OutString))
 		{
 			return;

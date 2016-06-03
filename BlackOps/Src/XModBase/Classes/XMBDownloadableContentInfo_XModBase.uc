@@ -1,4 +1,4 @@
-class X2DownloadableContentInfo_XModBase extends X2DownloadableContentInfo;
+class XMBDownloadableContentInfo_XModBase extends X2DownloadableContentInfo;
 
 /// <summary>
 /// Called after the Templates have been created (but before they are validated) while this DLC / Mod is installed.
@@ -46,7 +46,7 @@ static function AddUniversalAbilities()
 
 			if (!Template.bIsCosmetic)
 			{
-				foreach class'XModBase_Config'.default.UniversalAbilitySet(AbilityName)
+				foreach class'XMBConfig'.default.UniversalAbilitySet(AbilityName)
 				{
 					Template.Abilities.AddItem(AbilityName);
 				}
