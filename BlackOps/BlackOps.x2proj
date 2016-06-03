@@ -2216,19 +2216,16 @@
     <Content Include="Src\XModBase\Classes\X2TargetingMethod_Grenade_XModBase.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
+    <Content Include="Src\XModBase\Classes\XMBAbilityToHitCalc_StandardAim.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\XMBAbilityToHitCalc_StandardAim.uc">
+    <Content Include="Src\XModBase\Classes\XModBase_Config.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffectInterface.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_BonusRadius.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\XMBEffect_Persistent.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBOverrideInterface.uc">
@@ -2241,6 +2238,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBAction_ForceVisibility.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_Persistent.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_RevealUnit.uc">
