@@ -764,6 +764,9 @@ static function X2AbilityTemplate Flush()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.CinescriptCameraType = "StandardSuppression";
 
+	// This forces the shot to visually miss
+	Template.bIsASuppressionEffect = true;
+
 	// This is supposed to play a miss animation for the initial shot before the target leaves cover
 	Template.ActionFireClass = class'X2Action_Fire_Miss';
 
