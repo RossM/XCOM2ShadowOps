@@ -6,6 +6,7 @@ var int BonusCharges;		// Number of extra charges of the item to add for each it
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
+	local X2ItemTemplate ItemTemplate;
 	local X2EquipmentTemplate EquipmentTemplate;
 	local X2WeaponTemplate WeaponTemplate;
 	local X2ItemTemplateManager ItemTemplateMgr;
@@ -27,7 +28,12 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	ItemTemplateMgr = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 	AbilityTemplateMan = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
-	EquipmentTemplate = X2EquipmentTemplate(ItemTemplateMgr.FindItemTemplate(DataName));
+	ItemTemplate = ItemTemplateMgr.FindItemTemplate(DataName);
+	
+	// Use the highest upgraded available version of the item
+	`XCOMHQ.UpdateItemTemplateToHighestAvailableUpgrade(ItemTemplate);
+
+	EquipmentTemplate = X2EquipmentTemplate(ItemTemplate);
 	if (EquipmentTemplate == none)
 	{
 		`RedScreen(`location $": Missing equipment template for" @ DataName);
@@ -53,14 +59,12 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 		}
 	}
 
-	// Create item
+	// No items to merge with, so create the item
 	ItemState = EquipmentTemplate.CreateInstanceFromTemplate(NewGameState);
 	ItemState.Ammo = BaseCharges;
 	NewGameState.AddStateObject(ItemState);
 
 	NewEffectState.CreatedObjectReference = ItemState.GetReference();
-
-	// Add abilities - TODO: we don't support ability overrides or additional abilities yet
 
 	// Add equipment-dependent soldier abilities
 	EarnedSoldierAbilities = NewUnit.GetEarnedSoldierAbilities();
