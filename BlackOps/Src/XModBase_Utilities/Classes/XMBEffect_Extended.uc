@@ -93,10 +93,6 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	foreach Breakdown.Modifiers(Modifier)
 		Breakdown.ResultTable[Modifier.ModType] += Modifier.Value;
 
-	// Add in our own modifiers if this is a call to super.GetToHitModifiers
-	foreach ShotModifiers(Modifier)
-		Breakdown.ResultTable[Modifier.ModType] += Modifier.Value;
-
 	// If we are supposed to be ignoring squadsight modifiers, find the squadsight modifiers and cancel them
 	if (IgnoreSquadsightPenalty(EffectState, Attacker, Target, AbilityState))
 	{
