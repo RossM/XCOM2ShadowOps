@@ -86,12 +86,6 @@ event ExpandHandler(string InString, out string OutString)
 	switch (Type)
 	{
 		case 'AssociatedWeapon':
-			AbilityState = XComGameState_Ability(ParseObj);
-			EffectState = XComGameState_Effect(ParseObj);
-			if (EffectState != none)
-			{
-				AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.AbilityStateObjectRef.ObjectID));
-			}
 			if (AbilityState != none)
 			{
 				ItemState = AbilityState.GetSourceWeapon();
@@ -101,7 +95,7 @@ event ExpandHandler(string InString, out string OutString)
 			}
 			else
 			{
-				OutString = "item";
+				OutString = "weapon";
 			}
 			break;
 
