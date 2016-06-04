@@ -61,13 +61,6 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 
 	// Add abilities - TODO: we don't support ability overrides or additional abilities yet
 
-	// Add abilities from the equipment item itself
-	foreach EquipmentTemplate.Abilities(AbilityName)
-	{
-		AbilityTemplate = AbilityTemplateMan.FindAbilityTemplate(AbilityName);
-		`TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, ItemState.GetReference());
-	}
-
 	// Add equipment-dependent soldier abilities
 	EarnedSoldierAbilities = NewUnit.GetEarnedSoldierAbilities();
 	for (idx = 0; idx < EarnedSoldierAbilities.Length; ++idx)
@@ -79,14 +72,61 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 		if (EarnedSoldierAbilities[idx].ApplyToWeaponSlot == eInvSlot_Utility &&
 			EarnedSoldierAbilities[idx].UtilityCat == ItemState.GetWeaponCategory())
 		{
-			`TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, ItemState.GetReference());
+			InitAbility(AbilityTemplate, NewUnit, NewGameState, ItemState.GetReference());
 		}
 
 		// Add grenade abilities
 		if (AbilityTemplate.bUseLaunchedGrenadeEffects && X2GrenadeTemplate(EquipmentTemplate) != none)
 		{
-			`TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, NewUnit.GetItemInSlot(EarnedSoldierAbilities[idx].ApplyToWeaponSlot, NewGameState).GetReference(), ItemState.GetReference());
+			InitAbility(AbilityTemplate, NewUnit, NewGameState, NewUnit.GetItemInSlot(EarnedSoldierAbilities[idx].ApplyToWeaponSlot, NewGameState).GetReference(), ItemState.GetReference());
 		}
+	}
+
+	// Add abilities from the equipment item itself. Add these last in case they're overridden by soldier abilities.
+	foreach EquipmentTemplate.Abilities(AbilityName)
+	{
+		AbilityTemplate = AbilityTemplateMan.FindAbilityTemplate(AbilityName);
+		InitAbility(AbilityTemplate, NewUnit, NewGameState, ItemState.GetReference());
+	}
+}
+
+simulated function InitAbility(X2AbilityTemplate AbilityTemplate, XComGameState_Unit NewUnit, XComGameState NewGameState, optional StateObjectReference ItemRef, optional StateObjectReference AmmoRef)
+{
+	local XComGameState_Ability OtherAbility;
+	local StateObjectReference AbilityRef;
+	local XComGameStateHistory History;
+	local X2AbilityTemplateManager AbilityTemplateMan;
+	local name AdditionalAbility;
+
+	History = `XCOMHISTORY;
+	AbilityTemplateMan = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+
+	// Check for ability overrides
+	foreach NewUnit.Abilities(AbilityRef)
+	{
+		OtherAbility = XComGameState_Ability(History.GetGameStateForObjectID(AbilityRef.ObjectID));
+
+		if (OtherAbility.GetMyTemplate().OverrideAbilities.Find(AbilityTemplate.DataName) != INDEX_NONE)
+			return;
+	}
+
+	`TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, ItemRef, AmmoRef);
+
+	// Add additional abilities
+	foreach AbilityTemplate.AdditionalAbilities(AdditionalAbility)
+	{
+		AbilityTemplate = AbilityTemplateMan.FindAbilityTemplate(AdditionalAbility);
+
+		// Check for overrides of the additional abilities
+		foreach NewUnit.Abilities(AbilityRef)
+		{
+			OtherAbility = XComGameState_Ability(History.GetGameStateForObjectID(AbilityRef.ObjectID));
+
+			if (OtherAbility.GetMyTemplate().OverrideAbilities.Find(AbilityTemplate.DataName) != INDEX_NONE)
+				return;
+		}
+
+		`TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, ItemRef, AmmoRef);
 	}
 }
 
