@@ -84,6 +84,15 @@ static function AddUniversalAbilities()
 					if (Template.Abilities.Find(AbilityName) == INDEX_NONE)
 						Template.Abilities.AddItem(AbilityName);
 				}
+
+				if (Template.DataName == 'Soldier')
+				{
+					foreach class'XMBConfig'.default.AllSoldierAbilitySet(AbilityName)
+					{
+						if (Template.Abilities.Find(AbilityName) == INDEX_NONE)
+							Template.Abilities.AddItem(AbilityName);
+					}
+				}
 			}
 		}
 	}
