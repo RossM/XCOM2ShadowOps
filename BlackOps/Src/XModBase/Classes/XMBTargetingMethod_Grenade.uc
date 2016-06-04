@@ -28,12 +28,8 @@ function GetOverrideVersion(out int Major, out int Minor, out int Patch)
 	Patch = PatchVersion;
 }
 
-function bool GetExtObjectValue(name Type, out object Value, optional object Data1 = none, optional object Data2 = none) { return false; }
-function SetExtObjectValue(name Type, object Value, optional object Data1 = none, optional object Data2 = none);
-function bool GetExtFloatValue(name Type, out float Value, optional object Data1 = none, optional object Data2 = none) { return false; }
-function SetExtFloatValue(name Type, float Value, optional object Data1 = none, optional object Data2 = none);
-function bool GetExtStringValue(name Type, out string Value, optional object Data1 = none, optional object Data2 = none) { return false; }
-function SetExtStringValue(name Type, string Value, optional object Data1 = none, optional object Data2 = none);
+function bool GetExtValue(LWTuple Data) { return false; }
+function bool SetExtValue(LWTuple Data) { return false; }
 
 // Targeting methods are saved as a class reference, not an object, so bake in the version here
 defaultproperties

@@ -30,12 +30,27 @@ simulated function float GetRadiusModifier(const XComGameState_Ability Ability, 
 
 function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
 
-function float GetExtValue(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, float fBaseValue)
+function bool GetExtValue(LWTuple Tuple)
 {
-	if (Type == 'BonusRadius')
-		return GetRadiusModifier(AbilityState, Attacker, fBaseValue);
+	local XComGameState_Unit Attacker;
+	local XComGameState_Ability AbilityState;
+	local LWTValue Value;
+	local float fBaseValue;
 
-	return 0;
+	if (Tuple.id != 'BonusRadius')
+		return false;
+
+	Attacker = XComGameState_Unit(Tuple.Data[1].o);
+	AbilityState = XComGameState_Ability(Tuple.Data[2].o);
+	fBaseValue = Tuple.Data[3].f;
+
+	Value.f = GetRadiusModifier(AbilityState, Attacker, fBaseValue);
+	Value.kind = LWTVFloat;
+
+	Tuple.Data.Length = 0;
+	Tuple.Data.AddItem(Value);
+
+	return true;
 }
 
 function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, optional ShotBreakdown ShotBreakdown, optional out array<ShotModifierInfo> ShotModifiers) { return false; }

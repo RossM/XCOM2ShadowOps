@@ -30,7 +30,7 @@ static function ChainAbilityTag()
 	local X2AbilityTag OldAbilityTag;
 	local int idx;
 	local XMBOverrideInterface Override;
-	local object OldAbilityTagObj;
+	local LWTuple Tuple;
 
 	Engine = `XENGINE;
 
@@ -43,8 +43,11 @@ static function ChainAbilityTag()
 		if (IsNewer(Override))
 			return;
 
-		if (Override.GetExtObjectValue('WrappedTag', OldAbilityTagObj))
-			OldAbilityTag = X2AbilityTag(OldAbilityTagObj);
+		Tuple = new class'LWTuple';
+		Tuple.id = 'WrappedTag';
+
+		if (Override.GetExtValue(Tuple))
+			OldAbilityTag = X2AbilityTag(Tuple.Data[0].o);
 	}
 
 	AbilityTag = new class'XMBAbilityTag';

@@ -22,6 +22,10 @@ simulated function CalculateRadiusModifier(const XComGameState_Ability Ability)
 	local XComGameState_Effect EffectState;
 	local XMBEffectInterface BonusRadiusEffect;
 	local XComGameStateHistory History;
+	local LWTuple Tuple;
+
+	Tuple = new class'LWTuple';
+	Tuple.id = 'BonusRadius';
 
 	fRadiusModifier = 0;
 
@@ -34,7 +38,18 @@ simulated function CalculateRadiusModifier(const XComGameState_Ability Ability)
 		BonusRadiusEffect = XMBEffectInterface(EffectState.GetX2Effect());
 		if (BonusRadiusEffect != none)
 		{
-			fRadiusModifier += BonusRadiusEffect.GetExtValue('BonusRadius', EffectState, SourceUnit, none, Ability, fTargetRadius);
+			Tuple.Data.Length = 4;
+			Tuple.Data[0].o = EffectState;
+			Tuple.Data[0].kind = LWTVObject;
+			Tuple.Data[1].o = SourceUnit;
+			Tuple.Data[1].kind = LWTVObject;
+			Tuple.Data[2].o = Ability;
+			Tuple.Data[2].kind = LWTVObject;
+			Tuple.Data[3].f = fTargetRadius;
+			Tuple.Data[3].kind = LWTVFloat;
+
+			if (BonusRadiusEffect.GetExtValue(Tuple))
+				fRadiusModifier += Tuple.Data[0].f;
 		}
 	}
 }
@@ -64,9 +79,5 @@ function GetOverrideVersion(out int Major, out int Minor, out int Patch)
 	Patch = PatchVersion;
 }
 
-function bool GetExtObjectValue(name Type, out object Value, optional object Data1 = none, optional object Data2 = none) { return false; }
-function SetExtObjectValue(name Type, object Value, optional object Data1 = none, optional object Data2 = none);
-function bool GetExtFloatValue(name Type, out float Value, optional object Data1 = none, optional object Data2 = none) { return false; }
-function SetExtFloatValue(name Type, float Value, optional object Data1 = none, optional object Data2 = none);
-function bool GetExtStringValue(name Type, out string Value, optional object Data1 = none, optional object Data2 = none) { return false; }
-function SetExtStringValue(name Type, string Value, optional object Data1 = none, optional object Data2 = none);
+function bool GetExtValue(LWTuple Data) { return false; }
+function bool SetExtValue(LWTuple Data) { return false; }
