@@ -1,7 +1,7 @@
 class XMBTargetingMethod_Grenade extends X2TargetingMethod_Grenade implements(XMBOverrideInterface);
 
 // XModBase version
-var int MajorVersion, MinorVersion, PatchVersion;
+var const int MajorVersion, MinorVersion, PatchVersion;
 
 // This is necessary to get grenade-radius-modifying abilities to work, by giving the terrible
 // hack in XMBAbilityMultiTarget_SoldierBonusRadius a chance to do its thing before the
@@ -34,3 +34,11 @@ function bool GetExtFloatValue(name Type, out float Value, optional object Data1
 function SetExtFloatValue(name Type, float Value, optional object Data1 = none, optional object Data2 = none);
 function bool GetExtStringValue(name Type, out string Value, optional object Data1 = none, optional object Data2 = none) { return false; }
 function SetExtStringValue(name Type, string Value, optional object Data1 = none, optional object Data2 = none);
+
+// Targeting methods are saved as a class reference, not an object, so bake in the version here
+defaultproperties
+{
+	MajorVersion = 0
+	MinorVersion = 1
+	PatchVersion = 0
+}
