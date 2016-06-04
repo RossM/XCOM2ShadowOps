@@ -1,4 +1,4 @@
-class XMBEffect_Persistent extends X2Effect_Persistent implements(XMBEffectInterface);
+class XMBEffect_Extended extends X2Effect_Persistent implements(XMBEffectInterface);
 
 // This class adds some extra methods to X2Effect_Persistent which can be overridden in a
 // subclass to create new effects.
@@ -65,7 +65,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	if (ToHitCalc == none)
 		return;
 
-	// We want to make sure that other XMBEffect_Persistent's effects are not included in our calculation.
+	// We want to make sure that other XMBEffect_Extended's effects are not included in our calculation.
 	// Luckily, A2AbilityToHitCalc.HitModifiers is unused, so we use it as a flag to indicate we are in a sub-calculation.
 	if (ToHitCalc.IsA('XMBAbilityToHitCalc_StandardAim'))
 		return;
@@ -135,7 +135,7 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 	if (ToHitCalc == none)
 		return;
 
-	// We want to make sure that other XMBEffect_Persistent's effects are not included in our calculation.
+	// We want to make sure that other XMBEffect_Extended's effects are not included in our calculation.
 	// Luckily, A2AbilityToHitCalc.HitModifiers is unused, so we use it as a flag to indicate we are in a sub-calculation.
 	if (ToHitCalc.IsA('XMBAbilityToHitCalc_StandardAim'))
 		return;

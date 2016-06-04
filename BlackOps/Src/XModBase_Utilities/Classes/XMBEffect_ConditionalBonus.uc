@@ -3,7 +3,7 @@
 //  AUTHOR:  xylthixlm
 //---------------------------------------------------------------------------------------
 
-class XMBEffect_ConditionalBonus extends XMBEffect_Persistent;
+class XMBEffect_ConditionalBonus extends XMBEffect_Extended;
 
 struct ExtShotModifierInfo
 {
@@ -19,7 +19,7 @@ struct ExtShotModifierInfo
 
 var array<ExtShotModifierInfo> Modifiers;	// Modifiers to attacks made by (or at) the unit with the effect
 
-var bool bIgnoreSquadsightPenalty;			// Negates squadsight penalties. Requires XMBEffect_Persistent.
+var bool bIgnoreSquadsightPenalty;			// Negates squadsight penalties. Requires XMBEffect_Extended.
 
 
 ////////////////

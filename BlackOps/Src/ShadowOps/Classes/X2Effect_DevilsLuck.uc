@@ -1,4 +1,4 @@
-class X2Effect_DevilsLuck extends XMBEffect_Persistent;
+class X2Effect_DevilsLuck extends XMBEffect_Extended;
 
 var float HitChanceMultiplier, CritChanceMultiplier;
 
