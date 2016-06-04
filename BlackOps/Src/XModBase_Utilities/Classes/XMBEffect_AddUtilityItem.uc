@@ -1,7 +1,8 @@
 class XMBEffect_AddUtilityItem extends X2Effect_Persistent;
 
 var name DataName;
-var int Quantity;
+var int BaseCharges;		// Number of charges of the item to add.
+var int BonusCharges;		// Number of extra charges of the item to add for each item of that type already in the inventory.
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
@@ -45,7 +46,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 			if (ItemState != none && !ItemState.bMergedOut && ItemState.GetMyTemplate() == WeaponTemplate)
 			{
 				ItemState = XComGameState_Item(NewGameState.CreateStateObject(ItemState.Class, ItemState.ObjectID));
-				ItemState.Ammo += Quantity;
+				ItemState.Ammo += BaseCharges + ItemState.MergedItemCount * BonusCharges;
 				NewGameState.AddStateObject(ItemState);
 				return;
 			}
@@ -54,7 +55,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 
 	// Create item
 	ItemState = EquipmentTemplate.CreateInstanceFromTemplate(NewGameState);
-	ItemState.Ammo = Quantity;
+	ItemState.Ammo = BaseCharges;
 	NewGameState.AddStateObject(ItemState);
 
 	NewEffectState.CreatedObjectReference = ItemState.GetReference();
@@ -142,4 +143,9 @@ simulated function OnEffectRemoved(const out EffectAppliedData ApplyEffectParame
 		return;
 
 	NewGameState.RemoveStateObject(RemovedEffectState.CreatedObjectReference.ObjectID);
+}
+
+defaultproperties
+{
+	BaseCharges = 1
 }

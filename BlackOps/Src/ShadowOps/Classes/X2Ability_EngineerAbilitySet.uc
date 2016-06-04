@@ -43,7 +43,7 @@ static function X2AbilityTemplate SmokeAndMirrors()
 
 	Effect = new class'XMBEffect_AddUtilityItem';
 	Effect.DataName = 'SmokeGrenade';
-	Effect.Quantity = 1;
+	Effect.BaseCharges = 1;
 
 	return Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_BlackOps.UIPerk_smokeandmirrors", false, Effect);
 }
