@@ -2249,7 +2249,7 @@
     <Content Include="Src\XModBase_Utilities\Classes\XMGEffect_AIControl.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddGrenade.uc">
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddUtilityItem.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddReservedActionPoints.uc">
