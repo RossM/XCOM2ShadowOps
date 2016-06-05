@@ -704,6 +704,7 @@ static function X2AbilityTemplate Entrench()
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
 	ActionPointCost.AllowedTypes.AddItem(class'X2CharacterTemplateManager'.default.DeepCoverActionPoint);
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	

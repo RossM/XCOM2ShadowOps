@@ -423,7 +423,7 @@ LocFriendlyName="Entrench"
 LocLongDescription="Increase Defense by <Ability:Defense/> and Dodge by <Ability:Dodge/> until you move. Only works in cover."
 LocHelpText="Increase Defense by <Ability:Defense/> and Dodge by <Ability:Dodge/> until you move. Only works in cover."
 LocFlyOverText="Entrench"
-LocPromotionPopupText="<Bullet/> It's often better to stay in worse cover and Entrench before firing rather than moving to better cover. <br/><Bullet/> You need to be next to cover to Entrench, but the bonuses to Defense and Dodge it grants apply even against enemies that flank you. <br/><Bullet/> Using Entrench as your first action doesn't end your turn. <br/>"
+LocPromotionPopupText="<Bullet/> It's often better to stay in worse cover and Entrench before firing rather than moving to better cover. <br/>"
 
 [ShadowOps_Aggression X2AbilityTemplate]
 LocFriendlyName="Aggression"
