@@ -3,11 +3,45 @@
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
 Beta version v0.7.0
-  * Smoke and Mirrors now provides a bonus smoke grenade use (even if there is no smoke grenade equipped).
-  * First Strike applies when flanking or concealed.
-  * Packmaster only applies to standard utility slots.
+General changes
+  * XComModOptions.ini now has options to disable the mod's item and non-class gameplay changes.
+Class changes
+  Combat Engineer
+    * Smoke and Mirrors now provides a bonus smoke grenade use (even if there is no smoke grenade equipped).
+    * Breach moved to Pioneer subclass.
+	* Fastball moved to Corporal.
+	* Dense Smoke moved to Sergeant, Sapper subclass.
+	* Moving Target moved to Sergeant.
+	* Aggression moved to Lieutenant.
+	* Entrench revised: Increase Defense by 30 and Dodge by 50 until you move. Only works in cover.
+	* Fracture moved to Captain.
+	* Fracture shred increased to 2/4/6 (was 2/3/4).
+	* Chain Reaction removed.
+	* Combat Drugs moved to Sapper subclass.
+	* Combat Drugs bonus increased to +10 aim and +20 crit (was +10 aim and +10 crit).
+	* Resilience (from Infantry) added at Major.
+    * Packmaster only applies to standard utility slots.
+  Dragoon
+    * Vanish now has a 2 round cooldown.
+  Hunter
+    * First Strike applies when either flanking or concealed. (Was only when concealed.)
+  Infantry
+    * Magnum moved to Rifleman subclass.
+	* New Sergeant ability: First Aid. You have one free medikit use on every mission. Each carried medikit gives you two additional uses.
+    * Zero In moved to Lieutenant.
+	* Flush revised: Fire a pistol shot that automatically hits and forces the target to move to new cover.
+	* Ready for Anything removed.
+	* New Captain ability: Second Wind. Using a medikit on an injured unit also grants that unit a bonus action point.
+Item changes
   * Depleted Elerium Rounds shred reduced to 2.
-  * Vanish has 2 round cooldown.
+Visual changes
+  * Flush has a new, improved visualization.
+Other changes
+  * Scrounger AWC ability removed.
+  * New AWC ability: Lightfoot. You have +3 Mobility and are harder to detect while concealed.
+  * New AWC ability: Pyromaniac. Your fire attacks deal +2 damage, and your burn effects deal +2 damage per turn.
+  * New AWC ability: Snake Blood. Your poison attacks deal +1 damage, and your poison effects deal +1 damage per turn. You are immune to poison.
+  * New AWC ability: Rage. You gain Implacable, Untouchable, and Serial for 3 turns, but you can't choose your own actions.
 Bugfixes
   * GTS unlocks now cost 200 on Legendary difficulty.
 
