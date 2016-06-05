@@ -11,7 +11,7 @@ struct TemplateEdit
 };
 
 var config array<name> ExtraStartingItems, DisabledItems;
-var config array<name> GrenadeAbilities, SuppressionBlockedAbilities, OverwatchAbilities;
+var config array<name> GrenadeAbilities, SuppressionBlockedAbilities, OverwatchAbilities, MedikitAbilities;
 var config array<TemplateEdit> BuildableItems;
 
 static function EditTemplates()
@@ -283,6 +283,12 @@ static function AddAllPostActivationEvents()
 	foreach default.OverwatchAbilities(DataName)
 	{
 		AddPostActivationEvent(DataName, 'OverwatchUsed');
+	}
+
+	// Second Wind
+	foreach default.MedikitAbilities(DataName)
+	{
+		AddPostActivationEvent(DataName, 'MedikitUsed');
 	}
 }
 

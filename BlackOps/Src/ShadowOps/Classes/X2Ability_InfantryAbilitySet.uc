@@ -41,6 +41,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Fortify());
 	Templates.AddItem(FortifyTrigger());
 	Templates.AddItem(FirstAid());
+	Templates.AddItem(SecondWind());
+	Templates.AddItem(SecondWindTrigger());
 
 	return Templates;
 }
@@ -1131,6 +1133,125 @@ static function X2AbilityTemplate FirstAid()
 	Effect.BonusCharges = 1;
 
 	return Passive('ShadowOps_FirstAid', "img:///UILibrary_PerkIcons.UIPerk_supermedic", true, Effect);
+}
+
+static function X2AbilityTemplate SecondWind()
+{
+	local X2AbilityTemplate Template;
+
+	Template = PurePassive('ShadowOps_SecondWind', "img:///UILibrary_BlackOps.UIPerk_secondwind", false);
+	Template.AdditionalAbilities.AddItem('ShadowOps_SecondWindTrigger');
+
+	return Template;
+}
+
+static function X2AbilityTemplate SecondWindTrigger()
+{
+	local X2AbilityTemplate					Template;
+	local X2Effect_GrantActionPoints		Effect;
+	local X2AbilityTrigger_EventListener	Trigger;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SecondWindTrigger');
+
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_secondwind";
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SimpleSingleTarget;
+
+	Trigger = new class'X2AbilityTrigger_EventListener';
+	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
+	Trigger.ListenerData.EventID = 'MedikitUsed';
+	Trigger.ListenerData.Filter = eFilter_Unit;
+	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.RapidFireListener;
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Effect = new class'X2Effect_GrantActionPoints';
+	Effect.NumActionPoints = 1;
+	Effect.PointType = class'X2CharacterTemplateManager'.default.StandardActionPoint;
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = SecondWind_BuildVisualization;
+	Template.bSkipFireAction = true;
+
+	return Template;
+}
+
+function SecondWind_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{		
+	local X2AbilityTemplate             AbilityTemplate;
+	local XComGameStateContext_Ability  Context;
+	local AbilityInputContext           AbilityContext;
+	
+	local Actor                     TargetVisualizer;
+	local int                       TargetIndex;
+
+	local VisualizationTrack        EmptyTrack;
+	local VisualizationTrack        BuildTrack;
+	local int						TrackIndex;
+	local bool						bAlreadyAdded;
+	local XComGameStateHistory      History;
+
+	local X2Action_PlaySoundAndFlyOver SoundAndFlyover;
+
+	History = `XCOMHISTORY;
+	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+	AbilityContext = Context.InputContext;
+	AbilityTemplate = class'XComGameState_Ability'.static.GetMyTemplateManager().FindAbilityTemplate(AbilityContext.AbilityTemplateName);
+
+	//Configure the visualization track for the target(s). This functionality uses the context primarily
+	//since the game state may not include state objects for misses.
+	//****************************************************************************************	
+	if (AbilityTemplate.AbilityTargetEffects.Length > 0 &&			//There are effects to apply
+		AbilityContext.PrimaryTarget.ObjectID > 0)				//There is a primary target
+	{
+		TargetVisualizer = History.GetVisualizer(AbilityContext.PrimaryTarget.ObjectID);
+
+		BuildTrack = EmptyTrack;
+		BuildTrack.TrackActor = TargetVisualizer;
+		BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.PrimaryTarget.ObjectID);
+		BuildTrack.StateObject_NewState = BuildTrack.StateObject_OldState;
+
+		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, Context));
+		SoundAndFlyOver.SetSoundAndFlyOverParameters(none, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
+
+		OutVisualizationTracks.AddItem(BuildTrack);
+	}
+
+	//  Apply effects to multi targets
+	if( AbilityTemplate.AbilityMultiTargetEffects.Length > 0 && AbilityContext.MultiTargets.Length > 0)
+	{
+		for( TargetIndex = 0; TargetIndex < AbilityContext.MultiTargets.Length; ++TargetIndex )
+		{	
+			//Some abilities add the same target multiple times into the targets list - see if this is the case and avoid adding redundant tracks
+			bAlreadyAdded = false;
+			for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
+			{
+				if( OutVisualizationTracks[TrackIndex].StateObject_NewState.ObjectID == AbilityContext.MultiTargets[TargetIndex].ObjectID )
+				{
+					bAlreadyAdded = true;
+				}
+			}
+
+			if( !bAlreadyAdded )
+			{
+				TargetVisualizer = History.GetVisualizer(AbilityContext.MultiTargets[TargetIndex].ObjectID);
+
+				BuildTrack = EmptyTrack;
+				BuildTrack.TrackActor = TargetVisualizer;
+				BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.MultiTargets[TargetIndex].ObjectID);
+				BuildTrack.StateObject_NewState = BuildTrack.StateObject_OldState;
+
+				SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, Context));
+				SoundAndFlyOver.SetSoundAndFlyOverParameters(none, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
+
+				OutVisualizationTracks.AddItem(BuildTrack);
+			}
+		}
+	}
 }
 
 DefaultProperties
