@@ -1,4 +1,4 @@
-class X2Effect_HunkerDown extends X2Effect_PersistentStatChange;
+class X2Effect_Entrench extends X2Effect_PersistentStatChange;
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {

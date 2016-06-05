@@ -28,7 +28,6 @@ static function EditTemplates()
 	ChangeAllToGrenadeActionPoints();
 	AddSwapAmmoAbilities();
 	FixHotloadAmmo();
-	FixHunkerDown();
 
 	if (class'ModConfig'.default.bEnableRulesTweaks)
 	{
@@ -253,9 +252,6 @@ static function AddAllDoNotConsumeAllAbilities()
 		AddDoNotConsumeAllAbility(DataName, 'ShadowOps_SmokeAndMirrors');
 		AddDoNotConsumeAllEffect(DataName, 'Fastball');
 	}
-
-	// Entrench
-	AddDoNotConsumeAllAbility('HunkerDown', 'ShadowOps_Entrench');
 }
 
 static function AddPostActivationEvent(name AbilityName, name EventName)
@@ -461,28 +457,6 @@ static function FixHotloadAmmo()
 	foreach TemplateAllDifficulties(Template)
 	{
 		Template.BuildNewGameStateFn = class'X2AbilityOverrides_BO'.static.HotLoadAmmo_BuildGameState;
-	}
-}
-
-static function FixHunkerDown()
-{
-	local X2AbilityTemplateManager				AbilityManager;
-	local array<X2AbilityTemplate>				TemplateAllDifficulties;
-	local X2AbilityTemplate						Template;
-	local array<X2Effect>						Effects;
-	local int idx;
-
-	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
-	AbilityManager.FindAbilityTemplateAllDifficulties('HunkerDown', TemplateAllDifficulties);
-	foreach TemplateAllDifficulties(Template)
-	{
-		Effects = Template.AbilityTargetEffects;
-		for (idx = 0; idx < Effects.Length; idx++)
-		{
-			if (Effects[idx].class == class'X2Effect_PersistentStatChange')
-				Effects[idx] = new class'X2Effect_HunkerDown'(Effects[idx]);
-		}
-		class'X2AbilityTemplate_BO'.static.SetAbilityTargetEffects(Template, Effects);
 	}
 }
 

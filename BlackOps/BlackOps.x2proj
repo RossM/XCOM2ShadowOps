@@ -225,7 +225,7 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_HitAndRun.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_HunkerDown.uc">
+    <Content Include="Src\ShadowOps\Classes\X2Effect_Entrench.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_HunterMarked.uc">
