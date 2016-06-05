@@ -1180,6 +1180,7 @@ static function X2AbilityTemplate SecondWindTrigger()
 	return Template;
 }
 
+// This visualizer plays a flyover over each target.
 function SecondWind_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
 {		
 	local X2AbilityTemplate             AbilityTemplate;
