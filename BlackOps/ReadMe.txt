@@ -25,6 +25,8 @@ Class changes
     * Vanish now has a 2 round cooldown.
   Hunter
     * First Strike applies when either flanking or concealed. (Was only when concealed.)
+	* Sprint moved to Lieutenant.
+	* Tracking moved to Captain.
   Infantry
     * Magnum moved to Rifleman subclass.
 	* New Sergeant ability: First Aid. You have one free medikit use on every mission. Each carried medikit gives you two additional uses.
