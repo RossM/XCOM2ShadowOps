@@ -109,7 +109,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 
 simulated function InitAbility(X2AbilityTemplate AbilityTemplate, XComGameState_Unit NewUnit, XComGameState NewGameState, optional StateObjectReference ItemRef, optional StateObjectReference AmmoRef)
 {
-	local XComGameState_Ability OtherAbility;
+	local XComGameState_Ability NewAbility, OtherAbility;
 	local StateObjectReference AbilityRef;
 	local XComGameStateHistory History;
 	local X2AbilityTemplateManager AbilityTemplateMan;
@@ -127,7 +127,9 @@ simulated function InitAbility(X2AbilityTemplate AbilityTemplate, XComGameState_
 			return;
 	}
 
-	`TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, ItemRef, AmmoRef);
+	AbilityRef = `TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, ItemRef, AmmoRef);
+	NewAbility = XComGameState_Ability(NewGameState.GetGameStateForObjectID(AbilityRef.ObjectID));
+	NewAbility.CheckForPostBeginPlayActivation();
 
 	// Add additional abilities
 	foreach AbilityTemplate.AdditionalAbilities(AdditionalAbility)
@@ -143,7 +145,9 @@ simulated function InitAbility(X2AbilityTemplate AbilityTemplate, XComGameState_
 				return;
 		}
 
-		`TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, ItemRef, AmmoRef);
+		AbilityRef = `TACTICALRULES.InitAbilityForUnit(AbilityTemplate, NewUnit, NewGameState, ItemRef, AmmoRef);
+		NewAbility = XComGameState_Ability(NewGameState.GetGameStateForObjectID(AbilityRef.ObjectID));
+		NewAbility.CheckForPostBeginPlayActivation();
 	}
 }
 
