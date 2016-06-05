@@ -681,7 +681,6 @@ static function X2AbilityTemplate Flush()
 	Template.AdditionalAbilities.AddItem('ShadowOps_FlushShot');
 
 	// Icon Properties
-	Template.bDontDisplayInAbilitySummary = true;
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_flush";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
