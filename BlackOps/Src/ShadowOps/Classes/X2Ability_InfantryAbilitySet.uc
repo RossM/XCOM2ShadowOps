@@ -41,8 +41,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Fortify());
 	Templates.AddItem(FortifyTrigger());
 	Templates.AddItem(FirstAid());
-	Templates.AddItem(HelpingHand());
-	Templates.AddItem(HelpingHandTrigger());
+	Templates.AddItem(SecondWind());
+	Templates.AddItem(SecondWindTrigger());
 
 	return Templates;
 }
@@ -1135,23 +1135,23 @@ static function X2AbilityTemplate FirstAid()
 	return Passive('ShadowOps_FirstAid', "img:///UILibrary_PerkIcons.UIPerk_supermedic", true, Effect);
 }
 
-static function X2AbilityTemplate HelpingHand()
+static function X2AbilityTemplate SecondWind()
 {
 	local X2AbilityTemplate Template;
 
-	Template = PurePassive('ShadowOps_HelpingHand', "img:///UILibrary_BlackOps.UIPerk_secondwind", false);
-	Template.AdditionalAbilities.AddItem('ShadowOps_HelpingHandTrigger');
+	Template = PurePassive('ShadowOps_SecondWind', "img:///UILibrary_BlackOps.UIPerk_secondwind", false);
+	Template.AdditionalAbilities.AddItem('ShadowOps_SecondWindTrigger');
 
 	return Template;
 }
 
-static function X2AbilityTemplate HelpingHandTrigger()
+static function X2AbilityTemplate SecondWindTrigger()
 {
 	local X2AbilityTemplate					Template;
 	local X2Effect_GrantActionPoints		Effect;
 	local X2AbilityTrigger_EventListener	Trigger;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HelpingHandTrigger');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SecondWindTrigger');
 
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_secondwind";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -1174,14 +1174,14 @@ static function X2AbilityTemplate HelpingHandTrigger()
 	Template.AddTargetEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = HelpingHand_BuildVisualization;
+	Template.BuildVisualizationFn = SecondWind_BuildVisualization;
 	Template.bSkipFireAction = true;
 
 	return Template;
 }
 
 // This visualizer plays a flyover over each target.
-function HelpingHand_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+function SecondWind_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
 {		
 	local X2AbilityTemplate             AbilityTemplate;
 	local XComGameStateContext_Ability  Context;
