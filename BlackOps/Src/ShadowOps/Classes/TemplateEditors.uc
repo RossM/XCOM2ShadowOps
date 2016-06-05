@@ -285,7 +285,7 @@ static function AddAllPostActivationEvents()
 		AddPostActivationEvent(DataName, 'OverwatchUsed');
 	}
 
-	// Second Wind
+	// Helping Hand
 	foreach default.MedikitAbilities(DataName)
 	{
 		AddPostActivationEvent(DataName, 'MedikitUsed');

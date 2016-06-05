@@ -141,19 +141,19 @@ LocHelpText="You have one free medikit use on every mission. Each carried mediki
 LocFlyOverText="First Aid"
 LocPromotionPopupText=""
 
-[ShadowOps_SecondWind X2AbilityTemplate]
-LocFriendlyName="Second Wind"
+[ShadowOps_HelpingHand X2AbilityTemplate]
+LocFriendlyName="Helping Hand"
 LocLongDescription="Using a medikit on an injured unit also grants that unit a bonus action point."
 LocHelpText="Using a medikit on an injured unit also grants that unit a bonus action point."
-LocFlyOverText="Second Wind"
+LocFlyOverText="Helping Hand"
 LocPromotionPopupText=""
 
-[ShadowOps_SecondWindTrigger X2AbilityTemplate]
-LocFriendlyName="Second Wind"
+[ShadowOps_HelpingHandTrigger X2AbilityTemplate]
+LocFriendlyName="Helping Hand"
 LocLongDescription="Using a medikit on an injured unit also grants that unit a bonus action point."
 LocHelpText="Using a medikit on an injured unit also grants that unit a bonus action point."
-LocFlyOverText="Second Wind"
-LocHitMessage="Second Wind"
+LocFlyOverText="Helping Hand"
+LocHitMessage="Helping Hand"
 
 ; === Dragoon abilities ===
 

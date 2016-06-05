@@ -31,7 +31,7 @@ Class changes
     * Zero In moved to Lieutenant.
 	* Flush revised: Fire a pistol shot that automatically hits and forces the target to move to new cover.
 	* Ready for Anything removed.
-	* New Captain ability: Second Wind. Using a medikit on an injured unit also grants that unit a bonus action point.
+	* New Captain ability: Helping Hand. Using a medikit on an injured unit also grants that unit a bonus action point.
 Item changes
   * Depleted Elerium Rounds shred reduced to 2.
 Visual changes
