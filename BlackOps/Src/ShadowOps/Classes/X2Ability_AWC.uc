@@ -186,12 +186,20 @@ static function X2AbilityTemplate Lightfoot()
 static function X2AbilityTemplate Pyromaniac()
 {
 	local XMBEffect_BonusDamageByDamageType Effect;
+	local X2AbilityTemplate Template;
+	local XMBEffect_AddUtilityItem ItemEffect;
 
 	Effect = new class'XMBEffect_BonusDamageByDamageType';
 	Effect.RequiredDamageTypes.AddItem('fire');
 	Effect.DamageBonus = default.PyromaniacDamageBonus;
 
-	return Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+
+	ItemEffect = new class 'XMBEffect_AddUtilityItem';
+	ItemEffect.DataName = 'Firebomb';
+	Template.AddTargetEffect(ItemEffect);
+
+	return Template;
 }
 
 static function X2AbilityTemplate SnakeBlood()

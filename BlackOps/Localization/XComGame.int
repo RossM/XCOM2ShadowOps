@@ -527,8 +527,8 @@ LocFlyOverText="Lightfoot"
 
 [ShadowOps_Pyromaniac X2AbilityTemplate]
 LocFriendlyName="Pyromaniac"
-LocLongDescription="Your fire attacks deal +2 damage, and your burn effects deal +2 damage per turn."
-LocHelpText="Your fire attacks deal +2 damage, and your burn effects deal +2 damage per turn."
+LocLongDescription="Your fire attacks deal +1 damage, and your burn effects deal +1 damage per turn. You get a free incendiary grenade on each mission."
+LocHelpText="Your fire attacks deal +1 damage, and your burn effects deal +1 damage per turn. You get a free incendiary grenade on each mission."
 LocFlyOverText="Pyromaniac"
 
 [ShadowOps_SnakeBlood X2AbilityTemplate]

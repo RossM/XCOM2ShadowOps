@@ -39,7 +39,7 @@ Visual changes
 Other changes
   * Scrounger AWC ability removed.
   * New AWC ability: Lightfoot. You have +3 Mobility and are harder to detect while concealed.
-  * New AWC ability: Pyromaniac. Your fire attacks deal +2 damage, and your burn effects deal +2 damage per turn.
+  * New AWC ability: Pyromaniac. Your fire attacks deal +1 damage, and your burn effects deal +1 damage per turn. You get a free incendiary grenade on each mission.
   * New AWC ability: Snake Blood. Your poison attacks deal +1 damage, and your poison effects deal +1 damage per turn. You are immune to poison.
   * New AWC ability: Rage. You gain Implacable, Untouchable, and Serial for 3 turns, but you can't choose your own actions.
 Bugfixes
