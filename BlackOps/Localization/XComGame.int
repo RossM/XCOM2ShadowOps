@@ -93,7 +93,7 @@ LocFriendlyName="Rifle Suppression"
 LocLongDescription="Fire a barrage that pins down a target, granting reaction fire against it if it moves, and imposing a <Ability:SUPPRESSIONPENALTY/> penalty to the target's aim."
 LocHelpText="Penalize target's aim and shoot them if they move."
 LocFlyOverText="Rifle Suppression"
-LocPromotionPopupText="<Bullet/> Suppressed enemies take a -50 penalty to their Aim and can't use grenades.<br/><Bullet/> The reaction shot from Rifle Suppression has a +20 aim modifier.<br/><Bullet/> Suppression doesn't benefit from Covering Fire.<br/><Bullet/> Rifle Suppression costs <Ability:SelfAmmoCost/> ammo points to use, but has no cooldown.<br/><Bullet/> Rifle Suppression will be canceled if the suppressing unit is damaged.<br/><Bullet/> If multiple units suppress a target, the aim penalty will stack.<br/>"
+LocPromotionPopupText="<Bullet/> Suppressed enemies take a -50 penalty to their Aim and can't use grenades.<br/><Bullet/> The reaction shot from Rifle Suppression has a +<Ability:ToHit:SuppressionShot/> aim modifier.<br/><Bullet/> Suppression doesn't benefit from Covering Fire.<br/><Bullet/> Rifle Suppression costs <Ability:SelfAmmoCost/> ammo points to use, but has no cooldown.<br/><Bullet/> Rifle Suppression will be canceled if the suppressing unit is damaged.<br/><Bullet/> If multiple units suppress a target, the aim penalty will stack.<br/>"
 
 [ShadowOps_Focus X2AbilityTemplate]
 LocFriendlyName="Focus"
