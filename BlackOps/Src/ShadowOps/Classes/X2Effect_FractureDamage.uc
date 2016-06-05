@@ -36,14 +36,6 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 
 function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
 {
-	local XComGameState_Item SourceItem;
-	local X2WeaponTemplate WeaponTemplate;
-
-	if (AbilityState != none)
-	{
-		SourceItem = AbilityState.GetSourceWeapon();
-	}
-
 	switch (tag)
 	{
 	case 'Crit':
