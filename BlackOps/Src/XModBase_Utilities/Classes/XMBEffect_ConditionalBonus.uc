@@ -331,24 +331,28 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 
 	switch (Tag)
 	{
-	case 'Crit':
-		Tag = 'ToHit';
-		HitResult = eHit_Crit;
-		break;
-	case 'Defense':
-		Tag = 'ToHitAsTarget';
-		HitResult = eHit_Success;
-		ResultMultiplier = -1;
-		break;
-	case 'Dodge':
-		Tag = 'ToHitAsTarget';
-		HitResult = eHit_Graze;
-		break;
-	case 'CritDefense':
-		Tag = 'ToHitAsTarget';
-		HitResult = eHit_Crit;
-		ResultMultiplier = -1;
-		break;
+	case 'ToHit':				Tag = 'ToHit';			HitResult = eHit_Success;							break;
+	case 'ToHitAsTarget':		Tag = 'ToHitAsTarget';	HitResult = eHit_Success;							break;
+	case 'Defense':				Tag = 'ToHitAsTarget';	HitResult = eHit_Success;	ResultMultiplier = -1;	break;
+	case 'Damage':				Tag = 'Damage';			HitResult = eHit_Success;							break;
+	case 'Shred':				Tag = 'Shred';			HitResult = eHit_Success;							break;
+	case 'ArmorPiercing':		Tag = 'ArmorPiercing';	HitResult = eHit_Success;							break;
+	case 'Crit':				Tag = 'ToHit';			HitResult = eHit_Crit;								break;
+	case 'CritDefense':			Tag = 'ToHitAsTarget';	HitResult = eHit_Crit;		ResultMultiplier = -1;	break;
+	case 'CritDamage':			Tag = 'Damage';			HitResult = eHit_Crit;								break;
+	case 'CritShred':			Tag = 'Shred';			HitResult = eHit_Crit;								break;
+	case 'CritArmorPiercing':	Tag = 'ArmorPiercing';	HitResult = eHit_Crit;								break;
+	case 'Graze':				Tag = 'ToHit';			HitResult = eHit_Graze;								break;
+	case 'Dodge':				Tag = 'ToHitAsTarget';	HitResult = eHit_Graze;								break;
+	case 'GrazeDamage':			Tag = 'Damage';			HitResult = eHit_Graze;								break;
+	case 'GrazeShred':			Tag = 'Shred';			HitResult = eHit_Graze;								break;
+	case 'GrezeArmorPiercing':	Tag = 'ArmorPiercing';	HitResult = eHit_Graze;								break;
+	case 'MissDamage':			Tag = 'Damage';			HitResult = eHit_Miss;								break;
+	case 'MissShred':			Tag = 'Shred';			HitResult = eHit_Miss;								break;
+	case 'MissArmorPiercing':	Tag = 'ArmorPiercing';	HitResult = eHit_Miss;								break;
+
+	default:
+		return false;
 	}
 
 	if (Modifiers.Find('Type', Tag) == INDEX_NONE)
@@ -392,6 +396,9 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		}
 		return true;
 	}
+
+	if (ValidModifiers == 0)
+		return false;
 
 	TagValue = string(int(Result * ResultMultiplier));
 	return true;
