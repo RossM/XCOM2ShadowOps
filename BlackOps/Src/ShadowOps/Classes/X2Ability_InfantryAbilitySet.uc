@@ -477,7 +477,7 @@ static function X2AbilityTemplate ZoneOfControl()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 
-	Template.bCrossClassEligible = true;
+	Template.bCrossClassEligible = false;
 
 	return Template;
 }
