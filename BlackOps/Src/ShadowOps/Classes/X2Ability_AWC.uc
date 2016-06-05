@@ -10,7 +10,7 @@ var config float DevilsLuckHitChanceMultiplier, DevilsLuckCritChanceMultiplier;
 var config int LightfootMobilityBonus;
 var config float LightfootDetectionModifier;
 var config int PyromaniacDamageBonus;
-var config int SnakeBloodDamageBonus;
+var config int SnakeBloodDodgeBonus;
 var config int RageDuration, RageCharges;
 
 static function array<X2DataTemplate> CreateTemplates()
@@ -204,13 +204,12 @@ static function X2AbilityTemplate Pyromaniac()
 
 static function X2AbilityTemplate SnakeBlood()
 {
-	local XMBEffect_BonusDamageByDamageType Effect;
+	local X2Effect_PersistentStatChange Effect;
 	local X2Effect_DamageImmunity ImmunityEffect;
 	local X2AbilityTemplate Template;
 
-	Effect = new class'XMBEffect_BonusDamageByDamageType';
-	Effect.RequiredDamageTypes.AddItem('poison');
-	Effect.DamageBonus = default.SnakeBloodDamageBonus;
+	Effect = new class'X2Effect_PersistentStatChange';
+	Effect.AddPersistentStatChange(eStat_Dodge, default.SnakeBloodDodgeBonus);
 
 	Template = Passive('ShadowOps_SnakeBlood', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 
