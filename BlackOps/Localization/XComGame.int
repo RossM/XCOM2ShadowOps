@@ -401,15 +401,15 @@ LocPromotionPopupText="<Bullet/> Fastball effectively lets you use a grenade wit
 
 [ShadowOps_Fracture X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds <Ability:Shred:ShadowOps_FractureDamage/> armor and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that shreds <Ability:Shred:ShadowOps_FractureDamage/> armor and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that has +<Ability:Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that has +<Ability:Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
-LocPromotionPopupText="<Bullet/> More advanced weapons will shred more armor.<br/><Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Don't wait to use Fracture until you need both the shredding and the bonus damage. It's still a good ability even when it only does one of those things. <br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_FractureDamage X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that shreds <Ability:Shred/> armor and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that shreds <Ability:Shred/> parmor and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that has +<Ability:Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that has +<Ability:Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 
 [ShadowOps_Packmaster X2AbilityTemplate]

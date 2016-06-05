@@ -7,6 +7,7 @@ var config float BreachRange, BreachRadius, BreachShotgunRange, BreachShotgunRad
 var config float DangerZoneBonusRadius, DangerZoneBreachBonusRadius;
 var config int MovingTargetDefenseBonus, MovingTargetDodgeBonus;
 var config int EntrenchDefense, EntrenchDodge;
+var config int FractureCritModifier;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -412,6 +413,7 @@ static function X2AbilityTemplate FractureDamage()
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
 	DamageEffect = new class'X2Effect_FractureDamage';
+	DamageEffect.CritModifier = default.FractureCritModifier;
 	DamageEffect.BuildPersistentEffect(1, true, false, false);
 	DamageEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, false,,Template.AbilitySourceName);
 	Template.AddTargetEffect(DamageEffect);
