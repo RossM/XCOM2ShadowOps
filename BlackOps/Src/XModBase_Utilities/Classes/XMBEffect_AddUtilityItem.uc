@@ -17,6 +17,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	local XComGameStateHistory History;
 	local name AbilityName;
 	local array<SoldierClassAbilityType> EarnedSoldierAbilities;
+	local XGUnit UnitVisualizer;
 	local int idx;
 
 	NewUnit = XComGameState_Unit(kNewTargetState);
@@ -63,6 +64,17 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	ItemState = EquipmentTemplate.CreateInstanceFromTemplate(NewGameState);
 	ItemState.Ammo = BaseCharges;
 	NewGameState.AddStateObject(ItemState);
+
+	// Temporarily turn off equipment restrictions so we can add the item to the unit's inventory
+	NewUnit.bIgnoreItemEquipRestrictions = true;
+	NewUnit.AddItemToInventory(ItemState, eInvSlot_Utility, NewGameState);
+	NewUnit.bIgnoreItemEquipRestrictions = false;
+
+	// Update the unit's visualizer to include the new item
+	// Note: Normally this should be done in an X2Action, but since this effect is normally used in
+	// a PostBeginPlay trigger, we just apply the change immediately.
+	UnitVisualizer = XGUnit(NewUnit.GetVisualizer());
+	UnitVisualizer.ApplyLoadoutFromGameState(NewUnit, NewGameState);
 
 	NewEffectState.CreatedObjectReference = ItemState.GetReference();
 

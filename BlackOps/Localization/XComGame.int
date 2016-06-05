@@ -134,6 +134,13 @@ LocLongDescription="+<Ability:Defense/> Defense until the start of your next tur
 LocHelpText="+<Ability:Defense/> Defense until the start of your next turn."
 LocFlyOverText="Fortify"
 
+[ShadowOps_FirstAid X2AbilityTemplate]
+LocFriendlyName="First Aid"
+LocLongDescription="You have one free medikit use on every mission. Each carried medikit gives you two additional uses."
+LocHelpText="You have one free medikit use on every mission. Each carried medikit gives you two additional uses."
+LocFlyOverText="First Aid"
+LocPromotionPopupText=""
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]

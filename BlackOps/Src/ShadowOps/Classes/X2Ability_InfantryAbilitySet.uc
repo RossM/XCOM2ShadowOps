@@ -40,6 +40,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(AdrenalineSurgeTrigger());
 	Templates.AddItem(Fortify());
 	Templates.AddItem(FortifyTrigger());
+	Templates.AddItem(FirstAid());
 
 	return Templates;
 }
@@ -1118,6 +1119,18 @@ static function X2AbilityTemplate FortifyTrigger()
 	Template.bSkipFireAction = true;
 
 	return Template;
+}
+
+static function X2AbilityTemplate FirstAid()
+{
+	local XMBEffect_AddUtilityItem Effect;
+
+	Effect = new class'XMBEffect_AddUtilityItem';
+	Effect.DataName = 'medikit';
+	Effect.BaseCharges = 1;
+	Effect.BonusCharges = 1;
+
+	return Passive('ShadowOps_FirstAid', "img:///UILibrary_PerkIcons.UIPerk_supermedic", true, Effect);
 }
 
 DefaultProperties
