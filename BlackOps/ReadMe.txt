@@ -11,8 +11,8 @@ Class changes
     * Breach moved to Pioneer subclass.
 	* Fastball moved to Corporal.
 	* Dense Smoke moved to Sergeant, Sapper subclass.
-	* Moving Target moved to Sergeant.
-	* Aggression moved to Lieutenant.
+	* Aggression moved to Sergeant.
+	* Moving Target reduced to +30 defense, +50 dodge (was +40 defense, +100 dodge).
 	* Entrench revised: Increase Defense by 30 and Dodge by 50 until you move. Only works in cover.
 	* Fracture moved to Captain.
 	* Fracture shred increased to 2/4/6 (was 2/3/4).
@@ -28,6 +28,7 @@ Class changes
   Infantry
     * Magnum moved to Rifleman subclass.
 	* New Sergeant ability: First Aid. You have one free medikit use on every mission. Each carried medikit gives you two additional uses.
+	* Resilience removed (moved to Combat Engineer).
     * Zero In moved to Lieutenant.
 	* Flush revised: Fire a pistol shot that automatically hits and forces the target to move to new cover.
 	* Ready for Anything removed.
