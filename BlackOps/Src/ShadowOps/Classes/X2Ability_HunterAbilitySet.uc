@@ -906,6 +906,7 @@ static function X2AbilityTemplate FirstStrike()
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.FirstStrikeDamageBonus);
 	Effect.bIgnoreSquadSightPenalty = true;
+	Effect.bRequireAbilityWeapon = true;
 
 	Condition = new class'X2Condition_FirstStrike';
 	Effect.OtherConditions.AddItem(Condition);
