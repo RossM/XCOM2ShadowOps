@@ -421,8 +421,8 @@ LocFlyOverText="Fracture"
 
 [ShadowOps_Packmaster X2AbilityTemplate]
 LocFriendlyName="Packmaster"
-LocLongDescription="All your limited-use items in utility slots gain a bonus use. This does not include grenades in your grenade-only slot."
-LocHelpText="All your limited-use items in utility slots gain a bonus use. This does not include grenades in your grenade-only slot."
+LocLongDescription="Limited-use items in utility slots gain a bonus use. This does not include grenades in the grenade-only slot."
+LocHelpText="Limited-use items in utility slots gain a bonus use. This does not include grenades in the grenade-only slot."
 LocFlyOverText="Packmaster"
 
 [ShadowOps_Entrench X2AbilityTemplate]
@@ -726,7 +726,7 @@ TacticalText="<Bullet/> Increases Armor. <br/>"
 ; === GTS ability templates ===
 [PackmasterUnlock X2SoldierAbilityUnlockTemplate]
 DisplayName="Combat Engineer: Packmaster"
-Summary="Limited-use utility items gain a bonus use."
+Summary="Limited-use items in utility slots gain a bonus use."
 
 [DamnGoodGroundUnlock X2SoldierAbilityUnlockTemplate]
 DisplayName="Hunter: Damn Good Ground"
