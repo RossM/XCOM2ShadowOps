@@ -26,10 +26,13 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 {
 	local ShotModifierInfo ModInfo;
 
-	ModInfo.ModType = eHit_Crit;
-	ModInfo.Reason = FriendlyName;
-	ModInfo.Value = CritModifier;
-	ShotModifiers.AddItem(ModInfo);
+	if (AbilityState.GetMyTemplateName() == 'ShadowOps_Fracture')
+	{
+		ModInfo.ModType = eHit_Crit;
+		ModInfo.Reason = FriendlyName;
+		ModInfo.Value = CritModifier;
+		ShotModifiers.AddItem(ModInfo);
+	}
 }
 
 // XMBEffectInterface
