@@ -153,16 +153,18 @@ simulated function InitAbility(X2AbilityTemplate AbilityTemplate, XComGameState_
 
 simulated function OnEffectRemoved(const out EffectAppliedData ApplyEffectParameters, XComGameState NewGameState, bool bCleansed, XComGameState_Effect RemovedEffectState)
 {
-	local XComGameState_Item ItemState;
-	local XComGameStateHistory History;
+	if (RemovedEffectState.CreatedObjectReference.ObjectID > 0)
+		NewGameState.RemoveStateObject(RemovedEffectState.CreatedObjectReference.ObjectID);
+}
 
-	History = `XCOMHISTORY;
-	ItemState = XComGameState_Item(History.GetGameStateForObjectID(RemovedEffectState.CreatedObjectReference.ObjectID));	
+function UnitEndedTacticalPlay(XComGameState_Effect EffectState, XComGameState_Unit UnitState)
+{
+	local XComGameState NewGameState;
 
-	if(ItemState == none)
-		return;
+	NewGameState = UnitState.GetParentGameState();
 
-	NewGameState.RemoveStateObject(RemovedEffectState.CreatedObjectReference.ObjectID);
+	if (EffectState.CreatedObjectReference.ObjectID > 0)
+		NewGameState.RemoveStateObject(EffectState.CreatedObjectReference.ObjectID);
 }
 
 defaultproperties
