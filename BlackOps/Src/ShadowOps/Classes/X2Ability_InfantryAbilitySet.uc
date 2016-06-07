@@ -668,6 +668,7 @@ static function X2AbilityTemplate Flush()
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Condition_Visibility            VisibilityCondition;
+	local X2Condition_UnitProperty			PropertyCondition;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2Effect_Flush					FlushEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
@@ -701,8 +702,11 @@ static function X2AbilityTemplate Flush()
 	VisibilityCondition.bRequireGameplayVisible = true;
 	VisibilityCondition.bAllowSquadsight = true;
 	Template.AbilityTargetConditions.AddItem(VisibilityCondition);
-	// Can't target dead; Can't target friendlies
-	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+
+	PropertyCondition = new class'X2Condition_UnitProperty';
+	PropertyCondition.FailOnNonUnits = true;
+	Template.AbilityTargetConditions.AddItem(PropertyCondition);
+
 	// Can't shoot while dead
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	// Only at single targets that are in range.
