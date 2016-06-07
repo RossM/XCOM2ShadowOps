@@ -720,8 +720,8 @@ static function X2AbilityTemplate Flush()
 	AmmoCost.iAmmo = 1;
 	AmmoCost.bFreeCost = true;  // Will be used by the actual shot
 	Template.AbilityCosts.AddItem(AmmoCost);
-	Template.bAllowAmmoEffects = true;
-	Template.bAllowBonusWeaponEffects = true;
+	Template.bAllowAmmoEffects = false;
+	Template.bAllowBonusWeaponEffects = false;
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.FlushCooldown;
@@ -787,6 +787,7 @@ static function X2AbilityTemplate FlushShot()
 	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
 	local X2AbilityTarget_Single            SingleTarget;
 	local X2AbilityTrigger_Event	        Trigger;
+	local X2Effect							Effect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FlushShot');
 
@@ -799,17 +800,22 @@ static function X2AbilityTemplate FlushShot()
 	ReserveActionPointCost.AllowedTypes.AddItem('Flush');
 	Template.AbilityCosts.AddItem(ReserveActionPointCost);
 
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
 	Template.AbilityToHitCalc = new class'X2AbilityToHitCalc_UseSavedHitResult';
 
-	// No ability conditions - if Flush fired, always take the shot
+	// No target conditions to ensure the reaction shot is used up
 
 	SingleTarget = new class'X2AbilityTarget_Single';
 	SingleTarget.OnlyIncludeTargetsInsideWeaponRange = true;
 	Template.AbilityTargetStyle = SingleTarget;
 
-	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
-	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
-	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+	Effect = class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect();
+	Effect.TargetConditions.AddItem(default.LivingHostileTargetProperty);
+	Template.AddTargetEffect(Effect);
+	Effect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
+	Effect.TargetConditions.AddItem(default.LivingHostileTargetProperty);
+	Template.AddTargetEffect(Effect);
 
 	Template.bAllowAmmoEffects = true;
 	Template.bAllowBonusWeaponEffects = true;
@@ -832,10 +838,28 @@ static function X2AbilityTemplate FlushShot()
 	Template.bDisplayInUITacticalText = false;
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildVisualizationFn = FlushShot_BuildVisualization;
 	Template.CinescriptCameraType = "StandardGunFiring";
 
 	return Template;
+}
+
+function FlushShot_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{		
+	local XComGameStateContext_Ability  Context;
+	local AbilityInputContext           AbilityContext;
+	local XComGameState_Unit			OldTargetState;
+	local XComGameStateHistory			History;
+
+	History = `XCOMHISTORY;
+	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+	AbilityContext = Context.InputContext;
+
+	OldTargetState = XComGameState_Unit(History.GetGameStateForObjectID(AbilityContext.PrimaryTarget.ObjectID,, VisualizeGameState.HistoryIndex - 1));
+
+	// Don't show any visualization if the target is dead
+	if (OldTargetState != none && OldTargetState.IsAlive())
+		TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);
 }
 
 static function X2AbilityTemplate RifleSuppression()
