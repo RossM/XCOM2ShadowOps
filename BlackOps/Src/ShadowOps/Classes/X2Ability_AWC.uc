@@ -217,6 +217,8 @@ static function X2AbilityTemplate SnakeBlood()
 	ImmunityEffect.ImmuneTypes.AddItem('poison');
 	Template.AddTargetEffect(ImmunityEffect);
 
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.DodgeLabel, eStat_Dodge, default.SnakeBloodDodgeBonus);
+
 	return Template;
 }
 
