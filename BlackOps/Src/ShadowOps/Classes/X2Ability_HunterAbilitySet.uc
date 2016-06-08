@@ -894,8 +894,11 @@ static function RattledVisualization(XComGameState VisualizeGameState, out Visua
 {
 	local X2Action_PlaySoundAndFlyOver SoundAndFlyOver;
 	
-	SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
-	SoundAndFlyOver.SetSoundAndFlyOverParameters(None, default.BullseyePenaltyName, '', eColor_Bad);
+	if (EffectApplyResult == 'AA_Success')
+	{
+		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
+		SoundAndFlyOver.SetSoundAndFlyOverParameters(None, default.BullseyePenaltyName, '', eColor_Bad);
+	}
 }
 
 static function X2AbilityTemplate FirstStrike()
