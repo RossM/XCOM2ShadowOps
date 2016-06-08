@@ -1,4 +1,4 @@
-class UnitUtilities_BO extends Object config(ModOptions);
+class UnitUtilities_BO extends Object config(ShadowOpsOptions);
 
 var config bool bDisplaySubclassNames;
 

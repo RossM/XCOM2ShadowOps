@@ -47,7 +47,7 @@
     <Content Include="Config\XComGameData_WeaponData.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\XComModOptions.ini">
+    <Content Include="Config\XComShadowOpsOptions.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\XComStrategyTuning.ini">
