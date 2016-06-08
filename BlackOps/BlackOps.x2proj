@@ -155,6 +155,9 @@
     <Content Include="Src\ShadowOps\Classes\X2Action_Fire_Miss.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2AIBTShadowOps.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_AlwaysReady.uc">
       <SubType>Content</SubType>
     </Content>
