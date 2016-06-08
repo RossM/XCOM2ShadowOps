@@ -1,7 +1,7 @@
 class X2Ability_InfantryAbilitySet extends XMBAbility
 	config(GameData_SoldierSkills);
 
-var name AlwaysReadyEffectName;
+var name AlwaysReadyEffectName, FlushEffectName;
 
 var config int MagnumDamageBonus, MagnumOffenseBonus;
 var config int FullAutoHitModifier;
@@ -672,6 +672,7 @@ static function X2AbilityTemplate Flush()
 	local X2Condition_CanActivateAbility	AbilityCondition;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2Effect_Flush					FlushEffect;
+	local X2Effect_Persistent				PersistentEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
 	local XMBEffect_AddReservedActionPoints	ReservePointsEffect;
@@ -752,6 +753,13 @@ static function X2AbilityTemplate Flush()
 	SaveHitResultEffect.bApplyOnHit = true;
 	SaveHitResultEffect.bApplyOnMiss = true;
 	Template.AddShooterEffect(SaveHitResultEffect);
+
+	PersistentEffect = new class'X2Effect_Persistent';
+	PersistentEffect.EffectName = default.FlushEffectName;
+	PersistentEffect.BuildPersistentEffect(1, false, true,, eGameRule_PlayerTurnEnd);
+	PersistentEffect.bApplyOnHit = true;
+	PersistentEffect.bApplyOnMiss = true;
+	Template.AddTargetEffect(PersistentEffect);
 			
 	ActionPointEffect = new class'X2Effect_GrantActionPoints';
 	ActionPointEffect.NumActionPoints = 1;
@@ -793,12 +801,13 @@ static function X2AbilityTemplate Flush()
 
 static function X2AbilityTemplate FlushShot()
 {
-	local X2AbilityTemplate                 Template;
-	local X2AbilityCost_Ammo				AmmoCost;
-	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
-	local X2AbilityTarget_Single            SingleTarget;
-	local X2AbilityTrigger_Event	        Trigger;
-	local X2Effect							Effect;
+	local X2AbilityTemplate							Template;
+	local X2AbilityCost_Ammo						AmmoCost;
+	local X2AbilityCost_ReserveActionPoints			ReserveActionPointCost;
+	local X2Condition_UnitEffectsWithAbilitySource	EffectsCondition;
+	local X2AbilityTarget_Single					SingleTarget;
+	local X2AbilityTrigger_Event					Trigger;
+	local X2Effect									Effect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FlushShot');
 
@@ -815,7 +824,11 @@ static function X2AbilityTemplate FlushShot()
 
 	Template.AbilityToHitCalc = new class'X2AbilityToHitCalc_UseSavedHitResult';
 
-	// No target conditions to ensure the reaction shot is used up
+	EffectsCondition = new class'X2Condition_UnitEffectsWithAbilitySource';
+	EffectsCondition.AddRequireEffect(default.FlushEffectName, 'AA_UnitIsImmune');
+	Template.AbilityTargetConditions.AddItem(EffectsCondition);
+
+	// None of the normal target conditions to ensure the reaction shot is used
 
 	SingleTarget = new class'X2AbilityTarget_Single';
 	SingleTarget.OnlyIncludeTargetsInsideWeaponRange = true;
@@ -1292,4 +1305,5 @@ function SecondWind_BuildVisualization(XComGameState VisualizeGameState, out arr
 DefaultProperties
 {
 	AlwaysReadyEffectName = "AlwaysReadyTriggered";
+	FlushEffectName = "FlushTarget";
 }
