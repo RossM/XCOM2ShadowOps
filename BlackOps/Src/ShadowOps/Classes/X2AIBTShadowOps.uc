@@ -17,8 +17,18 @@ static event bool FindBTActionDelegate(name strName, optional out delegate<BTAct
 
 function bt_status SetDestinationFromAlertData()
 {
-	m_kBehavior.m_vBTDestination = m_kBehavior.m_vAlertDataMovementDestination;
-	m_kBehavior.m_bBTDestinationSet = m_kBehavior.m_bAlertDataMovementDestinationSet;
+	local vector vDest;
+
+	if (m_kBehavior.m_bAlertDataMovementDestinationSet)
+	{
+		vDest = m_kBehavior.m_vAlertDataMovementDestination;
+
+		// Always use cover
+		m_kBehavior.GetClosestCoverLocation(vDest, vDest, false);
+
+		m_kBehavior.m_vBTDestination = vDest;
+		m_kBehavior.m_bBTDestinationSet = m_kBehavior.m_bAlertDataMovementDestinationSet;
+	}
 
 	return BTS_SUCCESS;
 }
