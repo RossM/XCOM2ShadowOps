@@ -2,7 +2,14 @@ class UIScreenListener_UIPersonnel extends UIScreenListener;
 
 event OnInit(UIScreen Screen)
 {
-	RefreshVisuals(Screen);
+	local object ListenerObj;
+
+	ListenerObj = self;
+
+	`XEVENTMGR.RegisterForEvent(ListenerObj, 'OnSoldierListItemUpdate_End', OnSoldierListItemUpdate_End, ELD_Immediate);
+	`XEVENTMGR.RegisterForEvent(ListenerObj, 'OnSoldierListItemUpdate_Focussed', OnSoldierListItemUpdate_End, ELD_Immediate);
+
+	RefreshVisuals(Screen, true);
 }
 
 event OnReceiveFocus(UIScreen Screen)
@@ -10,7 +17,7 @@ event OnReceiveFocus(UIScreen Screen)
 	RefreshVisuals(Screen);
 }
 
-function RefreshVisuals(UIScreen Screen)
+function RefreshVisuals(UIScreen Screen, bool bOnInit = false)
 {
 	local UIPersonnel_SoldierListItem	ListItem; 
 	local UIPersonnel					Personnel;
@@ -24,7 +31,14 @@ function RefreshVisuals(UIScreen Screen)
 
 		if (ListItem != none)
 		{
-			UpdateData(ListItem);
+			if (ListItem.IsA('UIPersonnel_SoldierListItem_LW'))
+			{
+				ListItem.UpdateData();
+			}
+			else
+			{
+				UpdateData(ListItem);
+			}
 		}
 	}
 }
@@ -69,6 +83,46 @@ function UpdateData(UIPersonnel_SoldierListItem ListItem)
 					false, //todo: is disabled 
 					Unit.ShowPromoteIcon(),
 					false); // psi soldiers can't rank up via missions
+}
+
+// For Long War Toolbox compatibility
+function EventListenerReturn OnSoldierListItemUpdate_End(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+{
+	local UIPersonnel_SoldierListItem ListItem;
+	local XComGameState_Unit Unit;
+	local X2SoldierClassTemplate SoldierClass;
+	local array<UIPanel> Children;
+	local UIScrollingText ClassNameText;
+	local string strClassName;
+	local int UIState;
+	local bool IsFocussed;
+
+	ListItem = UIPersonnel_SoldierListItem(EventData);
+
+	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ListItem.UnitRef.ObjectID));
+	SoldierClass = Unit.GetSoldierClassTemplate();
+
+	// Grab the soldier class UIScrollingText. This is brittle.
+	ListItem.GetChildrenOfType(class'UIScrollingText', Children);
+	ClassNameText = UIScrollingText(Children[1]);
+
+	// HORRIBLE HACK
+	IsFocussed = InStr(ClassNameText.htmlText, class'UIUtilities_Colors'.const.BLACK_HTML_COLOR $ "'>") != -1;
+
+	if (ListItem.IsDisabled)
+		UIState = eUIState_Disabled;
+	else if (IsFocussed)
+		UIState = -1;
+	else
+		UIState = eUIState_Normal;
+
+	if (ClassNameText != none)
+	{
+		strClassName = Caps(SoldierClass != None ? class'UnitUtilities_BO'.static.GetSoldierClassDisplayName(Unit) : "");
+		ClassNameText.SetHtmlText(class'UIUtilities_Text'.static.GetColoredText(strClassName, UIState));
+	}
+
+	return ELR_NoInterrupt;
 }
 
 defaultproperties
