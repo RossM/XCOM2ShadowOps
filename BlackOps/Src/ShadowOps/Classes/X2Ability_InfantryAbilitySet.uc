@@ -669,6 +669,7 @@ static function X2AbilityTemplate Flush()
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Condition_Visibility            VisibilityCondition;
 	local X2Condition_UnitProperty			PropertyCondition;
+	local X2Condition_CanActivateAbility	AbilityCondition;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2Effect_Flush					FlushEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
@@ -706,6 +707,12 @@ static function X2AbilityTemplate Flush()
 	PropertyCondition = new class'X2Condition_UnitProperty';
 	PropertyCondition.FailOnNonUnits = true;
 	Template.AbilityTargetConditions.AddItem(PropertyCondition);
+
+	// Require that the target can take a move
+	AbilityCondition = new class'X2Condition_CanActivateAbility';
+	AbilityCondition.AbilityName = 'StandardMove';
+	AbilityCondition.bIgnoreCosts = true;
+	Template.AbilityTargetConditions.AddItem(AbilityCondition);
 
 	// Can't shoot while dead
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
