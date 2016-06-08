@@ -710,6 +710,10 @@ static function X2AbilityTemplate TrackingTrigger()
 	TargetProperty.ExcludeFriendlyToSource = false;
 	Template.AbilityMultiTargetConditions.AddItem(TargetProperty);
 
+	EffectsCondition = new class'X2Condition_UnitEffects';
+	EffectsCondition.AddExcludeEffect(class'X2Effect_Burrowed'.default.EffectName, 'AA_UnitIsBurrowed');
+	Template.AbilityMultiTargetConditions.AddItem(EffectsCondition);
+
 	TrackingEffect = new class'XMBEffect_RevealUnit';
 	TrackingEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
 	Template.AddMultiTargetEffect(TrackingEffect);
