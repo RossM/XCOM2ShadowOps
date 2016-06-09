@@ -89,6 +89,9 @@
     <Content Include="Src\ShadowOps\Classes\TemplateEditors.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIArmory_Promotion.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIAvengerHUD.uc">
       <SubType>Content</SubType>
     </Content>
@@ -283,6 +286,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2TargetingMethod_Breach.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\XComGameState_ShadowOpsUnitInfo.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\XComGameState_ShadowOpsUpgradeInfo.uc">

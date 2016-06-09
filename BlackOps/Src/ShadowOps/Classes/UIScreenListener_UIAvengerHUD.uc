@@ -42,6 +42,8 @@ function PerformUpgrades()
 		bChanged = true;
 	if (UpgradeInfo.PerformUpgrade('RenameAWCAbilities', NewGameState))
 		bChanged = true;
+	if (UpgradeInfo.PerformUpgrade('GrantFreeRespecs1', NewGameState))
+		bChanged = true;
 	if (UpgradeInfo.ShowUpgradePopupIfNeeded())
 		bChanged = true;
 

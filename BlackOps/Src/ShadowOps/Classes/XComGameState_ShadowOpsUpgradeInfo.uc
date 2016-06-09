@@ -27,6 +27,7 @@ function InitializeForNewGame()
 {
 	UpgradesPerformed.AddItem('RenameSoldierClasses');
 	UpgradesPerformed.AddItem('RenameAWCAbilities');
+	UpgradesPerformed.AddItem('RenameAWCAbilities');
 }
 
 function bool PerformUpgrade(name UpgradeName, XComGameState NewGameState)
@@ -44,6 +45,10 @@ function bool PerformUpgrade(name UpgradeName, XComGameState NewGameState)
 		return true;
 	case 'RenameAWCAbilities':
 		RenameAWCAbilities(NewGameState);
+		UpgradesPerformed.AddItem(UpgradeName);
+		return true;
+	case 'GrantFreeRespecs1':
+		GrantFreeRespecs(NewGameState);
 		UpgradesPerformed.AddItem(UpgradeName);
 		return true;
 	}
@@ -120,6 +125,51 @@ function RenameAWCAbilities(XComGameState NewGameState)
 					UnitState.AWCAbilities[i].AbilityType.AbilityName = NewTemplateName;
 				}
 			}
+		}
+	}
+}
+
+function GrantFreeRespecs(XComGameState NewGameState)
+{
+	local XComGameStateHistory History;
+	local XComGameState_Unit UnitState;
+	local XComGameState_ShadowOpsUnitInfo UnitInfo;
+	local bool bAllowRespec;
+
+	History = `XCOMHISTORY;
+
+	foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
+	{
+		bAllowRespec = false;
+
+		switch (UnitState.GetSoldierClassTemplateName())
+		{
+		case 'ShadowOps_CombatEngineer':
+		case 'ShadowOps_Dragoon':
+		case 'ShadowOps_Hunter':
+		case 'ShadowOps_Infantry':
+			bAllowRespec = UnitState.GetSoldierRank() >= 2;
+			break;
+		}
+		
+		if (bAllowRespec)
+		{
+			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
+			UnitInfo = XComGameState_ShadowOpsUnitInfo(UnitState.FindComponentObject(class'XComGameState_ShadowOpsUnitInfo'));
+
+			if (UnitInfo == none)
+			{
+				UnitInfo = XComGameState_ShadowOpsUnitInfo(NewGameState.CreateStateObject(class'XComGameState_ShadowOpsUnitInfo'));
+				UnitState.AddComponentObject(UnitInfo);
+			}
+
+			UnitInfo.bFreeRespecAllowed = true;
+			UnitInfo.iFreeRespecMaxRank = UnitState.GetSoldierRank();
+
+			NewGameState.AddStateObject(UnitState);
+			NewGameState.AddStateObject(UnitInfo);
+
+			`Log("Set free respec on unit id" @ UnitState.ObjectId); 
 		}
 	}
 }

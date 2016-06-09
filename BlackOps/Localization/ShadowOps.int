@@ -32,3 +32,6 @@ LocPromotionPopupText="<Bullet/> The extra mobility from Finesse can help you to
 ModUpgradeLabel="Shadow Ops Class Pack beta v0.6"
 ModUpgradeSummary="Shadow Ops Class Pack has been updated to beta version 0.6. Important changes: <br/><br/><Bullet/> Covering Fire removed from Infantry and replaced with Fortify.<br/><Bullet/> Lightning Reflexes removed from Combat Engineer and replaced with Moving Target.<br/><Bullet/> Infantry can now equip two ammo types, and switch between them during battle. <br/><Bullet/> Seven new AWC-only abilities are available in the AWC. You may need to start a new game for them to appear. <br/><br/>For more complete change notes, see readme.txt."
 ModUpgradeAcceptLabel="Got it"
+
+[UIScreenListener_UIArmory_Promotion]
+LocFreeRespec="Free Respec"
