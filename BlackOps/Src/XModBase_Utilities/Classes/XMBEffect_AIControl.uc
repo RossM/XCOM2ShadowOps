@@ -1,4 +1,4 @@
-class XMGEffect_AIControl extends X2Effect_Persistent;
+class XMBEffect_AIControl extends X2Effect_Persistent;
 
 var name BehaviorTreeName;
 
