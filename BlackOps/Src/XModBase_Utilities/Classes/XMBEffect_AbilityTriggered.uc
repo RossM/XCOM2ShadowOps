@@ -66,10 +66,20 @@ function static EventListenerReturn AssassinListener(Object EventData, Object Ev
 function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState)
 {
 	local X2Condition kCondition;
+	local XComGameState_Item SourceWeapon;
+	local StateObjectReference ItemRef;
 	local name AvailableCode;
+		
+	if (bRequireAbilityWeapon)
+	{
+		SourceWeapon = AbilityState.GetSourceWeapon();
+		if (SourceWeapon == none)
+			return 'AA_UnknownError';
 
-	if (bRequireAbilityWeapon && AbilityState.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
-		return 'AA_UnknownError';
+		ItemRef = EffectState.ApplyEffectParameters.ItemStateObjectRef;
+		if (SourceWeapon.ObjectID != ItemRef.ObjectID && SourceWeapon.LoadedAmmo.ObjectID != ItemRef.ObjectID)
+			return 'AA_UnknownError';
+	}
 
 	if (bRequireKill && (Target == none || !Target.IsDead()))
 		return 'AA_UnitIsAlive';

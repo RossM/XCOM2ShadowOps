@@ -9,15 +9,15 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	local ShotModifierInfo ModInfo;
 	local XComGameState_Item SourceWeapon;
 	local int Tiles, Modifier;
-	local StateObjectReference ItemRef;;
+	local StateObjectReference ItemRef;
 
 	if (bRequireAbilityWeapon)
 	{
 		SourceWeapon = AbilityState.GetSourceWeapon();
 		if (SourceWeapon == none)
 			return;
-		ItemRef = EffectState.ApplyEffectParameters.ItemStateObjectRef;
 
+		ItemRef = EffectState.ApplyEffectParameters.ItemStateObjectRef;
 		if (SourceWeapon.ObjectID != ItemRef.ObjectID && SourceWeapon.LoadedAmmo.ObjectID != ItemRef.ObjectID)
 			return;
 	}
