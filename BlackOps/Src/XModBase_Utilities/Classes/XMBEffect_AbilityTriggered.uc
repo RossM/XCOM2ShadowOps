@@ -46,6 +46,9 @@ function EventListenerReturn AbilityActivatedListener(Object EventData, Object E
 	if (TargetUnit == none || TargetUnit.ObjectID == SourceUnit.ObjectID)
 		return ELR_NoInterrupt;
 
+	if (AllowedHitResults.Length > 0 && AllowedHitResults.Find(AbilityContext.ResultContext.HitResult) == INDEX_NONE)
+		return ELR_NoInterrupt;
+
 	if (ValidateAttack(EffectState, SourceUnit, TargetUnit, AbilityState) != 'AA_Success')
 		return ELR_NoInterrupt;
 
