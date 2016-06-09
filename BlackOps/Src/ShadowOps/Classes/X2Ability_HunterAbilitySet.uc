@@ -400,6 +400,8 @@ static function X2AbilityTemplate Assassin()
 	Condition.AllowedCoverTypes.AddItem(CT_None);
 
 	Effect = new class'XMBEffect_AbilityTriggered';
+	Effect.EffectName = 'Assassin';
+	Effect.TriggeredEvent = 'Assassin';
 	Effect.bRequireAbilityWeapon = true;
 	Effect.bRequireKill = true;
 	Effect.AbilityTargetConditions.AddItem(Condition);

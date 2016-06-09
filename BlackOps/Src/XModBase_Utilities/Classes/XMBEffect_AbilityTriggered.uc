@@ -10,32 +10,28 @@ var array<X2Condition> AbilityShooterConditions;
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
 	local X2EventManager EventMgr;
-	local XComGameState_Unit UnitState;
 	local Object ListenerObj;
 
 	EventMgr = `XEVENTMGR;
 
-	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
-
-	ListenerObj = EffectGameState;
-	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AssassinListener, ELD_OnStateSubmitted, , UnitState);	
+	ListenerObj = self;
+	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AbilityActivatedListener, ELD_OnStateSubmitted);	
 }
 
-function static EventListenerReturn AssassinListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function EventListenerReturn AbilityActivatedListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameStateContext_Ability AbilityContext;
 	local XComGameState_Unit SourceUnit, TargetUnit;
 	local XComGameState_Effect EffectState;
 	local X2EventManager EventMgr;
-	local XMBEffect_AbilityTriggered AssassinEffect;
 
 	SourceUnit = XComGameState_Unit(EventSource);
 	if (SourceUnit == none)
 		return ELR_NoInterrupt;
 
-	EffectState = SourceUnit.GetUnitAffectedByEffectState(default.EffectName);
-	if (EffectState == none)
+	EffectState = SourceUnit.GetUnitAffectedByEffectState(EffectName);
+	if (EffectState == none || EffectState.GetX2Effect() != self)
 		return ELR_NoInterrupt;
 
 	AbilityState = XComGameState_Ability(EventData);
@@ -50,15 +46,11 @@ function static EventListenerReturn AssassinListener(Object EventData, Object Ev
 	if (TargetUnit == none || TargetUnit.ObjectID == SourceUnit.ObjectID)
 		return ELR_NoInterrupt;
 
-	AssassinEffect = XMBEffect_AbilityTriggered(EffectState.GetX2Effect());
-	if (AssassinEffect == none)
-		return ELR_NoInterrupt;
-
-	if (AssassinEffect.ValidateAttack(EffectState, SourceUnit, TargetUnit, AbilityState) != 'AA_Success')
+	if (ValidateAttack(EffectState, SourceUnit, TargetUnit, AbilityState) != 'AA_Success')
 		return ELR_NoInterrupt;
 
 	EventMgr = `XEVENTMGR;
-	EventMgr.TriggerEvent(AssassinEffect.TriggeredEvent, AbilityState, SourceUnit, GameState);
+	EventMgr.TriggerEvent(TriggeredEvent, AbilityState, SourceUnit, GameState);
 
 	return ELR_NoInterrupt;
 }
@@ -112,6 +104,6 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 DefaultProperties
 {
 	DuplicateResponse = eDupe_Ignore
-	EffectName = "Assassin"
-	TriggeredEvent = "Assassin"
+	EffectName = "XMBAbilityTriggered"
+	TriggeredEvent = "XMBAbilityTrigger"
 }
