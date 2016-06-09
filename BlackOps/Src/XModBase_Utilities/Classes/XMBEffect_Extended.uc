@@ -10,8 +10,8 @@
 //
 //  DEPENDENCIES
 //
-//  This class only depends on XMBEffectInterface. However, if XModBase/Classes/ is
-//  available, it will use a more efficient implementation.
+//  This class only depends on XMBEffectInterface. However, if the classes in 
+//  XModBase/Classes/ are available, it will use a more efficient implementation.
 //---------------------------------------------------------------------------------------
 class XMBEffect_Extended extends X2Effect_Persistent implements(XMBEffectInterface);
 
