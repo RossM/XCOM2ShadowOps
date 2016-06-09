@@ -1,6 +1,35 @@
 //---------------------------------------------------------------------------------------
 //  FILE:    XMBEffect_ConditionalBonus.uc
 //  AUTHOR:  xylthixlm
+//
+//  This class provides an easy way of creating passive effects that give bonuses based
+//  on some condition. Build up the modifiers you want to add using AddToHitModifier
+//  and related functions, and set the conditions for them by adding an X2Condition to
+//  SelfConditions or OtherConditions. This class takes care of validating the
+//  conditions and applying the modifiers. You can also define different modifiers
+//  based on the tech tier of the weapon or other item used. Ability tags are
+//  automatically defined for each modifier.
+//
+//  EXAMPLES
+//
+//  +4 damage against flanked targets:
+//    CoverTypeCondition = new class'XMBCondition_CoverType';
+//    CoverTypeCondition.AllowedCoverTypes.AddItem(CT_NONE);
+//    ConditionalBonusEffect = new class'XMBEffect_ConditionalBonus';
+//    ConditionalBonusEffect.OtherConditions.AddItem(CoverTypeCondition);
+//    ConditionalBonusEffect.AddDamageModifier(4);
+//
+//  +100 dodge against reaction fire:
+//    ReactionFireCondition = new class'XMBCondition_ReactionFire';
+//    ConditionalBonusEffect = new class'XMBEffect_ConditionalBonus';
+//    ConditionalBonusEffect.SelfConditions.AddItem(ReactionFireCondition);
+//    ConditionalBonusEffect.AddToHitAsTargetModifier(100, eHit_Graze);
+//
+//  +10/15/20 crit chance based on weapon tech:
+//    ConditionalBonusEffect = new class'XMBEffect_ConditionalBonus';
+//    ConditionalBonusEffect.AddToHitModifier(10, eHit_Crit, 'conventional');
+//    ConditionalBonusEffect.AddToHitModifier(15, eHit_Crit, 'magnetic');
+//    ConditionalBonusEffect.AddToHitModifier(20, eHit_Crit, 'beam');
 //---------------------------------------------------------------------------------------
 
 class XMBEffect_ConditionalBonus extends XMBEffect_Extended;
