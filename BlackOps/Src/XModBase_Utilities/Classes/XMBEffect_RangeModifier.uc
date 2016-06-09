@@ -18,7 +18,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 			return;
 		ItemRef = EffectState.ApplyEffectParameters.ItemStateObjectRef;
 
-		if (SourceWeapon != ItemRef && SourceWeapon.LoadedAmmo != ItemRef)
+		if (SourceWeapon.ObjectID != ItemRef.ObjectID && SourceWeapon.LoadedAmmo.ObjectID != ItemRef.ObjectID)
 			return;
 	}
 
