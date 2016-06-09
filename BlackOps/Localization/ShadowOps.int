@@ -35,3 +35,5 @@ ModUpgradeAcceptLabel="Got it"
 
 [UIScreenListener_UIArmory_Promotion]
 LocFreeRespec="Free Respec"
+RespecWarning="Your soldiers have been granted free respecs due to changes in the Shadow Ops Class Pack class skill trees. If you rank up a soldier before using their free respec, you will lose that free respec permanently."
+RespecWarningTitle="Free Respec Expiration"

@@ -1,11 +1,13 @@
 class UIScreenListener_UIArmory_Promotion extends UIScreenListener;
 
 var UIButton RespecButton;
-var localized string LocFreeRespec;
+var localized string LocFreeRespec, RespecWarning, RespecWarningTitle;
 var UIArmory Armory;
+var bool bShowedPopup;
 
 event OnInit(UIScreen Screen)
 {
+	local TDialogueBoxData kDialogData;
 	local XComGameState_Unit Unit;
 	local XComGameState_ShadowOpsUnitInfo UnitInfo;
 	local bool bAllowRespec;
@@ -16,7 +18,8 @@ event OnInit(UIScreen Screen)
 	Unit = Armory.GetUnit();
 	UnitInfo = XComGameState_ShadowOpsUnitInfo(Unit.FindComponentObject(class'XComGameState_ShadowOpsUnitInfo'));
 
-	bAllowRespec = UnitInfo != none && UnitInfo.bFreeRespecAllowed && Unit.GetSoldierRank() <= UnitInfo.iFreeRespecMaxRank;
+	bAllowRespec = UnitInfo != none && UnitInfo.bFreeRespecAllowed && 
+		(Unit.GetSoldierRank() <= UnitInfo.iFreeRespecMaxRank || (Unit.GetSoldierRank() == UnitInfo.iFreeRespecMaxRank + 1 && Unit.HasAvailablePerksToAssign()));
 
 	if (bAllowRespec)
 	{
@@ -24,6 +27,7 @@ event OnInit(UIScreen Screen)
 		{
 			RespecButton = Armory.Spawn(class'UIButton', Armory);
 			RespecButton.InitButton('respecButton', LocFreeRespec, OnButtonRespec);
+			RespecButton.bAnimateOnInit = false;
 			RespecButton.SetText(LocFreeRespec);
 			RespecButton.SetResizeToText(true);
 			RespecButton.SetFontSize(50);
@@ -33,7 +37,19 @@ event OnInit(UIScreen Screen)
 		}
 
 		RespecButton.Show();
-		RespecButton.NeedsAttention(Unit.CanRankUpSoldier());
+
+		if (Unit.GetSoldierRank() >= UnitInfo.iFreeRespecMaxRank + 1 && !bShowedPopup)
+		{
+			bShowedPopup = true;
+
+			kDialogData.eType = eDialog_Normal;
+			kDialogData.strTitle = default.RespecWarningTitle;
+			kDialogData.strText = default.RespecWarning;
+			kDialogData.strAccept = class'UIUtilities_Text'.default.m_strGenericOK;
+			kDialogData.eType = eDialog_Warning;
+
+			`HQPRES.UIRaiseDialog(kDialogData);
+		}
 	}
 	else if (RespecButton != none)
 	{
