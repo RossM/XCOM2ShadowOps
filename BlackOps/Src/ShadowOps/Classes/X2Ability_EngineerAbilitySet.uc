@@ -471,6 +471,8 @@ static function X2AbilityTemplate SlamFire()
 	Template.AddShooterEffectExclusions();
 
 	SlamFireEffect = new class'XMBEffect_AbilityCostRefund';
+	SlamFireEffect.EffectName = 'SlamFire';
+	SlamFireEffect.TriggeredEvent = 'SlamFire';
 	SlamFireEffect.bRequireAbilityWeapon = true;
 	SlamFireEffect.AllowedHitResults.AddItem(eHit_Crit);
 	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
