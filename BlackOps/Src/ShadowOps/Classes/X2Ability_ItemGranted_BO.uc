@@ -32,6 +32,7 @@ static function X2AbilityTemplate FlechetteRounds()
 
 	Effect = new class'XMBEffect_RangeModifier';
 	Effect.RangeAccuracy = default.FlechetteRangeAccuracy;
+	Effect.bRequireAbilityWeapon = true;
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, false);
 	Template.AddShooterEffect(Effect);
