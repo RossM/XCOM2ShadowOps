@@ -1,6 +1,7 @@
 class XMBCondition_CoverType extends X2Condition;
 
 var array<ECoverType> AllowedCoverTypes;
+var bool bRequireCanTakeCover;
 
 event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGameState_BaseObject kSource)
 {
@@ -10,7 +11,6 @@ event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGa
 	local XComGameStateHistory History;
 
 	History = `XCOMHISTORY;
-
 	HistoryIndex = History.GetCurrentHistoryIndex();
 
 	TargetUnit = XComGameState_Unit(kTarget);
@@ -18,6 +18,7 @@ event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGa
 	{
 		kTarget = History.GetPreviousGameStateForObject(kTarget);
 		HistoryIndex = kTarget.GetParentGameState().HistoryIndex;
+		TargetUnit = XComGameState_Unit(kTarget);
 	}
 
 	if (AllowedCoverTypes.Length > 0)
@@ -27,6 +28,14 @@ event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGa
 		if (!`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(kSource.ObjectID, kTarget.ObjectID, VisInfo, HistoryIndex))
 			return 'AA_NotInRange';
 		if (AllowedCoverTypes.Find(VisInfo.TargetCover) == INDEX_NONE)
+			return 'AA_InvalidTargetCoverType';
+	}
+
+	if (bRequireCanTakeCover)
+	{
+		if (TargetUnit == none)
+			return 'AA_NotAUnit';
+		if (!TargetUnit.GetMyTemplate().bCanTakeCover)
 			return 'AA_InvalidTargetCoverType';
 	}
 	

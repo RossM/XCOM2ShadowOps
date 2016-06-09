@@ -5,7 +5,7 @@
 
 class XMBAbility extends X2Ability;
 
-var const X2Condition FullCoverCondition, HalfCoverCondition, NoCoverCondition;
+var const X2Condition FullCoverCondition, HalfCoverCondition, NoCoverCondition, FlankedCondition;
 var const X2Condition HeightAdvantageCondition, HeightDisadvantageCondition;
 var const X2Condition ReactionFireCondition;
 var const X2Condition DeadCondition;
@@ -54,6 +54,12 @@ defaultproperties
 		AllowedCoverTypes[0] = CT_None
 	End Object
 	NoCoverCondition = DefaultNoCoverCondition
+
+	Begin Object Class=XMBCondition_CoverType Name=DefaultFlankedCondition
+		AllowedCoverTypes[0] = CT_None
+		bRequireCanTakeCover = true
+	End Object
+	FlankedCondition = DefaultFlankedCondition
 
 	Begin Object Class=XMBCondition_HeightAdvantage Name=DefaultHeightAdvantageCondition
 		bRequireHeightAdvantage = true

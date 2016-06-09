@@ -14,7 +14,7 @@
 //
 //  +4 damage against flanked targets:
 //    ConditionalBonusEffect = new class'XMBEffect_ConditionalBonus';
-//    ConditionalBonusEffect.OtherConditions.AddItem(default.NoCoverCondition);
+//    ConditionalBonusEffect.OtherConditions.AddItem(default.FlankedCondition);
 //    ConditionalBonusEffect.AddDamageModifier(4);
 //
 //  +100 dodge against reaction fire:
