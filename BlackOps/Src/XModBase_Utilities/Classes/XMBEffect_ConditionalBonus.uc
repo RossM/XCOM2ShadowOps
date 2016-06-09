@@ -25,11 +25,16 @@
 //    ConditionalBonusEffect.SelfConditions.AddItem(ReactionFireCondition);
 //    ConditionalBonusEffect.AddToHitAsTargetModifier(100, eHit_Graze);
 //
-//  +10/15/20 crit chance based on weapon tech:
+//  +10/15/20 crit chance with associated weapon, based on weapon tech:
 //    ConditionalBonusEffect = new class'XMBEffect_ConditionalBonus';
+//    ConditionalBonusEffect.bRequireAbilityWeapon = true;
 //    ConditionalBonusEffect.AddToHitModifier(10, eHit_Crit, 'conventional');
 //    ConditionalBonusEffect.AddToHitModifier(15, eHit_Crit, 'magnetic');
 //    ConditionalBonusEffect.AddToHitModifier(20, eHit_Crit, 'beam');
+//
+//  DEPENDENCIES
+//
+//  This class requires XMBEffect_Extended. It does not require XModBase/Classes/.
 //---------------------------------------------------------------------------------------
 
 class XMBEffect_ConditionalBonus extends XMBEffect_Extended;
@@ -64,6 +69,7 @@ var array<X2Condition> OtherConditions;		// Conditions applied to the other unit
 // Setters //
 /////////////
 
+// Adds a modifier to the hit chance of attacks made by the unit with the effect.
 function AddToHitModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -76,6 +82,7 @@ function AddToHitModifier(int Value, optional EAbilityHitResult ModType = eHit_S
 	Modifiers.AddItem(ExtModInfo);
 }	
 
+// Adds a modifier to the hit chance of attacks made against (not by) the unit with the effect.
 function AddToHitAsTargetModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -88,6 +95,7 @@ function AddToHitAsTargetModifier(int Value, optional EAbilityHitResult ModType 
 	Modifiers.AddItem(ExtModInfo);
 }	
 
+// Adds a modifier to the damage of attacks made by the unit with the effect.
 function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -100,6 +108,7 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 	Modifiers.AddItem(ExtModInfo);
 }	
 
+// Adds a modifier to the armor shredding amount of attacks made by the unit with the effect.
 function AddShredModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -112,6 +121,7 @@ function AddShredModifier(int Value, optional EAbilityHitResult ModType = eHit_S
 	Modifiers.AddItem(ExtModInfo);
 }	
 
+// Adds a modifier to the armor piercing amount of attacks made by the unit with the effect.
 function AddArmorPiercingModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -129,6 +139,7 @@ function AddArmorPiercingModifier(int Value, optional EAbilityHitResult ModType 
 // Implementation //
 ////////////////////
 
+// Checks that an attack meets all the conditions of this effect.
 function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
 	local X2Condition kCondition;
@@ -136,6 +147,7 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 	local StateObjectReference ItemRef;
 	local name AvailableCode;
 		
+	// Check that the attack is using the correct weapon if required
 	if (!bAsTarget && bRequireAbilityWeapon)
 	{
 		SourceWeapon = AbilityState.GetSourceWeapon();
@@ -149,6 +161,7 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 
 	if (!bAsTarget)
 	{
+		// Attack by the unit with the effect - check target conditions
 		foreach OtherConditions(kCondition)
 		{
 			AvailableCode = kCondition.AbilityMeetsCondition(AbilityState, Target);
@@ -164,6 +177,7 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 				return AvailableCode;
 		}
 
+		// Attack by the unit with the effect - check shooter conditions
 		foreach SelfConditions(kCondition)
 		{
 			AvailableCode = kCondition.MeetsCondition(Attacker);
@@ -173,6 +187,7 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 	}
 	else
 	{
+		// Attack against the unit with the effect - check target conditions
 		foreach SelfConditions(kCondition)
 		{
 			AvailableCode = kCondition.AbilityMeetsCondition(AbilityState, Target);
@@ -188,6 +203,7 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 				return AvailableCode;
 		}
 
+		// Attack against the unit with the effect - check shooter conditions
 		foreach TargetConditions(kCondition)
 		{
 			AvailableCode = kCondition.MeetsCondition(Attacker);
@@ -199,6 +215,7 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 	return 'AA_Success';
 }
 
+// Checks that the weapon used by the attack is the right tech tier for a modifier
 static function name ValidateWeapon(ExtShotModifierInfo ExtModInfo, XComGameState_Item SourceWeapon)
 {
 	local X2WeaponTemplate WeaponTemplate;
@@ -216,6 +233,7 @@ static function name ValidateWeapon(ExtShotModifierInfo ExtModInfo, XComGameStat
 	return 'AA_Success';
 }
 
+// From X2Effect_Persistent. Returns a damage modifier for an attack by the unit with the effect.
 function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, optional XComGameState NewGameState)
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -242,6 +260,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 	return BonusDamage;
 }
 
+// From X2Effect_Persistent. Returns an armor shred modifier for an attack by the unit with the effect.
 function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData)
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -268,6 +287,7 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 	return BonusShred;
 }
 
+// From X2Effect_Persistent. Returns an armor piercing modifier for an attack by the unit with the effect.
 function int GetExtraArmorPiercing(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData)
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -294,6 +314,7 @@ function int GetExtraArmorPiercing(XComGameState_Effect EffectState, XComGameSta
 	return BonusArmorPiercing;
 }
 
+// From X2Effect_Persistent. Returns to hit modifiers for an attack by the unit with the effect.
 function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -316,6 +337,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	super.GetToHitModifiers(EffectState, Attacker, Target, AbilityState, ToHitType, bMelee, bFlanking, bIndirectFire, ShotModifiers);	
 }
 
+// From X2Effect_Persistent. Returns to hit modifiers for an attack against (not by) the unit with the effect.
 function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {
 	local ExtShotModifierInfo ExtModInfo;
@@ -338,6 +360,7 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 	super.GetToHitAsTargetModifiers(EffectState, Attacker, Target, AbilityState, ToHitType, bMelee, bFlanking, bIndirectFire, ShotModifiers);	
 }
 
+// From XMBEffect_Extended. Returns true if squadsight penalties should be ignored for this attack.
 function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState) 
 {
 	if (!bIgnoreSquadsightPenalty)
@@ -354,6 +377,14 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 // Utility //
 /////////////
 
+// From XMBEffectInterface. Checks whether this effect handles a particular ability tag, such as
+// "<Ability:ToHit/>", and gets the value of the tag if it's handled. This function knows which
+// modifiers are actually applied by this effect, and will only handle those. A complete list of 
+// the modifiers which might be handled is in the cases of the switch statement.
+//
+// For tech-dependent tags, in tactical play the tag displays the actual value based on the unit's
+// equipment. In the Armory it displays all the possible values separated by slashes, such as
+// "2/3/4".
 function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue)
 {
 	local float Result;
@@ -368,6 +399,7 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	ResultMultiplier = 1;
 	TechResults.Length = class'X2ItemTemplateManager'.default.WeaponTechCategories.Length;
 
+	// These are all the combinations of modifier type and hit result that make sense.
 	switch (Tag)
 	{
 	case 'ToHit':				Tag = 'ToHit';			HitResult = eHit_Success;							break;
@@ -394,6 +426,7 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		return false;
 	}
 
+	// If there are no modifiers of the right type, don't handle this ability tag.
 	if (Modifiers.Find('Type', Tag) == INDEX_NONE)
 		return false;
 
@@ -402,6 +435,7 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		ItemState = AbilityState.GetSourceWeapon();
 	}
 
+	// Collect all the modifiers which apply.
 	foreach Modifiers(ExtModInfo)
 	{
 		if (ExtModInfo.Type != Tag)
@@ -413,18 +447,22 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		idx = class'X2ItemTemplateManager'.default.WeaponTechCategories.Find(ExtModInfo.WeaponTech);
 		if (idx != INDEX_NONE)
 		{
+			// Track the results for each tech category
 			TechResults[idx] += ExtModInfo.ModInfo.Value;
 			ValidTechModifiers++;
 		}
 
+		// Validate the weapon being used against the required tech level of the modifier
 		if (ValidateWeapon(ExtModInfo, ItemState) != 'AA_Success')
 			continue;
 
-		ValidModifiers++;
-
+		// This modifier applies. Add it to the result, and track the number of valid modifiers.
 		Result += ExtModInfo.ModInfo.Value;
+		ValidModifiers++;
 	}
 
+	// If there are no valid modifiers, but there would have been if there had been a weapon of
+	// the right tech, output the modifier for each tech level.
 	if (ValidModifiers == 0 && ValidTechModifiers > 0)
 	{
 		TagValue = "";
@@ -436,9 +474,12 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		return true;
 	}
 
+	// Still no valid modifiers? Then this isn't a tag we handle.
 	if (ValidModifiers == 0)
 		return false;
 
+	// Save the result. The ResultMultipler is to handle Defense, which is internally respresented
+	// as a negative modifier to eHit_Success.
 	TagValue = string(int(Result * ResultMultiplier));
 	return true;
 }
