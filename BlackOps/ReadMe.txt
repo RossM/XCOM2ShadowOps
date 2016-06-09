@@ -5,6 +5,7 @@ By default, this mod adds the new classes in addition to the basic classes. To r
 Beta version v0.7.0
 General changes
   * XComModOptions.ini now has options to disable the mod's item and non-class gameplay changes.
+  * All soldiers will receive a free respec (in the Armory promotion screen) when upgrading. This free respec must be used before the soldier ranks up or it is lost.
 Class changes
   Combat Engineer
     * Smoke and Mirrors now provides a bonus smoke grenade use (even if there is no smoke grenade equipped).
@@ -15,7 +16,7 @@ Class changes
 	* Moving Target reduced to +30 defense, +50 dodge (was +40 defense, +100 dodge).
 	* Entrench revised: Increase Defense by 30 and Dodge by 50 until you move. Only works in cover.
 	* Fracture moved to Captain.
-	* Fracture shred increased to 2/4/6 (was 2/3/4).
+	* Fracture now grants +20 crit chance instead of 2/3/4 shred.
 	* Chain Reaction removed.
 	* Combat Drugs moved to Sapper subclass.
 	* Combat Drugs bonus increased to +10 aim and +20 crit (was +10 aim and +10 crit).
@@ -39,6 +40,7 @@ Item changes
   * Depleted Elerium Rounds shred reduced to 2.
 Visual changes
   * Flush has a new, improved visualization.
+  * Many abilities now display their tech level dependent bonuses at each tech level.
 Other changes
   * Scrounger AWC ability removed.
   * New AWC ability: Lightfoot. You have +3 Mobility and are harder to detect while concealed.
