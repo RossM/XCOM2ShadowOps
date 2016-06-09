@@ -14,46 +14,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
-	local XComGameState_AIUnitData NewAIUnitData;
-	local XComGameState_Unit NewUnitState;
-	local bool bDataChanged;
-	local AlertAbilityInfo AlertInfo;
-	local Vector PingLocation;
-	local XComGameState_BattleData BattleData;
-
-	NewUnitState = XComGameState_Unit(kNewTargetState);
-
-	// Create an AI alert for the objective location
-
-	BattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
-
-	PingLocation = BattleData.MapData.ObjectiveLocation;
-	AlertInfo.AlertTileLocation = `XWORLD.GetTileCoordinatesFromPosition(PingLocation);
-	AlertInfo.AlertRadius = 500;
-	AlertInfo.AlertUnitSourceID = 0;
-	AlertInfo.AnalyzingHistoryIndex = NewGameState.HistoryIndex;
-
-	// Add AI data with the alert
-
-	NewAIUnitData = XComGameState_AIUnitData(NewGameState.CreateStateObject(class'XComGameState_AIUnitData', NewUnitState.GetAIUnitDataID()));
-	if( NewAIUnitData.m_iUnitObjectID != NewUnitState.ObjectID )
-	{
-		NewAIUnitData.Init(NewUnitState.ObjectID);
-		bDataChanged = true;
-	}
-	if( NewAIUnitData.AddAlertData(NewUnitState.ObjectID, eAC_MapwideAlert_Hostile, AlertInfo, NewGameState) )
-	{
-		bDataChanged = true;
-	}
-
-	if( bDataChanged )
-	{
-		NewGameState.AddStateObject(NewAIUnitData);
-	}
-	else
-	{
-		NewGameState.PurgeGameStateForObjectID(NewAIUnitData.ObjectID);
-	}
+	super(X2Effect_Persistent).OnEffectAdded(ApplyEffectParameters, kNewTargetState, NewGameState, NewEffectState);
 }
 
 function EventListenerReturn AIControlListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
@@ -89,5 +50,4 @@ function bool AIControlEffectTicked(X2Effect_Persistent PersistentEffect, const 
 defaultproperties
 {
 	EffectTickedFn = AIControlEffectTicked
-	bTickWhenApplied = true
 }
