@@ -1,6 +1,6 @@
-class X2Effect_FlechetteRounds extends X2Effect_Persistent config(GameData_WeaponData);
+class XMBEffect_RangeModifier extends X2Effect_Persistent;
 
-var config array<int> RangeAccuracy;
+var array<int> RangeAccuracy;
 
 function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {

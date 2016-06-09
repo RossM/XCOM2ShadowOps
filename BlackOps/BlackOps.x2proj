@@ -213,9 +213,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_Fade.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_FlechetteRounds.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Flush.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2240,6 +2237,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBOverrideInterface.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_RangeModifier.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_ReactionFire.uc">

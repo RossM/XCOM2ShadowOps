@@ -1,4 +1,6 @@
-class X2Ability_ItemGranted_BO extends X2Ability;
+class X2Ability_ItemGranted_BO extends X2Ability config(GameData_WeaponData);
+
+var config array<int> FlechetteRangeAccuracy;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -14,7 +16,7 @@ static function array<X2DataTemplate> CreateTemplates()
 static function X2AbilityTemplate FlechetteRounds()
 {
 	local X2AbilityTemplate             Template;
-	local X2Effect_FlechetteRounds      Effect;
+	local XMBEffect_RangeModifier      Effect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'FlechetteRounds');
 
@@ -28,7 +30,8 @@ static function X2AbilityTemplate FlechetteRounds()
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
-	Effect = new class'X2Effect_FlechetteRounds';
+	Effect = new class'XMBEffect_RangeModifier';
+	Effect.RangeAccuracy = default.FlechetteRangeAccuracy;
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, false);
 	Template.AddShooterEffect(Effect);
