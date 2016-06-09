@@ -13,16 +13,13 @@
 //  EXAMPLES
 //
 //  +4 damage against flanked targets:
-//    CoverTypeCondition = new class'XMBCondition_CoverType';
-//    CoverTypeCondition.AllowedCoverTypes.AddItem(CT_NONE);
 //    ConditionalBonusEffect = new class'XMBEffect_ConditionalBonus';
-//    ConditionalBonusEffect.OtherConditions.AddItem(CoverTypeCondition);
+//    ConditionalBonusEffect.OtherConditions.AddItem(default.NoCoverCondition);
 //    ConditionalBonusEffect.AddDamageModifier(4);
 //
 //  +100 dodge against reaction fire:
-//    ReactionFireCondition = new class'XMBCondition_ReactionFire';
 //    ConditionalBonusEffect = new class'XMBEffect_ConditionalBonus';
-//    ConditionalBonusEffect.SelfConditions.AddItem(ReactionFireCondition);
+//    ConditionalBonusEffect.SelfConditions.AddItem(default.ReactionFireCondition);
 //    ConditionalBonusEffect.AddToHitAsTargetModifier(100, eHit_Graze);
 //
 //  +10/15/20 crit chance with associated weapon, based on weapon tech:

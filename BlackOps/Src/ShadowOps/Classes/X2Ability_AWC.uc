@@ -136,13 +136,9 @@ static function X2AbilityTemplate Weaponmaster()
 static function X2AbilityTemplate AbsolutelyCritical()
 {
 	local XMBEffect_ConditionalBonus             Effect;
-	local XMBCondition_CoverType						Condition;
-
-	Condition = new class'XMBCondition_CoverType';
-	Condition.AllowedCoverTypes.AddItem(CT_NONE);
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.OtherConditions.AddItem(Condition);
+	Effect.OtherConditions.AddItem(default.NoCoverCondition);
 	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
 
 	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);

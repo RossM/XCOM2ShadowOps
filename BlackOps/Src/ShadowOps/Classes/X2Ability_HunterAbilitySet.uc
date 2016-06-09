@@ -316,13 +316,9 @@ static function X2AbilityTemplate VitalPoint()
 static function X2AbilityTemplate Precision()
 {
 	local XMBEffect_ConditionalBonus             PrecisionEffect;
-	local XMBCondition_CoverType						Condition;
-
-	Condition = new class'XMBCondition_CoverType';
-	Condition.AllowedCoverTypes.AddItem(CT_Standing);
 
 	PrecisionEffect = new class'XMBEffect_ConditionalBonus';
-	PrecisionEffect.OtherConditions.AddItem(Condition);
+	PrecisionEffect.OtherConditions.AddItem(default.FullCoverCondition);
 	PrecisionEffect.AddToHitModifier(default.PrecisionOffenseBonus);
 
 	return Passive('ShadowOps_Precision', "img:///UILibrary_BlackOps.UIPerk_precision", true, PrecisionEffect);
@@ -331,13 +327,9 @@ static function X2AbilityTemplate Precision()
 static function X2AbilityTemplate LowProfile()
 {
 	local XMBEffect_ConditionalBonus             LowProfileEffect;
-	local XMBCondition_CoverType						Condition;
-
-	Condition = new class'XMBCondition_CoverType';
-	Condition.AllowedCoverTypes.AddItem(CT_MidLevel);
 
 	LowProfileEffect = new class'XMBEffect_ConditionalBonus';
-	LowProfileEffect.SelfConditions.AddItem(Condition);
+	LowProfileEffect.SelfConditions.AddItem(default.HalfCoverCondition);
 	LowProfileEffect.AddToHitAsTargetModifier(-default.LowProfileDefenseBonus);
 
 	return Passive('ShadowOps_LowProfile', "img:///UILibrary_BlackOps.UIPerk_lowprofile", true, LowProfileEffect);
@@ -394,17 +386,13 @@ static function X2AbilityTemplate Assassin()
 {
 	local X2AbilityTemplate						Template;
 	local XMBEffect_AbilityTriggered						Effect;
-	local XMBCondition_CoverType				Condition;
-
-	Condition = new class'XMBCondition_CoverType';
-	Condition.AllowedCoverTypes.AddItem(CT_None);
 
 	Effect = new class'XMBEffect_AbilityTriggered';
 	Effect.EffectName = 'Assassin';
 	Effect.TriggeredEvent = 'Assassin';
 	Effect.bRequireAbilityWeapon = true;
-	Effect.AbilityTargetConditions.AddItem(new class'XMBCondition_IsDead');
-	Effect.AbilityTargetConditions.AddItem(Condition);
+	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
+	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
 
 	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_PerkIcons.UIPerk_executioner", true, Effect);
 	Template.AdditionalAbilities.AddItem('ShadowOps_AssassinTrigger');
@@ -926,7 +914,6 @@ static function X2AbilityTemplate FirstStrike()
 static function X2AbilityTemplate DamnGoodGround()
 {
 	local XMBEffect_ConditionalBonus Effect;
-	local XMBCondition_HeightAdvantage Condition;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.EffectName = 'DamnGoodGround';
@@ -934,14 +921,10 @@ static function X2AbilityTemplate DamnGoodGround()
 	Effect.AddToHitAsTargetModifier(-default.DamnGoodGroundDefenseBonus);
 
 	// This condition applies when the unit is the target
-	Condition = new class'XMBCondition_HeightAdvantage';
-	Condition.bRequireHeightAdvantage = true;
-	Effect.SelfConditions.AddItem(Condition);
+	Effect.SelfConditions.AddItem(default.HeightAdvantageCondition);
 
 	// This condition applies when the unit is the attacker
-	Condition = new class'XMBCondition_HeightAdvantage';
-	Condition.bRequireHeightDisadvantage = true;
-	Effect.OtherConditions.AddItem(Condition);
+	Effect.OtherConditions.AddItem(default.HeightDisadvantageCondition);
 
 	return Passive('ShadowOps_DamnGoodGround', "img:///UILibrary_BlackOps.UIPerk_damngoodground", true, Effect);
 }
