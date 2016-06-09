@@ -8,8 +8,8 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	EventMgr = `XEVENTMGR;
 
 	ListenerObj = self;
-	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', RageListener, ELD_OnVisualizationBlockCompleted);	
-	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', RageListener, ELD_OnVisualizationBlockCompleted);	
+	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AIControlListener, ELD_OnVisualizationBlockCompleted);	
+	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', AIControlListener, ELD_OnVisualizationBlockCompleted);	
 }
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
@@ -56,7 +56,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	}
 }
 
-function EventListenerReturn RageListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function EventListenerReturn AIControlListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
 	local XComGameState_Unit UnitState;
 	local XComGameState NewGameState;
@@ -86,7 +86,7 @@ function EventListenerReturn RageListener(Object EventData, Object EventSource, 
 	return ELR_NoInterrupt;
 }
 
-function bool RageEffectTicked(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_Effect kNewEffectState, XComGameState NewGameState, bool FirstApplication)
+function bool AIControlEffectTicked(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_Effect kNewEffectState, XComGameState NewGameState, bool FirstApplication)
 {
 	local XComGameState_Unit UnitState;
 
@@ -110,7 +110,6 @@ function bool RageEffectTicked(X2Effect_Persistent PersistentEffect, const out E
 
 defaultproperties
 {
-	EffectName = "Rage"
-	EffectTickedFn = RageEffectTicked
+	EffectTickedFn = AIControlEffectTicked
 	bTickWhenApplied = true
 }

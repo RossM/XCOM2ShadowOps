@@ -266,6 +266,7 @@ static function X2AbilityTemplate Rage()
 	Template.AddShooterEffectExclusions();
 
 	BehaviorTreeEffect = new class'XMGEffect_AIControl';
+	BehaviorTreeEffect.EffectName = 'Rage';
 	BehaviorTreeEffect.BehaviorTreeName = 'ShadowOps_Rage';
 	BehaviorTreeEffect.NumActions = 1;
 	BehaviorTreeEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
