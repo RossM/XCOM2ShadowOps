@@ -11,9 +11,7 @@ var array<X2Condition> AbilityShooterConditions;
 function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {
 	local ShotModifierInfo ModInfo;
-	local XComGameState_Item SourceWeapon;
 	local int Tiles, Modifier;
-	local StateObjectReference ItemRef;
 
 	if (ValidateAttack(EffectState, Attacker, Target, AbilityState) != 'AA_Success')
 		return;
