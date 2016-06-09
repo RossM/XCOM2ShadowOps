@@ -16,7 +16,7 @@ static function array<X2DataTemplate> CreateTemplates()
 static function X2AbilityTemplate FlechetteRounds()
 {
 	local X2AbilityTemplate             Template;
-	local XMBEffect_RangeModifier      Effect;
+	local XMBEffect_ToHitModifierByRange      Effect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'FlechetteRounds');
 
@@ -30,7 +30,7 @@ static function X2AbilityTemplate FlechetteRounds()
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
-	Effect = new class'XMBEffect_RangeModifier';
+	Effect = new class'XMBEffect_ToHitModifierByRange';
 	Effect.RangeAccuracy = default.FlechetteRangeAccuracy;
 	Effect.bRequireAbilityWeapon = true;
 	Effect.BuildPersistentEffect(1, true, false, false);

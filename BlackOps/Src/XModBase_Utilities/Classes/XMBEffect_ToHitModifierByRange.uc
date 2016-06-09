@@ -1,4 +1,4 @@
-class XMBEffect_RangeModifier extends X2Effect_Persistent;
+class XMBEffect_ToHitModifierByRange extends X2Effect_Persistent;
 
 var array<int> RangeAccuracy;
 
