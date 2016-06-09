@@ -33,7 +33,7 @@ Class changes
 	* New Sergeant ability: First Aid. You have one free medikit use on every mission. Each carried medikit gives you two additional uses.
 	* Resilience removed (moved to Combat Engineer).
     * Zero In moved to Lieutenant.
-	* Flush revised: Fire a pistol shot that automatically hits and forces the target to move to new cover.
+	* Flush revised: Fire a pistol shot that automatically hits and forces the target to move to new cover. 2 turn cooldown.
 	* Ready for Anything removed.
 	* New Captain ability: Second Wind. Using a medikit on an injured unit also grants that unit a bonus action point.
 Item changes
