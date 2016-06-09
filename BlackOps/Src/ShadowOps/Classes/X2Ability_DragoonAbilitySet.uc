@@ -991,7 +991,7 @@ static function X2AbilityTemplate Rocketeer()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local XMBEffect_BonusItemCharges            ItemChargesEffect;
+	local XMBEffect_AddItemChargesBySlot            ItemChargesEffect;
 	local X2Effect_Persistent					PersistentEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Rocketeer');
@@ -1011,7 +1011,7 @@ static function X2AbilityTemplate Rocketeer()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	ItemChargesEffect = new class'XMBEffect_BonusItemCharges';
+	ItemChargesEffect = new class'XMBEffect_AddItemChargesBySlot';
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_HeavyWeapon);
 	Template.AddTargetEffect(ItemChargesEffect);
 

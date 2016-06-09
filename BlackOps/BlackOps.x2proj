@@ -2269,9 +2269,6 @@
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddUtilityItem.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddReservedActionPoints.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_HeightAdvantage.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2287,7 +2284,7 @@
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_ConditionalBonus.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_BonusItemCharges.uc">
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddItemChargesBySlot.uc">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
