@@ -1,6 +1,6 @@
 class XMBEffect_AbilityTriggered extends X2Effect_Persistent;
 
-var bool bRequireAbilityWeapon, bRequireKill;
+var bool bRequireAbilityWeapon;
 var array<EAbilityHitResult> AllowedHitResults;
 var name TriggeredEvent;
 
@@ -75,9 +75,6 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 		if (SourceWeapon.ObjectID != ItemRef.ObjectID && SourceWeapon.LoadedAmmo.ObjectID != ItemRef.ObjectID)
 			return 'AA_UnknownError';
 	}
-
-	if (bRequireKill && (Target == none || !Target.IsDead()))
-		return 'AA_UnitIsAlive';
 
 	foreach AbilityTargetConditions(kCondition)
 	{

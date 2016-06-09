@@ -403,7 +403,7 @@ static function X2AbilityTemplate Assassin()
 	Effect.EffectName = 'Assassin';
 	Effect.TriggeredEvent = 'Assassin';
 	Effect.bRequireAbilityWeapon = true;
-	Effect.bRequireKill = true;
+	Effect.AbilityTargetConditions.AddItem(new class'XMBCondition_IsDead');
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_PerkIcons.UIPerk_executioner", true, Effect);
