@@ -179,9 +179,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_NotVisibleToEnemies.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Condition_ReactionFire.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2243,6 +2240,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBOverrideInterface.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_ReactionFire.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AbilityTriggered.uc">

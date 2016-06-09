@@ -1,4 +1,4 @@
-class X2Condition_ReactionFire extends X2Condition;
+class XMBCondition_ReactionFire extends X2Condition;
 
 event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameState_BaseObject kTarget)
 {

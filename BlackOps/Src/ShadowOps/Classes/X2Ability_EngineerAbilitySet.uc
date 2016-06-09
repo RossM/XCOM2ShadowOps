@@ -675,7 +675,7 @@ static function X2AbilityTemplate MovingTarget()
 	local XMBEffect_ConditionalBonus             Effect;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.SelfConditions.AddItem(new class'X2Condition_ReactionFire');
+	Effect.SelfConditions.AddItem(new class'XMBCondition_ReactionFire');
 	Effect.AddToHitAsTargetModifier(-default.MovingTargetDefenseBonus);
 	Effect.AddToHitAsTargetModifier(default.MovingTargetDodgeBonus, eHit_Graze);
 
