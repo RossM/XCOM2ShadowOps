@@ -190,6 +190,7 @@ static function X2AbilityTemplate Pyromaniac()
 	local XMBEffect_AddUtilityItem ItemEffect;
 
 	Effect = new class'XMBEffect_BonusDamageByDamageType';
+	Effect.EffectName = 'Pyromaniac';
 	Effect.RequiredDamageTypes.AddItem('fire');
 	Effect.DamageBonus = default.PyromaniacDamageBonus;
 

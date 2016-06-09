@@ -80,5 +80,5 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 
 defaultproperties
 {
-	EffectName = "Pyromaniac";
+	EffectName = "XMBBonusDamageByDamageType";
 }
