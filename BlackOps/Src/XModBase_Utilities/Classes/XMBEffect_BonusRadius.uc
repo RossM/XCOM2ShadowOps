@@ -57,5 +57,5 @@ function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComG
 
 defaultproperties
 {
-	EffectName = "BonusRadius";
+	EffectName = "XMBBonusRadius";
 }
