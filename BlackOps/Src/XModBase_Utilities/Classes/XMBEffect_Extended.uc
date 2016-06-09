@@ -15,8 +15,10 @@
 //---------------------------------------------------------------------------------------
 class XMBEffect_Extended extends X2Effect_Persistent implements(XMBEffectInterface);
 
-// This class adds some extra methods to X2Effect_Persistent which can be overridden in a
-// subclass to create new effects.
+
+///////////////////
+// New functions //
+///////////////////
 
 // If true, the unit with this effect is immune to critical hits.
 function bool CannotBeCrit(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState) { return false; }
@@ -33,6 +35,7 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 // If there are multiple effects with GetFinalToHitModifiers on a unit, they all get the same 
 // breakdown, so they won't see the effects of other GetFinalToHitModifiers overrides.
 function GetFinalToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, ShotBreakdown ShotBreakdown, out array<ShotModifierInfo> ShotModifiers);
+
 
 ////////////////////
 // Implementation //
