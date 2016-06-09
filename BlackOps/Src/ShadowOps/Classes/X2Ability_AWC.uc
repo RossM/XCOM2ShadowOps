@@ -230,7 +230,7 @@ static function X2AbilityTemplate Rage()
 	local X2Effect_Implacable			ImplacableEffect;
 	local X2Effect_Untouchable			UntouchableEffect;
 	local X2Effect_Serial				SerialEffect;
-	local X2Effect_RunBehaviorTree		BehaviorTreeEffect;
+	local XMGEffect_AIControl			RageEffect;
 	local X2AbilityTemplateManager		AbilityTemplateManager;
 	local X2AbilityCharges              Charges;
 	local X2AbilityCost_Charges         ChargeCost;
@@ -265,13 +265,12 @@ static function X2AbilityTemplate Rage()
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
 
-	BehaviorTreeEffect = new class'XMGEffect_AIControl';
-	BehaviorTreeEffect.EffectName = 'Rage';
-	BehaviorTreeEffect.BehaviorTreeName = 'ShadowOps_Rage';
-	BehaviorTreeEffect.NumActions = 1;
-	BehaviorTreeEffect.EffectAddedFn = Rage_EffectAdded;
-	BehaviorTreeEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
-	Template.AddTargetEffect(BehaviorTreeEffect);
+	RageEffect = new class'XMGEffect_AIControl';
+	RageEffect.EffectName = 'Rage';
+	RageEffect.BehaviorTreeName = 'ShadowOps_Rage';
+	RageEffect.EffectAddedFn = Rage_EffectAdded;
+	RageEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	Template.AddTargetEffect(RageEffect);
 
 	ImplacableEffect = new class'X2Effect_Implacable';
 	EffectTemplate = AbilityTemplateManager.FindAbilityTemplate('Implacable');

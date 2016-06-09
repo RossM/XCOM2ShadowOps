@@ -1,4 +1,6 @@
-class XMGEffect_AIControl extends X2Effect_RunBehaviorTree;
+class XMGEffect_AIControl extends X2Effect_Persistent;
+
+var name BehaviorTreeName;
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
@@ -10,11 +12,6 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	ListenerObj = self;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AIControlListener, ELD_OnVisualizationBlockCompleted);	
 	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', AIControlListener, ELD_OnVisualizationBlockCompleted);	
-}
-
-simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
-{
-	super(X2Effect_Persistent).OnEffectAdded(ApplyEffectParameters, kNewTargetState, NewGameState, NewEffectState);
 }
 
 function EventListenerReturn AIControlListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
