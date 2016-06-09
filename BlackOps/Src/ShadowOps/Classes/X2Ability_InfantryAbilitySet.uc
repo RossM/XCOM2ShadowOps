@@ -675,7 +675,6 @@ static function X2AbilityTemplate Flush()
 	local X2Effect_Persistent				PersistentEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
-	local XMBEffect_AddReservedActionPoints	ReservePointsEffect;
 	local X2Effect_SaveHitResult			SaveHitResultEffect;
 	local X2Effect_PreviewDamage			PreviewDamageEffect;
 
@@ -743,12 +742,6 @@ static function X2AbilityTemplate Flush()
 	StandardAim.bGuaranteedHit = true;
 	Template.AbilityToHitCalc = StandardAim;
 
-	ReservePointsEffect = new class'XMBEffect_AddReservedActionPoints';
-	ReservePointsEffect.ReserveType = 'Flush';
-	ReservePointsEffect.bApplyOnHit = true;
-	ReservePointsEffect.bApplyOnMiss = true;
-	Template.AddShooterEffect(ReservePointsEffect);
-
 	SaveHitResultEffect = new class'X2Effect_SaveHitResult';
 	SaveHitResultEffect.bApplyOnHit = true;
 	SaveHitResultEffect.bApplyOnMiss = true;
@@ -803,22 +796,17 @@ static function X2AbilityTemplate FlushShot()
 {
 	local X2AbilityTemplate							Template;
 	local X2AbilityCost_Ammo						AmmoCost;
-	local X2AbilityCost_ReserveActionPoints			ReserveActionPointCost;
 	local X2Condition_UnitEffectsWithAbilitySource	EffectsCondition;
 	local X2AbilityTarget_Single					SingleTarget;
 	local X2AbilityTrigger_Event					Trigger;
 	local X2Effect									Effect;
+	local X2Effect_RemoveEffects					RemoveEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FlushShot');
 
 	AmmoCost = new class'X2AbilityCost_Ammo';
 	AmmoCost.iAmmo = 1;
 	Template.AbilityCosts.AddItem(AmmoCost);
-
-	ReserveActionPointCost = new class'X2AbilityCost_ReserveActionPoints';
-	ReserveActionPointCost.iNumPoints = 1;
-	ReserveActionPointCost.AllowedTypes.AddItem('Flush');
-	Template.AbilityCosts.AddItem(ReserveActionPointCost);
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
@@ -833,6 +821,10 @@ static function X2AbilityTemplate FlushShot()
 	SingleTarget = new class'X2AbilityTarget_Single';
 	SingleTarget.OnlyIncludeTargetsInsideWeaponRange = true;
 	Template.AbilityTargetStyle = SingleTarget;
+
+	RemoveEffect = new class'X2Effect_RemoveEffects';
+	RemoveEffect.EffectNamesToRemove.AddItem(default.FlushEffectName);
+	Template.AddTargetEffect(RemoveEffect);
 
 	Effect = class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect();
 	Effect.TargetConditions.AddItem(default.LivingHostileTargetProperty);
