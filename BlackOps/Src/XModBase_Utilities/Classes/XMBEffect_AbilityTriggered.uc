@@ -104,6 +104,5 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 DefaultProperties
 {
 	DuplicateResponse = eDupe_Ignore
-	EffectName = "XMBAbilityTriggered"
 	TriggeredEvent = "XMBAbilityTrigger"
 }

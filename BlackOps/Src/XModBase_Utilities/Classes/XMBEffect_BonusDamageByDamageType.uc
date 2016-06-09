@@ -77,8 +77,3 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 
 	return 0;
 }
-
-defaultproperties
-{
-	EffectName = "XMBBonusDamageByDamageType";
-}
