@@ -1,3 +1,28 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBCondition_CoverType.uc
+//  AUTHOR:  xylthixlm
+//
+//  A condition that restricts the possible cover types the target of an ability can
+//  have relative to the shooter.
+//
+//  USAGE
+//
+//  XMBAbility provides default instances of this class for common cases:
+//
+//  default.FullCoverCondition		The target is in full cover
+//  default.HalfCoverCondition		The target is in half cover
+//  default.NoCoverCondition		The target is not in cover
+//  default.FlankedCondition		The target is not in cover and can be flanked
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBCondition_CoverType extends X2Condition;
 
 var array<ECoverType> AllowedCoverTypes;

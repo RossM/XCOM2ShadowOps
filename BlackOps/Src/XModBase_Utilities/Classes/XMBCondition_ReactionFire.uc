@@ -1,3 +1,24 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBCondition_ReactionFire.uc
+//  AUTHOR:  xylthixlm
+//
+//  A condition that requires that an attack be considered reaction fire.
+//
+//  USAGE
+//
+//  XMBAbility provides a default instance of this class:
+//
+//  default.ReactionFireCondition		The attack is reaction fire
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBCondition_ReactionFire extends X2Condition;
 
 event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameState_BaseObject kTarget)

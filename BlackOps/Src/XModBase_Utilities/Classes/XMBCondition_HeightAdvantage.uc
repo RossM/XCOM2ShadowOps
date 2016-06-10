@@ -1,3 +1,26 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBCondition_HeightAdvantage.uc
+//  AUTHOR:  xylthixlm
+//
+//  A condition that restricts the height of the target of an ability relative to the
+//  height of the shooter.
+//
+//  USAGE
+//
+//  XMBAbility provides default instances of this class for common cases:
+//
+//  default.HeightAdvantageCondition		The target is higher than the shooter
+//  default.HeightDisadvantageCondition		The target is lower than the shooter
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBCondition_HeightAdvantage extends X2Condition;
 
 var bool bRequireHeightAdvantage, bRequireHeightDisadvantage;
