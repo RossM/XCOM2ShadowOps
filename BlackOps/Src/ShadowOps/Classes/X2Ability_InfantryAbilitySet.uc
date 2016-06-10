@@ -671,7 +671,7 @@ static function X2AbilityTemplate Flush()
 	local X2Condition_UnitProperty			PropertyCondition;
 	local X2Condition_CanActivateAbility	AbilityCondition;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
-	local X2Effect_Flush					FlushEffect;
+	local X2Effect_RunBehaviorTree			FlushEffect;
 	local X2Effect_Persistent				PersistentEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
@@ -761,7 +761,8 @@ static function X2AbilityTemplate Flush()
 	ActionPointEffect.bApplyOnMiss = true;
 	Template.AddTargetEffect(ActionPointEffect);
 
-	FlushEffect = new class'X2Effect_Flush';
+	FlushEffect = new class'X2Effect_RunBehaviorTree';
+	FlushEffect.BehaviorTreeName = 'FlushMove';
 	FlushEffect.bApplyOnHit = true;
 	FlushEffect.bApplyOnMiss = true;
 	Template.AddTargetEffect(FlushEffect);
