@@ -210,9 +210,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_Fade.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_Flush.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_FractureDamage.uc">
       <SubType>Content</SubType>
     </Content>
