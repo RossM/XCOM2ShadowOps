@@ -1,3 +1,22 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_AbilityTriggered.uc
+//  AUTHOR:  xylthixlm
+//
+//  A persistent effect which triggers an event whenever the unit uses an ability
+//  meeting certain conditions. This is more flexible than setting an ability trigger on
+//  'AbilityActivated' directly because it lets you check the properties of the ability
+//  used, such as with XMBCondition_ReactionFire, and lets you check the properties of
+//  the target even when the ability to be triggered is self-targeting.
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBEffect_AbilityTriggered extends X2Effect_Persistent;
 
 var bool bRequireAbilityWeapon;
