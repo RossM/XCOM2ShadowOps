@@ -9,9 +9,9 @@ var int PerItemBonus;
 // only give extra uses to certain items.
 function int GetItemChargeModifier(XComGameState NewGameState, XComGameState_Unit NewUnit, XComGameState_Item ItemIter)
 {
-	if (ApplyToSlots.Find(ItemIter.InventorySlot) != INDEX_NONE)
+	if (ItemIter.Quantity > 0 && ApplyToSlots.Find(ItemIter.InventorySlot) != INDEX_NONE)
 	{
-		return PerItemBonus * ItemIter.MergedItemCount;
+		return PerItemBonus;
 	}
 
 	return 0;
@@ -20,9 +20,9 @@ function int GetItemChargeModifier(XComGameState NewGameState, XComGameState_Uni
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
 	local XComGameState_Unit NewUnit;
-	local XComGameState_Item ItemState;
+	local XComGameState_Item ItemState, InnerItemState;
 	local XComGameStateHistory History;
-	local int i, modifier;
+	local int i, j, modifier;
 
 	NewUnit = XComGameState_Unit(kNewTargetState);
 	if (NewUnit == none)
@@ -32,12 +32,23 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 
 	for (i = 0; i < NewUnit.InventoryItems.Length; ++i)
 	{
-		ItemState = XComGameState_Item(NewGameState.GetGameStateForObjectID(NewUnit.InventoryItems[i].ObjectID));
-		if (ItemState == none)
-			ItemState = XComGameState_Item(History.GetGameStateForObjectID(NewUnit.InventoryItems[i].ObjectID));
+		ItemState = XComGameState_Item(History.GetGameStateForObjectID(NewUnit.InventoryItems[i].ObjectID));
 		if (ItemState != none && !ItemState.bMergedOut)
 		{
 			modifier = GetItemChargeModifier(NewGameState, NewUnit, ItemState);
+
+			// Add in the charges for merged items. We can't just multiply by MergedItemCount
+			// because GetItemChargeModifier might give different results if the merged items
+			// were in different slots.
+			for (j = 0; j < NewUnit.InventoryItems.Length; ++j)
+			{
+				InnerItemState = XComGameState_Item(History.GetGameStateForObjectID(NewUnit.InventoryItems[j].ObjectID));
+				if (InnerItemState.bMergedOut && InnerItemState.GetMyTemplate() == ItemState.GetMyTemplate())
+				{
+					modifier += GetItemChargeModifier(NewGameState, NewUnit, InnerItemState);
+				}
+			}
+
 			if (modifier != 0)
 			{
 				ItemState = XComGameState_Item(NewGameState.CreateStateObject(ItemState.Class, ItemState.ObjectID));
