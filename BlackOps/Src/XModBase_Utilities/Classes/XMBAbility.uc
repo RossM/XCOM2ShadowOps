@@ -38,6 +38,27 @@ static function X2AbilityTemplate Passive(name DataName, string IconImage, bool 
 	return Template;
 }
 
+simulated static function EffectFlyOver_Visualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+{
+	local X2Action_PlaySoundAndFlyOver	SoundAndFlyOver;
+	local X2AbilityTemplate             AbilityTemplate;
+	local XComGameStateContext_Ability  Context;
+	local AbilityInputContext           AbilityContext;
+	local EWidgetColor					MessageColor;
+
+	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+	AbilityContext = Context.InputContext;
+	AbilityTemplate = class'XComGameState_Ability'.static.GetMyTemplateManager().FindAbilityTemplate(AbilityContext.AbilityTemplateName);
+	
+	MessageColor = AbilityTemplate.Hostility == eHostility_Offensive ? eColor_Bad : eColor_Good;
+
+	if (EffectApplyResult == 'AA_Success' && XGUnit(BuildTrack.TrackActor).IsAlive())
+	{
+		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
+		SoundAndFlyOver.SetSoundAndFlyOverParameters(None, AbilityTemplate.LocFlyOverText, '', MessageColor, AbilityTemplate.IconImage);
+	}
+}
+
 defaultproperties
 {
 	Begin Object Class=XMBCondition_CoverType Name=DefaultFullCoverCondition

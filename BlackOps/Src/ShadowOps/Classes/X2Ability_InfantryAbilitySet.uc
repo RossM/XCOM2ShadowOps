@@ -1093,7 +1093,7 @@ static function X2AbilityTemplate AdrenalineSurgeTrigger()
 	AdrenalineEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage);
 	AdrenalineEffect.TargetConditions.AddItem(PropertyCondition);
 	AdrenalineEffect.TargetConditions.AddItem(EffectsCondition);
-	AdrenalineEffect.VisualizationFn = AdrenalineSurge_BuildVisualization;
+	AdrenalineEffect.VisualizationFn = EffectFlyOver_Visualization;
 	Template.AddTargetEffect(AdrenalineEffect);
 	Template.AddMultiTargetEffect(AdrenalineEffect);
 
@@ -1114,24 +1114,6 @@ static function X2AbilityTemplate AdrenalineSurgeTrigger()
 	Template.Hostility = eHostility_Neutral;
 
 	return Template;
-}
-
-simulated static function AdrenalineSurge_BuildVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
-{
-	local X2Action_PlaySoundAndFlyOver	SoundAndFlyOver;
-	local X2AbilityTemplate             AbilityTemplate;
-	local XComGameStateContext_Ability  Context;
-	local AbilityInputContext           AbilityContext;
-
-	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
-	AbilityContext = Context.InputContext;
-	AbilityTemplate = class'XComGameState_Ability'.static.GetMyTemplateManager().FindAbilityTemplate(AbilityContext.AbilityTemplateName);
-
-	if (EffectApplyResult == 'AA_Success' && XGUnit(BuildTrack.TrackActor).IsAlive())
-	{
-		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
-		SoundAndFlyOver.SetSoundAndFlyOverParameters(None, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
-	}
 }
 
 static function X2AbilityTemplate Fortify()
