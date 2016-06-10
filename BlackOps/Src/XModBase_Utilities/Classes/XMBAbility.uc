@@ -13,7 +13,7 @@
 //  DEPENDENCIES
 //
 //  This class requires XMBCondition_CoverType, XMBCondition_HeightAdvantage,
-//  XMBCondition_ReactionFire, and XMBCondition_IsDead.
+//  XMBCondition_ReactionFire, and XMBCondition_Dead.
 //---------------------------------------------------------------------------------------
 
 class XMBAbility extends X2Ability;
@@ -109,7 +109,7 @@ defaultproperties
 	End Object
 	ReactionFireCondition = DefaultReactionFireCondition
 
-	Begin Object Class=XMBCondition_IsDead Name=DefaultDeadCondition
+	Begin Object Class=XMBCondition_Dead Name=DefaultDeadCondition
 	End Object
 	DeadCondition = DefaultDeadCondition
 }

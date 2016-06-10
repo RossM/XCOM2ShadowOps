@@ -1,4 +1,4 @@
-class XMBCondition_IsDead extends X2Condition;
+class XMBCondition_Dead extends X2Condition;
 
 event name CallMeetsCondition(XComGameState_BaseObject kTarget) 
 { 

@@ -2230,7 +2230,7 @@
     <Content Include="Src\XModBase_Interfaces\Classes\XMBOverrideInterface.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_IsDead.uc">
+    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_Dead.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_ToHitModifierByRange.uc">
