@@ -1,6 +1,19 @@
 //---------------------------------------------------------------------------------------
 //  FILE:    XMBAbility.uc
 //  AUTHOR:  xylthixlm
+//
+//  This class provides additional helpers for defining ability templates. Simply
+//  declare your ability sets to extend XMBAbility instead of X2Ability, and then use
+//  whatever helpers you need.
+//
+//  USAGE
+//
+//  class X2Ability_MyClassAbilitySet extends XMBAbility;
+//
+//  DEPENDENCIES
+//
+//  This class requires XMBCondition_CoverType, XMBCondition_HeightAdvantage,
+//  XMBCondition_ReactionFire, and XMBCondition_IsDead.
 //---------------------------------------------------------------------------------------
 
 class XMBAbility extends X2Ability;
