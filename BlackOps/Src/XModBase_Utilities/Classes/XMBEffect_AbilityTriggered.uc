@@ -20,7 +20,6 @@
 class XMBEffect_AbilityTriggered extends X2Effect_Persistent;
 
 var bool bRequireAbilityWeapon;
-var array<EAbilityHitResult> AllowedHitResults;
 var name TriggeredEvent;
 
 var array<X2Condition> AbilityTargetConditions;
@@ -63,9 +62,6 @@ function EventListenerReturn AbilityActivatedListener(Object EventData, Object E
 
 	TargetUnit = XComGameState_Unit(GameState.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
 	if (TargetUnit == none || TargetUnit.ObjectID == SourceUnit.ObjectID)
-		return ELR_NoInterrupt;
-
-	if (AllowedHitResults.Length > 0 && AllowedHitResults.Find(AbilityContext.ResultContext.HitResult) == INDEX_NONE)
 		return ELR_NoInterrupt;
 
 	if (ValidateAttack(EffectState, SourceUnit, TargetUnit, AbilityState) != 'AA_Success')

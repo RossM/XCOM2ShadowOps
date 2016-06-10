@@ -18,7 +18,6 @@
 class XMBEffect_AbilityCostRefund extends X2Effect_Persistent config(GameData_SoldierSkills);
 
 var bool bRequireAbilityWeapon;
-var array<EAbilityHitResult> AllowedHitResults;
 var name TriggeredEvent;
 
 var array<X2Condition> AbilityTargetConditions;
@@ -48,9 +47,6 @@ function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStat
 	TargetUnit = XComGameState_Unit(NewGameState.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
 	if (TargetUnit == none)
 		TargetUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
-
-	if (AllowedHitResults.Length > 0 && AllowedHitResults.Find(AbilityContext.ResultContext.HitResult) == INDEX_NONE)
-		return false;
 
 	if (ValidateAttack(EffectState, SourceUnit, TargetUnit, kAbility) != 'AA_Success')
 		return false;

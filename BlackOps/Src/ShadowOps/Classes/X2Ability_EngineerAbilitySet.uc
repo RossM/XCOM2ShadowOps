@@ -474,7 +474,7 @@ static function X2AbilityTemplate SlamFire()
 	SlamFireEffect.EffectName = 'SlamFire';
 	SlamFireEffect.TriggeredEvent = 'SlamFire';
 	SlamFireEffect.bRequireAbilityWeapon = true;
-	SlamFireEffect.AllowedHitResults.AddItem(eHit_Crit);
+	SlamFireEffect.AbilityTargetConditions.AddItem(default.CritCondition);
 	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
 	SlamFireEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true, , Template.AbilitySourceName);
 	Template.AddTargetEffect(SlamFireEffect);

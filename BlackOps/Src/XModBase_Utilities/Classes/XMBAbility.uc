@@ -29,6 +29,7 @@ var const X2Condition FullCoverCondition, HalfCoverCondition, NoCoverCondition, 
 var const X2Condition HeightAdvantageCondition, HeightDisadvantageCondition;
 var const X2Condition ReactionFireCondition;
 var const X2Condition DeadCondition;
+var const X2Condition HitCondition, MissCondition, CritCondition, GrazeCondition;
 
 // Helper method for quickly defining a non-pure passive.
 static function X2AbilityTemplate Passive(name DataName, string IconImage, bool bCrossClassEligible, X2Effect_Persistent Effect)
@@ -119,4 +120,24 @@ defaultproperties
 	Begin Object Class=XMBCondition_Dead Name=DefaultDeadCondition
 	End Object
 	DeadCondition = DefaultDeadCondition
+
+	Begin Object Class=XMBCondition_AbilityHitResult Name=DefaultHitCondition
+		bRequireHit = true
+	End Object
+	HitCondition = DefaultHitCondition
+
+	Begin Object Class=XMBCondition_AbilityHitResult Name=DefaultMissCondition
+		bRequireMiss = true
+	End Object
+	MissCondition = DefaultMissCondition
+
+	Begin Object Class=XMBCondition_AbilityHitResult Name=DefaultCritCondition
+		IncludeHitResults[0] = eHit_Crit
+	End Object
+	CritCondition = DefaultCritCondition
+
+	Begin Object Class=XMBCondition_AbilityHitResult Name=DefaultGrazeCondition
+		IncludeHitResults[0] = eHit_Graze
+	End Object
+	GrazeCondition = DefaultGrazeCondition
 }
