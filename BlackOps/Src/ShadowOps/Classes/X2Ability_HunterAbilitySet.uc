@@ -247,20 +247,20 @@ static function X2DataTemplate HunterMark()
 	return Template;
 }
 
-static function X2Effect_HunterMarked CreateMarkedEffect(int NumTurns, bool bIsInfinite)
+static function X2Effect_PersistentStatChange CreateMarkedEffect(int NumTurns, bool bIsInfinite)
 {
-	local X2Effect_HunterMarked MarkedEffect;
+	local X2Effect_PersistentStatChange MarkedEffect;
 
-	MarkedEffect = new class 'X2Effect_HunterMarked';
+	MarkedEffect = new class 'X2Effect_PersistentStatChange';
 	MarkedEffect.EffectName = class'X2StatusEffects'.default.MarkedName;
 	MarkedEffect.DuplicateResponse = eDupe_Ignore;
+	MarkedEffect.AddPersistentStatChange(eStat_Defense, -default.HunterMarkHitModifier);
 	MarkedEffect.BuildPersistentEffect(NumTurns, bIsInfinite, true,,eGameRule_PlayerTurnEnd);
 	MarkedEffect.SetDisplayInfo(ePerkBuff_Penalty, class'X2StatusEffects'.default.MarkedFriendlyName, class'X2StatusEffects'.default.MarkedFriendlyDesc, "img:///UILibrary_PerkIcons.UIPerk_mark");
 	MarkedEffect.VisualizationFn = class'X2StatusEffects'.static.MarkedVisualization;
 	MarkedEffect.EffectTickedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationTicked;
 	MarkedEffect.EffectRemovedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationRemoved;
 	MarkedEffect.bRemoveWhenTargetDies = true;
-	MarkedEffect.AccuracyBonus = default.HunterMarkHitModifier;
 
 	return MarkedEffect;
 }

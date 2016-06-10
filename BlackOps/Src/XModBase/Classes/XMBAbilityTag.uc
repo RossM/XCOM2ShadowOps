@@ -100,6 +100,11 @@ event ExpandHandler(string InString, out string OutString)
 			break;
 
 		case 'ToHit':
+			if (FindStatBonus(AbilityTemplate, eStat_Defense, OutString, -1))
+			{
+				break;
+			}
+			// Fallthrough
 		case 'BaseToHit':
 			ToHitCalc = X2AbilityToHitCalc_StandardAim(AbilityTemplate.AbilityToHitCalc);
 			if (ToHitCalc != none)
@@ -133,7 +138,7 @@ event ExpandHandler(string InString, out string OutString)
 	}
 }
 
-function bool FindStatBonus(X2AbilityTemplate AbilityTemplate, ECharStatType StatType, out string OutString)
+function bool FindStatBonus(X2AbilityTemplate AbilityTemplate, ECharStatType StatType, out string OutString, optional float Multiplier = -1)
 {
 	local X2Effect EffectTemplate;
 	local X2Effect_PersistentStatChange StatChangeEffect;
@@ -150,7 +155,7 @@ function bool FindStatBonus(X2AbilityTemplate AbilityTemplate, ECharStatType Sta
 			idx = StatChangeEffect.m_aStatChanges.Find('StatType', StatType);
 			if (idx != INDEX_NONE)
 			{
-				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount));
+				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount * Multiplier));
 				return true;
 			}
 		}
@@ -163,7 +168,7 @@ function bool FindStatBonus(X2AbilityTemplate AbilityTemplate, ECharStatType Sta
 			idx = StatChangeEffect.m_aStatChanges.Find('StatType', StatType);
 			if (idx != INDEX_NONE)
 			{
-				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount));
+				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount * Multiplier));
 				return true;
 			}
 		}
@@ -176,7 +181,7 @@ function bool FindStatBonus(X2AbilityTemplate AbilityTemplate, ECharStatType Sta
 			idx = StatChangeEffect.m_aStatChanges.Find('StatType', StatType);
 			if (idx != INDEX_NONE)
 			{
-				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount));
+				OutString = string(int(StatChangeEffect.m_aStatChanges[idx].StatAmount * Multiplier));
 				return true;
 			}
 		}
