@@ -1040,7 +1040,7 @@ static function X2AbilityTemplate AdrenalineSurgeTrigger()
 	local X2AbilityTemplate                 Template;	
 	local array<name>                       SkipExclusions;
 	local X2AbilityTrigger_EventListener	EventListener;
-	local X2Effect_AdrenalineSurge			AdrenalineEffect;
+	local X2Effect_PersistentStatChange		AdrenalineEffect;
 	local X2Effect_Persistent				CooldownEffect;
 	local X2AbilityMultitarget_Radius		RadiusMultitarget;
 	local X2Condition_UnitProperty			PropertyCondition;
@@ -1084,13 +1084,16 @@ static function X2AbilityTemplate AdrenalineSurgeTrigger()
 	EffectsCondition = new class'X2Condition_UnitEffects';
 	EffectsCondition.AddExcludeEffect('AdrenalineSurgeCooldown', 'AA_UnitIsImmune');
 
-	AdrenalineEffect = new class'X2Effect_AdrenalineSurge';
-	AdrenalineEffect.CritMod = default.AdrenalineSurgeCritBonus;
+	AdrenalineEffect = new class'X2Effect_PersistentStatChange';
+	AdrenalineEffect.EffectName = 'AdrenalineSurgeBonus';
+	AdrenalineEffect.DuplicateResponse = eDupe_Refresh;
 	AdrenalineEffect.AddPersistentStatChange(eStat_Mobility, default.AdrenalineSurgeMobilityBonus);
+	AdrenalineEffect.AddPersistentStatChange(eStat_CritChance, default.AdrenalineSurgeCritBonus);
 	AdrenalineEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnEnd);
 	AdrenalineEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage);
 	AdrenalineEffect.TargetConditions.AddItem(PropertyCondition);
 	AdrenalineEffect.TargetConditions.AddItem(EffectsCondition);
+	AdrenalineEffect.VisualizationFn = AdrenalineSurge_BuildVisualization;
 	Template.AddTargetEffect(AdrenalineEffect);
 	Template.AddMultiTargetEffect(AdrenalineEffect);
 
@@ -1111,6 +1114,24 @@ static function X2AbilityTemplate AdrenalineSurgeTrigger()
 	Template.Hostility = eHostility_Neutral;
 
 	return Template;
+}
+
+simulated static function AdrenalineSurge_BuildVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
+{
+	local X2Action_PlaySoundAndFlyOver	SoundAndFlyOver;
+	local X2AbilityTemplate             AbilityTemplate;
+	local XComGameStateContext_Ability  Context;
+	local AbilityInputContext           AbilityContext;
+
+	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+	AbilityContext = Context.InputContext;
+	AbilityTemplate = class'XComGameState_Ability'.static.GetMyTemplateManager().FindAbilityTemplate(AbilityContext.AbilityTemplateName);
+
+	if (EffectApplyResult == 'AA_Success' && XGUnit(BuildTrack.TrackActor).IsAlive())
+	{
+		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
+		SoundAndFlyOver.SetSoundAndFlyOverParameters(None, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
+	}
 }
 
 static function X2AbilityTemplate Fortify()

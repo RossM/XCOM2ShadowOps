@@ -189,9 +189,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
-    <Content Include="Src\ShadowOps\Classes\X2Effect_AdrenalineSurge.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Aggression.uc">
       <SubType>Content</SubType>
     </Content>
