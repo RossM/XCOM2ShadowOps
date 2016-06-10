@@ -657,8 +657,8 @@ static function X2AbilityTemplate DenseSmoke()
 	Effect = new class'XMBEffect_BonusRadius';
 	Effect.EffectName = 'DenseSmokeRadius';
 	Effect.fBonusRadius = class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
-	Effect.AllowedTemplateNames.AddItem('SmokeGrenade');
-	Effect.AllowedTemplateNames.AddItem('SmokeGrenadeMk2');
+	Effect.IncludeItemNames.AddItem('SmokeGrenade');
+	Effect.IncludeItemNames.AddItem('SmokeGrenadeMk2');
 
 	return Passive('ShadowOps_DenseSmoke', "img:///UILibrary_BlackOps.UIPerk_densesmoke", true, Effect);
 }

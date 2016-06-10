@@ -1,7 +1,24 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_BonusRadius.uc
+//  AUTHOR:  xylthixlm
+//
+//  A persistent effect which increases the radius of grenades used by the unit, as well
+//  as the radius of any other ability the unit uses with its multitarget type set to
+//  X2AbilityMultiTarget_SoldierBonusRadius.
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  Core
+//---------------------------------------------------------------------------------------
 class XMBEffect_BonusRadius extends X2Effect_Persistent implements(XMBEffectInterface);
 
 var float fBonusRadius;					// Amount to increase the radius, in meters. One tile equals 1.5 meters.
-var array<name> AllowedTemplateNames;	// Ammo types (grenades) which the bonus will apply to. If empty, it applies to everything.
+var array<name> IncludeItemNames;		// Ammo types (grenades) which the bonus will apply to. If empty, it applies to everything.
 
 // This effect increases the radius of any effect using X2AbilityMultiTarget_SoldierBonusRadius, which in vanilla is only grenades.
 //
@@ -10,7 +27,7 @@ simulated function float GetRadiusModifier(const XComGameState_Ability Ability, 
 {
 	local XComGameState_Item ItemState;
 
-	if (AllowedTemplateNames.Length > 0)
+	if (IncludeItemNames.Length > 0)
 	{
 		ItemState = Ability.GetSourceAmmo();
 		if (ItemState == none)
@@ -19,7 +36,7 @@ simulated function float GetRadiusModifier(const XComGameState_Ability Ability, 
 		if (ItemState == none)
 			return 0;
 
-		if (AllowedTemplateNames.Find(ItemState.GetMyTemplateName()) == INDEX_NONE)
+		if (IncludeItemNames.Find(ItemState.GetMyTemplateName()) == INDEX_NONE)
 			return 0;
 	}
 
