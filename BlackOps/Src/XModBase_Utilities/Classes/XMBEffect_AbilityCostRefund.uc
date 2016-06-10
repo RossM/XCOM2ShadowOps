@@ -1,3 +1,20 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_AbilityCostRefund.uc
+//  AUTHOR:  xylthixlm
+//
+//  A persistent effect which causes the action point cost of any ability meeting
+//  certain conditions to be automatically refunded. This can be used to create effects
+//  that work like Serial.
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  Core
+//---------------------------------------------------------------------------------------
 class XMBEffect_AbilityCostRefund extends X2Effect_Persistent config(GameData_SoldierSkills);
 
 var bool bRequireAbilityWeapon;
