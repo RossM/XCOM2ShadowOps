@@ -10,10 +10,17 @@
 //
 //  class X2Ability_MyClassAbilitySet extends XMBAbility;
 //
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
 //  DEPENDENCIES
 //
-//  This class requires XMBCondition_CoverType, XMBCondition_HeightAdvantage,
-//  XMBCondition_ReactionFire, and XMBCondition_Dead.
+//  XMBCondition_CoverType.uc
+//  XMBCondition_HeightAdvantage.uc
+//  XMBCondition_ReactionFire.uc
+//  XMBCondition_Dead.uc
 //---------------------------------------------------------------------------------------
 
 class XMBAbility extends X2Ability;

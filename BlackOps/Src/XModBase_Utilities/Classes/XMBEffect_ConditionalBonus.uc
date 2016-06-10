@@ -29,9 +29,15 @@
 //    ConditionalBonusEffect.AddToHitModifier(15, eHit_Crit, 'magnetic');
 //    ConditionalBonusEffect.AddToHitModifier(20, eHit_Crit, 'beam');
 //
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
 //  DEPENDENCIES
 //
-//  This class requires XMBEffect_Extended. It does not require XModBase/Classes/.
+//  Core
+//  XMBEffect_Extended.uc
 //---------------------------------------------------------------------------------------
 
 class XMBEffect_ConditionalBonus extends XMBEffect_Extended;

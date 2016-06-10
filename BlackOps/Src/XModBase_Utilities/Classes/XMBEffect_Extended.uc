@@ -8,10 +8,14 @@
 //  IMPORTANT NOTE: If you override GetToHitModifiers in a derived class of this, don't
 //  forget to call super.GetToHitModifiers().
 //
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
 //  DEPENDENCIES
 //
-//  This class only depends on XMBEffectInterface. However, if the classes in 
-//  XModBase/Classes/ are available, it will use a more efficient implementation.
+//  Core
 //---------------------------------------------------------------------------------------
 class XMBEffect_Extended extends X2Effect_Persistent implements(XMBEffectInterface);
 
