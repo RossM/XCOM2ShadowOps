@@ -2232,6 +2232,9 @@
     <Content Include="Src\XModBase_Interfaces\Classes\XMBOverrideInterface.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_AbilityName.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_Dead.uc">
       <SubType>Content</SubType>
     </Content>

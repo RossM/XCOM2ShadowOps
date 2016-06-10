@@ -2,7 +2,9 @@
 //  FILE:    XMBCondition_ReactionFire.uc
 //  AUTHOR:  xylthixlm
 //
-//  A condition that requires that an attack be considered reaction fire.
+//  A condition that requires that an attack be considered reaction fire. This is
+//  intended for use with persistent effects that check conditions, such as
+//  XMBEffect_ConditionalBonus.
 //
 //  USAGE
 //
