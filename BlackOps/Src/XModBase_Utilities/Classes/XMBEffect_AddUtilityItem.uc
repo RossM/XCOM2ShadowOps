@@ -63,6 +63,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	// No items to merge with, so create the item
 	ItemState = EquipmentTemplate.CreateInstanceFromTemplate(NewGameState);
 	ItemState.Ammo = BaseCharges;
+	ItemState.Quantity = 0;  // Flag as not a real item
 	NewGameState.AddStateObject(ItemState);
 
 	// Temporarily turn off equipment restrictions so we can add the item to the unit's inventory
