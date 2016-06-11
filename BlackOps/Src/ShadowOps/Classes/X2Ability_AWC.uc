@@ -177,40 +177,13 @@ static function X2AbilityTemplate HitAndRun()
 
 static function X2AbilityTemplate HitAndRunTrigger()
 {
-	local X2AbilityTemplate						Template;
-	local X2Effect_GrantActionPoints            Effect;
-	local X2AbilityTrigger_EventListener		EventListener;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HitAndRunTrigger');
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-
-	EventListener = new class'X2AbilityTrigger_EventListener';
-	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
-	EventListener.ListenerData.EventID = 'HitAndRun';
-	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
-	EventListener.ListenerData.Filter = eFilter_Unit;
-	Template.AbilityTriggers.AddItem(EventListener);
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	local X2Effect_GrantActionPoints Effect;
 
 	Effect = new class'X2Effect_GrantActionPoints';
 	Effect.NumActionPoints = 1;
 	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bShowActivation = true;
-	Template.bSkipFireAction = true;
-
-	return Template;
+	return SelfTargetTrigger('ShadowOps_HitAndRunTrigger', "img:///UILibrary_BlackOps.UIPerk_AWC", Effect, 'HitAndRun', true);
 }
 
 static function X2AbilityTemplate DevilsLuck()

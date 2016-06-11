@@ -401,42 +401,21 @@ static function X2AbilityTemplate Assassin()
 
 static function X2AbilityTemplate AssassinTrigger()
 {
-	local X2AbilityTemplate						Template;
-	local X2Effect_RangerStealth                StealthEffect;
-	local X2AbilityTrigger_EventListener		EventListener;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AssassinTrigger');
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_executioner";
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-
-	EventListener = new class'X2AbilityTrigger_EventListener';
-	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
-	EventListener.ListenerData.EventID = 'Assassin';
-	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
-	EventListener.ListenerData.Filter = eFilter_Unit;
-	Template.AbilityTriggers.AddItem(EventListener);
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
+	local X2AbilityTemplate Template;
+	local X2Effect_RangerStealth StealthEffect;
 
 	StealthEffect = new class'X2Effect_RangerStealth_BO';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
-	Template.AddTargetEffect(StealthEffect);
+
+	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_PerkIcons.UIPerk_executioner", StealthEffect, 'Assassin');
+
+	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
 	Template.AddTargetEffect(class'X2Effect_Spotted'.static.CreateUnspottedEffect());
 
 	Template.ActivationSpeech = 'ActivateConcealment';
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bSkipFireAction = true;
 
 	return Template;
 }

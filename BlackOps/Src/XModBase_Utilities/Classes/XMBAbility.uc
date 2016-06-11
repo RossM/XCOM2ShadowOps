@@ -59,6 +59,40 @@ static function X2AbilityTemplate Passive(name DataName, string IconImage, bool 
 	return Template;
 }
 
+static function X2AbilityTemplate SelfTargetTrigger(name DataName, string IconImage, X2Effect Effect, name EventID, optional bool bShowActivation = false)
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityTrigger_EventListener		EventListener;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, DataName);
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+	Template.IconImage = IconImage;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = EventID;
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bShowActivation = bShowActivation;
+	Template.bSkipFireAction = true;
+
+	return Template;
+}
+
 simulated static function EffectFlyOver_Visualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
 {
 	local X2Action_PlaySoundAndFlyOver	SoundAndFlyOver;
