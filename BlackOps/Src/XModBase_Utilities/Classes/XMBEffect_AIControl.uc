@@ -29,6 +29,11 @@ function static UpdateAIControl()
 
 	History = `XCOMHISTORY;
 
+	`BATTLE.SetTimer(0.1f, false, nameof(UpdateAIControl));
+
+	if (!`BEHAVIORTREEMGR.IsReady())
+		return;
+
     foreach History.IterateByClassType(class'XComGameState_Effect', EffectState)
 	{
 		AIControlEffect = XMBEffect_AIControl(EffectState.GetX2Effect());
@@ -40,7 +45,6 @@ function static UpdateAIControl()
 			kBehavior = XGUnit(`XCOMHISTORY.GetVisualizer(UnitState.ObjectID)).m_kBehavior;
 			if (kBehavior != None && !kBehavior.IsInState('Inactive'))
 			{
-				`BATTLE.SetTimer(0.1f, false, nameof(UpdateAIControl));
 				continue;
 			}
 
@@ -61,14 +65,7 @@ function static EventListenerReturn AIControlListener(Object EventData, Object E
 
 function bool AIControlEffectTicked(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_Effect kNewEffectState, XComGameState NewGameState, bool FirstApplication)
 {
-	local XComGameState_Unit UnitState;
-
-	UnitState = XComGameState_Unit(NewGameState.GetGameStateForObjectId(ApplyEffectParameters.TargetStateObjectRef.ObjectID));	
-
-	if (UnitState.IsMindControlled())
-		return false;
-
-	UnitState.AutoRunBehaviorTree(BehaviorTreeName);
+	UpdateAIControl();
 
 	return false;
 }
