@@ -1,4 +1,4 @@
-class XMBEffect_AIControl extends X2Effect_Persistent;
+class X2Effect_AIControl extends X2Effect_Persistent;
 
 var name BehaviorTreeName;
 
@@ -24,7 +24,7 @@ function static UpdateAIControl()
 	local XComGameState_Unit UnitState;
 	local XComGameState_Effect EffectState;
 	local XComGameStateHistory History;
-	local XMBEffect_AIControl AIControlEffect;
+	local X2Effect_AIControl AIControlEffect;
 	local XGAIBehavior kBehavior;
 
 	History = `XCOMHISTORY;
@@ -36,7 +36,7 @@ function static UpdateAIControl()
 
     foreach History.IterateByClassType(class'XComGameState_Effect', EffectState)
 	{
-		AIControlEffect = XMBEffect_AIControl(EffectState.GetX2Effect());
+		AIControlEffect = X2Effect_AIControl(EffectState.GetX2Effect());
 
 		if (AIControlEffect != none)
 		{

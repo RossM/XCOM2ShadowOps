@@ -286,7 +286,7 @@ static function X2AbilityTemplate Rage()
 	local X2Effect_Implacable			ImplacableEffect;
 	local X2Effect_Untouchable			UntouchableEffect;
 	local X2Effect_Serial				SerialEffect;
-	local XMBEffect_AIControl			RageEffect;
+	local X2Effect_AIControl			RageEffect;
 	local X2AbilityTemplateManager		AbilityTemplateManager;
 	local X2AbilityCharges              Charges;
 	local X2AbilityCost_Charges         ChargeCost;
@@ -321,7 +321,7 @@ static function X2AbilityTemplate Rage()
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
 
-	RageEffect = new class'XMBEffect_AIControl';
+	RageEffect = new class'X2Effect_AIControl';
 	RageEffect.EffectName = 'Rage';
 	RageEffect.BehaviorTreeName = 'ShadowOps_Rage';
 	RageEffect.EffectAddedFn = Rage_EffectAdded;
