@@ -105,11 +105,27 @@ static function X2AbilityTemplate SelfTargetTrigger(name DataName, string IconIm
 	return Template;
 }
 
+static function X2AbilityCost_ActionPoints ActionPointCost(EActionPointCost Cost)
+{
+	local X2AbilityCost_ActionPoints			AbilityCost;
+
+	AbilityCost = new class'X2AbilityCost_ActionPoints';
+	switch (Cost)
+	{
+	case eCost_Free:				AbilityCost.iNumPoints = 1; AbilityCost.bFreeCost = true; break;
+	case eCost_Single:				AbilityCost.iNumPoints = 1; break;
+	case eCost_Weapon:				AbilityCost.iNumPoints = 0; AbilityCost.bAddWeaponTypicalCost = true; break;
+	case eCost_SingleConsumeAll:	AbilityCost.iNumPoints = 1; AbilityCost.bConsumeAllPoints = true; break;
+	case eCost_WeaponConsumeAll:	AbilityCost.iNumPoints = 0; AbilityCost.bAddWeaponTypicalCost = true; AbilityCost.bConsumeAllPoints = true; break;
+	}
+
+	return AbilityCost;
+}
+
 static function X2AbilityTemplate SelfTargetActivated(name DataName, string IconImage, bool bCrossClassEligible, X2Effect Effect, int ShotHUDPriority, optional bool bShowActivation = false, optional EActionPointCost Cost = eCost_Single, optional int Cooldown = 0)
 {
 	local X2AbilityTemplate						Template;
 	local X2AbilityCooldown                     AbilityCooldown;
-	local X2AbilityCost_ActionPoints			ActionPointCost;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, DataName);
 
@@ -132,16 +148,7 @@ static function X2AbilityTemplate SelfTargetActivated(name DataName, string Icon
 		Template.AbilityCooldown = AbilityCooldown;
 	}
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	switch (Cost)
-	{
-	case eCost_Free:				ActionPointCost.iNumPoints = 1; ActionPointCost.bFreeCost = true; break;
-	case eCost_Single:				ActionPointCost.iNumPoints = 1; break;
-	case eCost_Weapon:				ActionPointCost.iNumPoints = 0; ActionPointCost.bAddWeaponTypicalCost = true; break;
-	case eCost_SingleConsumeAll:	ActionPointCost.iNumPoints = 1; ActionPointCost.bConsumeAllPoints = true; break;
-	case eCost_WeaponConsumeAll:	ActionPointCost.iNumPoints = 0; ActionPointCost.bAddWeaponTypicalCost = true; ActionPointCost.bConsumeAllPoints = true; break;
-	}
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(Cost));
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
