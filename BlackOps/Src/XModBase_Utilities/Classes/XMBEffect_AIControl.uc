@@ -6,25 +6,39 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
 	local X2EventManager EventMgr;
 	local Object ListenerObj;
+	local XComGameState_BattleData BattleData;
+
+	// We use BattleData for the listener obj because it is unique and removed at the end of the battle
+	BattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
 
 	EventMgr = `XEVENTMGR;
 
-	// This does not work because the registration is lost if you save+reload during tactical play.
-	ListenerObj = self;
+	ListenerObj = BattleData;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AIControlListener, ELD_OnVisualizationBlockCompleted);	
 	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', AIControlListener, ELD_OnVisualizationBlockCompleted);	
 }
 
-function EventListenerReturn AIControlListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function static EventListenerReturn AIControlListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
 	local XComGameState_Unit UnitState;
+	local XComGameState_Effect EffectState;
+	local XComGameStateHistory History;
+	local XMBEffect_AIControl AIControlEffect;
 
-    foreach `XCOMHISTORY.IterateByClassType(class'XComGameState_Unit', UnitState)
+	History = `XCOMHISTORY;
+
+    foreach History.IterateByClassType(class'XComGameState_Effect', EffectState)
 	{
-		if (UnitState.ActionPoints.Length > 0 && UnitState.AffectedByEffectNames.Find(EffectName) != INDEX_NONE && 
-			!UnitState.IsMindControlled() && !`BEHAVIORTREEMGR.IsQueued(UnitState.ObjectID))	
+		AIControlEffect = XMBEffect_AIControl(EffectState.GetX2Effect());
+
+		if (AIControlEffect != none)
 		{
-			UnitState.AutoRunBehaviorTree(BehaviorTreeName);
+			UnitState = XComGameState_Unit(History.GetGameStateForObjectId(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
+
+			if (UnitState.ActionPoints.Length > 0 && !UnitState.IsMindControlled() && !`BEHAVIORTREEMGR.IsQueued(UnitState.ObjectID))	
+			{
+				UnitState.AutoRunBehaviorTree(AIControlEffect.BehaviorTreeName);
+			}
 		}
 	}
 
