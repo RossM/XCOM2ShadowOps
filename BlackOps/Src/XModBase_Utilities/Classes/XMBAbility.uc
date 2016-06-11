@@ -32,6 +32,7 @@ enum EActionPointCost
 	eCost_SingleConsumeAll,
 	eCost_Weapon,
 	eCost_WeaponConsumeAll,
+	eCost_Overwatch,
 };
 
 var const X2Condition FullCoverCondition, HalfCoverCondition, NoCoverCondition, FlankedCondition;
@@ -117,6 +118,7 @@ static function X2AbilityCost_ActionPoints ActionPointCost(EActionPointCost Cost
 	case eCost_Weapon:				AbilityCost.iNumPoints = 0; AbilityCost.bAddWeaponTypicalCost = true; break;
 	case eCost_SingleConsumeAll:	AbilityCost.iNumPoints = 1; AbilityCost.bConsumeAllPoints = true; break;
 	case eCost_WeaponConsumeAll:	AbilityCost.iNumPoints = 0; AbilityCost.bAddWeaponTypicalCost = true; AbilityCost.bConsumeAllPoints = true; break;
+	case eCost_Overwatch:			AbilityCost.iNumPoints = 1; AbilityCost.bConsumeAllPoints = true; AbilityCost.bFreeCost = true; break;
 	}
 
 	return AbilityCost;

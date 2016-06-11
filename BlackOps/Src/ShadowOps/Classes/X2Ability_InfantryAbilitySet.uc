@@ -90,7 +90,6 @@ static function BandolierPurchased(XComGameState NewGameState, XComGameState_Uni
 static function X2AbilityTemplate SwapAmmo()
 {
 	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Condition_UnitProperty          ShooterPropertyCondition;
 	local X2Condition_SwapAmmo				WeaponCondition;
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
@@ -99,8 +98,7 @@ static function X2AbilityTemplate SwapAmmo()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SwapAmmo');
 	
 	Template.bDontDisplayInAbilitySummary = true;
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
 	ShooterPropertyCondition = new class'X2Condition_UnitProperty';	
 	ShooterPropertyCondition.ExcludeDead = true;                    //Can't reload while dead
@@ -131,7 +129,6 @@ static function X2AbilityTemplate SwapAmmo()
 	Template.BuildNewGameStateFn = SwapAmmo_BuildGameState;
 	Template.BuildVisualizationFn = class'X2Ability_DefaultAbilitySet'.static.ReloadAbility_BuildVisualization;
 
-	ActionPointCost.iNumPoints = 1;
 	Template.Hostility = eHostility_Neutral;
 
 	Template.CinescriptCameraType="GenericAccentCam";
@@ -289,7 +286,7 @@ static function X2AbilityTemplate AlwaysReadyTrigger()
 static function X2AbilityTemplate FullAuto()
 {
 	local X2AbilityTemplate					Template;
-	local X2AbilityCost_ActionPoints		ActionPointCost;
+	local X2AbilityCost_ActionPoints		AbilityActionPointCost;
 	local X2AbilityCost_Ammo				AmmoCost;
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 	local X2AbilityCooldown                 Cooldown;
@@ -306,10 +303,10 @@ static function X2AbilityTemplate FullAuto()
 	Template.bUsesFiringCamera = true;
 	Template.CinescriptCameraType = "StandardGunFiring";	
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = default.FullAutoActions;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	AbilityActionPointCost = new class'X2AbilityCost_ActionPoints';
+	AbilityActionPointCost.iNumPoints = default.FullAutoActions;
+	AbilityActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(AbilityActionPointCost);
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.FullAutoCooldown;
@@ -424,7 +421,6 @@ static function X2AbilityTemplate ZoneOfControl()
 {
 	local X2AbilityTemplate             Template;
 	local X2AbilityCooldown             Cooldown;
-	local X2AbilityCost_ActionPoints    ActionPointCost;
 	local X2Effect_ReserveActionPoints  ReservePointsEffect;
 	local X2Condition_UnitEffects           SuppressedCondition;
 
@@ -439,11 +435,7 @@ static function X2AbilityTemplate ZoneOfControl()
 	Template.Hostility = eHostility_Defensive;
 	Template.AbilityConfirmSound = "Unreal2DSounds_OverWatch";
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;   //  this will guarantee the unit has at least 1 action point
-	ActionPointCost.bFreeCost = true;           //  ReserveActionPoints effect will take all action points away
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Overwatch));
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
@@ -666,7 +658,6 @@ static function X2AbilityTemplate Flush()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Condition_Visibility            VisibilityCondition;
 	local X2Condition_UnitProperty			PropertyCondition;
 	local X2Condition_CanActivateAbility	AbilityCondition;
@@ -719,12 +710,7 @@ static function X2AbilityTemplate Flush()
 	// Only at single targets that are in range.
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 
-	// Action Point
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);	
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));	
 
 	// Ammo
 	AmmoCost = new class'X2AbilityCost_Ammo';	
@@ -883,7 +869,6 @@ static function X2AbilityTemplate RifleSuppression()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ReserveActionPoints      ReserveActionPointsEffect;
 	local X2Effect_Suppression              SuppressionEffect;
 
@@ -895,10 +880,7 @@ static function X2AbilityTemplate RifleSuppression()
 	AmmoCost.iAmmo = 2;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.bConsumeAllPoints = true;   //  this will guarantee the unit has at least 1 action point
-	ActionPointCost.bFreeCost = true;           //  ReserveActionPoints effect will take all action points away
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Overwatch));
 	
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	

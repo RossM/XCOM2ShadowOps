@@ -255,7 +255,7 @@ static function X2AbilityTemplate SnakeBlood()
 static function X2AbilityTemplate Rage()
 {
 	local X2AbilityTemplate				Template, EffectTemplate;
-	local X2AbilityCost_ActionPoints    ActionPointCost;
+	local X2AbilityCost_ActionPoints    AbilityActionPointCost;
 	local X2Effect_Implacable			ImplacableEffect;
 	local X2Effect_Untouchable			UntouchableEffect;
 	local X2Effect_Serial				SerialEffect;
@@ -284,10 +284,10 @@ static function X2AbilityTemplate Rage()
 	ChargeCost.NumCharges = 1;
 	Template.AbilityCosts.AddItem(ChargeCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 2;
-	ActionPointCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	AbilityActionPointCost = new class'X2AbilityCost_ActionPoints';
+	AbilityActionPointCost.iNumPoints = 2;
+	AbilityActionPointCost.bFreeCost = true;
+	Template.AbilityCosts.AddItem(AbilityActionPointCost);
 
 	Template.AbilityToHitCalc = default.DeadEye;
 

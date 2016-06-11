@@ -76,7 +76,6 @@ static function X2AbilityTemplate SnapShotOverwatch()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ReserveActionPoints      ReserveActionPointsEffect;
 	local array<name>                       SkipExclusions;
 	local X2Effect_CoveringFire             CoveringFireEffect;
@@ -93,11 +92,7 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	AmmoCost.bFreeCost = true;                  //  ammo is consumed by the shot, not by this, but this should verify ammo is available
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;
-	ActionPointCost.bFreeCost = true;           //  ReserveActionPoints effect will take all action points away
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Overwatch));
 	
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
@@ -162,7 +157,6 @@ static function X2AbilityTemplate SnapShotOverwatch()
 static function X2DataTemplate HunterMark()
 {
 	local X2AbilityTemplate Template;
-	local X2AbilityCost_ActionPoints ActionPointCost;
 	local X2Condition_UnitProperty UnitPropertyCondition;
 	local X2Condition_Visibility TargetVisibilityCondition;
 	local X2Condition_UnitEffects UnitEffectsCondition;
@@ -184,10 +178,7 @@ static function X2DataTemplate HunterMark()
 	Cooldown.iNumTurns = default.HunterMarkCooldown;
 	Template.AbilityCooldown = Cooldown;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
 	// Stay concealed while using
 	Template.ConcealmentRule = eConceal_Always;
@@ -338,7 +329,6 @@ static function X2AbilityTemplate LowProfile()
 static function X2AbilityTemplate Sprint()
 {
 	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityCooldown                 Cooldown;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2AbilityTargetStyle              TargetStyle;
@@ -351,10 +341,7 @@ static function X2AbilityTemplate Sprint()
 	Template.Hostility = eHostility_Neutral;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Free));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.SprintCooldown;
@@ -443,7 +430,6 @@ static function X2AbilityTemplate Fade()
 static function X2AbilityTemplate SliceAndDice()
 {
 	local X2AbilityTemplate                 Template;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityToHitCalc_StandardMelee  StandardMelee;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityCooldown                 Cooldown;
@@ -461,10 +447,7 @@ static function X2AbilityTemplate SliceAndDice()
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilityConfirmSound = "TacticalUI_SwordConfirm";
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_SingleConsumeAll));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.SliceAndDiceCooldown;
@@ -736,7 +719,6 @@ static function X2AbilityTemplate Bullseye()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
 	local X2Condition_Visibility			TargetVisibilityCondition;
@@ -770,12 +752,7 @@ static function X2AbilityTemplate Bullseye()
 	// Only at single targets that are in range.
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 
-	// Action Point
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);	
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));	
 
 	// Ammo
 	AmmoCost = new class'X2AbilityCost_Ammo';	

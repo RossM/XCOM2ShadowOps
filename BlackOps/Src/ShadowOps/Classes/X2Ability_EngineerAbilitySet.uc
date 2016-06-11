@@ -72,7 +72,6 @@ static function X2AbilityTemplate Breach()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityTarget_Cursor            CursorTarget;
 	local XMBAbilityMultiTarget_SoldierBonusRadius       RadiusMultiTarget;
@@ -98,11 +97,7 @@ static function X2AbilityTemplate Breach()
 	AmmoCost.iAmmo = default.BreachAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.BreachCooldown;
@@ -153,7 +148,6 @@ static function X2AbilityTemplate ShotgunBreach()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityTarget_Cursor            CursorTarget;
 	local XMBAbilityMultiTarget_SoldierBonusRadius       RadiusMultiTarget;
@@ -178,11 +172,7 @@ static function X2AbilityTemplate ShotgunBreach()
 	AmmoCost.iAmmo = default.BreachAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.BreachCooldown;
@@ -235,7 +225,6 @@ static function X2AbilityTemplate ShotgunBreach()
 static function X2AbilityTemplate Fastball()
 {
 	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityCooldown                 Cooldown;
 	local X2Effect_Persistent				FastballEffect;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
@@ -250,10 +239,7 @@ static function X2AbilityTemplate Fastball()
 	Template.Hostility = eHostility_Neutral;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Free));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.FastballCooldown;
@@ -334,7 +320,6 @@ static function X2AbilityTemplate FractureAbility()
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 	local X2Condition_Visibility            TargetVisibilityCondition;
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fracture');
 
@@ -362,11 +347,7 @@ static function X2AbilityTemplate FractureAbility()
 	AmmoCost.iAmmo = default.FractureAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
 
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
@@ -651,7 +632,7 @@ static function X2AbilityTemplate MovingTarget()
 static function X2AbilityTemplate Entrench()
 {
 	local X2AbilityTemplate                 Template;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2AbilityCost_ActionPoints        AbilityActionPointCost;
 	local X2Condition_UnitProperty          PropertyCondition;
 	local X2Effect_Entrench				    PersistentStatChangeEffect;
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
@@ -670,11 +651,9 @@ static function X2AbilityTemplate Entrench()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = class'X2Ability_DefaultAbilitySet'.static.HunkerDownAbility_BuildVisualization;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;
-	ActionPointCost.AllowedTypes.AddItem(class'X2CharacterTemplateManager'.default.DeepCoverActionPoint);
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	AbilityActionPointCost = ActionPointCost(eCost_SingleConsumeAll);
+	AbilityActionPointCost.AllowedTypes.AddItem(class'X2CharacterTemplateManager'.default.DeepCoverActionPoint);
+	Template.AbilityCosts.AddItem(AbilityActionPointCost);
 	
 	PropertyCondition = new class'X2Condition_UnitProperty';	
 	PropertyCondition.ExcludeDead = true;                           // Can't hunkerdown while dead
