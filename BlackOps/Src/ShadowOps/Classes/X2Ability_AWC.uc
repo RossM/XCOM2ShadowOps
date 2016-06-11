@@ -13,6 +13,8 @@ var config int PyromaniacDamageBonus;
 var config int SnakeBloodDodgeBonus;
 var config int RageDuration, RageCharges;
 
+var config array<name> HitAndRunExcludedAbilities;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -24,6 +26,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Weaponmaster());
 	Templates.AddItem(AbsolutelyCritical());
 	Templates.AddItem(HitAndRun());
+	Templates.AddItem(HitAndRunTrigger());
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Lightfoot());
 	Templates.AddItem(Pyromaniac());
@@ -146,11 +149,68 @@ static function X2AbilityTemplate AbsolutelyCritical()
 
 static function X2AbilityTemplate HitAndRun()
 {
-	local X2Effect_HitAndRun                    Effect;
+	local X2AbilityTemplate Template;
+	local XMBEffect_AbilityTriggered Effect;
+	local XMBCondition_AbilityCost CostCondition;
+	local XMBCondition_AbilityName NameCondition;
 
-	Effect = new class'X2Effect_HitAndRun';
+	Effect = new class'XMBEffect_AbilityTriggered';
+	Effect.EffectName = 'HitAndRun';
+	Effect.TriggeredEvent = 'HitAndRun';
 
-	return Passive('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	CostCondition = new class'XMBCondition_AbilityCost';
+	CostCondition.bRequireMaximumCost = true;
+	CostCondition.MaximumCost = 1;
+	CostCondition.bRequireMinimumPointsSpent = true;
+	CostCondition.MinimumPointsSpent = 2;
+	Effect.AbilityTargetConditions.AddItem(CostCondition);
+
+	NameCondition = new class'XMBCondition_AbilityName';
+	NameCondition.ExcludeAbilityNames = default.HitAndRunExcludedAbilities;
+	Effect.AbilityTargetConditions.AddItem(NameCondition);
+
+	Template = Passive('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	Template.AdditionalAbilities.AddItem('ShadowOps_HitAndRunTrigger');
+
+	return Template;
+}
+
+static function X2AbilityTemplate HitAndRunTrigger()
+{
+	local X2AbilityTemplate						Template;
+	local X2Effect_GrantActionPoints            Effect;
+	local X2AbilityTrigger_EventListener		EventListener;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HitAndRunTrigger');
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'HitAndRun';
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
+	Effect = new class'X2Effect_GrantActionPoints';
+	Effect.NumActionPoints = 1;
+	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bShowActivation = true;
+	Template.bSkipFireAction = true;
+
+	return Template;
 }
 
 static function X2AbilityTemplate DevilsLuck()

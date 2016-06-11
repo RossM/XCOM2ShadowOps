@@ -221,9 +221,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_HeavyArmor.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_HitAndRun.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Entrench.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2230,6 +2227,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBOverrideInterface.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_AbilityCost.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_AbilityHitResult.uc">
