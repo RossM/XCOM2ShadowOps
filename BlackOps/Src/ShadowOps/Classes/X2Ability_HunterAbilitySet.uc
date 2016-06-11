@@ -406,7 +406,6 @@ static function X2AbilityTemplate AssassinTrigger()
 
 	StealthEffect = new class'X2Effect_RangerStealth_BO';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
-	StealthEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 
 	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_PerkIcons.UIPerk_executioner", StealthEffect, 'Assassin');

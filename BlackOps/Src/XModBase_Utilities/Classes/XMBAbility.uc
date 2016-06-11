@@ -29,7 +29,9 @@ enum EActionPointCost
 {
 	eCost_Free,
 	eCost_Single,
-	eCost_ConsumeAll
+	eCost_SingleConsumeAll,
+	eCost_Weapon,
+	eCost_WeaponConsumeAll,
 };
 
 var const X2Condition FullCoverCondition, HalfCoverCondition, NoCoverCondition, FlankedCondition;
@@ -90,6 +92,9 @@ static function X2AbilityTemplate SelfTargetTrigger(name DataName, string IconIm
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
+	if (X2Effect_Persistent(Effect) != none)
+		X2Effect_Persistent(Effect).SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true, , Template.AbilitySourceName);
+
 	Template.AddTargetEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -128,9 +133,14 @@ static function X2AbilityTemplate SelfTargetActivated(name DataName, string Icon
 	}
 
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = Cost == eCost_Free;
-	ActionPointCost.bConsumeAllPoints = Cost == eCost_ConsumeAll;
+	switch (Cost)
+	{
+	case eCost_Free:				ActionPointCost.iNumPoints = 1; ActionPointCost.bFreeCost = true; break;
+	case eCost_Single:				ActionPointCost.iNumPoints = 1; break;
+	case eCost_Weapon:				ActionPointCost.iNumPoints = 0; ActionPointCost.bAddWeaponTypicalCost = true; break;
+	case eCost_SingleConsumeAll:	ActionPointCost.iNumPoints = 1; ActionPointCost.bConsumeAllPoints = true; break;
+	case eCost_WeaponConsumeAll:	ActionPointCost.iNumPoints = 0; ActionPointCost.bAddWeaponTypicalCost = true; ActionPointCost.bConsumeAllPoints = true; break;
+	}
 	Template.AbilityCosts.AddItem(ActionPointCost);
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
