@@ -439,36 +439,8 @@ static function X2AbilityTemplate Aggression()
 
 static function X2AbilityTemplate SlamFire()
 {
-	local X2AbilityTemplate				Template;
-	local X2AbilityCooldown				Cooldown;
-	local XMBEffect_AbilityCostRefund             SlamFireEffect;
-	local X2AbilityCost_ActionPoints    ActionPointCost;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SlamFire');
-
-	// Icon Properties
-	Template.DisplayTargetHitChance = false;
-	Template.AbilitySourceName = 'eAbilitySource_Perk';                                       // color of the icon
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_slamfire";
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
-	Template.Hostility = eHostility_Neutral;
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
-
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.SlamFireCooldown;
-	Template.AbilityCooldown = Cooldown;
-
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	class'X2Ability_RangerAbilitySet'.static.SuperKillRestrictions(Template, 'Serial_SuperKillCheck');
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	Template.AddShooterEffectExclusions();
+	local X2AbilityTemplate					Template;
+	local XMBEffect_AbilityCostRefund       SlamFireEffect;
 
 	SlamFireEffect = new class'XMBEffect_AbilityCostRefund';
 	SlamFireEffect.EffectName = 'SlamFire';
@@ -476,19 +448,11 @@ static function X2AbilityTemplate SlamFire()
 	SlamFireEffect.bRequireAbilityWeapon = true;
 	SlamFireEffect.AbilityTargetConditions.AddItem(default.CritCondition);
 	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
-	SlamFireEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true, , Template.AbilitySourceName);
-	Template.AddTargetEffect(SlamFireEffect);
 
-	Template.AbilityTargetStyle = default.SelfTarget;	
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-	
-	Template.bShowActivation = true;
-	Template.bSkipFireAction = true;
+	Template = SelfTargetActivated('ShadowOps_SlamFire', "img:///UILibrary_BlackOps.UIPerk_slamfire", true, SlamFireEffect, class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY, false, eCost_Free, default.SlamFireCooldown);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-
-	Template.bCrossClassEligible = true;
+	class'X2Ability_RangerAbilitySet'.static.SuperKillRestrictions(Template, 'Serial_SuperKillCheck');
+	Template.AddShooterEffectExclusions();
 
 	return Template;
 }

@@ -25,6 +25,13 @@
 
 class XMBAbility extends X2Ability;
 
+enum EActionPointCost
+{
+	eCost_Free,
+	eCost_Single,
+	eCost_ConsumeAll
+};
+
 var const X2Condition FullCoverCondition, HalfCoverCondition, NoCoverCondition, FlankedCondition;
 var const X2Condition HeightAdvantageCondition, HeightDisadvantageCondition;
 var const X2Condition ReactionFireCondition;
@@ -92,6 +99,57 @@ static function X2AbilityTemplate SelfTargetTrigger(name DataName, string IconIm
 
 	return Template;
 }
+
+static function X2AbilityTemplate SelfTargetActivated(name DataName, string IconImage, bool bCrossClassEligible, X2Effect Effect, int ShotHUDPriority, optional bool bShowActivation = false, optional EActionPointCost Cost = eCost_Single, optional int Cooldown = 0)
+{
+	local X2AbilityTemplate						Template;
+	local X2AbilityCooldown                     AbilityCooldown;
+	local X2AbilityCost_ActionPoints			ActionPointCost;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, DataName);
+
+	Template.DisplayTargetHitChance = false;
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.Hostility = eHostility_Neutral;
+	Template.IconImage = IconImage;
+	Template.ShotHUDPriority = ShotHUDPriority;
+	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	if (Cooldown > 0)
+	{
+		AbilityCooldown = new class'X2AbilityCooldown';
+		AbilityCooldown.iNumTurns = Cooldown;
+		Template.AbilityCooldown = AbilityCooldown;
+	}
+
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bFreeCost = Cost == eCost_Free;
+	ActionPointCost.bConsumeAllPoints = Cost == eCost_ConsumeAll;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
+	if (X2Effect_Persistent(Effect) != none)
+		X2Effect_Persistent(Effect).SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true, , Template.AbilitySourceName);
+
+	Template.AddTargetEffect(Effect);
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bShowActivation = bShowActivation;
+	Template.bSkipFireAction = true;
+
+	Template.bCrossClassEligible = bCrossClassEligible;
+
+	return Template;
+}
+
 
 simulated static function EffectFlyOver_Visualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
 {

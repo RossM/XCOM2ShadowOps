@@ -424,47 +424,19 @@ static function X2AbilityTemplate Fade()
 {
 	local X2AbilityTemplate						Template;
 	local X2Effect_Fade							StealthEffect;
-	local X2AbilityCooldown                     Cooldown;
-	local X2AbilityCost_ActionPoints			ActionPointCost;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fade');
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fade";
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.FadeCooldown;
-	Template.AbilityCooldown = Cooldown;
-
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
 	StealthEffect = new class'X2Effect_Fade';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
-	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
-	Template.AddTargetEffect(StealthEffect);
 
+	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_BlackOps.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, false, eCost_Single, default.FadeCooldown);
+
+	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
+
+	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
+	Template.AddShooterEffectExclusions();
 	Template.AddTargetEffect(class'X2Effect_Spotted'.static.CreateUnspottedEffect());
-
 	Template.ActivationSpeech = 'ActivateConcealment';
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bSkipFireAction = true;
-
-	Template.bCrossClassEligible = true;
 
 	return Template;
 }
