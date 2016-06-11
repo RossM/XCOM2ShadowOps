@@ -29,27 +29,32 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
 	local X2EventManager EventMgr;
 	local Object ListenerObj;
+	local XComGameState_Unit UnitState;
 
 	EventMgr = `XEVENTMGR;
 
-	ListenerObj = self;
-	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AbilityActivatedListener, ELD_OnStateSubmitted);	
+	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
+
+	ListenerObj = UnitState;
+	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AbilityActivatedListener, ELD_OnStateSubmitted,, UnitState);	
 }
 
-function EventListenerReturn AbilityActivatedListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+function static EventListenerReturn AbilityActivatedListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
 	local XComGameState_Ability AbilityState;
 	local XComGameStateContext_Ability AbilityContext;
 	local XComGameState_Unit SourceUnit, TargetUnit;
 	local XComGameState_Effect EffectState;
 	local X2EventManager EventMgr;
+	local StateObjectReference EffectRef;
+	local XComGameStateHistory History;
+	local XMBEffect_AbilityTriggered AbilityTriggeredEffect;
+
+	History = `XCOMHISTORY;
+	EventMgr = `XEVENTMGR;
 
 	SourceUnit = XComGameState_Unit(EventSource);
 	if (SourceUnit == none)
-		return ELR_NoInterrupt;
-
-	EffectState = SourceUnit.GetUnitAffectedByEffectState(EffectName);
-	if (EffectState == none || EffectState.GetX2Effect() != self)
 		return ELR_NoInterrupt;
 
 	AbilityState = XComGameState_Ability(EventData);
@@ -64,11 +69,22 @@ function EventListenerReturn AbilityActivatedListener(Object EventData, Object E
 	if (TargetUnit == none || TargetUnit.ObjectID == SourceUnit.ObjectID)
 		return ELR_NoInterrupt;
 
-	if (ValidateAttack(EffectState, SourceUnit, TargetUnit, AbilityState) != 'AA_Success')
-		return ELR_NoInterrupt;
+	foreach SourceUnit.AffectedByEffects(EffectRef)
+	{
+		EffectState = XComGameState_Effect(GameState.GetGameStateForObjectId(EffectRef.ObjectID));
+		if (EffectState == none)
+			EffectState = XComGameState_Effect(History.GetGameStateForObjectId(EffectRef.ObjectID));
+		
+		AbilityTriggeredEffect = XMBEffect_AbilityTriggered(EffectState.GetX2Effect());
 
-	EventMgr = `XEVENTMGR;
-	EventMgr.TriggerEvent(TriggeredEvent, AbilityState, SourceUnit, GameState);
+		if (AbilityTriggeredEffect != none)
+		{
+			if (AbilityTriggeredEffect.ValidateAttack(EffectState, SourceUnit, TargetUnit, AbilityState) == 'AA_Success')
+			{
+				EventMgr.TriggerEvent(AbilityTriggeredEffect.TriggeredEvent, AbilityState, SourceUnit, GameState);
+			}
+		}
+	}
 
 	return ELR_NoInterrupt;
 }

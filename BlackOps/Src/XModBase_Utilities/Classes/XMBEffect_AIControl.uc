@@ -9,6 +9,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 
 	EventMgr = `XEVENTMGR;
 
+	// This does not work because the registration is lost if you save+reload during tactical play.
 	ListenerObj = self;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AIControlListener, ELD_OnVisualizationBlockCompleted);	
 	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', AIControlListener, ELD_OnVisualizationBlockCompleted);	

@@ -40,9 +40,6 @@ event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameSta
 
 	GameState = kAbility.GetParentGameState();
 
-	`Log(`location);
-	`RedScreen(`location);
-
 	AbilityContext = XComGameStateContext_Ability(GameState.GetContext());
 	if (AbilityContext == none)
 		return 'AA_ValueCheckFailed';
@@ -102,7 +99,6 @@ event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameSta
 	}
 
 	`Log(kAbility.GetMyTemplateName() @ "Cost:" @ Cost @ "Spent:" @ PointsSpent);
-	`RedScreen(kAbility.GetMyTemplateName() @ "Cost:" @ Cost @ "Spent:" @ PointsSpent);
 
 	if (bRequireMinimumPointsSpent && PointsSpent < MinimumPointsSpent)
 		return 'AA_ValueCheckFailed';
