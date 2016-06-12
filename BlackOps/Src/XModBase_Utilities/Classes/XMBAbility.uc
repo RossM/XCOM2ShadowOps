@@ -198,11 +198,11 @@ static function X2AbilityTemplate SelfTargetActivated(name DataName, string Icon
 	Template.bSkipFireAction = true;
 
 	Template.bCrossClassEligible = bCrossClassEligible;
-// Set this as the VisualizationFn on an X2Effect_Persistent to have it display a flyover over the target when applied.
+
 	return Template;
 }
 
-
+// Set this as the VisualizationFn on an X2Effect_Persistent to have it display a flyover over the target when applied.
 simulated static function EffectFlyOver_Visualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
 {
 	local X2Action_PlaySoundAndFlyOver	SoundAndFlyOver;
