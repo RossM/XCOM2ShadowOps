@@ -16,7 +16,6 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	ListenerObj = BattleData;
 	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AIControlListener, ELD_OnVisualizationBlockCompleted, 0);	
 	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', AIControlListener, ELD_OnVisualizationBlockCompleted, 0);	
-	EventMgr.RegisterForEvent(ListenerObj, 'PlayerTurnBegun', AIControlListener, ELD_OnVisualizationBlockCompleted, 0);	
 }
 
 function static UpdateAIControl()
