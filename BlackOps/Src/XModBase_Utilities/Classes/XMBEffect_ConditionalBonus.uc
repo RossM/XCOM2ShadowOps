@@ -42,6 +42,11 @@
 
 class XMBEffect_ConditionalBonus extends XMBEffect_Extended;
 
+
+/////////////////////
+// Data structures //
+/////////////////////
+
 struct ExtShotModifierInfo
 {
 	var ShotModifierInfo ModInfo;
@@ -50,23 +55,24 @@ struct ExtShotModifierInfo
 };
 
 
-/////////////
-// Bonuses //
-/////////////
+//////////////////////
+// Bonus properties //
+//////////////////////
 
 var array<ExtShotModifierInfo> Modifiers;	// Modifiers to attacks made by (or at) the unit with the effect
 
 var bool bIgnoreSquadsightPenalty;			// Negates squadsight penalties. Requires XMBEffect_Extended.
 
 
-////////////////
-// Conditions //
-////////////////
+//////////////////////////
+// Condition properties //
+//////////////////////////
 
 var bool bRequireAbilityWeapon;				// Require that the weapon used matches the weapon associated with the ability
 
 var array<X2Condition> SelfConditions;		// Conditions applied to the unit with the effect (usually the shooter)
 var array<X2Condition> OtherConditions;		// Conditions applied to the other unit involved (usually the target)
+
 
 /////////////
 // Setters //
@@ -374,11 +380,6 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 
 	return true;
 }
-
-
-/////////////
-// Utility //
-/////////////
 
 // From XMBEffectInterface. Checks whether this effect handles a particular ability tag, such as
 // "<Ability:ToHit/>", and gets the value of the tag if it's handled. This function knows which

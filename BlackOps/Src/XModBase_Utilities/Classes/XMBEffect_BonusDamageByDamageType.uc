@@ -19,8 +19,24 @@
 //---------------------------------------------------------------------------------------
 class XMBEffect_BonusDamageByDamageType extends X2Effect_Persistent config(GameData_SoldierSkills);
 
-var array<name> RequiredDamageTypes;
+
+//////////////////////
+// Bonus properties //
+//////////////////////
+
 var int DamageBonus;
+
+
+//////////////////////////
+// Condition properties //
+//////////////////////////
+
+var array<name> RequiredDamageTypes;
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, optional XComGameState NewGameState)
 {

@@ -17,11 +17,28 @@
 //---------------------------------------------------------------------------------------
 class XMBEffect_AbilityCostRefund extends X2Effect_Persistent config(GameData_SoldierSkills);
 
-var bool bRequireAbilityWeapon;
+
+///////////////////////
+// Effect properties //
+///////////////////////
+
 var name TriggeredEvent;
+var bool bShowFlyOver;
+
+
+//////////////////////////
+// Condition properties //
+//////////////////////////
+
+var bool bRequireAbilityWeapon;
 
 var array<X2Condition> AbilityTargetConditions;
 var array<X2Condition> AbilityShooterConditions;
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
@@ -34,7 +51,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	EffectObj = EffectGameState;
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
-	if (TriggeredEvent != '')
+	if (bShowFlyOver && TriggeredEvent != '')
 		EventMgr.RegisterForEvent(EffectObj, TriggeredEvent, EffectGameState.TriggerAbilityFlyover, ELD_OnStateSubmitted, , UnitState);
 }
 
@@ -118,4 +135,5 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 DefaultProperties
 {
 	DuplicateResponse = eDupe_Ignore
+	bShowFlyOver = true
 }

@@ -4,7 +4,7 @@
 //
 //  Adds a utility item to a unit's inventory. The utility item granted only lasts for
 //  the duration of the battle. Optionally, can also grant bonus charges to any equipped
-//  items of the same kind already in the unit inventory.
+//  items of the same kind already in the unit's inventory.
 //
 //  USAGE
 //
@@ -19,10 +19,20 @@
 //---------------------------------------------------------------------------------------
 class XMBEffect_AddUtilityItem extends X2Effect_Persistent;
 
+
+///////////////////////
+// Effect properties //
+///////////////////////
+
 var name DataName;
 var int BaseCharges;		// Number of charges of the item to add.
 var int BonusCharges;		// Number of extra charges of the item to add for each item of that type already in the inventory.
 var bool bUseHighestAvailableUpgrade;	// If true, grant the highest available upgraded version of the item.
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {

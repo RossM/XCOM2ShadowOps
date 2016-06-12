@@ -20,9 +20,9 @@
 class XMBEffect_Extended extends X2Effect_Persistent implements(XMBEffectInterface);
 
 
-///////////////////
-// New functions //
-///////////////////
+////////////////////////////
+// Overrideable functions //
+////////////////////////////
 
 // If true, the unit with this effect is immune to critical hits.
 function bool CannotBeCrit(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState) { return false; }
@@ -45,12 +45,11 @@ function GetFinalToHitModifiers(XComGameState_Effect EffectState, XComGameState_
 // Implementation //
 ////////////////////
 
-// XMBEffectInterface
-
+// From XMBEffectInterface
 function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
 function bool GetExtValue(LWTuple Data) { return false; }
 
-// XMBAbilityToHitCalc_StandardAim uses this to find which modifiers it should apply.
+// From XMBEffectInterface. XMBAbilityToHitCalc_StandardAim uses this to find which modifiers it should apply.
 function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, ShotBreakdown ShotBreakdown, out array<ShotModifierInfo> ShotModifiers)
 {
 	switch (Type)
@@ -69,8 +68,7 @@ function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComG
 	return false;
 }
 
-// X2Effect_Persistent
-
+// From X2Effect_Persistent
 function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {
 	local X2AbilityTemplate AbilityTemplate;
@@ -142,6 +140,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 	ToHitCalc.HitModifiers.Length = 0;
 }
 
+// From X2Effect_Persistent
 function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {
 	local X2AbilityTemplate AbilityTemplate;

@@ -21,13 +21,28 @@
 //---------------------------------------------------------------------------------------
 class XMBEffect_ToHitModifierByRange extends X2Effect_Persistent;
 
+
+//////////////////////
+// Bonus properties //
+//////////////////////
+
 var array<int> RangeAccuracy;
 var EAbilityHitResult ModType;
+
+
+//////////////////////////
+// Condition properties //
+//////////////////////////
 
 var bool bRequireAbilityWeapon;
 
 var array<X2Condition> AbilityTargetConditions;
 var array<X2Condition> AbilityShooterConditions;
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, out array<ShotModifierInfo> ShotModifiers)
 {

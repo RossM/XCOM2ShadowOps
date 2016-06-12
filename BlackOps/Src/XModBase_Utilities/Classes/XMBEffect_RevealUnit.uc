@@ -20,8 +20,18 @@
 //---------------------------------------------------------------------------------------
 class XMBEffect_RevealUnit extends X2Effect_Persistent;
 
+
+///////////////////////
+// Effect properties //
+///////////////////////
+
 var float LookAtDuration;
 var bool bRevealConcealed;
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 function EffectAddedCallback(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState)
 {

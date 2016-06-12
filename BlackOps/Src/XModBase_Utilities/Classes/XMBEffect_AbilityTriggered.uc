@@ -19,11 +19,27 @@
 //---------------------------------------------------------------------------------------
 class XMBEffect_AbilityTriggered extends X2Effect_Persistent;
 
-var bool bRequireAbilityWeapon;
+
+///////////////////////
+// Effect properties //
+///////////////////////
+
 var name TriggeredEvent;
+
+
+//////////////////////////
+// Condition properties //
+//////////////////////////
+
+var bool bRequireAbilityWeapon;
 
 var array<X2Condition> AbilityTargetConditions;
 var array<X2Condition> AbilityShooterConditions;
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
@@ -57,6 +73,8 @@ function static EventListenerReturn AbilityActivatedListener(Object EventData, O
 	if (SourceUnit == none)
 		return ELR_NoInterrupt;
 
+	// XComGameState_Unit already has an AbilityActivated listener, which we replace. Call the 
+	// handler so it can take care of important things like breaking concealment.
 	SourceUnit.OnAbilityActivated(EventData, EventSource, GameState, EventID);
 
 	AbilityState = XComGameState_Ability(EventData);
