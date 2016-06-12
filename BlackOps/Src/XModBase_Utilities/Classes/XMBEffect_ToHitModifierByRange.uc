@@ -1,3 +1,24 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_AddItemChargesBySlot.uc
+//  AUTHOR:  xylthixlm
+//
+//  Adds a to-hit modifier to attacks based on the range between the attacker and the
+//  target. This can also check conditions on the attacker and/or target, like
+//  XMBEffect_ConditionalBonus does. Usually this is used to add a special range-based
+//  bonus to a weapon or ammo, in which case you should set bRequireAbilityWeapon to
+//  true.
+//
+//  USAGE
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBEffect_ToHitModifierByRange extends X2Effect_Persistent;
 
 var array<int> RangeAccuracy;

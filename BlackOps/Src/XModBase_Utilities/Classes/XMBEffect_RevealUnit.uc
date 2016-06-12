@@ -1,3 +1,22 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_RevealUnit.uc
+//  AUTHOR:  xylthixlm
+//
+//  Causes a unit to be revealed on the map, and plays a flyover over any revealed
+//  units when applied. Optionally also reveals hidden Faceless and Chryssalids. If the
+//  revealed unit is in the fog of war it may be difficult to actually see.
+//
+//  USAGE
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBEffect_RevealUnit extends X2Effect_Persistent;
 
 var float LookAtDuration;

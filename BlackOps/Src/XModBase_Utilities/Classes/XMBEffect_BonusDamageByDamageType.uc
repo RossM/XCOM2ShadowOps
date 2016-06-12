@@ -1,3 +1,22 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    BonusDamageByDamageType.uc
+//  AUTHOR:  xylthixlm
+//
+//  Adds bonus damage to damaging effects with a certain damage type or types. This
+//  counts both effects which actually deal that damage type, and things like grenades
+//  and ammo which actually do generic damage but apply a typed damage-over-time effect.
+//
+//  USAGE
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBEffect_BonusDamageByDamageType extends X2Effect_Persistent config(GameData_SoldierSkills);
 
 var array<name> RequiredDamageTypes;
@@ -44,7 +63,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 		}
 	}
 
-	// Firebombs don't actually deal fire damage, they deal explosive damage. Check for the X2Effect_Burning.
+	// Grenades and special ammo don't actually deal elemental damage. Check for the damage over time.
 	foreach WeaponEffects(Effect)
 	{
 		PersistentEffect = X2Effect_Persistent(Effect);
@@ -60,7 +79,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 		}
 	}
 
-	// Check for effects that actually deal fire damage. This includes the burning on-tick effect.
+	// Check for effects that actually deal elemental damage. This includes damage over time on-tick effects.
 	ApplyDamageEffect = X2Effect_ApplyWeaponDamage(class'X2Effect'.static.GetX2Effect(AppliedData.EffectRef));
 	if (ApplyDamageEffect != none)
 	{

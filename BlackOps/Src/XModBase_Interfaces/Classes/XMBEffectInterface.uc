@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------
-//  FILE:    XMBEffect_Extended.uc
+//  FILE:    XMBEffectInterface.uc
 //  AUTHOR:  xylthixlm
 //
 //  This provides an interface which X2Effect subclasses can implement to interact with
