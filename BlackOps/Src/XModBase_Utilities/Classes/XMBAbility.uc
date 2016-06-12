@@ -25,23 +25,48 @@
 
 class XMBAbility extends X2Ability;
 
+// Used by ActionPointCost and related functions
 enum EActionPointCost
 {
-	eCost_Free,
-	eCost_Single,
-	eCost_SingleConsumeAll,
-	eCost_Weapon,
-	eCost_WeaponConsumeAll,
-	eCost_Overwatch,
+	eCost_Free,					// No action point cost, but you must have an action point available.
+	eCost_Single,				// Costs a single action point.
+	eCost_SingleConsumeAll,		// Costs a single action point, ends the turn.
+	eCost_Double,				// Costs two action points.
+	eCost_DoubleConsumeAll,		// Costs two action points, ends the turn.
+	eCost_Weapon,				// Costs as much as a weapon shot.
+	eCost_WeaponConsumeAll,		// Costs as much as a weapon shot, ends the turn.
+	eCost_Overwatch,			// No action point cost, but displays as ending the turn. Used for 
+								// abilities that have an X2Effect_ReserveActionPoints or similar.
 };
 
-var const X2Condition FullCoverCondition, HalfCoverCondition, NoCoverCondition, FlankedCondition;
-var const X2Condition HeightAdvantageCondition, HeightDisadvantageCondition;
-var const X2Condition ReactionFireCondition;
-var const X2Condition DeadCondition;
-var const X2Condition HitCondition, MissCondition, CritCondition, GrazeCondition;
+// Predefined conditions for use with XMBEffect_ConditionalBonus and similar effects.
 
-// Helper method for quickly defining a non-pure passive.
+// Cover conditions. Only work as target conditions, not shooter conditions.
+var const XMBCondition_CoverType FullCoverCondition;				// The target is in full cover
+var const XMBCondition_CoverType HalfCoverCondition;				// The target is in half cover
+var const XMBCondition_CoverType NoCoverCondition;					// The target is not in cover
+var const XMBCondition_CoverType FlankedCondition;					// The target is not in cover and can be flanked
+
+// Height advantage conditions. Only work as target conditions, not shooter conditions.
+var const XMBCondition_HeightAdvantage HeightAdvantageCondition;	// The target is higher than the shooter
+var const XMBCondition_HeightAdvantage HeightDisadvantageCondition;	// The target is lower than the shooter
+
+// Reaction fire conditions. Only work as target conditions, not shooter conditions. Nonsensical
+// if used on an X2AbilityTemplate, since it will always be either reaction fire or not.
+var const XMBCondition_ReactionFire ReactionFireCondition;			// The attack is reaction fire
+
+// Liveness conditions. Work as target or shooter conditions.
+var const XMBCondition_Dead DeadCondition;							// The target is dead
+
+// Result conditions. Only work as target conditions, not shooter conditions. Doesn't work if used
+// on an X2AbilityTemplate since the hit result isn't known when selecting targets.
+var const XMBCondition_AbilityHitResult HitCondition;				// The ability hits (including crits and grazes)
+var const XMBCondition_AbilityHitResult MissCondition;				// The ability misses
+var const XMBCondition_AbilityHitResult CritCondition;				// The ability crits
+var const XMBCondition_AbilityHitResult GrazeCondition;				// The ability grazes
+
+// Helper method for quickly defining a non-pure passive. Works like PurePassive, except it also 
+// takes an X2Effect_Persistent.
 static function X2AbilityTemplate Passive(name DataName, string IconImage, bool bCrossClassEligible, X2Effect_Persistent Effect)
 {
 	local X2AbilityTemplate						Template;
@@ -69,6 +94,10 @@ static function X2AbilityTemplate Passive(name DataName, string IconImage, bool 
 	return Template;
 }
 
+// Helper function for quickly defining an ability that triggers on an event and targets the unit 
+// itself. Note that this does not add a passive ability icon, so you should pair it with a
+// Passive or PurePassive that defines the icon. The IconImage argument is still used as the icon
+// for effects created by this ability.
 static function X2AbilityTemplate SelfTargetTrigger(name DataName, string IconImage, X2Effect Effect, name EventID, optional bool bShowActivation = false)
 {
 	local X2AbilityTemplate						Template;
@@ -106,6 +135,7 @@ static function X2AbilityTemplate SelfTargetTrigger(name DataName, string IconIm
 	return Template;
 }
 
+// Helper function for creating an X2AbilityCost_ActionPoints.
 static function X2AbilityCost_ActionPoints ActionPointCost(EActionPointCost Cost)
 {
 	local X2AbilityCost_ActionPoints			AbilityCost;
@@ -115,8 +145,10 @@ static function X2AbilityCost_ActionPoints ActionPointCost(EActionPointCost Cost
 	{
 	case eCost_Free:				AbilityCost.iNumPoints = 1; AbilityCost.bFreeCost = true; break;
 	case eCost_Single:				AbilityCost.iNumPoints = 1; break;
-	case eCost_Weapon:				AbilityCost.iNumPoints = 0; AbilityCost.bAddWeaponTypicalCost = true; break;
 	case eCost_SingleConsumeAll:	AbilityCost.iNumPoints = 1; AbilityCost.bConsumeAllPoints = true; break;
+	case eCost_Double:				AbilityCost.iNumPoints = 2; break;
+	case eCost_DoubleConsumeAll:	AbilityCost.iNumPoints = 2; AbilityCost.bConsumeAllPoints = true; break;
+	case eCost_Weapon:				AbilityCost.iNumPoints = 0; AbilityCost.bAddWeaponTypicalCost = true; break;
 	case eCost_WeaponConsumeAll:	AbilityCost.iNumPoints = 0; AbilityCost.bAddWeaponTypicalCost = true; AbilityCost.bConsumeAllPoints = true; break;
 	case eCost_Overwatch:			AbilityCost.iNumPoints = 1; AbilityCost.bConsumeAllPoints = true; AbilityCost.bFreeCost = true; break;
 	}
@@ -124,6 +156,7 @@ static function X2AbilityCost_ActionPoints ActionPointCost(EActionPointCost Cost
 	return AbilityCost;
 }
 
+// Helper function for creating an activated ability that targets the user.
 static function X2AbilityTemplate SelfTargetActivated(name DataName, string IconImage, bool bCrossClassEligible, X2Effect Effect, int ShotHUDPriority, optional bool bShowActivation = false, optional EActionPointCost Cost = eCost_Single, optional int Cooldown = 0)
 {
 	local X2AbilityTemplate						Template;
@@ -165,7 +198,7 @@ static function X2AbilityTemplate SelfTargetActivated(name DataName, string Icon
 	Template.bSkipFireAction = true;
 
 	Template.bCrossClassEligible = bCrossClassEligible;
-
+// Set this as the VisualizationFn on an X2Effect_Persistent to have it display a flyover over the target when applied.
 	return Template;
 }
 
@@ -190,6 +223,7 @@ simulated static function EffectFlyOver_Visualization(XComGameState VisualizeGam
 		SoundAndFlyOver.SetSoundAndFlyOverParameters(None, AbilityTemplate.LocFlyOverText, '', MessageColor, AbilityTemplate.IconImage);
 	}
 }
+
 
 defaultproperties
 {
