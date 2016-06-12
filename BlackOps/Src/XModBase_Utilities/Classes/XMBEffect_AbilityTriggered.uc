@@ -57,6 +57,8 @@ function static EventListenerReturn AbilityActivatedListener(Object EventData, O
 	if (SourceUnit == none)
 		return ELR_NoInterrupt;
 
+	SourceUnit.OnAbilityActivated(EventData, EventSource, GameState, EventID);
+
 	AbilityState = XComGameState_Ability(EventData);
 	if (AbilityState == none)
 		return ELR_NoInterrupt;
