@@ -81,16 +81,6 @@ function static EventListenerReturn AIControlListener(Object EventData, Object E
 
 function bool AIControlEffectTicked(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_Effect kNewEffectState, XComGameState NewGameState, bool FirstApplication)
 {
-	local array<StateObjectReference> VisibleUnits;
-	local XComGameState_Unit UnitState;
-
-	UnitState = XComGameState_Unit(NewGameState.GetGameStateForObjectID(kNewEffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
-
-	// When there are no visible enemies, cancel Rage
-	class'X2TacticalVisibilityHelpers'.static.GetAllVisibleEnemiesForPlayer(UnitState.ControllingPlayer.ObjectID, VisibleUnits);
-	if(VisibleUnits.Length == 0)
-		return true;
-
 	UpdateAIControl();
 
 	return false;
