@@ -14,9 +14,9 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	EventMgr = `XEVENTMGR;
 
 	ListenerObj = BattleData;
-	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AIControlListener, ELD_OnVisualizationBlockCompleted);	
-	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', AIControlListener, ELD_OnVisualizationBlockCompleted);	
-	EventMgr.RegisterForEvent(ListenerObj, 'PlayerTurnBegun', AIControlListener, ELD_OnVisualizationBlockCompleted);	
+	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', AIControlListener, ELD_OnVisualizationBlockCompleted, 0);	
+	EventMgr.RegisterForEvent(ListenerObj, 'UnitMoveFinished', AIControlListener, ELD_OnVisualizationBlockCompleted, 0);	
+	EventMgr.RegisterForEvent(ListenerObj, 'PlayerTurnBegun', AIControlListener, ELD_OnVisualizationBlockCompleted, 0);	
 }
 
 function static UpdateAIControl()
@@ -29,35 +29,52 @@ function static UpdateAIControl()
 
 	History = `XCOMHISTORY;
 
-	`BATTLE.SetTimer(0.1f, false, nameof(UpdateAIControl));
-
-	if (!`BEHAVIORTREEMGR.IsReady())
-		return;
-
     foreach History.IterateByClassType(class'XComGameState_Effect', EffectState)
 	{
 		AIControlEffect = X2Effect_AIControl(EffectState.GetX2Effect());
 
 		if (AIControlEffect != none)
 		{
+			if (!`BEHAVIORTREEMGR.IsReady())
+			{
+				`Log("UpdateAiControl: BehaviorTreeMgr not ready, waiting");
+				`BATTLE.SetTimer(0.1f, false, nameof(UpdateAIControl), AIControlEffect);
+				return;
+			}
+
 			UnitState = XComGameState_Unit(History.GetGameStateForObjectId(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
+
+			`Log("UpdateAIControl: Considering" @ UnitState);
 
 			kBehavior = XGUnit(`XCOMHISTORY.GetVisualizer(UnitState.ObjectID)).m_kBehavior;
 			if (kBehavior != None && !kBehavior.IsInState('Inactive'))
 			{
+				`Log("UpdateAIControl: Unit already active");
 				continue;
 			}
 
-			if (UnitState.ActionPoints.Length > 0 && !UnitState.IsMindControlled() && !`BEHAVIORTREEMGR.IsQueued(UnitState.ObjectID))	
+			if (UnitState.ActionPoints.Length == 0)
 			{
-				UnitState.AutoRunBehaviorTree(AIControlEffect.BehaviorTreeName);
+				`Log("UpdateAIControl: Unit has no actions");
+				continue;
 			}
+			if (UnitState.IsMindControlled())
+			{
+				`Log("UpdateAIControl: Unit is mind controlled");
+				continue;
+			}
+
+			`Log("UpdateAIControl: Running behavior tree" @ AIControlEffect.BehaviorTreeName);
+			UnitState.AutoRunBehaviorTree(AIControlEffect.BehaviorTreeName);
+			return;
 		}
 	}
 }
 
 function static EventListenerReturn AIControlListener(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
+	`Log("AIControlListener("$EventID$")");
+
 	UpdateAIControl();
 
 	return ELR_NoInterrupt;
