@@ -30,7 +30,7 @@ var bool bShowFlyOver;								// Show a flyover when this effect refunds an abil
 // Condition properties //
 //////////////////////////
 
-var bool bRequireAbilityWeapon;						// Require that the weapon used in the ability match the weapon associated with this effect.
+var bool bRequireAbilityWeapon;						// Require that the weapon or ammo used in the ability match the item associated with this effect.
 
 var array<X2Condition> AbilityTargetConditions;		// Conditions on the target of the ability being refunded.
 var array<X2Condition> AbilityShooterConditions;	// Conditions on the shooter of the ability being refunded.

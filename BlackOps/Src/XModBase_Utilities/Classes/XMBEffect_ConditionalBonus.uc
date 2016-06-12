@@ -59,19 +59,19 @@ struct ExtShotModifierInfo
 // Bonus properties //
 //////////////////////
 
-var array<ExtShotModifierInfo> Modifiers;	// Modifiers to attacks made by (or at) the unit with the effect
+var array<ExtShotModifierInfo> Modifiers;			// Modifiers to attacks made by (or at) the unit with the effect
 
-var bool bIgnoreSquadsightPenalty;			// Negates squadsight penalties. Requires XMBEffect_Extended.
+var bool bIgnoreSquadsightPenalty;					// Negates squadsight penalties. Requires XMBEffect_Extended.
 
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
 
-var bool bRequireAbilityWeapon;				// Require that the weapon used matches the weapon associated with the ability
+var bool bRequireAbilityWeapon;						// Require that the weapon or ammo used in the ability match the item associated with this effect.
 
-var array<X2Condition> SelfConditions;		// Conditions applied to the unit with the effect (usually the shooter)
-var array<X2Condition> OtherConditions;		// Conditions applied to the other unit involved (usually the target)
+var array<X2Condition> SelfConditions;				// Conditions applied to the unit with the effect (usually the shooter)
+var array<X2Condition> OtherConditions;				// Conditions applied to the other unit involved (usually the target)
 
 
 /////////////

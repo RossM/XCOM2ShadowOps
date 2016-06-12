@@ -35,7 +35,7 @@ var EAbilityHitResult ModType;						// The type of modifier to apply. Defaults t
 // Condition properties //
 //////////////////////////
 
-var bool bRequireAbilityWeapon;						// Require that the weapon used in the ability match the weapon associated with this effect.
+var bool bRequireAbilityWeapon;						// Require that the weapon or ammo used in the ability match the item associated with this effect.
 
 var array<X2Condition> AbilityTargetConditions;		// Conditions on the target of the ability being modified.
 var array<X2Condition> AbilityShooterConditions;	// Conditions on the shooter of the ability being modified.
