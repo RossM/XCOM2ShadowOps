@@ -1,3 +1,20 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_AddItemChargesBySlot.uc
+//  AUTHOR:  xylthixlm
+//
+//  Adds extra charges to equipped items based on the slots those items are in.
+//
+//  USAGE
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBEffect_AddItemChargesBySlot extends X2Effect;
 
 var array<EInventorySlot> ApplyToSlots;

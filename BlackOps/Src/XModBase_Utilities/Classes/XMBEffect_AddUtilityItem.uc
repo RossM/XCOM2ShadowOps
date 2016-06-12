@@ -1,8 +1,28 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_AddUtilityItem.uc
+//  AUTHOR:  xylthixlm
+//
+//  Adds a utility item to a unit's inventory. The utility item granted only lasts for
+//  the duration of the battle. Optionally, can also grant bonus charges to any equipped
+//  items of the same kind already in the unit inventory.
+//
+//  USAGE
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBEffect_AddUtilityItem extends X2Effect_Persistent;
 
 var name DataName;
 var int BaseCharges;		// Number of charges of the item to add.
 var int BonusCharges;		// Number of extra charges of the item to add for each item of that type already in the inventory.
+var bool bUseHighestAvailableUpgrade;	// If true, grant the highest available upgraded version of the item.
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
@@ -32,7 +52,8 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	ItemTemplate = ItemTemplateMgr.FindItemTemplate(DataName);
 	
 	// Use the highest upgraded available version of the item
-	`XCOMHQ.UpdateItemTemplateToHighestAvailableUpgrade(ItemTemplate);
+	if (bUseHighestAvailableUpgrade)
+		`XCOMHQ.UpdateItemTemplateToHighestAvailableUpgrade(ItemTemplate);
 
 	EquipmentTemplate = X2EquipmentTemplate(ItemTemplate);
 	if (EquipmentTemplate == none)
@@ -171,4 +192,5 @@ function UnitEndedTacticalPlay(XComGameState_Effect EffectState, XComGameState_U
 defaultproperties
 {
 	BaseCharges = 1
+	bUseHighestAvailableUpgrade = true
 }
