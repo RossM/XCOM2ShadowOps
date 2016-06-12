@@ -2,8 +2,9 @@
 //  FILE:    XMBEffect_RevealUnit.uc
 //  AUTHOR:  xylthixlm
 //
-//  Causes a unit to be revealed on the map, and plays a flyover over any revealed
-//  units when applied. Optionally also reveals hidden Faceless and Chryssalids. If the
+//  Causes a unit to be visible on the map, and plays a flyover over any revealed
+//  enemy units when applied. Does not grant squadsight targeting over the revealed
+//  units. Optionally this can also unmask hidden Faceless and Chryssalids. If a
 //  revealed unit is in the fog of war it may be difficult to actually see.
 //
 //  USAGE
