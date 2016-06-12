@@ -24,17 +24,17 @@ class XMBEffect_AbilityTriggered extends X2Effect_Persistent;
 // Effect properties //
 ///////////////////////
 
-var name TriggeredEvent;
+var name TriggeredEvent;							// An event to trigger when the unit uses an ability meeting the conditions.
 
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
 
-var bool bRequireAbilityWeapon;
+var bool bRequireAbilityWeapon;						// Require that the weapon used in the ability match the weapon associated with this effect.
 
-var array<X2Condition> AbilityTargetConditions;
-var array<X2Condition> AbilityShooterConditions;
+var array<X2Condition> AbilityTargetConditions;		// Conditions on the target of the ability being checked.
+var array<X2Condition> AbilityShooterConditions;	// Conditions on the shooter of the ability being checked.
 
 
 ////////////////////

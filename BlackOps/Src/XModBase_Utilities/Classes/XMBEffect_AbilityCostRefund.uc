@@ -22,18 +22,18 @@ class XMBEffect_AbilityCostRefund extends X2Effect_Persistent config(GameData_So
 // Effect properties //
 ///////////////////////
 
-var name TriggeredEvent;
-var bool bShowFlyOver;
+var name TriggeredEvent;							// An event that will be triggered when this effect refunds an ability cost.
+var bool bShowFlyOver;								// Show a flyover when this effect refunds an ability cost. Requires TriggeredEvent to be set.
 
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
 
-var bool bRequireAbilityWeapon;
+var bool bRequireAbilityWeapon;						// Require that the weapon used in the ability match the weapon associated with this effect.
 
-var array<X2Condition> AbilityTargetConditions;
-var array<X2Condition> AbilityShooterConditions;
+var array<X2Condition> AbilityTargetConditions;		// Conditions on the target of the ability being refunded.
+var array<X2Condition> AbilityShooterConditions;	// Conditions on the shooter of the ability being refunded.
 
 
 ////////////////////

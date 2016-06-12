@@ -22,14 +22,14 @@ class XMBEffect_AddItemChargesBySlot extends X2Effect;
 // Bonus properties //
 //////////////////////
 
-var int PerItemBonus;
+var int PerItemBonus;									// The number of charges to add for each item in the right slot.
 
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
 
-var array<EInventorySlot> ApplyToSlots;
+var array<EInventorySlot> ApplyToSlots;					// The slot, or slots, to add charges to items in.
 
 
 ////////////////////////////

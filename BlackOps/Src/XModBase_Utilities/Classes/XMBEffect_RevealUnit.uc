@@ -25,8 +25,8 @@ class XMBEffect_RevealUnit extends X2Effect_Persistent;
 // Effect properties //
 ///////////////////////
 
-var float LookAtDuration;
-var bool bRevealConcealed;
+var float LookAtDuration;					// The duration the camera will look at the flyover.
+var bool bRevealConcealed;					// If true, reveal hidden Faceless and burrowed Chryssalids.
 
 
 ////////////////////

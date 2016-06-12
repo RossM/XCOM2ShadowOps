@@ -24,10 +24,10 @@ class XMBEffect_AddUtilityItem extends X2Effect_Persistent;
 // Effect properties //
 ///////////////////////
 
-var name DataName;
-var int BaseCharges;		// Number of charges of the item to add.
-var int BonusCharges;		// Number of extra charges of the item to add for each item of that type already in the inventory.
-var bool bUseHighestAvailableUpgrade;	// If true, grant the highest available upgraded version of the item.
+var name DataName;							// The name of the item template to grant.
+var int BaseCharges;						// Number of charges of the item to add.
+var int BonusCharges;						// Number of extra charges of the item to add for each item of that type already in the inventory.
+var bool bUseHighestAvailableUpgrade;		// If true, grant the highest available upgraded version of the item.
 
 
 ////////////////////

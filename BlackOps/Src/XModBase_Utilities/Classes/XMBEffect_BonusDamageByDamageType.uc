@@ -24,14 +24,25 @@ class XMBEffect_BonusDamageByDamageType extends X2Effect_Persistent config(GameD
 // Bonus properties //
 //////////////////////
 
-var int DamageBonus;
+var int DamageBonus;						// The amount of damage to add per instance of damage.
 
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
 
-var array<name> RequiredDamageTypes;
+var array<name> RequiredDamageTypes;		// Damage types which will have the bonus damage applied.
+
+
+
+////////////////////////////
+// Overrideable functions //
+////////////////////////////
+
+function int GetDamageBonus(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, optional XComGameState NewGameState)
+{
+	return DamageBonus;
+}
 
 
 ////////////////////
@@ -90,7 +101,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 			{ 
 				DamageType = ApplyDamageEffect.EffectDamageValue.DamageType;
 				if (RequiredDamageTypes.Find(DamageType) != INDEX_NONE && !TargetDamageable.IsImmuneToDamage(DamageType))
-					return DamageBonus;
+					return GetDamageBonus(EffectState, Attacker, TargetDamageable, AbilityState, AppliedData, CurrentDamage, NewGameState);
 			}
 		}
 	}
@@ -105,7 +116,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 		{
 			if (RequiredDamageTypes.Find(DamageType) != INDEX_NONE && !TargetDamageable.IsImmuneToDamage(DamageType))
 			{
-				return DamageBonus;
+				return GetDamageBonus(EffectState, Attacker, TargetDamageable, AbilityState, AppliedData, CurrentDamage, NewGameState);
 			}
 		}
 	}

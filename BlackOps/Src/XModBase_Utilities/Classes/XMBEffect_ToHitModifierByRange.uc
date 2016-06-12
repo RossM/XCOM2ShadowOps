@@ -26,18 +26,19 @@ class XMBEffect_ToHitModifierByRange extends X2Effect_Persistent;
 // Bonus properties //
 //////////////////////
 
-var array<int> RangeAccuracy;
-var EAbilityHitResult ModType;
+var array<int> RangeAccuracy;						// The bonus to add, indexed by range (in tiles). For ranges 
+													// beyond the last value the last value will be used.
+var EAbilityHitResult ModType;						// The type of modifier to apply. Defaults to eHit_Success.
 
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
 
-var bool bRequireAbilityWeapon;
+var bool bRequireAbilityWeapon;						// Require that the weapon used in the ability match the weapon associated with this effect.
 
-var array<X2Condition> AbilityTargetConditions;
-var array<X2Condition> AbilityShooterConditions;
+var array<X2Condition> AbilityTargetConditions;		// Conditions on the target of the ability being modified.
+var array<X2Condition> AbilityShooterConditions;	// Conditions on the shooter of the ability being modified.
 
 
 ////////////////////
