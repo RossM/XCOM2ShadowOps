@@ -520,6 +520,12 @@ LocLongDescription="You can take a move action after using a single-action abili
 LocHelpText="You can take a move action after using a single-action ability as your first action that would normally end your turn."
 LocFlyOverText="Hit and Run"
 
+[ShadowOps_HitAndRunTrigger X2AbilityTemplate]
+LocFriendlyName="Hit and Run"
+LocLongDescription="You can take a move action after using a single-action ability as your first action that would normally end your turn. This doesn't apply to abilities that reserve actions for the enemy turn, such as Overwatch and Suppression."
+LocHelpText="You can take a move action after using a single-action ability as your first action that would normally end your turn."
+LocFlyOverText="Hit and Run"
+
 [ShadowOps_DevilsLuck X2AbilityTemplate]
 LocFriendlyName="Devil's Luck"
 LocLongDescription="Your Hit chance is increased by 10% and Crit chance is increased by 20%. These bonuses are doubled when you are flanked or out of cover."

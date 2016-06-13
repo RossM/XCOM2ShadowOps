@@ -76,7 +76,6 @@ static function X2AbilityTemplate SnapShotOverwatch()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ReserveActionPoints      ReserveActionPointsEffect;
 	local array<name>                       SkipExclusions;
 	local X2Effect_CoveringFire             CoveringFireEffect;
@@ -93,11 +92,7 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	AmmoCost.bFreeCost = true;                  //  ammo is consumed by the shot, not by this, but this should verify ammo is available
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;
-	ActionPointCost.bFreeCost = true;           //  ReserveActionPoints effect will take all action points away
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Overwatch));
 	
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
@@ -162,7 +157,6 @@ static function X2AbilityTemplate SnapShotOverwatch()
 static function X2DataTemplate HunterMark()
 {
 	local X2AbilityTemplate Template;
-	local X2AbilityCost_ActionPoints ActionPointCost;
 	local X2Condition_UnitProperty UnitPropertyCondition;
 	local X2Condition_Visibility TargetVisibilityCondition;
 	local X2Condition_UnitEffects UnitEffectsCondition;
@@ -184,10 +178,7 @@ static function X2DataTemplate HunterMark()
 	Cooldown.iNumTurns = default.HunterMarkCooldown;
 	Template.AbilityCooldown = Cooldown;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
 	// Stay concealed while using
 	Template.ConcealmentRule = eConceal_Always;
@@ -247,20 +238,20 @@ static function X2DataTemplate HunterMark()
 	return Template;
 }
 
-static function X2Effect_HunterMarked CreateMarkedEffect(int NumTurns, bool bIsInfinite)
+static function X2Effect_PersistentStatChange CreateMarkedEffect(int NumTurns, bool bIsInfinite)
 {
-	local X2Effect_HunterMarked MarkedEffect;
+	local X2Effect_PersistentStatChange MarkedEffect;
 
-	MarkedEffect = new class 'X2Effect_HunterMarked';
+	MarkedEffect = new class 'X2Effect_PersistentStatChange';
 	MarkedEffect.EffectName = class'X2StatusEffects'.default.MarkedName;
 	MarkedEffect.DuplicateResponse = eDupe_Ignore;
+	MarkedEffect.AddPersistentStatChange(eStat_Defense, -default.HunterMarkHitModifier);
 	MarkedEffect.BuildPersistentEffect(NumTurns, bIsInfinite, true,,eGameRule_PlayerTurnEnd);
 	MarkedEffect.SetDisplayInfo(ePerkBuff_Penalty, class'X2StatusEffects'.default.MarkedFriendlyName, class'X2StatusEffects'.default.MarkedFriendlyDesc, "img:///UILibrary_PerkIcons.UIPerk_mark");
 	MarkedEffect.VisualizationFn = class'X2StatusEffects'.static.MarkedVisualization;
 	MarkedEffect.EffectTickedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationTicked;
 	MarkedEffect.EffectRemovedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationRemoved;
 	MarkedEffect.bRemoveWhenTargetDies = true;
-	MarkedEffect.AccuracyBonus = default.HunterMarkHitModifier;
 
 	return MarkedEffect;
 }
@@ -316,13 +307,9 @@ static function X2AbilityTemplate VitalPoint()
 static function X2AbilityTemplate Precision()
 {
 	local XMBEffect_ConditionalBonus             PrecisionEffect;
-	local XMBCondition_CoverType						Condition;
-
-	Condition = new class'XMBCondition_CoverType';
-	Condition.AllowedCoverTypes.AddItem(CT_Standing);
 
 	PrecisionEffect = new class'XMBEffect_ConditionalBonus';
-	PrecisionEffect.OtherConditions.AddItem(Condition);
+	PrecisionEffect.OtherConditions.AddItem(default.FullCoverCondition);
 	PrecisionEffect.AddToHitModifier(default.PrecisionOffenseBonus);
 
 	return Passive('ShadowOps_Precision', "img:///UILibrary_BlackOps.UIPerk_precision", true, PrecisionEffect);
@@ -331,13 +318,9 @@ static function X2AbilityTemplate Precision()
 static function X2AbilityTemplate LowProfile()
 {
 	local XMBEffect_ConditionalBonus             LowProfileEffect;
-	local XMBCondition_CoverType						Condition;
-
-	Condition = new class'XMBCondition_CoverType';
-	Condition.AllowedCoverTypes.AddItem(CT_MidLevel);
 
 	LowProfileEffect = new class'XMBEffect_ConditionalBonus';
-	LowProfileEffect.SelfConditions.AddItem(Condition);
+	LowProfileEffect.SelfConditions.AddItem(default.HalfCoverCondition);
 	LowProfileEffect.AddToHitAsTargetModifier(-default.LowProfileDefenseBonus);
 
 	return Passive('ShadowOps_LowProfile', "img:///UILibrary_BlackOps.UIPerk_lowprofile", true, LowProfileEffect);
@@ -346,7 +329,6 @@ static function X2AbilityTemplate LowProfile()
 static function X2AbilityTemplate Sprint()
 {
 	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityCooldown                 Cooldown;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2AbilityTargetStyle              TargetStyle;
@@ -359,10 +341,7 @@ static function X2AbilityTemplate Sprint()
 	Template.Hostility = eHostility_Neutral;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Free));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.SprintCooldown;
@@ -394,15 +373,11 @@ static function X2AbilityTemplate Assassin()
 {
 	local X2AbilityTemplate						Template;
 	local XMBEffect_AbilityTriggered						Effect;
-	local XMBCondition_CoverType				Condition;
-
-	Condition = new class'XMBCondition_CoverType';
-	Condition.AllowedCoverTypes.AddItem(CT_None);
 
 	Effect = new class'XMBEffect_AbilityTriggered';
 	Effect.bRequireAbilityWeapon = true;
-	Effect.bRequireKill = true;
-	Effect.AbilityTargetConditions.AddItem(Condition);
+	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
+	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
 
 	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_PerkIcons.UIPerk_executioner", true, Effect);
 	Template.AdditionalAbilities.AddItem('ShadowOps_AssassinTrigger');
@@ -413,42 +388,20 @@ static function X2AbilityTemplate Assassin()
 
 static function X2AbilityTemplate AssassinTrigger()
 {
-	local X2AbilityTemplate						Template;
-	local X2Effect_RangerStealth                StealthEffect;
-	local X2AbilityTrigger_EventListener		EventListener;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_AssassinTrigger');
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_executioner";
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-
-	EventListener = new class'X2AbilityTrigger_EventListener';
-	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
-	EventListener.ListenerData.EventID = 'Assassin';
-	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
-	EventListener.ListenerData.Filter = eFilter_Unit;
-	Template.AbilityTriggers.AddItem(EventListener);
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
+	local X2AbilityTemplate Template;
+	local X2Effect_RangerStealth StealthEffect;
 
 	StealthEffect = new class'X2Effect_RangerStealth_BO';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
-	StealthEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
-	Template.AddTargetEffect(StealthEffect);
+
+	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_PerkIcons.UIPerk_executioner", StealthEffect, 'Assassin');
+
+	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
 	Template.AddTargetEffect(class'X2Effect_Spotted'.static.CreateUnspottedEffect());
 
 	Template.ActivationSpeech = 'ActivateConcealment';
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bSkipFireAction = true;
 
 	return Template;
 }
@@ -457,47 +410,19 @@ static function X2AbilityTemplate Fade()
 {
 	local X2AbilityTemplate						Template;
 	local X2Effect_Fade							StealthEffect;
-	local X2AbilityCooldown                     Cooldown;
-	local X2AbilityCost_ActionPoints			ActionPointCost;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fade');
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fade";
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.FadeCooldown;
-	Template.AbilityCooldown = Cooldown;
-
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
 	StealthEffect = new class'X2Effect_Fade';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
-	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
-	Template.AddTargetEffect(StealthEffect);
 
+	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_BlackOps.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, false, eCost_Single, default.FadeCooldown);
+
+	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
+
+	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
+	Template.AddShooterEffectExclusions();
 	Template.AddTargetEffect(class'X2Effect_Spotted'.static.CreateUnspottedEffect());
-
 	Template.ActivationSpeech = 'ActivateConcealment';
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bSkipFireAction = true;
-
-	Template.bCrossClassEligible = true;
 
 	return Template;
 }
@@ -505,7 +430,6 @@ static function X2AbilityTemplate Fade()
 static function X2AbilityTemplate SliceAndDice()
 {
 	local X2AbilityTemplate                 Template;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityToHitCalc_StandardMelee  StandardMelee;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityCooldown                 Cooldown;
@@ -523,10 +447,7 @@ static function X2AbilityTemplate SliceAndDice()
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilityConfirmSound = "TacticalUI_SwordConfirm";
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_SingleConsumeAll));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.SliceAndDiceCooldown;
@@ -798,7 +719,6 @@ static function X2AbilityTemplate Bullseye()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
 	local X2Condition_Visibility			TargetVisibilityCondition;
@@ -832,12 +752,7 @@ static function X2AbilityTemplate Bullseye()
 	// Only at single targets that are in range.
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 
-	// Action Point
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);	
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));	
 
 	// Ammo
 	AmmoCost = new class'X2AbilityCost_Ammo';	
@@ -924,7 +839,6 @@ static function X2AbilityTemplate FirstStrike()
 static function X2AbilityTemplate DamnGoodGround()
 {
 	local XMBEffect_ConditionalBonus Effect;
-	local XMBCondition_HeightAdvantage Condition;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.EffectName = 'DamnGoodGround';
@@ -932,14 +846,10 @@ static function X2AbilityTemplate DamnGoodGround()
 	Effect.AddToHitAsTargetModifier(-default.DamnGoodGroundDefenseBonus);
 
 	// This condition applies when the unit is the target
-	Condition = new class'XMBCondition_HeightAdvantage';
-	Condition.bRequireHeightAdvantage = true;
-	Effect.SelfConditions.AddItem(Condition);
+	Effect.SelfConditions.AddItem(default.HeightAdvantageCondition);
 
 	// This condition applies when the unit is the attacker
-	Condition = new class'XMBCondition_HeightAdvantage';
-	Condition.bRequireHeightDisadvantage = true;
-	Effect.OtherConditions.AddItem(Condition);
+	Effect.OtherConditions.AddItem(default.HeightDisadvantageCondition);
 
 	return Passive('ShadowOps_DamnGoodGround', "img:///UILibrary_BlackOps.UIPerk_damngoodground", true, Effect);
 }

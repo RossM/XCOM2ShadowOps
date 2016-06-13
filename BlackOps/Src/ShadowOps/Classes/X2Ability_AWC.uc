@@ -13,6 +13,8 @@ var config int PyromaniacDamageBonus;
 var config int SnakeBloodDodgeBonus;
 var config int RageDuration, RageCharges;
 
+var config array<name> HitAndRunExcludedAbilities;
+
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -24,6 +26,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Weaponmaster());
 	Templates.AddItem(AbsolutelyCritical());
 	Templates.AddItem(HitAndRun());
+	Templates.AddItem(HitAndRunTrigger());
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Lightfoot());
 	Templates.AddItem(Pyromaniac());
@@ -136,13 +139,9 @@ static function X2AbilityTemplate Weaponmaster()
 static function X2AbilityTemplate AbsolutelyCritical()
 {
 	local XMBEffect_ConditionalBonus             Effect;
-	local XMBCondition_CoverType						Condition;
-
-	Condition = new class'XMBCondition_CoverType';
-	Condition.AllowedCoverTypes.AddItem(CT_NONE);
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.OtherConditions.AddItem(Condition);
+	Effect.OtherConditions.AddItem(default.NoCoverCondition);
 	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
 
 	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
@@ -150,11 +149,41 @@ static function X2AbilityTemplate AbsolutelyCritical()
 
 static function X2AbilityTemplate HitAndRun()
 {
-	local X2Effect_HitAndRun                    Effect;
+	local X2AbilityTemplate Template;
+	local XMBEffect_AbilityTriggered Effect;
+	local XMBCondition_AbilityCost CostCondition;
+	local XMBCondition_AbilityName NameCondition;
 
-	Effect = new class'X2Effect_HitAndRun';
+	Effect = new class'XMBEffect_AbilityTriggered';
+	Effect.EffectName = 'HitAndRun';
+	Effect.TriggeredEvent = 'HitAndRun';
 
-	return Passive('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	CostCondition = new class'XMBCondition_AbilityCost';
+	CostCondition.bRequireMaximumCost = true;
+	CostCondition.MaximumCost = 1;
+	CostCondition.bRequireMinimumPointsSpent = true;
+	CostCondition.MinimumPointsSpent = 2;
+	Effect.AbilityTargetConditions.AddItem(CostCondition);
+
+	NameCondition = new class'XMBCondition_AbilityName';
+	NameCondition.ExcludeAbilityNames = default.HitAndRunExcludedAbilities;
+	Effect.AbilityTargetConditions.AddItem(NameCondition);
+
+	Template = Passive('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	Template.AdditionalAbilities.AddItem('ShadowOps_HitAndRunTrigger');
+
+	return Template;
+}
+
+static function X2AbilityTemplate HitAndRunTrigger()
+{
+	local X2Effect_GrantActionPoints Effect;
+
+	Effect = new class'X2Effect_GrantActionPoints';
+	Effect.NumActionPoints = 1;
+	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
+
+	return SelfTargetTrigger('ShadowOps_HitAndRunTrigger', "img:///UILibrary_BlackOps.UIPerk_AWC", Effect, 'HitAndRun', true);
 }
 
 static function X2AbilityTemplate DevilsLuck()
@@ -190,6 +219,7 @@ static function X2AbilityTemplate Pyromaniac()
 	local XMBEffect_AddUtilityItem ItemEffect;
 
 	Effect = new class'XMBEffect_BonusDamageByDamageType';
+	Effect.EffectName = 'Pyromaniac';
 	Effect.RequiredDamageTypes.AddItem('fire');
 	Effect.DamageBonus = default.PyromaniacDamageBonus;
 
@@ -225,11 +255,11 @@ static function X2AbilityTemplate SnakeBlood()
 static function X2AbilityTemplate Rage()
 {
 	local X2AbilityTemplate				Template, EffectTemplate;
-	local X2AbilityCost_ActionPoints    ActionPointCost;
+	local X2AbilityCost_ActionPoints    AbilityActionPointCost;
 	local X2Effect_Implacable			ImplacableEffect;
 	local X2Effect_Untouchable			UntouchableEffect;
 	local X2Effect_Serial				SerialEffect;
-	local X2Effect_RunBehaviorTree		BehaviorTreeEffect;
+	local X2Effect_AIControl			RageEffect;
 	local X2AbilityTemplateManager		AbilityTemplateManager;
 	local X2AbilityCharges              Charges;
 	local X2AbilityCost_Charges         ChargeCost;
@@ -254,21 +284,22 @@ static function X2AbilityTemplate Rage()
 	ChargeCost.NumCharges = 1;
 	Template.AbilityCosts.AddItem(ChargeCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 2;
-	ActionPointCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	AbilityActionPointCost = new class'X2AbilityCost_ActionPoints';
+	AbilityActionPointCost.iNumPoints = 2;
+	AbilityActionPointCost.bFreeCost = true;
+	Template.AbilityCosts.AddItem(AbilityActionPointCost);
 
 	Template.AbilityToHitCalc = default.DeadEye;
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
 
-	BehaviorTreeEffect = new class'XMGEffect_AIControl';
-	BehaviorTreeEffect.BehaviorTreeName = 'ShadowOps_Rage';
-	BehaviorTreeEffect.NumActions = 1;
-	BehaviorTreeEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
-	Template.AddTargetEffect(BehaviorTreeEffect);
+	RageEffect = new class'X2Effect_AIControl';
+	RageEffect.EffectName = 'Rage';
+	RageEffect.BehaviorTreeName = 'ShadowOps_Rage';
+	RageEffect.EffectAddedFn = Rage_EffectAdded;
+	RageEffect.BuildPersistentEffect(default.RageDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	Template.AddTargetEffect(RageEffect);
 
 	ImplacableEffect = new class'X2Effect_Implacable';
 	EffectTemplate = AbilityTemplateManager.FindAbilityTemplate('Implacable');
@@ -300,4 +331,48 @@ static function X2AbilityTemplate Rage()
 	Template.bCrossClassEligible = true;
 
 	return Template;
+}
+
+function Rage_EffectAdded(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState)
+{
+	local XComGameState_AIUnitData NewAIUnitData;
+	local XComGameState_Unit NewUnitState;
+	local bool bDataChanged;
+	local AlertAbilityInfo AlertInfo;
+	local Vector PingLocation;
+	local XComGameState_BattleData BattleData;
+
+	NewUnitState = XComGameState_Unit(kNewTargetState);
+
+	// Create an AI alert for the objective location
+
+	BattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
+
+	PingLocation = BattleData.MapData.ObjectiveLocation;
+	AlertInfo.AlertTileLocation = `XWORLD.GetTileCoordinatesFromPosition(PingLocation);
+	AlertInfo.AlertRadius = 500;
+	AlertInfo.AlertUnitSourceID = 0;
+	AlertInfo.AnalyzingHistoryIndex = NewGameState.HistoryIndex;
+
+	// Add AI data with the alert
+
+	NewAIUnitData = XComGameState_AIUnitData(NewGameState.CreateStateObject(class'XComGameState_AIUnitData', NewUnitState.GetAIUnitDataID()));
+	if( NewAIUnitData.m_iUnitObjectID != NewUnitState.ObjectID )
+	{
+		NewAIUnitData.Init(NewUnitState.ObjectID);
+		bDataChanged = true;
+	}
+	if( NewAIUnitData.AddAlertData(NewUnitState.ObjectID, eAC_MapwideAlert_Hostile, AlertInfo, NewGameState) )
+	{
+		bDataChanged = true;
+	}
+
+	if( bDataChanged )
+	{
+		NewGameState.AddStateObject(NewAIUnitData);
+	}
+	else
+	{
+		NewGameState.PurgeGameStateForObjectID(NewAIUnitData.ObjectID);
+	}
 }

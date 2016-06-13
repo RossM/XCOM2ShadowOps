@@ -24,7 +24,7 @@ function bt_status SetDestinationFromAlertData()
 		vDest = m_kBehavior.m_vAlertDataMovementDestination;
 
 		// Always use cover
-		m_kBehavior.GetClosestCoverLocation(vDest, vDest, false);
+		m_kBehavior.GetClosestCoverLocation(vDest, vDest, false, true);
 
 		m_kBehavior.m_vBTDestination = vDest;
 		m_kBehavior.m_bBTDestinationSet = m_kBehavior.m_bAlertDataMovementDestinationSet;

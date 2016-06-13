@@ -2,6 +2,10 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.7.1
+General changes
+  * Compatibility with XModBase 1.0.0
+
 Beta version v0.7.0
 General changes
   * XComModOptions.ini now has options to disable the mod's item and non-class gameplay changes.

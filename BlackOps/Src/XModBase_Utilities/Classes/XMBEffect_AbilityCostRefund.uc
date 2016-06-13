@@ -1,11 +1,44 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_AbilityCostRefund.uc
+//  AUTHOR:  xylthixlm
+//
+//  A persistent effect which causes the action point cost of any ability meeting
+//  certain conditions to be automatically refunded. This can be used to create effects
+//  that work like Serial.
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBEffect_AbilityCostRefund extends X2Effect_Persistent config(GameData_SoldierSkills);
 
-var bool bRequireAbilityWeapon, bRequireKill;
-var array<EAbilityHitResult> AllowedHitResults;
-var name TriggeredEvent;
 
-var array<X2Condition> AbilityTargetConditions;
-var array<X2Condition> AbilityShooterConditions;
+///////////////////////
+// Effect properties //
+///////////////////////
+
+var name TriggeredEvent;							// An event that will be triggered when this effect refunds an ability cost.
+var bool bShowFlyOver;								// Show a flyover when this effect refunds an ability cost. Requires TriggeredEvent to be set.
+
+
+//////////////////////////
+// Condition properties //
+//////////////////////////
+
+var bool bRequireAbilityWeapon;						// Require that the weapon or ammo used in the ability match the item associated with this effect.
+
+var array<X2Condition> AbilityTargetConditions;		// Conditions on the target of the ability being refunded.
+var array<X2Condition> AbilityShooterConditions;	// Conditions on the shooter of the ability being refunded.
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
@@ -18,7 +51,8 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	EffectObj = EffectGameState;
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 
-	EventMgr.RegisterForEvent(EffectObj, 'SlamFire', EffectGameState.TriggerAbilityFlyover, ELD_OnStateSubmitted, , UnitState);
+	if (bShowFlyOver && TriggeredEvent != '')
+		EventMgr.RegisterForEvent(EffectObj, TriggeredEvent, EffectGameState.TriggerAbilityFlyover, ELD_OnStateSubmitted, , UnitState);
 }
 
 function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStateContext_Ability AbilityContext, XComGameState_Ability kAbility, XComGameState_Unit SourceUnit, XComGameState_Item AffectWeapon, XComGameState NewGameState, const array<name> PreCostActionPoints, const array<name> PreCostReservePoints)
@@ -30,9 +64,6 @@ function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStat
 	TargetUnit = XComGameState_Unit(NewGameState.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
 	if (TargetUnit == none)
 		TargetUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
-
-	if (AllowedHitResults.Length > 0 && AllowedHitResults.Find(AbilityContext.ResultContext.HitResult) == INDEX_NONE)
-		return false;
 
 	if (ValidateAttack(EffectState, SourceUnit, TargetUnit, kAbility) != 'AA_Success')
 		return false;
@@ -61,13 +92,20 @@ function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStat
 function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState)
 {
 	local X2Condition kCondition;
+	local XComGameState_Item SourceWeapon;
+	local StateObjectReference ItemRef;
 	local name AvailableCode;
+		
+	if (bRequireAbilityWeapon)
+	{
+		SourceWeapon = AbilityState.GetSourceWeapon();
+		if (SourceWeapon == none)
+			return 'AA_UnknownError';
 
-	if (bRequireAbilityWeapon && AbilityState.SourceWeapon != EffectState.ApplyEffectParameters.ItemStateObjectRef)
-		return 'AA_UnknownError';
-
-	if (bRequireKill && (Target == none || !Target.IsDead()))
-		return 'AA_UnitIsAlive';
+		ItemRef = EffectState.ApplyEffectParameters.ItemStateObjectRef;
+		if (SourceWeapon.ObjectID != ItemRef.ObjectID && SourceWeapon.LoadedAmmo.ObjectID != ItemRef.ObjectID)
+			return 'AA_UnknownError';
+	}
 
 	foreach AbilityTargetConditions(kCondition)
 	{
@@ -97,6 +135,5 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 DefaultProperties
 {
 	DuplicateResponse = eDupe_Ignore
-	EffectName = "SlamFire"
-	TriggeredEvent = "SlamFire"
+	bShowFlyOver = true
 }

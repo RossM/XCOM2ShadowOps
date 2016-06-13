@@ -1,7 +1,37 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_RevealUnit.uc
+//  AUTHOR:  xylthixlm
+//
+//  Causes a unit to be visible on the map, and plays a flyover over any revealed
+//  enemy units when applied. Does not grant squadsight targeting over the revealed
+//  units. Optionally this can also unmask hidden Faceless and Chryssalids. If a
+//  revealed unit is in the fog of war it may be difficult to actually see.
+//
+//  USAGE
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
 class XMBEffect_RevealUnit extends X2Effect_Persistent;
 
-var float LookAtDuration;
-var bool bRevealConcealed;
+
+///////////////////////
+// Effect properties //
+///////////////////////
+
+var float LookAtDuration;					// The duration the camera will look at the flyover.
+var bool bRevealConcealed;					// If true, reveal hidden Faceless and burrowed Chryssalids.
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 function EffectAddedCallback(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState)
 {

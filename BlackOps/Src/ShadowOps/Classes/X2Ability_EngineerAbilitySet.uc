@@ -72,7 +72,6 @@ static function X2AbilityTemplate Breach()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityTarget_Cursor            CursorTarget;
 	local XMBAbilityMultiTarget_SoldierBonusRadius       RadiusMultiTarget;
@@ -98,11 +97,7 @@ static function X2AbilityTemplate Breach()
 	AmmoCost.iAmmo = default.BreachAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.BreachCooldown;
@@ -153,7 +148,6 @@ static function X2AbilityTemplate ShotgunBreach()
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityTarget_Cursor            CursorTarget;
 	local XMBAbilityMultiTarget_SoldierBonusRadius       RadiusMultiTarget;
@@ -178,11 +172,7 @@ static function X2AbilityTemplate ShotgunBreach()
 	AmmoCost.iAmmo = default.BreachAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 	
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.BreachCooldown;
@@ -235,7 +225,6 @@ static function X2AbilityTemplate ShotgunBreach()
 static function X2AbilityTemplate Fastball()
 {
 	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityCooldown                 Cooldown;
 	local X2Effect_Persistent				FastballEffect;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
@@ -250,10 +239,7 @@ static function X2AbilityTemplate Fastball()
 	Template.Hostility = eHostility_Neutral;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Free));
 	
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.FastballCooldown;
@@ -334,7 +320,6 @@ static function X2AbilityTemplate FractureAbility()
 	local X2AbilityToHitCalc_StandardAim    ToHitCalc;
 	local X2Condition_Visibility            TargetVisibilityCondition;
 	local X2AbilityCost_Ammo                AmmoCost;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fracture');
 
@@ -362,11 +347,7 @@ static function X2AbilityTemplate FractureAbility()
 	AmmoCost.iAmmo = default.FractureAmmo;
 	Template.AbilityCosts.AddItem(AmmoCost);
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
 
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
@@ -439,54 +420,20 @@ static function X2AbilityTemplate Aggression()
 
 static function X2AbilityTemplate SlamFire()
 {
-	local X2AbilityTemplate				Template;
-	local X2AbilityCooldown				Cooldown;
-	local XMBEffect_AbilityCostRefund             SlamFireEffect;
-	local X2AbilityCost_ActionPoints    ActionPointCost;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SlamFire');
-
-	// Icon Properties
-	Template.DisplayTargetHitChance = false;
-	Template.AbilitySourceName = 'eAbilitySource_Perk';                                       // color of the icon
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_slamfire";
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
-	Template.Hostility = eHostility_Neutral;
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
-
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.SlamFireCooldown;
-	Template.AbilityCooldown = Cooldown;
-
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bFreeCost = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	class'X2Ability_RangerAbilitySet'.static.SuperKillRestrictions(Template, 'Serial_SuperKillCheck');
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	Template.AddShooterEffectExclusions();
+	local X2AbilityTemplate					Template;
+	local XMBEffect_AbilityCostRefund       SlamFireEffect;
 
 	SlamFireEffect = new class'XMBEffect_AbilityCostRefund';
+	SlamFireEffect.EffectName = 'SlamFire';
+	SlamFireEffect.TriggeredEvent = 'SlamFire';
 	SlamFireEffect.bRequireAbilityWeapon = true;
-	SlamFireEffect.AllowedHitResults.AddItem(eHit_Crit);
+	SlamFireEffect.AbilityTargetConditions.AddItem(default.CritCondition);
 	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
-	SlamFireEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, true, , Template.AbilitySourceName);
-	Template.AddTargetEffect(SlamFireEffect);
 
-	Template.AbilityTargetStyle = default.SelfTarget;	
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-	
-	Template.bShowActivation = true;
-	Template.bSkipFireAction = true;
+	Template = SelfTargetActivated('ShadowOps_SlamFire', "img:///UILibrary_BlackOps.UIPerk_slamfire", true, SlamFireEffect, class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY, false, eCost_Free, default.SlamFireCooldown);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-
-	Template.bCrossClassEligible = true;
+	class'X2Ability_RangerAbilitySet'.static.SuperKillRestrictions(Template, 'Serial_SuperKillCheck');
+	Template.AddShooterEffectExclusions();
 
 	return Template;
 }
@@ -598,7 +545,7 @@ static function X2AbilityTemplate Packmaster()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local XMBEffect_BonusItemCharges            ItemChargesEffect;
+	local XMBEffect_AddItemChargesBySlot            ItemChargesEffect;
 	local X2Effect_Persistent					PersistentEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Packmaster');
@@ -618,7 +565,7 @@ static function X2AbilityTemplate Packmaster()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	ItemChargesEffect = new class'XMBEffect_BonusItemCharges';
+	ItemChargesEffect = new class'XMBEffect_AddItemChargesBySlot';
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_Utility);
 	Template.AddTargetEffect(ItemChargesEffect);
 
@@ -655,8 +602,8 @@ static function X2AbilityTemplate DenseSmoke()
 	Effect = new class'XMBEffect_BonusRadius';
 	Effect.EffectName = 'DenseSmokeRadius';
 	Effect.fBonusRadius = class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
-	Effect.AllowedTemplateNames.AddItem('SmokeGrenade');
-	Effect.AllowedTemplateNames.AddItem('SmokeGrenadeMk2');
+	Effect.IncludeItemNames.AddItem('SmokeGrenade');
+	Effect.IncludeItemNames.AddItem('SmokeGrenadeMk2');
 
 	return Passive('ShadowOps_DenseSmoke', "img:///UILibrary_BlackOps.UIPerk_densesmoke", true, Effect);
 }
@@ -675,7 +622,7 @@ static function X2AbilityTemplate MovingTarget()
 	local XMBEffect_ConditionalBonus             Effect;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.SelfConditions.AddItem(new class'X2Condition_ReactionFire');
+	Effect.SelfConditions.AddItem(default.ReactionFireCondition);
 	Effect.AddToHitAsTargetModifier(-default.MovingTargetDefenseBonus);
 	Effect.AddToHitAsTargetModifier(default.MovingTargetDodgeBonus, eHit_Graze);
 
@@ -685,7 +632,7 @@ static function X2AbilityTemplate MovingTarget()
 static function X2AbilityTemplate Entrench()
 {
 	local X2AbilityTemplate                 Template;
-	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2AbilityCost_ActionPoints        AbilityActionPointCost;
 	local X2Condition_UnitProperty          PropertyCondition;
 	local X2Effect_Entrench				    PersistentStatChangeEffect;
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
@@ -704,11 +651,9 @@ static function X2AbilityTemplate Entrench()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = class'X2Ability_DefaultAbilitySet'.static.HunkerDownAbility_BuildVisualization;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;
-	ActionPointCost.AllowedTypes.AddItem(class'X2CharacterTemplateManager'.default.DeepCoverActionPoint);
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	AbilityActionPointCost = ActionPointCost(eCost_SingleConsumeAll);
+	AbilityActionPointCost.AllowedTypes.AddItem(class'X2CharacterTemplateManager'.default.DeepCoverActionPoint);
+	Template.AbilityCosts.AddItem(AbilityActionPointCost);
 	
 	PropertyCondition = new class'X2Condition_UnitProperty';	
 	PropertyCondition.ExcludeDead = true;                           // Can't hunkerdown while dead

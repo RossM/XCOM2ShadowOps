@@ -1,7 +1,40 @@
-class XMBEffect_BonusItemCharges extends X2Effect;
+//---------------------------------------------------------------------------------------
+//  FILE:    XMBEffect_AddItemChargesBySlot.uc
+//  AUTHOR:  xylthixlm
+//
+//  Adds extra charges to equipped items based on the slots those items are in.
+//
+//  USAGE
+//
+//  INSTALLATION
+//
+//  Install the XModBase core as described in readme.txt. Copy this file, and any files 
+//  listed as dependencies, into your mod's Classes/ folder. You may edit this file.
+//
+//  DEPENDENCIES
+//
+//  None.
+//---------------------------------------------------------------------------------------
+class XMBEffect_AddItemChargesBySlot extends X2Effect;
 
-var array<EInventorySlot> ApplyToSlots;
-var int PerItemBonus;
+
+//////////////////////
+// Bonus properties //
+//////////////////////
+
+var int PerItemBonus;									// The number of charges to add for each item in the right slot.
+
+
+//////////////////////////
+// Condition properties //
+//////////////////////////
+
+var array<EInventorySlot> ApplyToSlots;					// The slot, or slots, to add charges to items in.
+
+
+////////////////////////////
+// Overrideable functions //
+////////////////////////////
 
 // This effect adds additional charges to inventory items, similar to how Heavy Ordnance gives an
 // extra use of the grenade in the grenade-only slot. You can either set the ApplyToSlots and 
@@ -16,6 +49,11 @@ function int GetItemChargeModifier(XComGameState NewGameState, XComGameState_Uni
 
 	return 0;
 }
+
+
+////////////////////
+// Implementation //
+////////////////////
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {

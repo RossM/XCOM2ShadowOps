@@ -46,7 +46,6 @@ static function array<X2DataTemplate> CreateTemplates()
 static function X2AbilityTemplate ShieldProtocol()
 {
 	local X2AbilityTemplate                     Template;
-	local X2AbilityCost_ActionPoints            ActionPointCost;
 	local X2Condition_UnitProperty              TargetProperty;
 	local X2Condition_UnitEffects               EffectsCondition;
 	local X2AbilityCharges                      Charges;
@@ -64,10 +63,7 @@ static function X2AbilityTemplate ShieldProtocol()
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SingleTargetWithSelf;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
 	Charges = new class 'X2AbilityCharges';
 	Charges.InitialCharges = default.ShieldProtocolCharges;
@@ -298,7 +294,6 @@ static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit 
 static function X2AbilityTemplate StealthProtocol()
 {
 	local X2AbilityTemplate                     Template;
-	local X2AbilityCost_ActionPoints            ActionPointCost;
 	local X2Condition_UnitProperty              TargetProperty;
 	local X2Condition_UnitEffects               EffectsCondition;
 	local X2AbilityCharges                      Charges;
@@ -316,10 +311,7 @@ static function X2AbilityTemplate StealthProtocol()
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SingleTargetWithSelf;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
 	Charges = new class 'X2AbilityCharges_RevivalProtocol';
 	Charges.InitialCharges = default.StealthProtocolCharges;
@@ -380,7 +372,6 @@ static function X2Effect StealthProtocolEffect(string FriendlyName, string LongD
 static function X2AbilityTemplate BurstFire()
 {
 	local X2AbilityTemplate						Template;
-	local X2AbilityCost_ActionPoints			ActionPointCost;
 	local X2AbilityCost_Ammo					AmmoCost;
 	local X2Effect_ApplyWeaponDamage			WeaponDamageEffect;
 	local X2Effect_ApplyDirectionalWorldDamage  WorldDamage;
@@ -411,11 +402,7 @@ static function X2AbilityTemplate BurstFire()
 
 	Template.CinescriptCameraType = "StandardGunFiring";	
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.BurstFireCooldown;
@@ -475,7 +462,6 @@ static function X2AbilityTemplate BurstFire()
 static function X2AbilityTemplate RifleBurstFire()
 {
 	local X2AbilityTemplate						Template;
-	local X2AbilityCost_ActionPoints			ActionPointCost;
 	local X2AbilityCost_Ammo					AmmoCost;
 	local X2Effect_ApplyWeaponDamage			WeaponDamageEffect;
 	local X2Effect_ApplyDirectionalWorldDamage  WorldDamage;
@@ -506,11 +492,7 @@ static function X2AbilityTemplate RifleBurstFire()
 
 	Template.CinescriptCameraType = "StandardGunFiring";	
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 0; //Uses typical action points of weapon:
-	ActionPointCost.bAddWeaponTypicalCost = true;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.BurstFireCooldown;
@@ -741,7 +723,6 @@ static function X2AbilityTemplate VanishTrigger()
 static function X2AbilityTemplate RestorationProtocol()
 {
 	local X2AbilityTemplate                     Template;
-	local X2AbilityCost_ActionPoints            ActionPointCost;
 	local X2Condition_UnitProperty              TargetProperty;
 	local X2Condition_UnitStatCheck             UnitStatCheckCondition;
 	local X2AbilityCharges                      Charges;
@@ -763,10 +744,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SingleTargetWithSelf;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
 	Charges = new class 'X2AbilityCharges_RevivalProtocol';
 	Charges.InitialCharges = default.RestoratonProtocolCharges;
@@ -854,7 +832,6 @@ static function UnconsciousVisualizationRemoved(XComGameState VisualizeGameState
 static function X2AbilityTemplate StasisField()
 {
 	local X2AbilityTemplate                     Template;
-	local X2AbilityCost_ActionPoints            ActionPointCost;
 	local X2AbilityCooldown                     Cooldown;
 	local X2Effect_Stasis						StasisEffect;
 	local X2AbilityMultiTarget_Radius			RadiusMultiTarget;
@@ -871,10 +848,7 @@ static function X2AbilityTemplate StasisField()
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SelfTarget;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = false;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
 	Cooldown = new class'X2AbilityCooldown';
 	Cooldown.iNumTurns = default.StasisFieldCooldown;
@@ -910,7 +884,6 @@ static function X2AbilityTemplate StasisField()
 static function X2AbilityTemplate PuppetProtocol()
 {
 	local X2AbilityTemplate             Template;
-	local X2AbilityCost_ActionPoints    ActionPointCost;
 	local X2Condition_UnitProperty      UnitPropertyCondition;
 	local X2Effect_MindControl          MindControlEffect;
 	local X2Condition_UnitEffects       EffectCondition;
@@ -926,10 +899,7 @@ static function X2AbilityTemplate PuppetProtocol()
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
 	Template.Hostility = eHostility_Neutral;
 
-	ActionPointCost = new class'X2AbilityCost_ActionPoints';
-	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = true;
-	Template.AbilityCosts.AddItem(ActionPointCost);
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_SingleConsumeAll));
 
 	Charges = new class'X2AbilityCharges';
 	Charges.InitialCharges = 1;
@@ -991,7 +961,7 @@ static function X2AbilityTemplate Rocketeer()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local XMBEffect_BonusItemCharges            ItemChargesEffect;
+	local XMBEffect_AddItemChargesBySlot            ItemChargesEffect;
 	local X2Effect_Persistent					PersistentEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Rocketeer');
@@ -1011,7 +981,7 @@ static function X2AbilityTemplate Rocketeer()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	ItemChargesEffect = new class'XMBEffect_BonusItemCharges';
+	ItemChargesEffect = new class'XMBEffect_AddItemChargesBySlot';
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_HeavyWeapon);
 	Template.AddTargetEffect(ItemChargesEffect);
 
