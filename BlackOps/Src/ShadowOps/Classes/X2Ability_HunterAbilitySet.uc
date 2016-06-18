@@ -405,11 +405,12 @@ static function X2AbilityTemplate AssassinTrigger()
 static function X2AbilityTemplate Fade()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_Fade							StealthEffect;
+	local X2Effect_RangerStealth_BO				StealthEffect;
 
-	StealthEffect = new class'X2Effect_Fade';
+	StealthEffect = new class'X2Effect_RangerStealth_BO';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
+	StealthEffect.EffectAddedFn = Fade_EffectAdded;
 
 	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_BlackOps.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, false, eCost_Single, default.FadeCooldown);
 
@@ -422,6 +423,23 @@ static function X2AbilityTemplate Fade()
 
 	return Template;
 }
+
+static function Fade_EffectAdded(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState)
+{
+	local X2EventManager EventMgr;
+	local Object EffectObj;
+	local XComGameState_Unit UnitState;
+	local XComGameState_Effect EffectGameState;
+
+	UnitState = XComGameState_Unit( NewGameState.CreateStateObject( class'XComGameState_Unit', ApplyEffectParameters.TargetStateObjectRef.ObjectID ) );
+	EffectGameState = UnitState.GetUnitAffectedByEffectState(PersistentEffect.EffectName);
+
+	EventMgr = `XEVENTMGR;
+	EffectObj = EffectGameState;
+	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
+	EventMgr.RegisterForEvent(EffectObj, 'ObjectMoved', EffectGameState.GenerateCover_ObjectMoved, ELD_OnStateSubmitted, , UnitState);
+}
+
 
 static function X2AbilityTemplate SliceAndDice()
 {

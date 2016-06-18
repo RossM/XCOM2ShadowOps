@@ -634,7 +634,7 @@ static function X2AbilityTemplate Entrench()
 	local X2AbilityTemplate                 Template;
 	local X2AbilityCost_ActionPoints        AbilityActionPointCost;
 	local X2Condition_UnitProperty          PropertyCondition;
-	local X2Effect_Entrench				    PersistentStatChangeEffect;
+	local X2Effect_PersistentStatChange	    PersistentStatChangeEffect;
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
 	local X2Condition_UnitEffects UnitEffectsCondition;
 	local array<name>                       SkipExclusions;
@@ -676,13 +676,14 @@ static function X2AbilityTemplate Entrench()
 	InputTrigger = new class'X2AbilityTrigger_PlayerInput';
 	Template.AbilityTriggers.AddItem(InputTrigger);
 
-	PersistentStatChangeEffect = new class'X2Effect_Entrench';
-	PersistentStatChangeEffect.EffectName = 'Entrench';
+	PersistentStatChangeEffect = new class'X2Effect_PersistentStatChange';
+	PersistentStatChangeEffect.EffectName = 'HunkerDown';
 	PersistentStatChangeEffect.BuildPersistentEffect(1 /* Turns */, true,,,eGameRule_PlayerTurnBegin);
 	PersistentStatChangeEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage);
 	PersistentStatChangeEffect.AddPersistentStatChange(eStat_Dodge, default.EntrenchDodge);
 	PersistentStatChangeEffect.AddPersistentStatChange(eStat_Defense, default.EntrenchDefense);
 	PersistentStatChangeEffect.DuplicateResponse = eDupe_Refresh;
+	PersistentStatChangeEffect.EffectAddedFn = class'X2Ability_HunterAbilitySet'.static.Fade_EffectAdded;
 	Template.AddTargetEffect(PersistentStatChangeEffect);
 
 	Template.AddTargetEffect(class'X2Ability_SharpshooterAbilitySet'.static.SharpshooterAimEffect());
