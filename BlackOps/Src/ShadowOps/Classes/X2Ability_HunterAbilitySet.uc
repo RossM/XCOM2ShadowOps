@@ -163,7 +163,6 @@ static function X2DataTemplate HunterMark()
 	local X2AbilityTarget_Single SingleTarget;
 	local X2AbilityTrigger_PlayerInput InputTrigger;
 	local X2Effect_Persistent MarkedEffect;
-	local X2Effect_RemoveEffects RemovePreviousMarkEffect;
 	local X2AbilityCooldown Cooldown;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HunterMark');
@@ -217,12 +216,6 @@ static function X2DataTemplate HunterMark()
 	InputTrigger = new class'X2AbilityTrigger_PlayerInput';
 	Template.AbilityTriggers.AddItem(InputTrigger);
 
-	// Remove previous mark, if any
-	RemovePreviousMarkEffect = new class'X2Effect_RemoveEffects';
-	RemovePreviousMarkEffect.bCheckSource = true;
-	RemovePreviousMarkEffect.EffectNamesToRemove.AddItem(class'X2StatusEffects'.default.MarkedName);
-	Template.AddShooterEffect(RemovePreviousMarkEffect);
-
 	// Create the Marked effect
 	MarkedEffect = CreateMarkedEffect(1, true);
 
@@ -252,6 +245,7 @@ static function X2Effect_PersistentStatChange CreateMarkedEffect(int NumTurns, b
 	MarkedEffect.EffectTickedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationTicked;
 	MarkedEffect.EffectRemovedVisualizationFn = class'X2StatusEffects'.static.MarkedVisualizationRemoved;
 	MarkedEffect.bRemoveWhenTargetDies = true;
+	MarkedEffect.bUniqueTarget = true;
 
 	return MarkedEffect;
 }
