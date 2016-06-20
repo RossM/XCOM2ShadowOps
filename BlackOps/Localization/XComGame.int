@@ -72,7 +72,8 @@ LocPromotionPopupText="<Bullet/> Zone of Control will switch to pistol overwatch
 [ShadowOps_ZoneOfControlShot X2AbilityTemplate]
 LocFriendlyName="Zone of Control Shot"
 
-; ShadowOps_ZoneOfControlPistolShot is in ShadowOps.int
+[ShadowOps_ZoneOfControlPistolShot X2AbilityTemplate]
+LocFriendlyName="Zone of Control Pistol Shot"
 
 [ShadowOps_ZeroIn X2AbilityTemplate]
 LocFriendlyName="Zero In"
@@ -164,7 +165,19 @@ LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Sh
 LocFlyOverText="Shield Protocol""
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
-; HeavyArmor and Finesse are in ShadowOps.int
+[ShadowOps_HeavyArmor X2AbilityTemplate]
+LocFriendlyName="Tank"
+LocLongDescription="You gain additional Armor points based on your equipped armor."
+LocHelpText="You gain additional Armor points based on your equipped armor."
+LocFlyOverText="Tank"
+LocPromotionPopupText="<Bullet/> A Dragoon with Tank and an EXO or WAR suit can absorb truly ridiculous amounts of damage, especially if combined with a Plated Vest or Reinforced Vest.<br/><Bullet/> The shield from Shield Protocol doesn't benefit from armor directly, but any excess damage that isn't absorbed by the shield will be reduced by armor. Armor can completely protect against small amounts of damage as long as at least one point gets blocked by the shield.<br/><Bullet/> Light and medium armors provide one extra point of Armor, while heavy armor provides two extra points of Armor.<br/>"
+
+[ShadowOps_Finesse X2AbilityTemplate]
+LocFriendlyName="Finesse"
+LocLongDescription="Gain +<Ability:ToHit/> Aim and +<Ability:Mobility/> Mobility while equipped with a rifle."
+LocHelpText="Gain +<Ability:ToHit/> Aim and +<Ability:Mobility/> Mobility while equipped with a rifle."
+LocFlyOverText="Finesse"
+LocPromotionPopupText="<Bullet/> The extra mobility from Finesse can help you to get a flank or to reach the objective quickly, but be careful you don't get too far ahead of the rest of the squad.<br/><Bullet> The bonuses from Finesse are lost if you equip a cannon. Weapons that can be equipped by any unit that can equip a rifle, such as the Boltcaster, count as rifles for Finesse.<br/><Bullet/> Learning Finesse will automatically equip the highest-level rifle in your inventory.<br/>"
 
 [ShadowOps_StealthProtocol X2AbilityTemplate]
 LocFriendlyName="Stealth Protocol"

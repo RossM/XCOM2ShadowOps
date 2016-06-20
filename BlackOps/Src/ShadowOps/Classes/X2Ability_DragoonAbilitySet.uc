@@ -122,12 +122,14 @@ static function X2Effect ShieldProtocolEffect(string FriendlyName, string LongDe
 
 static function X2AbilityTemplate HeavyArmor()
 {
+	local X2AbilityTemplate						BaseTemplate;
 	local X2AbilityTemplate_BO					Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_HeavyArmor                   HeavyArmorEffect;
 
-	`CREATE_X2TEMPLATE(class'X2AbilityTemplate_BO', Template, 'ShadowOps_HeavyArmor');
+	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_HeavyArmor');
+	Template = new class'X2AbilityTemplate_BO'(BaseTemplate);
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_heavyarmor";
@@ -172,13 +174,15 @@ static function bool HeavyArmorStatDisplay(XComGameState_Item InventoryItem)
 
 static function X2AbilityTemplate Finesse()
 {
+	local X2AbilityTemplate						BaseTemplate;
 	local X2AbilityTemplate_BO					Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
 	local X2Effect_PersistentStatChange         FinesseEffect;
 	local X2Condition_UnitInventory				Condition;
 
-	`CREATE_X2TEMPLATE(class'X2AbilityTemplate_BO', Template, 'ShadowOps_Finesse');
+	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_Finesse');
+	Template = new class'X2AbilityTemplate_BO'(BaseTemplate);
 
 	// Icon Properties
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stickandmove";

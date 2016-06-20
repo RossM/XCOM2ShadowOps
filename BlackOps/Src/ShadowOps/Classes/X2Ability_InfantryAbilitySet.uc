@@ -559,6 +559,7 @@ static function X2AbilityTemplate ZoneOfControlShot()
 
 static function X2AbilityTemplate ZoneOfControlPistolShot()
 {
+	local X2AbilityTemplate					BaseTemplate;
 	local X2AbilityTemplate_BO              Template;
 	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
@@ -569,7 +570,8 @@ static function X2AbilityTemplate ZoneOfControlPistolShot()
 	local X2Condition_Visibility            TargetVisibilityCondition;
 	local X2Condition_UnitInventory			HasPistolCondition;
 
-	`CREATE_X2TEMPLATE(class'X2AbilityTemplate_BO', Template, 'ShadowOps_ZoneOfControlPistolShot');
+	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_ZoneOfControlPistolShot');
+	Template = new class'X2AbilityTemplate_BO'(BaseTemplate);
 
 	// This ability applies to the pistol, if one is equipped.
 	Template.ApplyToWeaponSlot = eInvSlot_SecondaryWeapon;
