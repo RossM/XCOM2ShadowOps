@@ -11,6 +11,7 @@
 //  The following examples in Examples.uc use this class:
 //
 //  SlamFire
+//  CloseAndPersonal
 //
 //  INSTALLATION
 //
@@ -30,13 +31,13 @@ class XMBEffect_AbilityCostRefund extends X2Effect_Persistent config(GameData_So
 
 var name TriggeredEvent;							// An event that will be triggered when this effect refunds an ability cost.
 var bool bShowFlyOver;								// Show a flyover when this effect refunds an ability cost. Requires TriggeredEvent to be set.
+var name CountValueName;							// Name of the unit value to use to count the number of actions refunded per turn.
+var int MaxRefundsPerTurn;							// Maximum number of actions to refund per turn. Requires CountUnitValue to be set.
 
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
-
-var bool bRequireAbilityWeapon;						// Require that the weapon or ammo used in the ability match the item associated with this effect.
 
 var array<X2Condition> AbilityTargetConditions;		// Conditions on the target of the ability being refunded.
 var array<X2Condition> AbilityShooterConditions;	// Conditions on the shooter of the ability being refunded.
@@ -66,10 +67,18 @@ function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStat
 	local X2EventManager EventMgr;
 	local XComGameState_Ability AbilityState;
 	local XComGameState_Unit TargetUnit;
+	local UnitValue CountUnitValue;
 
 	TargetUnit = XComGameState_Unit(NewGameState.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
 	if (TargetUnit == none)
 		TargetUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));
+
+	if (CountValueName != '')
+	{
+		SourceUnit.GetUnitValue(CountValueName, CountUnitValue);
+		if (MaxRefundsPerTurn >= 0 && CountUnitValue.fValue >= MaxRefundsPerTurn)
+			return false;
+	}
 
 	if (ValidateAttack(EffectState, SourceUnit, TargetUnit, kAbility) != 'AA_Success')
 		return false;
@@ -81,6 +90,11 @@ function bool PostAbilityCostPaid(XComGameState_Effect EffectState, XComGameStat
 		if (AbilityState != none)
 		{
 			SourceUnit.ActionPoints = PreCostActionPoints;
+
+			if (CountValueName != '')
+			{
+				SourceUnit.SetUnitFloatValue(CountValueName, CountUnitValue.fValue + 1, eCleanup_BeginTurn);
+			}
 
 			if (TriggeredEvent != '')
 			{
@@ -102,19 +116,19 @@ function private name ValidateAttack(XComGameState_Effect EffectState, XComGameS
 	local StateObjectReference ItemRef;
 	local name AvailableCode;
 		
-	if (bRequireAbilityWeapon)
-	{
-		SourceWeapon = AbilityState.GetSourceWeapon();
-		if (SourceWeapon == none)
-			return 'AA_UnknownError';
-
-		ItemRef = EffectState.ApplyEffectParameters.ItemStateObjectRef;
-		if (SourceWeapon.ObjectID != ItemRef.ObjectID && SourceWeapon.LoadedAmmo.ObjectID != ItemRef.ObjectID)
-			return 'AA_UnknownError';
-	}
-
 	foreach AbilityTargetConditions(kCondition)
 	{
+		if (kCondition.IsA('XMBCondition_MatchingWeapon'))
+		{
+			SourceWeapon = AbilityState.GetSourceWeapon();
+			if (SourceWeapon == none)
+				return 'AA_UnknownError';
+
+			ItemRef = EffectState.ApplyEffectParameters.ItemStateObjectRef;
+			if (SourceWeapon.ObjectID != ItemRef.ObjectID && SourceWeapon.LoadedAmmo.ObjectID != ItemRef.ObjectID)
+				return 'AA_UnknownError';
+		}
+
 		AvailableCode = kCondition.AbilityMeetsCondition(AbilityState, Target);
 		if (AvailableCode != 'AA_Success')
 			return AvailableCode;
@@ -142,4 +156,5 @@ DefaultProperties
 {
 	DuplicateResponse = eDupe_Ignore
 	bShowFlyOver = true
+	MaxRefundsPerTurn = -1;
 }

@@ -1,4 +1,4 @@
-class X2Ability_ItemGranted_BO extends X2Ability config(GameData_WeaponData);
+class X2Ability_ItemGranted_BO extends XMBAbility config(GameData_WeaponData);
 
 var config array<int> FlechetteRangeAccuracy;
 
@@ -32,7 +32,7 @@ static function X2AbilityTemplate FlechetteRounds()
 
 	Effect = new class'XMBEffect_ToHitModifierByRange';
 	Effect.RangeAccuracy = default.FlechetteRangeAccuracy;
-	Effect.bRequireAbilityWeapon = true;
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.GetMyHelpText(), Template.IconImage, false);
 	Template.AddShooterEffect(Effect);

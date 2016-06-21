@@ -131,7 +131,7 @@ static function X2AbilityTemplate Weaponmaster()
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.WeaponmasterBonusDamage);
-	Effect.bRequireAbilityWeapon = true;
+	Effect.OtherConditions.AddItem(default.MatchingWeaponCondition);
 
 	return Passive('ShadowOps_Weaponmaster', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
@@ -183,7 +183,7 @@ static function X2AbilityTemplate HitAndRunTrigger()
 	Effect.NumActionPoints = 1;
 	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
 
-	return SelfTargetTrigger('ShadowOps_HitAndRunTrigger', "img:///UILibrary_BlackOps.UIPerk_AWC", Effect, 'HitAndRun', true);
+	return SelfTargetTrigger('ShadowOps_HitAndRunTrigger', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect, 'HitAndRun');
 }
 
 static function X2AbilityTemplate DevilsLuck()

@@ -293,7 +293,7 @@ static function X2AbilityTemplate VitalPoint()
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.Modifiers = default.VitalPointModifiers;
-	Effect.bRequireAbilityWeapon = true;
+	Effect.OtherConditions.AddItem(default.MatchingWeaponCondition);
 
 	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_BlackOps.UIPerk_vitalpoint", false, Effect);
 }
@@ -371,7 +371,7 @@ static function X2AbilityTemplate Assassin()
 	Effect = new class'XMBEffect_AbilityTriggered';
 	Effect.EffectName = 'Assassin';
 	Effect.TriggeredEvent = 'Assassin';
-	Effect.bRequireAbilityWeapon = true;
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
 	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
 
@@ -391,7 +391,7 @@ static function X2AbilityTemplate AssassinTrigger()
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 
-	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_PerkIcons.UIPerk_executioner", StealthEffect, 'Assassin');
+	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_PerkIcons.UIPerk_executioner", false, StealthEffect, 'Assassin');
 
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
@@ -412,7 +412,8 @@ static function X2AbilityTemplate Fade()
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 	StealthEffect.EffectAddedFn = Fade_EffectAdded;
 
-	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_BlackOps.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, false, eCost_Single, default.FadeCooldown);
+	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_BlackOps.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, eCost_Single);
+	AddCooldown(Template, default.FadeCooldown);
 
 	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
 
@@ -842,7 +843,7 @@ static function X2AbilityTemplate FirstStrike()
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.FirstStrikeDamageBonus);
 	Effect.bIgnoreSquadSightPenalty = true;
-	Effect.bRequireAbilityWeapon = true;
+	Effect.OtherConditions.AddItem(default.MatchingWeaponCondition);
 
 	Condition = new class'X2Condition_FirstStrike';
 	Effect.OtherConditions.AddItem(Condition);

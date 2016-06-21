@@ -426,11 +426,12 @@ static function X2AbilityTemplate SlamFire()
 	SlamFireEffect = new class'XMBEffect_AbilityCostRefund';
 	SlamFireEffect.EffectName = 'SlamFire';
 	SlamFireEffect.TriggeredEvent = 'SlamFire';
-	SlamFireEffect.bRequireAbilityWeapon = true;
+	SlamFireEffect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 	SlamFireEffect.AbilityTargetConditions.AddItem(default.CritCondition);
 	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
 
-	Template = SelfTargetActivated('ShadowOps_SlamFire', "img:///UILibrary_BlackOps.UIPerk_slamfire", true, SlamFireEffect, class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY, false, eCost_Free, default.SlamFireCooldown);
+	Template = SelfTargetActivated('ShadowOps_SlamFire', "img:///UILibrary_BlackOps.UIPerk_slamfire", true, SlamFireEffect, class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY, eCost_Free);
+	AddCooldown(Template, default.SlamFireCooldown);
 
 	class'X2Ability_RangerAbilitySet'.static.SuperKillRestrictions(Template, 'Serial_SuperKillCheck');
 	Template.AddShooterEffectExclusions();
