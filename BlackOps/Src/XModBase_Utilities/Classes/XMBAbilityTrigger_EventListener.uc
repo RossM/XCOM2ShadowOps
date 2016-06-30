@@ -12,6 +12,19 @@
 //
 //  SelfTargetTrigger
 //
+//  EXAMPLES
+//
+//  The following examples in Examples.uc use this class:
+//
+//  AdrenalineSurge
+//  Assassin
+//  BullRush
+//  DeepCover
+//  HitAndRun
+//  InspireAgility
+//  ReverseEngineering
+//  SlamFire
+//
 //  INSTALLATION
 //
 //  Install the XModBase core as described in readme.txt. Copy this file, and any files 
