@@ -32,4 +32,32 @@ function AddRequireEffect(name EffectName, name Reason)
 	RequireEffects.AddItem(Require);
 }
 
+// allows derived templates to allow effects the parent does not
+function RemoveExcludeEffect(name EffectName)
+{
+	local int Index;
+	
+	for(Index = ExcludeEffects.Length - 1; Index >= 0; Index--)
+	{
+		if(ExcludeEffects[Index].EffectName == EffectName)
+		{
+			ExcludeEffects.Remove(Index, 1);
+		}
+	}
+}
+
+// allows derived templates to not require effects the parent does
+function RemoveRequireEffect(name EffectName)
+{
+	local int Index;
+	
+	for(Index = RequireEffects.Length - 1; Index >= 0; Index--)
+	{
+		if(RequireEffects[Index].EffectName == EffectName)
+		{
+			RequireEffects.Remove(Index, 1);
+		}
+	}
+}
+
 native function name MeetsCondition(XComGameState_BaseObject kTarget);

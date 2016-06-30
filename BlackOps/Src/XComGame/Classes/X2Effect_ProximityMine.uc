@@ -107,4 +107,5 @@ DefaultProperties
 {
 	EffectName="ProximityMine"
 	DuplicateResponse = eDupe_Allow;
+	bCanBeRedirected = false;
 }

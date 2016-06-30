@@ -45,6 +45,8 @@ var XComGameState_Unit														UnitState;
 var XComGameState_AIGroup													GroupState;
 var int																		ScanGroup;
 var XGUnit																	ScanUnit;
+var XComPerkContent															kPerkContent;
+var array<name>                                                             TargetAdditiveAnims;
 
 var X2Effect DamageEffect;		// If the damage was from an effect, this is the effect
 
@@ -59,7 +61,7 @@ enum eWeaponDamageType
 
 function Init(const out VisualizationTrack InTrack)
 {
-	local int MultiIndex, WorldResultIndex;
+	local int MultiIndex, WorldResultIndex, RedirectIndex;
 	local int DmgIndex, ActionIndex;
 	local XComGameState_Unit OldUnitState;
 	local X2EffectTemplateRef LookupEffect;
@@ -72,6 +74,9 @@ function Init(const out VisualizationTrack InTrack)
 	local XComGameState LastGameStateInInterruptChain;
 	local DamageResult DmgResult;
 	local X2Action OutFirstDamageAction;
+	local XComGameState_Effect EffectState;
+	local StateObjectReference EffectRef;
+	local name TargetAdditiveAnim;
 
 	super.Init(InTrack);
 
@@ -187,6 +192,31 @@ function Init(const out VisualizationTrack InTrack)
 				HitResults.AddItem(HitResult);
 			}
 		}	
+
+		if (HitResults.Length == 0)
+		{
+			for (RedirectIndex = 0; RedirectIndex < AbilityContext.ResultContext.EffectRedirects.Length; ++RedirectIndex)
+			{
+				if (AbilityContext.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef.ObjectID == InTrack.StateObject_NewState.ObjectID)
+				{
+					if (AbilityContext.InputContext.PrimaryTarget.ObjectID == AbilityContext.ResultContext.EffectRedirects[RedirectIndex].OriginalTargetRef.ObjectID)
+					{
+						bWasHit = bWasHit || AbilityContext.IsResultContextHit();
+						HitResult = AbilityContext.ResultContext.HitResult;
+						HitResults.AddItem(HitResult);
+					}
+				}
+				for (MultiIndex = 0; MultiIndex < AbilityContext.InputContext.MultiTargets.Length; ++MultiIndex)
+				{
+					if (AbilityContext.InputContext.MultiTargets[MultiIndex].ObjectID == AbilityContext.ResultContext.EffectRedirects[RedirectIndex].OriginalTargetRef.ObjectID)
+					{
+						bWasHit = bWasHit || AbilityContext.IsResultContextMultiHit(MultiIndex);
+						HitResult = AbilityContext.ResultContext.MultiTargetHitResults[MultiIndex];
+						HitResults.AddItem(HitResult);
+					}
+				}
+			}
+		}
 	}
 	else if (TickContext != none)
 	{
@@ -329,7 +359,6 @@ function Init(const out VisualizationTrack InTrack)
 	bMoving = X2Action_Move(`XCOMVISUALIZATIONMGR.GetCurrentTrackActionForVisualizer(Unit, true)) != none ||
 			  X2Action_Move(`XCOMVISUALIZATIONMGR.GetCurrentTrackActionForVisualizer(Unit, false)) != none;
 
-	
 	if( bMoving )
 	{
 		RunningAction = X2Action_MoveDirect(`XCOMVISUALIZATIONMGR.GetCurrentTrackActionForVisualizer(Unit, true));
@@ -337,6 +366,15 @@ function Init(const out VisualizationTrack InTrack)
 		{
 			RunningAction = X2Action_MoveDirect(`XCOMVISUALIZATIONMGR.GetCurrentTrackActionForVisualizer(Unit, false));
 		}
+	}
+
+	//  look for an additive anim to play for the target based on its effects
+	foreach UnitState.AffectedByEffects(EffectRef)
+	{
+		EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
+		TargetAdditiveAnim = EffectState.GetX2Effect().TargetAdditiveAnimOnApplyWeaponDamage(StateChangeContext, UnitState, EffectState);
+		if (TargetAdditiveAnim != '')
+			TargetAdditiveAnims.AddItem(TargetAdditiveAnim);
 	}
 }
 
@@ -406,7 +444,6 @@ simulated function Name ComputeAnimationToPlay(const string AppendEffectString="
 	local vector WorldUp;
 	local Name AnimName;
 	local string AnimString;
-	local XComPerkContent kContent;
 
 	WorldUp.X = 0.0f;
 	WorldUp.Y = 0.0f;
@@ -434,10 +471,10 @@ simulated function Name ComputeAnimationToPlay(const string AppendEffectString="
 	UnitRight = Vector(Unit.GetPawn().Rotation) cross WorldUp;
 	fDotRight = vHitDir dot UnitRight;
 
-	kContent = XGUnit(DamageDealer).GetPawn().GetPerkContent( string(AbilityTemplate.Name) );
-	if (kContent != none && kContent.TargetActivationAnim.PlayAnimation)
+	kPerkContent = XGUnit(DamageDealer).GetPawn().GetPerkContent(string(AbilityTemplate.Name));
+	if( kPerkContent != none && kPerkContent.TargetActivationAnim.PlayAnimation && !kPerkContent.TargetActivationAnim.AdditiveAnim )
 	{
-		AnimName = class'XComPerkContent'.static.ChooseAnimationForCover( Unit, kContent.TargetActivationAnim );
+		AnimName = class'XComPerkContent'.static.ChooseAnimationForCover(Unit, kPerkContent.TargetActivationAnim);
 	}
 
 	if (AnimName == '')
@@ -760,6 +797,33 @@ simulated state Executing
 		return (OutNotifies.length > 0);
 	}
 
+	function DoTargetAdditiveAnims()
+	{
+		local name TargetAdditiveAnim;
+		local CustomAnimParams CustomAnim;
+
+		CustomAnim.Additive = true;
+		foreach TargetAdditiveAnims(TargetAdditiveAnim)
+		{
+			CustomAnim.AnimName = TargetAdditiveAnim;
+			UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(CustomAnim);
+		}
+	}
+
+	function UnDoTargetAdditiveAnims()
+	{
+		local name TargetAdditiveAnim;
+		local CustomAnimParams CustomAnim;
+
+		CustomAnim.Additive = true;
+		CustomAnim.TargetWeight = 0.0f;
+		foreach TargetAdditiveAnims(TargetAdditiveAnim)
+		{
+			CustomAnim.AnimName = TargetAdditiveAnim;
+			UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(CustomAnim);
+		}
+	}
+
 Begin:
 	if (!bHiddenAction)
 	{
@@ -814,6 +878,14 @@ Begin:
 					AnimParams.PlayRate = GetMoveAnimationSpeed();
 					PlayingSequence = UnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams);
 				}
+
+				kPerkContent = XGUnit(DamageDealer).GetPawn().GetPerkContent(string(AbilityTemplate.Name));
+				if( kPerkContent != none && kPerkContent.TargetActivationAnim.PlayAnimation && kPerkContent.TargetActivationAnim.AdditiveAnim )
+				{
+					AnimParams.AnimName = class'XComPerkContent'.static.ChooseAnimationForCover(Unit, kPerkContent.TargetActivationAnim);
+					UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(AnimParams);
+				}
+				DoTargetAdditiveAnims();
 			}
 			else if( bMoving && RunningAction != None )
 			{
@@ -899,6 +971,7 @@ Begin:
 				}				
 
 				PlayingSequence = UnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams);
+				DoTargetAdditiveAnims();
 			}
 			else if( bMoving && RunningAction != None )
 			{
@@ -956,6 +1029,14 @@ Begin:
 			}
 		}
 	}
+
+	kPerkContent = XGUnit(DamageDealer).GetPawn().GetPerkContent(string(AbilityTemplate.Name));
+	if( kPerkContent != none && kPerkContent.TargetActivationAnim.PlayAnimation && kPerkContent.TargetActivationAnim.AdditiveAnim )
+	{
+		AnimParams.AnimName = class'XComPerkContent'.static.ChooseAnimationForCover(Unit, kPerkContent.TargetActivationAnim);
+		UnitPawn.GetAnimTreeController().RemoveAdditiveDynamicAnim(AnimParams);
+	}
+	UnDoTargetAdditiveAnims();
 
 	CompleteAction();
 }

@@ -59,6 +59,8 @@ static simulated event AddLDEffectToTiles( name EffectName, XComGameState NewGam
 	local array<TileIsland> TileIslands;
 	local array<TileParticleInfo> TileParticleInfos;
 	local VolumeEffectTileData InitialTileData;
+	local array<VolumeEffectTileData> AllTileDatas;
+	local int Intensity, Index;
 
 	GameplayTileUpdate = XComGameState_WorldEffectTileData( NewGameState.CreateStateObject( class'XComGameState_WorldEffectTileData' ) );
 	GameplayTileUpdate.WorldEffectClassName = EffectName;
@@ -68,16 +70,32 @@ static simulated event AddLDEffectToTiles( name EffectName, XComGameState NewGam
 	InitialTileData.DynamicFlagUpdateValue = GetTileDataDynamicFlagValue( );
 	InitialTileData.LDEffectTile = true;
 
+	GameplayTileUpdate.PreSizeTileData( Tiles.Length );
+
 	if (HasFillEffects( ))
 	{
-		TileIslands = CollapseTilesToPools( Tiles );
+		foreach TileIntensities( Intensity )
+		{
+			InitialTileData.Intensity = Intensity;
+			AllTileDatas.AddItem( InitialTileData );
+		}
+
+		TileIslands = CollapseTilesToPools( Tiles, AllTileDatas );
 		DetermineFireBlocks( TileIslands, Tiles, TileParticleInfos );
 
-		GameplayTileUpdate.SetInitialTileData( Tiles, InitialTileData, TileParticleInfos );
+		for (Index = 0; Index < Tiles.Length; ++Index)
+		{
+			GameplayTileUpdate.AddInitialTileData( Tiles[Index], AllTileDatas[Index], TileParticleInfos[Index] );
+		}
 	}
 	else
 	{
-		GameplayTileUpdate.SetInitialTileData( Tiles, InitialTileData );
+		for (Index = 0; Index < Tiles.Length; ++Index)
+		{
+			InitialTileData.Intensity = TileIntensities[Index];
+
+			GameplayTileUpdate.AddInitialTileData( Tiles[Index], InitialTileData );
+		}
 	}
 	NewGameState.AddStateObject( GameplayTileUpdate );
 

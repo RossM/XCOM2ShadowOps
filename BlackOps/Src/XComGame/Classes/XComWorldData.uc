@@ -109,6 +109,7 @@ var transient bool bUpdatedVisData;
 var transient bool bDisableVisibilityUpdates;
 var transient bool bDebugVisibility;
 var transient bool bDebugFOW;
+var transient bool bDebugEnableFOW;
 var transient bool bEnableFOW;
 var transient bool bEnableFOWUpdate;
 var transient bool bDebugBlockingTiles;
@@ -608,9 +609,6 @@ cpptext
 	}
 
 	void GetTeamAdjacentDestructibles( ETeam team, FDestructibleTileData &DestructibleData );
-
-	void SuperSafeClearTileBlockedByUnitFlag(class UXComGameState_Unit* BlockingUnit);
-
 	void MaybeAddForcedDestructionGamestates(class UXComGameState *NewGameState, const TArray<AXComDestructibleActor*> &Destructibles, class UXComGameState_EnvironmentDamage *DamageEvent);
 
 	//Debugging
@@ -1188,6 +1186,7 @@ defaultproperties
 	LastFloorHeight = -1.0
 	bDebugBlockingTiles = false
 	bEnableFOW = true
+	bDebugEnableFOW = true;
 	bEnableFOWUpdate = false
 	bUpdatingVisibility = false
 	bUseSingleThreadedSolver = false

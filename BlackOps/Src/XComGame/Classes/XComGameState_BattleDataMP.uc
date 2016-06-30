@@ -13,6 +13,7 @@ class XComGameState_BattleDataMP extends XComGameState_BattleData
 // Contains configuration settings for hosting this game online.
 var OnlineGameSettings              GameSettings;
 
+var string BizAnalyticsSessionID;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // cpptext

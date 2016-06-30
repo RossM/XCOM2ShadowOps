@@ -1,7 +1,13 @@
 //---------------------------------------------------------------------------------------
 //  FILE:    X2Action_PlayMatinee.uc
 //  AUTHOR:  David Burchanowski  --  2/10/2014
-//  PURPOSE: Plays a matinee in a gamestate safe manner
+//  PURPOSE: Plays a matinee (or matinee) in a gamestate safe manner. Allows playing multiple 
+//           matinees simultaneously, so that you can mix and max (or mod in) new character types 
+//           (or even new slots for existing character types). All slots from all playing matinees
+//           are available to AddUnitToMatinee().
+//           Note that all matinees with the BaseMatineeComment set will be loaded with the base automatically,
+//           so you can load them all with a single call to SelectMatineeByTag, even if
+//           some were added by mods.
 //           
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
@@ -27,8 +33,16 @@ struct native NonUnitToBaseMapping
 	var name AttachName;
 };
 
-// handle to the matinee we want to play
-var SeqAct_Interp Matinee;
+cpptext
+{
+private:
+	// builds a list of all variable links for each of the matinees in the Matinees array
+	void GetAllMatineeVariableLinks(TArray<FSeqVarLink*>& AllLinks);
+}
+
+// handle to the matinee (and any auxillary matinees) we want to play. All of them will play simultaneously,
+// the first one is considered the primary matinee
+var array<SeqAct_Interp> Matinees;
 
 // units that will participate in this matinee, and the matinee groups that will control them
 var private array<UnitToMatineeGroupMapping> UnitMappings;
@@ -36,8 +50,10 @@ var private array<UnitToMatineeGroupMapping> UnitMappings;
 // used when rebasing the matinee seqvars actors, so that they can be unrebased.
 var private array<NonUnitToBaseMapping> NonUnitMappings;
 
-// actor to use as the "base" of this matinee
-var protected Actor MatineeBase;
+// matinees will be "based" on a specific actor in the world, allowing us to move the entire matinee
+// just by moving the base. Each overlayed matinee will also have it's own base, so we need to be sure
+// we move them all
+var protected array<Actor> MatineeBases;
 
 // socket in the base actor to use, if any
 var protected name MatineeBaseSocket;
@@ -55,6 +71,9 @@ var private X2Camera_Matinee MatineeCamera;
 var private bool bRebaseNonUnitVariables;
 
 var protected bool MatineeSkipped; // set to true if the matinee is skipped by the user
+
+// if true, units will remain hidden after the matinee finishes playing
+var PostMatineeVisibility PostMatineeUnitVisibility;
 
 // wrappers to native since the matinee interfaces require native access
 native private function StartMatinee();
@@ -96,11 +115,11 @@ function SetMatineeBase(name MatineeBaseActorTag, optional name MatineeBaseSocke
 	if(MatineeBaseActorTag == '')
 	{
 		// no base specified, so just clear any previous one if there was one
-		MatineeBase = none;
+		MatineeBases.Length = 0;
 		return;
 	}
 
-	if(Matinee == none)
+	if(Matinees.Length == 0)
 	{
 		`Redscreen("Attempting to set Matinee Base but no Matinee has been set yet!");
 		return;
@@ -112,8 +131,7 @@ function SetMatineeBase(name MatineeBaseActorTag, optional name MatineeBaseSocke
 		{
 			if (PotentialBaseNonSkel.Tag == MatineeBaseActorTag)
 			{
-				MatineeBase = PotentialBaseNonSkel;
-				break;
+				MatineeBases.AddItem(PotentialBaseNonSkel);
 			}
 		}
 	}
@@ -123,13 +141,12 @@ function SetMatineeBase(name MatineeBaseActorTag, optional name MatineeBaseSocke
 		{
 			if (PotentialBase.Tag == MatineeBaseActorTag)
 			{
-				MatineeBase = PotentialBase;
-				break;
+				MatineeBases.AddItem(PotentialBase);
 			}
 		}
 	}
 
-	if(MatineeBase == none)
+	if(MatineeBases.Length == 0)
 	{
 		`Redscreen("Could not find dropship intro base actor with tag: " $ string(MatineeBaseActorTag));
 		return;
@@ -189,7 +206,22 @@ private function RemoveUnitsFromMatinee()
 			UnitMappings[Index].Unit.SyncVisualizer();
 			UnitVisualizer = XGUnit(UnitMappings[Index].Unit.GetVisualizer());
 			UnitVisualizer.GetPawn().m_bHiddenForMatinee = false;
-			UnitVisualizer.SetVisible(UnitMappings[Index].WasUnitVisibile);
+
+			// update the unit's visibility. Some matinees, for example spawns and level exits, may want to force
+			// the gamestate units to be hidden or visible
+			switch(PostMatineeUnitVisibility)
+			{
+			case PostMatineeVisibility_Visible:
+				UnitVisualizer.SetVisible(true);
+				break;
+
+			case PostMatineeVisibility_Hidden:
+				UnitVisualizer.SetVisible(false);
+				break;
+
+			default:
+				UnitVisualizer.SetVisible(UnitMappings[Index].WasUnitVisibile);
+			}
 
 			// destroy the temporary pawn we created
 			UnitMappings[Index].CreatedPawn.Destroy();
@@ -201,24 +233,29 @@ private function RemoveUnitsFromMatinee()
 protected function PlayMatinee()
 {
 	local X2MatineeInfo MatineeInfo;
+	local Actor MatineeBase;
+	local SeqAct_Interp Matinee;
 
 	// make sure we have a matinee to play
-	if(Matinee == none)
+	if(Matinees.Length == 0)
 	{
 		`Redscreen("No matinee specified in X2Action_PlayMatinee!");
 		return;
 	}
 
-	// move the matinee base to the correct location
-	if( MatineeBase != None && MatineeBaseLocation != vect(0,0,0))
+	// move the matinee bases to the correct location
+	if( MatineeBaseLocation != vect(0,0,0))
 	{
+		foreach MatineeBases(MatineeBase)
+		{
 		MatineeBase.SetLocation(MatineeBaseLocation);
 		MatineeBase.SetRotation(MatineeBaseRotation);
+	}
 	}
 
 	// update the timeout so that we can see the entire matinee
 	MatineeInfo = new class'X2MatineeInfo';
-	MatineeInfo.InitFromMatinee(Matinee);
+	MatineeInfo.InitFromMatinee(Matinees[0]);
 	TimeoutSeconds = ExecutingTime + MatineeInfo.GetMatineeDuration() + 5.0f; // timeout 5 seconds after the point where we think we should be finished
 
 	// don't do any visibilty updates during the matinee, or it can mess with pawn visibility
@@ -239,18 +276,21 @@ protected function PlayMatinee()
 	XComTacticalController(GetALocalPlayerController()).SetCinematicMode(true, true, true, true, true, true);
 
 	// create a camera on the camera stack to do the actual camera logic
-	if( !bNewUnitSelected && MatineeBase != none )
+	if( !bNewUnitSelected && MatineeBases.Length > 0 )
 	{
 		MatineeCamera = new class'X2Camera_Matinee';
-		MatineeCamera.SetMatinee(Matinee, MatineeBase);
+		MatineeCamera.SetMatinee(Matinees[0], MatineeBases[0]);
 		MatineeCamera.PopWhenFinished = false;
 		`CAMERASTACK.AddCamera(MatineeCamera);
 	}
 
 	// fixes bug where skipped matinee won't replay (because it thinks it's still playing).  mdomowicz 2015_11_13
+	foreach Matinees(Matinee)
+	{
 	Matinee.Stop();
+	}
 
-	// and play the matinee
+	// and play the matinees
 	StartMatinee();
 }
 
@@ -271,31 +311,39 @@ simulated function SelectMatineeByTag(string TagPrefix)
 	local array<SequenceObject> FoundMatinees;
 	local Sequence GameSeq;
 	local SeqAct_Interp FoundMatinee;
-	local int TotalValid;
 	local int Index;
 
 	GameSeq = class'WorldInfo'.static.GetWorldInfo().GetGameSequence();
 	GameSeq.FindSeqObjectsByClass(class'SeqAct_Interp', true, FoundMatinees);
-	FoundMatinees.RandomizeOrder();
 
-	Matinee = none;
+	// randomize the list and take the first one that matches. Since the input is random, the 
+	// selection will also be random
+	FoundMatinees.RandomizeOrder();
+	Matinees.Length = 0;
 	for (Index = 0; Index < FoundMatinees.length; Index++)
 	{
 		FoundMatinee = SeqAct_Interp(FoundMatinees[Index]);
-		if(Instr(FoundMatinee.ObjComment, TagPrefix, , true) == 0)
+		if(FoundMatinee.BaseMatineeComment == "" && Instr(FoundMatinee.ObjComment, TagPrefix,, true) == 0)
 		{
-			// this math works out such that there is an equal change of any matching matinee being chosen
-			TotalValid++;
-			if(Matinee == none || `SYNC_RAND(TotalValid) == 0)
-			{
-				Matinee = FoundMatinee;
+			Matinees.AddItem(FoundMatinee);
+			break;
 			}
 		}
-	}
 
-	if(Matinee == none)
+	if(Matinees.Length == 0)
 	{
 		`Redscreen("X2Action_PlayMatinee::SelectMatineeByTag(): Could not find Matinee for tag " $ TagPrefix);
+		return;
+	}
+
+	// add any layered auxiallary matinees from mods
+	for (Index = 0; Index < FoundMatinees.length; Index++)
+	{
+		FoundMatinee = SeqAct_Interp(FoundMatinees[Index]);
+		if(FoundMatinee.BaseMatineeComment == Matinees[0].ObjComment)
+	{
+			Matinees.AddItem(FoundMatinee);
+		}
 	}
 }
 
@@ -318,7 +366,7 @@ Begin:
 	PlayMatinee();
 
 	// just wait for the matinee to complete playback
-	while(Matinee != none) // the matinee will be set to none when it is finished/cancelled
+	while(Matinees.Length > 0) // the matinees will be cleared when they are finished
 	{
 		Sleep(0.0f);
 	}

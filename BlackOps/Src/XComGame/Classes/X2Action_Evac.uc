@@ -73,6 +73,8 @@ Begin:
 	}
 	else
 	{
+		if( UnitPawn.EvacWithRope )
+		{
 		RequestRopeArchetype();
 
 		while( RopeTemplate == None )
@@ -81,6 +83,7 @@ Begin:
 		}
 
 		SpawnAndPlayRopeAnim();
+		}
 
 		AnimParams.AnimName = 'HL_EvacStart';
 		AnimParams.PlayRate = GetNonCriticalAnimationSpeed();

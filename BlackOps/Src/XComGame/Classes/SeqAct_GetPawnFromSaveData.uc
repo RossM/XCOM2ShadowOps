@@ -70,7 +70,7 @@ event Activated()
 			{
 				UnitState = XComGameState_Unit(TempHistory.GetGameStateForObjectID(XComHQ.Crew[CrewIndex].ObjectID));
 				
-				if(UnitState.IsASoldier() && UnitState.IsAlive()) //Only soldiers... that are alive
+				if(UnitState != none && UnitState.IsASoldier() && UnitState.GetMyTemplateName() != 'SparkSoldier' && UnitState.IsAlive()) //Only soldiers... that are alive
 				{
 					//Skip over this soldier if we are looking for a specific one
 					if(ChosenSoldierName != "")
@@ -96,7 +96,7 @@ event Activated()
 		{
 			foreach SearchState.IterateByClassType(class'XComGameState_Unit', UnitState)
 			{
-				if(UnitState.IsASoldier() && UnitState.IsAlive()) //Only soldiers... that are alive
+				if(UnitState.IsASoldier() && UnitState.GetMyTemplateName() != 'SparkSoldier' && UnitState.IsAlive()) //Only soldiers... that are alive
 				{
 					UnitStates.AddItem(UnitState);
 				}

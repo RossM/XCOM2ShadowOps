@@ -129,6 +129,11 @@ function UnlockStaffSlot(XComGameState NewGameState)
 //---------------------------------------------------------------------------------------
 function int GetPowerOutput()
 {
+	if (IsUnderConstruction() && PowerOutput > 0)
+	{
+		return 0; // Facilities which produce power do not grant it until construction is completed
+	}
+
 	if (BuiltOnPowerCell())
 	{
 		// If a power generator is built on a power cell, double its output
@@ -569,7 +574,7 @@ function bool DisplayStaffingInfo()
 }
 
 //---------------------------------------------------------------------------------------
-function GetScientistSlots(out int iStaffed, out int iEmpty)
+function GetScientistSlots(out int iStaffed, out int iEmpty, optional bool bIncludeHidden)
 {
 	local XComGameState_StaffSlot StaffSlot;
 	local int i;
@@ -577,7 +582,7 @@ function GetScientistSlots(out int iStaffed, out int iEmpty)
 	for( i = 0; i < StaffSlots.Length; ++i )
 	{
 		StaffSlot = GetStaffSlot(i);
-		if( !StaffSlot.IsLocked() && StaffSlot.IsScientistSlot() )
+		if (!StaffSlot.IsLocked() && StaffSlot.IsScientistSlot() && (bIncludeHidden || !StaffSlot.IsHidden()))
 		{
 			if( StaffSlot.IsSlotFilled() )
 				iStaffed++;
@@ -587,7 +592,7 @@ function GetScientistSlots(out int iStaffed, out int iEmpty)
 	}
 }
 //---------------------------------------------------------------------------------------
-function GetEngineerSlots(out int iStaffed, out int iEmpty)
+function GetEngineerSlots(out int iStaffed, out int iEmpty, optional bool bIncludeHidden)
 {
 	local XComGameState_StaffSlot StaffSlot;
 	local int i;
@@ -595,7 +600,7 @@ function GetEngineerSlots(out int iStaffed, out int iEmpty)
 	for( i = 0; i < StaffSlots.Length; ++i )
 	{
 		StaffSlot = GetStaffSlot(i);
-		if( !StaffSlot.IsLocked() && StaffSlot.IsEngineerSlot() )
+		if (!StaffSlot.IsLocked() && StaffSlot.IsEngineerSlot() && (bIncludeHidden || !StaffSlot.IsHidden()))
 		{
 			if( StaffSlot.IsSlotFilled() )
 				iStaffed++;
@@ -606,7 +611,7 @@ function GetEngineerSlots(out int iStaffed, out int iEmpty)
 }
 
 //---------------------------------------------------------------------------------------
-function GetSoldierSlots(out int iStaffed, out int iEmpty)
+function GetSoldierSlots(out int iStaffed, out int iEmpty, optional bool bIncludeHidden)
 {
 	local XComGameState_StaffSlot StaffSlot;
 	local int i;
@@ -614,7 +619,7 @@ function GetSoldierSlots(out int iStaffed, out int iEmpty)
 	for( i = 0; i < StaffSlots.Length; ++i )
 	{
 		StaffSlot = GetStaffSlot(i);
-		if( !StaffSlot.IsLocked() && StaffSlot.IsSoldierSlot() )
+		if (!StaffSlot.IsLocked() && StaffSlot.IsSoldierSlot() && (bIncludeHidden || !StaffSlot.IsHidden()))
 		{
 			if( StaffSlot.IsSlotFilled() )
 				iStaffed++;

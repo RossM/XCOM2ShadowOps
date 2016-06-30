@@ -1423,7 +1423,7 @@ function CreateChallengeStartState()
 	}
 
 	//Create the basic strategy objects
-	class'XComGameStateContext_StrategyGameRule'.static.CreateStrategyGameStart(,false);
+	class'XComGameStateContext_StrategyGameRule'.static.CreateStrategyGameStart(,false, , , , , false);
 
 	//Create the tactical rule-set
 	m_NewStartState = class'XComGameStateContext_TacticalGameRule'.static.CreateDefaultTacticalStartState_Singleplayer(m_BattleData);

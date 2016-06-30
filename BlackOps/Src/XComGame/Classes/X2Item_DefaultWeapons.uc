@@ -1390,7 +1390,7 @@ static function X2DataTemplate CreateTemplate_Sword_Magnetic()
 
 	Template.ItemCat = 'weapon';
 	Template.WeaponCat = 'sword';
-	Template.WeaponTech = 'conventional';
+	Template.WeaponTech = 'magnetic';
 	Template.strImage = "img:///UILibrary_Common.MagSecondaryWeapons.MagSword";
 	Template.EquipSound = "Sword_Equip_Magnetic";
 	Template.InventorySlot = eInvSlot_SecondaryWeapon;

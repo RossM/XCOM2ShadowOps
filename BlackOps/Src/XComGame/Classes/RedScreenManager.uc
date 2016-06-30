@@ -21,7 +21,7 @@ function XComPresentationLayerBase GetPresentationLayer()
 
 event bool IsPresLayerReady()
 {
-	return GetPresentationLayer() != none && GetPresentationLayer().m_bPresLayerReady;
+	return GetPresentationLayer() != none && GetPresentationLayer().IsPresentationLayerReady();
 }
 
 event ActivateRedScreen()

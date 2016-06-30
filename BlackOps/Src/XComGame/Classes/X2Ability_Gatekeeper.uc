@@ -33,7 +33,7 @@ var config int GATEKEEPER_PSI_EXPLOSION_ENV_DMG;
 const GATEKEEPER_CLOSED_VALUE=0;	// Arbitrary value designated as the closed value.
 const GATEKEEPER_OPEN_VALUE=1;		// Arbitrary value designated as the open value.
 
-var private name DeathExplosionUnitValName;
+var privatewrite name DeathExplosionUnitValName;
 var private name OpenedEffectName;
 
 static function array<X2DataTemplate> CreateTemplates()
@@ -467,6 +467,7 @@ static function X2AbilityTemplate CreateMassPsiReanimationAbility()
 	PsiDamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	PsiDamageEffect.EffectDamageValue = class'X2Item_DefaultWeapons'.default.GATEKEEPER_MASS_PSI_REANIMATION_BASEDAMAGE;
 	PsiDamageEffect.EffectDamageValue.DamageType = 'Psi';
+	PsiDamageEffect.bIgnoreArmor = true;
 	PsiDamageEffect.bAlwaysKillsCivilians = true;
 
 	// Targets for damage must be alive
@@ -629,6 +630,8 @@ simulated function AnimaInversion_BuildVisualization(XComGameState VisualizeGame
 	}
 
 	OutVisualizationTracks.AddItem(GatekeeperTrack);
+
+	TypicalAbility_AddEffectRedirects(VisualizeGameState, OutVisualizationTracks, GatekeeperTrack);
 }
 
 static function X2AbilityTemplate CreateAnimaConsumeAbility()
@@ -997,7 +1000,7 @@ static function X2AbilityTemplate CreateDeathExplosionAbility()
 	return Template;
 }
 
-simulated function DeathExplosion_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+static simulated function DeathExplosion_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
 {
 	local XComGameStateHistory History;
 	local XComGameStateContext_Ability Context;
@@ -1216,6 +1219,7 @@ static function X2AbilityTemplate CreateMassPsiReanimationMPAbility()
 	PsiDamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	PsiDamageEffect.EffectDamageValue = class'X2Item_DefaultWeapons'.default.GATEKEEPER_MASS_PSI_REANIMATION_BASEDAMAGE;
 	PsiDamageEffect.EffectDamageValue.DamageType = 'Psi';
+	PsiDamageEffect.bIgnoreArmor = true;
 	PsiDamageEffect.bAlwaysKillsCivilians = true;
 
 	// Targets for damage must be alive

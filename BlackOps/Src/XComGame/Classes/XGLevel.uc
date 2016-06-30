@@ -122,7 +122,7 @@ function SetupXComFOW(bool bEnable)
 						FOWEffect = XComFOWEffect(PPChain.Effects[EffectIdx]);
 
 						//Even if we don't turn it on, set all its variables so that it will be ready if we DO turn it on
-						FOWEffect.bShowFOW = bEnable && WorldData.NumX != 0 && WorldData.bEnableFOW;			
+						FOWEffect.bShowFOW = bEnable && WorldData.NumX != 0 && WorldData.bEnableFOW && WorldData.bDebugEnableFOW;			
 						FOWEffect.LevelVolumePosition = WorldData.WorldBounds.Min;
 						FOWEffect.LevelVolumeDimensions.X = 1.0/(WorldData.NumX * class'XComWorldData'.const.WORLD_StepSize);
 						FOWEffect.LevelVolumeDimensions.Y = 1.0/(WorldData.NumY * class'XComWorldData'.const.WORLD_StepSize); 

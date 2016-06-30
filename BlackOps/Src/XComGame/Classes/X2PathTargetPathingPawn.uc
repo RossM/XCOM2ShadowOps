@@ -20,4 +20,5 @@ function UpdateObjectiveTiles(XComGameState_Unit InActiveUnitState);
 
 defaultproperties
 {
+	AllowSelectionOfActiveUnitTile=true
 }

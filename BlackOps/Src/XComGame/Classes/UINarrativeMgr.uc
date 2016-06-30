@@ -864,11 +864,12 @@ simulated function bool AddConversation(name nmConversation, delegate<OnNarrativ
 {
 	local LevelStreaming StreamedLevel;
 	local TConversation PendingConversation;
+	local XComCheatManager CheatManager;
 
 	`log("AddConversation:"@nmConversation@":"@NarrativeMoment@GetScriptTrace(), , 'XComNarrative');
 
-	`if (`notdefined(FINAL_RELEASE))
-		if( XComCheatManager(`XCOMGRI.GetALocalPlayerController().CheatManager) != none && XComCheatManager(`XCOMGRI.GetALocalPlayerController().CheatManager).bNarrativeDisabled )
+	CheatManager = XComCheatManager(`XCOMGRI.GetALocalPlayerController().CheatManager);
+	if( CheatManager != none && CheatManager.bNarrativeDisabled )
 		{
 			if( InNarrativeCompleteCallback != none )
 			{
@@ -877,7 +878,6 @@ simulated function bool AddConversation(name nmConversation, delegate<OnNarrativ
 
 			return true;
 		}
-	`endif
 
 		// jboswell: Detect scary cases and bitch/bail
 		// If this happens, more than likely someone needs to go in and re-associate the conversations with
@@ -898,9 +898,16 @@ simulated function bool AddConversation(name nmConversation, delegate<OnNarrativ
 	if( m_arrConversations.Length != 0 )
 	{
 		// check to see if the conversation to add is the same as currently spoken...
-		if( m_arrConversations[0].NarrativeMoment.iID == NarrativeMoment.iID )
+		if( m_arrConversations[0].NarrativeMoment == NarrativeMoment )
 		{
 			// and if so, don't add it.
+
+			// but still call the on-complete, or we might block gameplay
+			if(InNarrativeCompleteCallback != none)
+			{
+				InNarrativeCompleteCallback();
+			}
+
 			return true;
 		}
 	}

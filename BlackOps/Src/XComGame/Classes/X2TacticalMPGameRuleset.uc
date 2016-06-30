@@ -868,6 +868,8 @@ simulated state TurnPhase_MPGameStart
 
 		bRulesetRunning = true;
 
+		class'AnalyticsManager'.static.SendMPStartTelemetry( CachedHistory );
+
 		// Do not keep a record of this state in the History.
 	}
 
@@ -1092,6 +1094,10 @@ Begin:
 
 	//Let the other player know the timer has been reset after the visualizer is complete to avoid having the timer stopped due to a busy visualizer.
 	SendResetTime();
+
+	`SETLOC("Checking for Tactical Game Ended - PreActions");
+	//Perform fail safe checking for whether the tactical battle is over
+	FailsafeCheckForTacticalGameEnded();
 
 	`SETLOC("Check for Available Actions");
 	while( ActionsAvailable() && (!HasTacticalGameEnded()) && (!HasTimeExpired()) )
@@ -1364,6 +1370,8 @@ Begin:
 	Local_UpdateBattleData();
 	Local_WritePlayerStats();
 
+	class'AnalyticsManager'.static.SendMPEndTelemetry( CachedHistory, true );
+
 	bShouldDisconnect = true; // Always disconnecting!
 	if( bShouldDisconnect )
 	{
@@ -1505,6 +1513,8 @@ simulated state ConnectionClosed
 		OnlineEventManager.FillLastMatchPlayerInfoFromPRI(OnlineEventManager.m_kMPLastMatchInfo.m_kLocalPlayerInfo, XComMPTacticalPRI(LocalController.PlayerReplicationInfo));
 		WriteOnlineStatsForPlayer(BattleData, LocalPlayer, "Disconnected");
 		FinishWriteOnlineStats();
+
+		class'AnalyticsManager'.static.SendMPEndTelemetry( CachedHistory, false );
 	}
 
 Begin:

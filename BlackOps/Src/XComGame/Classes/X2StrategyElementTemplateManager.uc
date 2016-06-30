@@ -121,13 +121,16 @@ function array<X2AvengerAnimationTemplate> GetRandomizedAnimationTemplates()
 	return Result;
 }
 
-function array<X2StrategyElementTemplate> GetAllTemplatesOfClass(class<X2StrategyElementTemplate> TemplateClass)
+function array<X2StrategyElementTemplate> GetAllTemplatesOfClass(class<X2StrategyElementTemplate> TemplateClass, optional int UseTemplateGameArea=-1)
 {
 	local array<X2StrategyElementTemplate> arrTemplates;
 	local X2DataTemplate Template;
 
 	foreach IterateTemplates(Template, none)
 	{
+		if ((UseTemplateGameArea > -1) && !Template.IsTemplateAvailableToAllAreas(UseTemplateGameArea))
+			continue;
+
 		if (ClassIsChildOf(Template.Class, TemplateClass))
 		{
 			arrTemplates.AddItem(X2StrategyElementTemplate(Template));

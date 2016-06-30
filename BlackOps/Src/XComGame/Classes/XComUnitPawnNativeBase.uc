@@ -50,13 +50,6 @@ struct native FootIKInfo
 	var float						vCachedHitZ;
 };
 
-enum EXComUnitPawn_RagdollFlag
-{
-	ERagdoll_IfDamageTypeSaysTo,
-	ERagdoll_Always,
-	ERagdoll_Never
-};
-
 // holds physics and collision state -tsmith 
 struct native PhysicsState
 {
@@ -107,6 +100,7 @@ var float m_fTotalDistanceAlongPath;
 var float m_fDistanceMovedAlongPath;
 var float m_fDistanceToStopExactly;                 // Use this to stop at exactly this distance for things like climbovers/ontos/ladders etc.
 var int m_iLastInterval_MoveReactionProcessing;     // MHU - Utilized for Reaction Processing while moving.
+var(XComUnitPawn) float FollowDelay;
 
 // Stair volume
 var XComStairVolume m_StairVolume;
@@ -605,7 +599,7 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 native function HideAllAttachments(bool ShouldHide = true);
 
 native function XComAnimTreeController GetAnimTreeController();
-native function AnimNodeSequence PlayWeaponAnim(const out CustomAnimParams Params);
+native function AnimNodeSequence PlayWeaponAnim(out CustomAnimParams Params);
 
 native function SetAiming(bool Enable, float BlendTime, optional Name SocketOrBone = 'gun_fire', optional bool ShouldTurn = false);
 native function Vector2D GetAimDifference();
@@ -616,6 +610,7 @@ native function UpdateAiming(float DT);
 simulated function UpdateAimProfile(optional string DirectRequest)
 {
 	local string aimProfileToUse;
+	local XComAnimTreeController ATC;
 
 	if( DirectRequest == "" && Weapon != none)
 	{
@@ -626,39 +621,41 @@ simulated function UpdateAimProfile(optional string DirectRequest)
 		aimProfileToUse = DirectRequest;
 	}
 
-	GetAnimTreeController().SetStandingAimOffsetNodeProfile(name(aimProfileToUse));
+	ATC = GetAnimTreeController();
+	if (ATC != none)
+		ATC.SetStandingAimOffsetNodeProfile(name(aimProfileToUse));
 }
 
 // MHU - Ensures custom animsets have been hooked up according to equipped weapon.
 simulated exec function UpdateAnimations()
 {
-	if ( !IsA('XComCivilian') )
+	local XComAnimTreeController ATC;
+
+	// Need to perform animset overriding on a per weapon basis.
+	XComUpdateAnimSetList();
+
+	// Need to ensure the right aim profiles are selected for the FocusFire aim node
+	UpdateAimProfile();
+
+	ATC = GetAnimTreeController();
+
+	if (ATC != none)
 	{
-		// Need to perform animset overriding on a per weapon basis.
-		XComUpdateAnimSetList();
+		if (fStopDistanceNoCover == 0)
+			fStopDistanceNoCover = ATC.ComputeAnimationRMADistance(`XANIMNAME(eAnim_Running2NoCoverStart));
 
-		// Need to ensure the right aim profiles are selected for the FocusFire aim node
-		UpdateAimProfile();
+		if (fStopDistanceCover == 0)
+			fStopDistanceCover = ATC.ComputeAnimationRMADistance(`XANIMNAME(eAnim_Running2CoverRightStart));
+
+		if (fRunStartDistance == 0)
+			fRunStartDistance = ATC.ComputeAnimationRMADistance('MV_RunFwd_StartA');
+
+		if (fRunTurnDistance == 0)
+			fRunTurnDistance = ATC.ComputeAnimationRMADistance('MV_RunTurn90LeftA');
+
+		if (fStrangleStopDistance == 0)
+			fStrangleStopDistance = ATC.ComputeAnimationRMADistance('NO_StrangleStopA');
 	}
-	else
-	{
-		Mesh.UpdateAnimations();
-	}
-
-	if (fStopDistanceNoCover == 0)
-		fStopDistanceNoCover = GetAnimTreeController().ComputeAnimationRMADistance(`XANIMNAME(eAnim_Running2NoCoverStart));
-
-	if (fStopDistanceCover == 0)
-		fStopDistanceCover = GetAnimTreeController().ComputeAnimationRMADistance(`XANIMNAME(eAnim_Running2CoverRightStart));
-
-	if (fRunStartDistance == 0)
-		fRunStartDistance = GetAnimTreeController().ComputeAnimationRMADistance('MV_RunFwd_StartA');
-
-	if (fRunTurnDistance == 0)
-		fRunTurnDistance = GetAnimTreeController().ComputeAnimationRMADistance('MV_RunTurn90LeftA');
-
-	if (fStrangleStopDistance == 0)
-		fStrangleStopDistance = GetAnimTreeController().ComputeAnimationRMADistance('NO_StrangleStopA');
 }
 
 simulated function bool XComUpdateOpenCloseStateNode(EUnitPawn_OpenCloseState eDesiredState, optional bool bImmediate = false)
@@ -873,7 +870,7 @@ simulated event RagdollNotify()
 }
 
 //  jbouscher - called from AnimNotify_CosmeticUnit
-simulated event AnimateCosmeticUnit(name AnimName)
+simulated event AnimateCosmeticUnit(name AnimName, bool Looping)
 {
 	local XComGameState_Unit UnitState;
 	local XComGameState_Item ItemState;
@@ -892,6 +889,7 @@ simulated event AnimateCosmeticUnit(name AnimName)
 				if (CosmeticUnit.GetPawn().GetAnimTreeController().CanPlayAnimation(AnimName))
 				{
 					AnimParams.AnimName = AnimName;
+					AnimParams.Looping = Looping;
 					CosmeticUnit.GetPawn().GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams);
 				}
 			}
@@ -1869,6 +1867,8 @@ DefaultProperties
 		BlockZeroExtent = TRUE
 		bAcceptsDynamicDecals = TRUE
 	End Object
+
+	FollowDelay = 0.2f
 
 	m_kLowerFacialMC = LowerFacialMesh
 	Components.Add(LowerFacialMesh)

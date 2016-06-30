@@ -142,7 +142,7 @@ simulated function RequestFullPawnContent()
 		if(UnitState != none)
 		{
 			bShouldUseUnderlay = XComHeadquartersGame(class'Engine'.static.GetCurrentWorldInfo().Game).GetGamecore().m_kGeoscape.m_kBase.m_kCrewMgr.ShouldUseUnderlay();
-			bShouldUseUnderlay = bShouldUseUnderlay && !UnitState.GetMyTemplate().bForceAppearance && (UnitState.IsASoldier() || UnitState.IsAScientist() || UnitState.IsAnEngineer());
+			bShouldUseUnderlay = bShouldUseUnderlay && !UnitState.GetMyTemplate().bWearArmorInBase && !UnitState.GetMyTemplate().bForceAppearance && (UnitState.IsASoldier() || UnitState.IsAScientist() || UnitState.IsAnEngineer());
 		}
 
 		if(bShouldUseUnderlay)
@@ -434,16 +434,19 @@ simulated event FinishAnimControl(InterpGroup InInterpGroup)
 
 simulated exec function UpdateAnimations()
 {
-	local CustomAnimParams AnimParams;
+	local CustomAnimParams AnimParams, RemoveParams;
 
 	super.UpdateAnimations();
 
-	if( TorsoContent.UnitPawnAnimSets.Length > 0 )
+	if( TorsoContent != none && TorsoContent.UnitPawnAnimSets.Length > 0 )
 	{
 		XComAddAnimSetsExternal(TorsoContent.UnitPawnAnimSets);
 		if( GetAnimTreeController().CanPlayAnimation('ADD_SwordSocketOffset') )
 		{
 			AnimParams.AnimName = 'ADD_SwordSocketOffset';
+			AnimParams.BlendTime = 0.0f;
+			RemoveParams = AnimParams;
+			GetAnimTreeController().RemoveAdditiveDynamicAnim(RemoveParams);
 			GetAnimTreeController().PlayAdditiveDynamicAnim(AnimParams);
 		}
 	}
@@ -1066,7 +1069,7 @@ function WakePhysics()
 	}
 }
 
-simulated function FreezeHair() 
+simulated function FreezeHair()
 {
 	
 }

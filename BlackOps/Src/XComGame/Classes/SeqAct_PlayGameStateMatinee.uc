@@ -11,6 +11,14 @@ class SeqAct_PlayGameStateMatinee extends SequenceAction
 	implements(X2KismetSeqOpVisualizer)
 	native;
 
+// This lives here instead of in X2Action_PlayMatinee due to a cyclic dependency
+enum PostMatineeVisibility
+{
+	PostMatineeVisibility_Unchanged,
+	PostMatineeVisibility_Visible,
+	PostMatineeVisibility_Hidden,	
+};
+
 cpptext
 {
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent);
@@ -30,6 +38,9 @@ var() string MatineeComment;
 // Allows the LDs to specify a world space location for this matinee to play at
 var() string MatineeBaseActorTag;
 var() string MatineeBaseActorSocket;
+
+// If true, leaves game units hidden after playback completes, regardless of what state they were in before
+var() PostMatineeVisibility PostMatineeUnitVisibility;
 
 // finds the matinee with our tag in the loaded maps
 native private function SeqAct_Interp FindMatinee();
@@ -62,8 +73,9 @@ function BuildVisualization(XComGameState GameState, out array<VisualizationTrac
 	}
 
 	MatineeAction = X2Action_PlayMatinee(class'X2Action_PlayMatinee'.static.AddToVisualizationTrack(Track, GameState.GetContext()));
-	MatineeAction.Matinee = FindMatinee();
+	MatineeAction.Matinees.AddItem(FindMatinee());
 	MatineeAction.SetMatineeBase(name(MatineeBaseActorTag), name(MatineeBaseActorSocket));
+	MatineeAction.PostMatineeUnitVisibility = PostMatineeUnitVisibility;
 
 	// add the unit mappings -> group name
 	foreach VariableLinks(VarLink)
@@ -82,6 +94,11 @@ function BuildVisualization(XComGameState GameState, out array<VisualizationTrac
 	}
 
 	VisualizationTracks.AddItem(Track);
+}
+
+static event int GetObjClassVersion()
+{
+	return super.GetObjClassVersion() + 1;
 }
 
 defaultproperties

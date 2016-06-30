@@ -572,8 +572,10 @@ private function array<ParcelDefinition> GetRandomizedParcelDefinitions()
 	local array<ParcelDefinition> Result;
 	local ParcelDefinition ParcelDef;
 	local int PlotTypeIndex;
+	local XComMapManager MapManager;
 
 	CardManager = class'X2CardManager'.static.GetCardManager();
+	MapManager = `MAPS;
 
 	// add cards for all parcel definitions that are of the correct plot type
 	// it's possible that parcels were added since the last time the game was run, so this needs to happen every
@@ -593,6 +595,13 @@ private function array<ParcelDefinition> GetRandomizedParcelDefinitions()
 	// and get the parcel def for each map
 	foreach ParcelMapNames(ParcelMapName)
 	{
+		if (!MapManager.DoesMapPackageExist(ParcelMapName))
+		{
+			`Redscreen("ERROR: UXComParcelManager::GetRandomizedParcelDefinitions - Excluding Parcel Map: '"@ParcelMapName@"', Unable to find associated package");
+			CardManager.RemoveCardFromDeck('Parcels', ParcelMapName);
+			continue;
+		}
+
 		if(GetParcelDefinitionForMapname(ParcelMapName, ParcelDef))
 		{
 			if(ParcelDef.arrPlotTypes.Find('strPlotType', PlotType.strType) != INDEX_NONE) // could be other plot type cards from previous missions in the deck
@@ -2172,12 +2181,12 @@ function DebugSoldierSpawns()
 		}
 
 		// check for being outside of falcon volume spawn limiters
-		IsOutsideFalconVolumes = false;
+		IsOutsideFalconVolumes = true;
 		foreach FalconVolumes(FalconVolume)
 		{
-			if(!FalconVolume.ContainsPoint(GroupSpawn.Location))
+			if(FalconVolume.ContainsPoint(GroupSpawn.Location))
 			{
-				IsOutsideFalconVolumes = true;
+				IsOutsideFalconVolumes = false;
 				break;
 			}
 		}

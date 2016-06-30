@@ -33,8 +33,63 @@ cpptext
 // This is to support clearing the effect, since the random coverage is not deterministic
 native function GetAffectedTiles(out array<TilePosPair> Tiles, out array<int> Intensities, optional bool AllPossible = true);
 
+// Applies the effect to all units in the specified tiles (basically the result from GetAffectedTiles)
+native function ApplyToUnits(const out array<TilePosPair> Tiles, const out array<int> Intensities, XComGameState NewGameState);
+
 // Removes this effect from all tiles contained in the volume
 native function ClearAffectedTiles(XComGameState NewGameState);
+
+// Adds visualization for a game state that called ApplyToUnits or ClearAffectedUnits
+function AddVisualizationTracks(XComGameState GameState, out array<VisualizationTrack> VisualizationTracks)
+{
+	local X2Effect_World WorldEffect;
+	local XComGameState_WorldEffectTileData WorldEffectData;
+	local XComGameState_Unit UnitState;
+	local VisualizationTrack BuildTrack;
+	local VisualizationTrack EmptyTrack;
+	local StateObjectReference EffectStateRef;
+	local XComGameState_Effect EffectState;
+	local X2Effect_Persistent ApplyEffect;
+
+	WorldEffect = X2Effect_World(class'XComEngine'.static.GetClassDefaultObject(TileEffect));
+
+	// do visualization for the world
+	foreach GameState.IterateByClassType(class'XComGameState_WorldEffectTileData', WorldEffectData)
+	{
+		BuildTrack.StateObject_OldState = WorldEffectData;
+		BuildTrack.StateObject_NewState = WorldEffectData;
+		WorldEffect.AddX2ActionsForVisualization(GameState, BuildTrack, '');
+		VisualizationTracks.AddItem(BuildTrack);
+		break;
+	}
+
+	// and for the units
+	foreach GameState.IterateByClassType(class'XComGameState_Unit', UnitState)
+	{
+		BuildTrack = EmptyTrack;
+		BuildTrack.StateObject_OldState = UnitState;
+		BuildTrack.StateObject_NewState = UnitState;
+
+		foreach UnitState.AffectedByEffects(EffectStateRef)
+		{
+			EffectState = XComGameState_Effect(GameState.GetGameStateForObjectID(EffectStateRef.ObjectID));
+			if( EffectState != none )
+			{
+				//Assume that effect names are the same for each tile
+				ApplyEffect = EffectState.GetX2Effect();
+				if( ApplyEffect != none && GameState.GetGameStateForObjectID(EffectState.ObjectID) != none ) // only visualize effects that were added in this state
+				{
+					ApplyEffect.AddX2ActionsForVisualization(GameState, BuildTrack, 'AA_Success');
+				}
+			}
+		}
+
+		if(BuildTrack.TrackActions.Length > 0)
+		{
+			VisualizationTracks.AddItem(BuildTrack);
+		}
+	}
+}
 
 defaultproperties
 {

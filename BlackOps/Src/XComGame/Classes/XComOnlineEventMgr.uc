@@ -293,7 +293,7 @@ function EvalName(XComGameState_Unit TestUnit)
 	local name SuperSoldierID;
 	local int SoldierIndex;
 
-	if(`GAME != none)
+	if(`GAME != none && TestUnit.IsASoldier() && TestUnit.GetMyTemplateName() == 'Soldier')
 	{
 		if(TestUnit.GetFirstName() == "Sid" && TestUnit.GetLastName() == "Meier")
 		{
@@ -349,7 +349,7 @@ function PromptSummonSuperSoldier(ConfigurableSoldier SoldierConfig, XComGameSta
 
 	SuperSoldierRef = ConvertedSoldierState.GetReference();
 	Photo = `GAME.StrategyPhotographer;
-	Photo.AddHeadshotRequest(SuperSoldierRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, ShowSuperSoldierAlert, class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook());
+	Photo.AddHeadshotRequest(SuperSoldierRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, ShowSuperSoldierAlert);
 }
 
 private simulated function ShowSuperSoldierAlert(const out HeadshotRequestInfo ReqInfo, TextureRenderTarget2D RenderTarget)
@@ -1002,7 +1002,7 @@ event ShowPostLoadMessages()
 	if( (bIsPS3Build && LoadedSaveDataFromAnotherUserPS3()) || !bAchivementsEnabled )
 	{
 		Presentation = XComPlayerController(class'UIInteraction'.static.GetLocalPlayer(0).Actor).Pres; // GetLocalPlayer takes player index not controller index. Do not user LocalUserIndex.
-		if( Presentation != none && Presentation.m_bPresLayerReady )
+		if( Presentation != none && Presentation.IsPresentationLayerReady() )
 		{
 			DialogData.eType = eDialog_Warning;
 			if (bAchievementsDisabledXComHero)
@@ -2245,7 +2245,7 @@ private simulated function LossOfSaveDevice()
 	Presentation = ActiveController.Pres; // GetLocalPlayer takes player index not controller index. Do not user LocalUserIndex.
 	PlayerCamera =ActiveController.PlayerCamera; 
 	if( Presentation != none 
-		&& Presentation.m_bPresLayerReady 
+	   && Presentation.IsPresentationLayerReady()
 		&& Presentation.Get2DMovie().DialogBox != none 
 		&& !Presentation.Get2DMovie().DialogBox.ShowingDialog() 
 		&& !Presentation.IsInState('State_ProgressDialog') 
@@ -2354,7 +2354,7 @@ private function bool IsPresentationLayerReady()
 	local XComPresentationLayerBase Presentation;
 	Presentation = XComPlayerController(class'UIInteraction'.static.GetLocalPlayer(0).Actor).Pres; // GetLocalPlayer takes player index not controller index. Do not user LocalUserIndex.
 
-	return Presentation != none && Presentation.m_bPresLayerReady && Presentation.Get2DMovie().DialogBox != none;
+	return Presentation != none && Presentation.IsPresentationLayerReady() && Presentation.Get2DMovie().DialogBox != none;
 }
 
 function bool WaitingForPlayerProfileRead()
@@ -2450,6 +2450,7 @@ function CheckGameProgress(EAchievementType Type)
 				
 				// let bizdev know how awesome we are
 				`FXSLIVE.AnalyticsGameProgress(string(GetEnum(enum'EAchievementType', EAchievementType(Type))), float(progressCount) / 12);
+				class'AnalyticsManager'.static.SendGameProgressTelemetry( History, string(GetEnum(enum'EAchievementType', EAchievementType(Type))) );
 			}
 		}
 	}
@@ -3653,7 +3654,7 @@ public function string GetSystemMessageTitle(ESystemMessageType eMessageType)
 
 	// GetLocalPlayer takes player index not controller index. Do not user LocalUserIndex.
 	Presentation = XComPlayerController(class'UIInteraction'.static.GetLocalPlayer(0).Actor).Pres;
-	`log(`location @ `ShowVar(eMessageType) @ `ShowVar(Presentation) @ `ShowVar(Presentation.m_bPresLayerReady));
+	`log(`location @ `ShowVar(eMessageType) @ `ShowVar(Presentation) @ `ShowVar(Presentation.IsPresentationLayerReady()));
 	sSystemMessage = "";
 	sSystemMessage = m_sSystemMessageTitles[eMessageType];
 	return sSystemMessage;

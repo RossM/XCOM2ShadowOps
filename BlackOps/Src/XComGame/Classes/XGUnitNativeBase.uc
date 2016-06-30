@@ -1398,6 +1398,9 @@ function AddProjectileVolley(AnimNotify_FireWeaponVolley Notify)
 	local XComGameState_Ability AbilityState;
 	local XGWeapon AmmoWeapon;
 	local XComWeapon AmmoEntity;
+	local name EffectIter;
+	local XComGameState_Effect EffectState;
+	local Actor EffectProjectileTemplate;
 	
 	UnitPawn = GetPawn();
 	if (Notify.bPerkVolley == false)
@@ -1493,6 +1496,26 @@ function AddProjectileVolley(AnimNotify_FireWeaponVolley Notify)
 				if (PerkContent.CasterProjectile != none)
 				{
 					SpawnAndConfigureNewProjectile(PerkContent.CasterProjectile, Notify, AbilityContext, WeaponEntity);
+				}
+			}
+
+			//Create projectiles for effects that are interested
+			if (class'X2AbilityTemplateManager'.default.EffectsForProjectileVolleys.Length > 0)
+			{
+				if (UnitState == none)
+					UnitState = GetVisualizedGameState();
+
+				foreach class'X2AbilityTemplateManager'.default.EffectsForProjectileVolleys(EffectIter)
+				{
+					EffectState = UnitState.GetUnitAffectedByEffectState(EffectIter);
+					if (EffectState != none)
+					{
+						EffectProjectileTemplate = EffectState.GetX2Effect().GetProjectileVolleyTemplate(UnitState, EffectState, AbilityContext);
+						if (EffectProjectileTemplate != None)
+						{
+							SpawnAndConfigureNewProjectile(EffectProjectileTemplate, Notify, AbilityContext, WeaponEntity);
+						}
+					}
 				}
 			}
 		}
@@ -1649,7 +1672,9 @@ function bool HasOverrideDeathAnim(out Name DeathAnim)
 		}
 		return true;
 	}
-	return false;
+
+	// Check to see if this GameState Unit has an override anim 
+	return StateObject.HasOverrideDeathAnimOnLoad(DeathAnim);
 }
 
 defaultproperties

@@ -62,9 +62,17 @@ simulated function bool OnUnrealCommand(int cmd, int arg)
 
 simulated function BuildScreen()
 {
-	m_kStaffSlotContainer.SetTitle(m_strEngineers);
+	// Only display the Engineer count if there aren't any staff slots
+	if( m_kStaffSlotContainer.StaffSlots.Length == 0 )
+	{
+		m_kStaffSlotContainer.SetTitle(m_strEngineers);
+	}
 	m_kStaffSlotContainer.SetStaffSkill(class'UIUtilities_Image'.const.AlertIcon_Engineering, String(XCOMHQ().GetNumberOfEngineers()));
+	
+	//Don't add this tooltip if we have staffslots up simultaneously. 
+	if( m_kStaffSlotContainer.StaffSlots.Length == 0 )
 	m_kStaffSlotContainer.SetTooltipText(m_strStaffTooltip);
+	
 }
 
 simulated function RealizeNavHelp()

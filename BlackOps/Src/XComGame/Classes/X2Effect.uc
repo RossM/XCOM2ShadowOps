@@ -41,6 +41,7 @@ var bool                bShowImmunity;                  //  Default visualizatio
 var bool                bShowImmunityAnyFailure;        //  Default visualization will show a flyover to indicate a unit's immunity if the effect fails for any reason (effect application was not AA_Success)
 var float               DelayVisualizationSec;
 var bool				bAppliesDamage;					// if this effect should be considered as damage to control stats and some generic ability damage event generation
+var bool                bCanBeRedirected;               //  Indicates if an effect is appropriate to ever potentially redirect
 
 delegate name ApplyChanceCheck(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState);
 
@@ -289,4 +290,5 @@ defaultproperties
 	bIsImpairingMomentarily=false
 	bShowImmunity=true
 	bAppliesDamage=false
+	bCanBeRedirected=true
 }

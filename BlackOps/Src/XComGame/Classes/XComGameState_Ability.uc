@@ -758,12 +758,15 @@ simulated function name GetFireAnimationName(XComUnitPawn UnitPawn, bool UseMove
 	local float AngleBetween;
 	local vector Left;
 	local XComPerkContent kContent;
-	local name AnimName;
+	local name AnimName, SavedPerkAnimName;
 	local XGUnit Unit;
 
 	local X2AbilityTemplate AbilityTemplate;
 	local X2WeaponTemplate WeaponTemplate;
 	local name AbilityAnimName;
+
+	local array<XComPerkContent> Perks;
+	local int x;
 
 	UseTurnLeft = false;
 	UseTurnRight = false;
@@ -798,15 +801,35 @@ simulated function name GetFireAnimationName(XComUnitPawn UnitPawn, bool UseMove
 		}
 	}
 
-	kContent = UnitPawn.GetPerkContent( string(m_TemplateName) );
-	if (kContent != none && kContent.CasterActivationAnim.PlayAnimation)
+	Unit = XGUnit(UnitPawn.m_kGameUnit);
+	class'XComPerkContent'.static.GetAssociatedPerks(Perks, UnitPawn, m_TemplateName);
+	for (x = 0; x < Perks.Length; ++x)
 	{
-		Unit = XGUnit(UnitPawn.m_kGameUnit);
+		kContent = Perks[x];
+
+		if ((kContent.IsInState('ActionActive') || kContent.IsInState('DurationAction')) &&
+			kContent.CasterActivationAnim.PlayAnimation &&
+			!kContent.CasterActivationAnim.AdditiveAnim)
+	{
 		AnimName = class'XComPerkContent'.static.ChooseAnimationForCover( Unit, kContent.CasterActivationAnim );
-		if (AnimName != '')
+
+			if (AnimName != '')
 		{
-			return AnimName;
+				if (SavedPerkAnimName == '')
+				{
+					SavedPerkAnimName = AnimName;
 		}
+				else
+				{
+					`Redscreen("XComGameState_Ability::GetFireAnimationName - Multiple Perks are trying to play non-additive animations.");
+				}
+			}
+		}
+	}
+
+	if (SavedPerkAnimName != '')
+	{
+		return SavedPerkAnimName;
 	}
 
 	AbilityTemplate = GetMyTemplate();

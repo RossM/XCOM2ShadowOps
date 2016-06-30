@@ -123,7 +123,7 @@ simulated static function bool CanCycleTo(XComGameState_Unit Unit)
 
 	class'UIUtilities_Strategy'.static.GetPCSAvailability(Unit, Data);
 	
-	return super.CanCycleTo(Unit) && Data.bHasCombatSimsSlotsAvailable && Data.bHasAchievedCombatSimsRank && Data.bHasGTS;
+	return super.CanCycleTo(Unit) && Data.bHasCombatSimsSlotsAvailable && Data.bHasAchievedCombatSimsRank && Data.bHasGTS && Data.bCanEquipCombatSims;
 }
 
 //==============================================================================

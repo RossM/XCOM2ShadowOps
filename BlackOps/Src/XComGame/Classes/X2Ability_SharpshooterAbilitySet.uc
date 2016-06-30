@@ -958,7 +958,7 @@ static function X2AbilityTemplate Faceoff()
 	Template.AddShooterEffectExclusions();
 
 	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
-	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileUnitDisallowMindControlProperty);
 
 	Template.AddTargetEffect(new class'X2Effect_ApplyWeaponDamage');
 	Template.AddMultiTargetEffect(new class'X2Effect_ApplyWeaponDamage');

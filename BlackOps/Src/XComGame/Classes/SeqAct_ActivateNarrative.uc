@@ -12,6 +12,7 @@ class SeqAct_ActivateNarrative extends SequenceAction
 	native(Level);
 
 var() int NarrativeIndex;
+var() bool StopExistingNarrative;
 
 private function XComNarrativeMoment LoadNarrativeMoment()
 {
@@ -61,6 +62,7 @@ function BuildVisualization(XComGameState GameState, out array<VisualizationTrac
 
 	Narrative.Moment = LoadNarrativeMoment();
 	Narrative.WaitForCompletion = OutputLinks[1].Links.Length > 0;
+	Narrative.StopExistingNarrative = StopExistingNarrative;
 
 	VisualizationTracks.AddItem(BuildTrack);
 }

@@ -341,8 +341,11 @@ Begin:
 	SetupHackingScreen();
 
 	// Start hacking anims
-	if( TargetUnitPawn != None && TargetBeginAnim != '' )
+	if( TargetUnitPawn != None )
 	{
+		TargetUnitPawn.GetAnimTreeController().SetAllowNewAnimations(true);
+		if( TargetBeginAnim != '' )
+		{
 		Params = default.Params;
 		Params.AnimName = TargetBeginAnim;
 		Params.Looping = false;
@@ -354,6 +357,8 @@ Begin:
 		TargetUnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(Params);
 		TargetUnitPawn.GetAnimTreeController().SetAllowNewAnimations(false);
 	}
+	}
+	
 
 	Params = default.Params;
 	Params.AnimName = SourceBeginAnim;

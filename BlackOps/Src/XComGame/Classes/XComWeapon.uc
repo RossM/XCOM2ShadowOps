@@ -222,6 +222,16 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 		AdditiveNode = AnimNodeAdditiveBlending(SkelComp.Animations.FindAnimNode('AdditiveBlend'));
 		AimOffset = AnimNodeAimOffset(SkelComp.Animations.FindAnimNode('AimOffset'));
 
+		if( AdditiveDynamicNode != None )
+		{
+			AdditiveDynamicNode.SetAdditive(true);
+		}
+
+		if( AdditiveNode != None )
+		{
+			AdditiveNode.SetBlendTarget(1.0f, 0.0f);
+		}
+
 		if( AimOffset != None )
 		{
 			AimOffset.Aim.X = 0.0f;

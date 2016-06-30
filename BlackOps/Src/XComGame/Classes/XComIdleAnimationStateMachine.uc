@@ -522,6 +522,11 @@ function PlayIdleAnim(bool ResetPodAnimation = false)
 					// Since we want to randomize how the green idle works set a timer to start this animation again
 					PlayingSequence = UnitPawnNative.GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams);
 					SetTimer(PlayingSequence.AnimSeq.SequenceLength / fIdleAnimRate, false, nameof(ResetPodIdleAnimation), self);
+					
+					if( UnitState.GetMyTemplate().bLockdownPodIdleUntilReveal )
+					{
+						UnitPawnNative.GetAnimTreeController().SetAllowNewAnimations(false);
+					}
 				}
 				
 				return;

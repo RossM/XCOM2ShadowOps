@@ -97,6 +97,8 @@ var() bool							bHasSeenWelcomeResistance;
 var() bool							bNeedsToSeeFinalMission;
 var() array<name>					SeenCharacterTemplates;	//This list contains a list of character template groups that X-Com has seen during their campaign
 
+var() array<name>					SeenClassMovies; // Better system than individual flags, to support DLC/Mod classes
+
 var() bool							bTutorial;
 var() bool							bHasPlayedAmbushTutorial;
 var() bool							bHasPlayedMeleeTutorial;
@@ -1609,9 +1611,6 @@ static function CreateStartingEngineer(XComGameState StartState)
 	local TSoldier CharacterGeneratorResult;
 	local XGCharacterGenerator CharacterGenerator;
 	local XComGameState_HeadquartersXCom XComHQ;
-	local XComGameState_FacilityXCom Facility;
-	local StaffUnitInfo ShenInfo;
-	local int idx;
 
 	assert(StartState != none);
 
@@ -1630,25 +1629,12 @@ static function CreateStartingEngineer(XComGameState StartState)
 
 	ShenState = CharacterTemplate.CreateInstanceFromTemplate(StartState);
 	ShenState.SetSkillLevel(2);
-	// TODO: Localize this
 	ShenState.SetCharacterName(class'XLocalizedData'.default.LilyShenFirstName, class'XLocalizedData'.default.LilyShenLastName, "");
 	CharacterGeneratorResult = CharacterGenerator.CreateTSoldier(CharacterTemplate.DataName);
 	ShenState.SetTAppearance(CharacterGeneratorResult.kAppearance);
 		
 	StartState.AddStateObject(ShenState);
 	XComHQ.AddToCrew(StartState, ShenState);
-
-	// Put Shen in default staffing slot in the Armory
-	for(idx = 0; idx < XComHQ.Facilities.Length; idx++)
-	{
-		Facility = XComGameState_FacilityXCom(`XCOMHISTORY.GetGameStateForObjectID(XComHQ.Facilities[idx].ObjectID));
-	
-		if(Facility.GetMyTemplateName() == 'Storage')
-		{
-			ShenInfo.UnitRef = ShenState.GetReference();
-			Facility.GetStaffSlot(0).FillSlot(StartState, ShenInfo);
-		}
-	}
 }
 
 //---------------------------------------------------------------------------------------
@@ -1660,9 +1646,6 @@ static function CreateStartingScientist(XComGameState StartState)
 	local TSoldier CharacterGeneratorResult;
 	local XGCharacterGenerator CharacterGenerator;
 	local XComGameState_HeadquartersXCom XComHQ;
-	local XComGameState_FacilityXCom Facility;
-	local StaffUnitInfo TyganInfo;
-	local int idx;
 
 	assert(StartState != none);
 
@@ -1687,18 +1670,6 @@ static function CreateStartingScientist(XComGameState StartState)
 
 	StartState.AddStateObject(TyganState);
 	XComHQ.AddToCrew(StartState, TyganState);
-	
-	// Put Tygan in default staffing slot in the Power Core
-	for(idx = 0; idx < XComHQ.Facilities.Length; idx++)
-	{
-		Facility = XComGameState_FacilityXCom(`XCOMHISTORY.GetGameStateForObjectID(XComHQ.Facilities[idx].ObjectID));
-
-		if(Facility.GetMyTemplateName() == 'PowerCore')
-		{
-			TyganInfo.UnitRef = TyganState.GetReference();
-			Facility.GetStaffSlot(0).FillSlot(StartState, TyganInfo);
-		}
-	}
 }
 
 static function CreateStartingBradford(XComGameState StartState)
@@ -1834,7 +1805,10 @@ function bool Update(XComGameState NewGameState, out array<XComGameState_Unit> U
 	{
 		if( class'X2StrategyGameRulesetDataStructures'.static.LessThan(CurrentOrders[idx].OrderCompletionTime, StrategyRuleset.GameTime) )
 		{
-			OnStaffOrderComplete(NewGameState, CurrentOrders[idx]);
+			if (NewGameState != none)
+			{
+				OnStaffOrderComplete(NewGameState, CurrentOrders[idx]);
+			}
 			bUpdated = true;
 		}
 	}
@@ -6139,16 +6113,8 @@ function StaffShadowChamber(XComGameState NewGameState)
 {
 	local XComGameState_FacilityXCom FacilityState;
 	local StaffUnitInfo ShenInfo, TyganInfo;
-	
-	// First take Tygan out of Research
-	FacilityState = GetFacilityByName('PowerCore');
-	FacilityState.GetStaffSlot(0).EmptySlot(NewGameState);
 
-	// And Shen out of Engineering
-	FacilityState = GetFacilityByName('Storage');
-	FacilityState.GetStaffSlot(0).EmptySlot(NewGameState);
-
-	// Then add them to the Shadow Chamber
+	// Add Shen and Tygan to the Shadow Chamber
 	ShenInfo.UnitRef = GetShenReference();
 	TyganInfo.UnitRef = GetTyganReference();
 	FacilityState = GetFacilityByName('ShadowChamber');
@@ -6159,22 +6125,11 @@ function StaffShadowChamber(XComGameState NewGameState)
 function EmptyShadowChamber(XComGameState NewGameState)
 {
 	local XComGameState_FacilityXCom FacilityState;
-	local StaffUnitInfo ShenInfo, TyganInfo;
-
-	// First empty the Shadow Chamber
+	
+	// Empty the Shadow Chamber
 	FacilityState = GetFacilityByName('ShadowChamber');
 	FacilityState.GetStaffSlot(0).EmptySlot(NewGameState);
 	FacilityState.GetStaffSlot(1).EmptySlot(NewGameState);
-
-	// Then put Tygan back in Research
-	TyganInfo.UnitRef = GetTyganReference();
-	FacilityState = GetFacilityByName('PowerCore');
-	FacilityState.GetStaffSlot(0).FillSlot(NewGameState, TyganInfo);
-
-	// And Shen back in Engineering
-	ShenInfo.UnitRef = GetShenReference();
-	FacilityState = GetFacilityByName('Storage');
-	FacilityState.GetStaffSlot(0).FillSlot(NewGameState, ShenInfo);
 }
 
 //#############################################################################################
@@ -7064,6 +7019,7 @@ function RestoreSoldierUnlockTemplates()
 function OnCrewMemberAdded(XComGameState NewGameState, XComGameState_Unit NewUnitState)
 {
 	local X2StrategyElementTemplateManager TemplateMan;
+	local X2SoldierClassTemplate ClassTemplate;
 	local X2SoldierUnlockTemplate UnlockTemplate;
 	local name UnlockName;
 	local StateObjectReference NewUnitRef;
@@ -7098,12 +7054,13 @@ function OnCrewMemberAdded(XComGameState NewGameState, XComGameState_Unit NewUni
 			}
 		}
 
-		if(NewUnitState.GetRank() >= 1 && HasFacilityByName('AdvancedWarfareCenter'))
+		ClassTemplate = NewUnitState.GetSoldierClassTemplate();
+		if (ClassTemplate.bAllowAWCAbilities && NewUnitState.GetRank() >= 1 && HasFacilityByName('AdvancedWarfareCenter'))
 		{
 			NewUnitState.RollForAWCAbility();
 		}
 
-		if(NewUnitState.IsInjured() && NewUnitState.GetStatus() != eStatus_Healing)
+		if (!ClassTemplate.bUniqueTacticalToStrategyTransfer && NewUnitState.IsInjured() && NewUnitState.GetStatus() != eStatus_Healing)
 		{
 			ProjectState = XComGameState_HeadquartersProjectHealSoldier(NewGameState.CreateStateObject(class'XComGameState_HeadquartersProjectHealSoldier'));
 			NewGameState.AddStateObject(ProjectState);
@@ -7117,10 +7074,10 @@ function OnCrewMemberAdded(XComGameState NewGameState, XComGameState_Unit NewUni
 
 	if (Photographer != none)
 	{
-		Photographer.AddHeadshotRequest(NewUnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Passport_Armory', 128, 128, OnSoldierHeadCaptureFinishedSmall, class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook());
+		Photographer.AddHeadshotRequest(NewUnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Passport_Armory', 128, 128, OnSoldierHeadCaptureFinishedSmall);
 		NewStaffRefs.AddItem(NewUnitRef);
 
-		Photographer.AddHeadshotRequest(NewUnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, OnSoldierHeadCaptureFinishedLarge, class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook());
+		Photographer.AddHeadshotRequest(NewUnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, OnSoldierHeadCaptureFinishedLarge);
 		NewStaffRefs.AddItem(NewUnitRef);
 	}
 
@@ -7813,6 +7770,7 @@ function UpdateGameBoard()
 	local XComHQPresentationLayer Pres;
 	local array<XComGameState_Unit> UnitsWhichLeveledUp;
 	local XComGameState_Objective ObjectiveState, NewObjectiveState;
+	local array<XComGameState_Objective> NagObjectives;
 
 	Pres = `HQPRES;
 	History = `XCOMHISTORY;
@@ -7820,34 +7778,34 @@ function UpdateGameBoard()
 	// Don't let any HQ updates complete while the Avenger or Skyranger are flying, or if another popup is already being presented
 	if (Pres.StrategyMap2D != none && Pres.StrategyMap2D.m_eUIState != eSMS_Flight && !Pres.ScreenStack.HasInstanceOf(class'UIAlert'))
 	{
-		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Update XCom Headquarters");
-		NewXComHQState = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', ObjectID));
-		NewGameState.AddStateObject(NewXComHQState);
-
-		if (!NewXComHQState.Update(NewGameState, UnitsWhichLeveledUp))
-		{
-			NewGameState.PurgeGameStateForObjectID(NewXComHQState.ObjectID);
-		}
-
 		// Check objectives for nags
-		foreach History.IterateByClassType(class'XComGameState_Objective', ObjectiveState)
+		foreach History.IterateByClassType( class'XComGameState_Objective', ObjectiveState )
 		{
-			if (ObjectiveState.CheckNagTimer())
+			if (ObjectiveState.CheckNagTimer( ))
 			{
-				NewObjectiveState = XComGameState_Objective(NewGameState.CreateStateObject(class'XComGameState_Objective', ObjectiveState.ObjectID));
-				NewGameState.AddStateObject(NewObjectiveState);
-				
-				NewObjectiveState.BeginNagging(NewXComHQState);
+				NagObjectives.AddItem( ObjectiveState );
 			}
 		}
 
-		if (NewGameState.GetNumGameStateObjects() > 0)
+		if ((NagObjectives.Length > 0) || Update(none, UnitsWhichLeveledUp))
 		{
-			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-		}
-		else
-		{
-			History.CleanupPendingGameState(NewGameState);
+			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState( "Update XCom Headquarters" );
+
+			NewXComHQState = XComGameState_HeadquartersXCom( NewGameState.CreateStateObject( class'XComGameState_HeadquartersXCom', ObjectID ) );
+			NewGameState.AddStateObject( NewXComHQState );
+
+			NewXComHQState.Update(NewGameState, UnitsWhichLeveledUp);
+
+			// start nag states
+			foreach NagObjectives(ObjectiveState)
+			{
+				NewObjectiveState = XComGameState_Objective( NewGameState.CreateStateObject( class'XComGameState_Objective', ObjectiveState.ObjectID ) );
+				NewGameState.AddStateObject( NewObjectiveState );
+
+				NewObjectiveState.BeginNagging( NewXComHQState );
+			}
+
+			`XCOMGAME.GameRuleset.SubmitGameState( NewGameState );
 		}
 
 		// Check projects for completion

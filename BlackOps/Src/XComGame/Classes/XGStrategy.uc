@@ -410,7 +410,7 @@ function LaunchTacticalBattle(optional int MissionID = -1)
 	{
 		if(MissionState.GetMissionSource().CustomLoadingMovieName_Intro != "")
 		{
-			`XENGINE.PlaySpecificLoadingMovie(MissionState.GetMissionSource().CustomLoadingMovieName_Intro, "LoadingScreenVS_Propaganda");
+			`XENGINE.PlaySpecificLoadingMovie(MissionState.GetMissionSource().CustomLoadingMovieName_Intro, MissionState.GetMissionSource().CustomLoadingMovieName_IntroSound);
 			`XENGINE.PlayLoadMapMovie(-1);
 		}		
 		BattleData.m_strMapCommand = "open" @ GeneratedMission.Plot.MapName $ "?game=XComGame.XComTacticalGame";
@@ -1094,7 +1094,7 @@ Begin:
 		WorldInfo.MyLocalEnvMapManager.SetEnableCaptures(TRUE);
 
 		//DropshipLocation.Z -= 2000.0f; //Locate the drop ship below the map
-		`MAPS.AddStreamingMap("CIN_Loading_Interior", DropshipLocation, DropshipRotation, false);// .bForceNoDupe = true;
+		`MAPS.AddStreamingMap(`MAPS.GetTransitionMap(), DropshipLocation, DropshipRotation, false);// .bForceNoDupe = true;
 		while(!`MAPS.IsStreamingComplete())
 		{
 			sleep(0.0f);
@@ -1150,7 +1150,7 @@ Begin:
 		class'WorldInfo'.static.GetWorldInfo().GetALocalPlayerController().ClientSetCameraFade(true, MakeColor(0, 0, 0), vect2d(0, 1), 0.0);
 		Sleep(0.1f);
 
-		`MAPS.RemoveStreamingMapByName("CIN_Loading_Interior", false);
+		`MAPS.RemoveStreamingMapByName(`MAPS.GetTransitionMap(), false);
 	}
 	else
 	{

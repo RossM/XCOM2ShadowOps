@@ -13,6 +13,7 @@ class UIMouseGuard_RotatePawn extends UIMouseGuard
 
 var bool bMouseIn;
 var bool bRotatingPawn;
+var bool bCanRotate;
 var Rotator ActorRotation;
 var Vector2D MouseLocation;
 var Actor ActorPawn;
@@ -57,7 +58,7 @@ simulated function OnUpdate()
 	HumanPawn = XComHumanPawn(ActorPawn);
 	if( ActorPawn != none && HumanPawn != None )
 	{
-		if(bRotatingPawn)
+		if(bRotatingPawn && bCanRotate)
 		{
 			MouseDelta = Movie.Pres.m_kUIMouseCursor.m_v2MouseFrameDelta;
 			ActorRotation.Yaw += -1 * MouseDelta.X * DragRotationMultiplier;
@@ -110,6 +111,8 @@ simulated function bool OnUnrealCommand(int cmd, int arg)
 	if ( !CheckInputIsReleaseOrDirectionRepeat(cmd, arg) )
 		return false;
 
+	if(bCanRotate)
+	{
 	switch( cmd )
 	{
 	case class'UIUtilities_Input'.const.FXS_MOUSE_SCROLL_DOWN:
@@ -118,6 +121,7 @@ simulated function bool OnUnrealCommand(int cmd, int arg)
 	case class'UIUtilities_Input'.const.FXS_MOUSE_SCROLL_UP:
 		if(bMouseIn) RotateInPlace(1);
 		return true;
+	}
 	}
 
 	return super.OnUnrealCommand(cmd, arg);
@@ -163,4 +167,13 @@ simulated function OnRemoved()
 {
 	SetActorPawn(none);
 	super.OnRemoved();
+}
+simulated function SetCanRotate(bool Rotate)
+{
+	bCanRotate = Rotate;
+}
+
+defaultproperties
+{
+	bCanRotate = true;
 }

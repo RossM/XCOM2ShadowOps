@@ -13,6 +13,7 @@ var protectedwrite EGender Gender;
 var protectedwrite ECharacterRace Race;
 var protectedwrite X2BodyPartTemplate TorsoTemplate;
 var protectedwrite name ArmorName;
+var protectedwrite name CharacterName;
 var protectedwrite array<name> DLCNames;
 var protectedwrite bool bCivilian;
 var protectedwrite bool bVeteran;
@@ -52,6 +53,11 @@ function SetTorsoSelection(name InMatchCharacterTemplateForTorso, name InMatchAr
 {
 	MatchCharacterTemplateForTorso = InMatchCharacterTemplateForTorso;
 	MatchArmorTemplateForTorso = InMatchArmorTemplateForTorso;
+}
+
+function AddCharacterFilter(Name InCharacterName)
+{
+	CharacterName = InCharacterName;
 }
 
 function bool FilterAny( X2BodyPartTemplate Template )
@@ -108,6 +114,11 @@ function bool FilterByArmor(X2BodyPartTemplate Template)
 	return Template.ArmorTemplate == '' || Template.ArmorTemplate == ArmorName;
 }
 
+function bool FilterByCharacter(X2BodyPartTemplate Template)
+{
+	return Template.CharacterTemplate == '' || Template.CharacterTemplate == CharacterName;
+}
+
 function bool FilterByTech(X2BodyPartTemplate Template)
 {
 	local X2TechTemplate TechTemplate;
@@ -152,9 +163,24 @@ function bool FilterByGenderAndRace(X2BodyPartTemplate Template)
 	return	FilterByGender(Template) && FilterByRace(Template) && FilterByNonSpecialized(Template);
 }
 
+function bool FilterByGenderAndRaceAndCharacter(X2BodyPartTemplate Template)
+{
+	return FilterByGenderAndRace(Template) && FilterByCharacter(Template);
+}
+
+function bool FilterByGenderAndRaceAndCharacterAndTech(X2BodyPartTemplate Template)
+{
+	return FilterByGenderAndRaceAndCharacter(Template) && FilterByTech(Template);
+}
+
 function bool FilterByGenderAndNonSpecialized(X2BodyPartTemplate Template)
 {
 	return FilterByGender(Template) && FilterByNonSpecialized(Template);
+}
+
+function bool FilterByGenderAndCharacterAndNonSpecialized(X2BodyPartTemplate Template)
+{
+	return FilterByGender(Template) && FilterByCharacter(Template) && FilterByNonSpecialized(Template);
 }
 
 function bool FilterByGenderAndNonSpecializedCivilian(X2BodyPartTemplate Template)
@@ -162,9 +188,9 @@ function bool FilterByGenderAndNonSpecializedCivilian(X2BodyPartTemplate Templat
 	return FilterByGender(Template) && FilterByNonSpecialized(Template) && FilterByCivilian(Template);
 }
 
-function bool FilterByGenderAndNonSpecializedAndTech(X2BodyPartTemplate Template)
+function bool FilterByGenderAndCharacterAndNonSpecializedAndTech(X2BodyPartTemplate Template)
 {
-	return FilterByGender(Template) && FilterByNonSpecialized(Template) && FilterByTech(Template);
+	return FilterByGender(Template) && FilterByCharacter(Template) && FilterByNonSpecialized(Template) && FilterByTech(Template);
 }
 
 function bool FilterByGenderAndNonSpecializedAndTechAndArmor(X2BodyPartTemplate Template)

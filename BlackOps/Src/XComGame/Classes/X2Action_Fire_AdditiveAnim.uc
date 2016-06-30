@@ -12,10 +12,9 @@ Begin:
 	}
 
 	FinishAnim(UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(AnimParams));
-	//  clean up additive anim
-	AnimParams.AnimName = 'ShutDownAdditive';
-	AnimParams.TargetWeight = 0.0f;
-	UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(AnimParams);
+	
+	// Jwats: Now blend out the animation
+	UnitPawn.GetAnimTreeController().RemoveAdditiveDynamicAnim(AnimParams);
 
 	SetTargetUnitDiscState();
 

@@ -164,6 +164,8 @@ protected function ContextBuildVisualization(out array<VisualizationTrack> Visua
 	BuildTrack.TrackActor = `XCOMHISTORY.GetVisualizer(FallingUnit.ObjectID);
 	`XCOMHISTORY.GetCurrentAndPreviousGameStatesForObjectID(FallingUnit.ObjectID, BuildTrack.StateObject_OldState, BuildTrack.StateObject_NewState, eReturnType_Reference, AssociatedState.HistoryIndex);
 	
+	class'X2Action_WaitForWorldDamage'.static.AddToVisualizationTrack( BuildTrack, self );
+	
 	if (XComGameState_Unit(BuildTrack.StateObject_OldState).GetMyTemplate().bIsTurret)
 	{
 		class'X2Action_RemoveUnit'.static.AddToVisualizationTrack( BuildTrack, self );

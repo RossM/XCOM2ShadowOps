@@ -16,17 +16,29 @@ simulated function UIStaffContainer InitStaffContainer(optional name InitName, o
 
 simulated function Refresh(StateObjectReference LocationRef, delegate<UIStaffSlot.OnStaffUpdated> onStaffUpdatedDelegate)
 {
-	local int i;
 	local XComGameState_FacilityXCom Facility;
+	local XComGameState_StaffSlot StaffSlot;
+	local bool bSlotVisible;
+	local int i;
 
 	Facility = XComGameState_FacilityXCom(`XCOMHISTORY.GetGameStateForObjectID(LocationRef.ObjectID));
 
+	if (Facility.StaffSlots.Length == 0 || Facility.GetMyTemplate().bHideStaffSlots)
+	{
+		//Hide the box for facilities without any staffers, like the Armory, or for any facilities which have them permanently hidden. 
+		Hide();
+	}
+	else 
+	{
 	// Show or create slots for the currently requested facility
 	for (i = 0; i < Facility.StaffSlots.Length; i++)
 	{
-		// If the staff slot is locked and no upgrades are available, do not initialize or show the staff slot
-		if ((Facility.GetStaffSlot(i).IsLocked() && !Facility.CanUpgrade()) || Facility.GetMyTemplate().bHideStaffSlots)
+			// If the staff slot is locked and no upgrades are available, or it is always hidden, do not initialize or show the staff slot
+			StaffSlot = Facility.GetStaffSlot(i);
+			if ((StaffSlot.IsLocked() && !Facility.CanUpgrade()) || StaffSlot.IsHidden())
 			continue;
+			else
+				bSlotVisible = true;
 
 		if (i < StaffSlots.Length)
 			StaffSlots[i].UpdateData();
@@ -38,13 +50,13 @@ simulated function Refresh(StateObjectReference LocationRef, delegate<UIStaffSlo
 				StaffSlots.AddItem(Spawn(class'UIFacility_AcademySlot', self).InitStaffSlot(self, LocationRef, i, onStaffUpdatedDelegate));
 				break;
 			case class'UIFacility_AdvancedWarfareCenter':
-				if (Facility.GetStaffSlot(i).IsSoldierSlot())
+					if (StaffSlot.IsSoldierSlot())
 					StaffSlots.AddItem(Spawn(class'UIFacility_AdvancedWarfareCenterSlot', self).InitStaffSlot(self, LocationRef, i, onStaffUpdatedDelegate));
 				else
 					StaffSlots.AddItem(Spawn(class'UIFacility_StaffSlot', self).InitStaffSlot(self, LocationRef, i, onStaffUpdatedDelegate));
 				break;
 			case class'UIFacility_PsiLab':
-				if (Facility.GetStaffSlot(i).IsSoldierSlot())
+					if (StaffSlot.IsSoldierSlot())
 					StaffSlots.AddItem(Spawn(class'UIFacility_PsiLabSlot', self).InitStaffSlot(self, LocationRef, i, onStaffUpdatedDelegate));
 				else
 					StaffSlots.AddItem(Spawn(class'UIFacility_StaffSlot', self).InitStaffSlot(self, LocationRef, i, onStaffUpdatedDelegate));
@@ -56,11 +68,11 @@ simulated function Refresh(StateObjectReference LocationRef, delegate<UIStaffSlo
 		}
 	}
 
-	//Hide the box for facilities without any staffers, like the Armory, or for any facilities which have them permanently hidden. 
-	if (Facility.StaffSlots.Length > 0 && !Facility.GetMyTemplate().bHideStaffSlots)
+		if (bSlotVisible) // Show the container only if at least one slot is visible
 		Show();
 	else
 		Hide();
+}
 }
 
 simulated function bool OnUnrealCommand(int cmd, int arg)

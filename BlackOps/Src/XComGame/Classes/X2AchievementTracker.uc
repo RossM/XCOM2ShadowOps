@@ -893,12 +893,34 @@ static function EventListenerReturn OnPOICompleted(Object EventData, Object Even
 
 static function EventListenerReturn OnRegionContacted(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
+	local XComGameStateHistory History;
+	local XComGameState_Continent Continent;
+	local bool bEveryContinentBonus;
+
 	if (GameState.GetContext( ).InterruptionStatus == eInterruptionStatus_Interrupt)
 	{
 		return ELR_NoInterrupt;
 	}
 
+	History = `XCOMHISTORY;
+
 	`ONLINEEVENTMGR.UnlockAchievement(AT_ContactRegion);
+
+	bEveryContinentBonus = true;
+	foreach History.IterateByClassType(class'XComGameState_Continent', Continent)
+	{
+		if (!Continent.bContinentBonusActive)
+		{
+			bEveryContinentBonus = false;
+			break;
+		}
+	}
+
+	// Achievement: Get all of the continent bonuses in a single game
+	if (bEveryContinentBonus)
+	{
+		`ONLINEEVENTMGR.UnlockAchievement(AT_GetAllContinentBonuses);
+	}
 
 	return ELR_NoInterrupt;
 }

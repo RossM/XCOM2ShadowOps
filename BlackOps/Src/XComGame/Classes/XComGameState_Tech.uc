@@ -22,6 +22,7 @@ var array<X2ItemTemplate>			   ItemsUpgraded; // Proving ground project techs ma
 var int								   TimesResearched; // Some repeatable techs increase in time to research the more you research them
 var float							   TimeReductionScalar; // Techs can be rushed, value is fraction of total points it is reduced by
 var int								   SavedDiscountPercent; // Saved discount percent from when the tech was activated. Used for giving correct refunds if cancelled.
+var StateObjectReference			   UnitRewardRef; // If this tech rewards a unit, store it here
 
 //---------------------------------------------------------------------------------------
 static function X2StrategyElementTemplateManager GetMyTemplateManager()
@@ -305,6 +306,12 @@ function DisplayTechCompletePopups()
 			{
 				`HQPRES.UIFacilityAvailable(NewFacilities[iFacility]);
 			}
+		}
+		
+		// If this tech rewards a unit, display a popup to alert the player
+		if (TechState.UnitRewardRef.ObjectID != 0)
+		{
+			`HQPRES.UINewStaffAvailable(TechState.UnitRewardRef);
 		}
 	}
 }

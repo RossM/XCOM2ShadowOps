@@ -8,10 +8,15 @@
 class X2StaffSlotTemplate extends X2StrategyElementTemplate;
 
 // Data
+var (Display) bool					bHideStaffSlot; // Do not show this staff slot on the facility screen
 var (Display) bool					bRequireConfirmToEmpty; // Flag to require confirmation from the player before emptying this slot
 var (Display) bool					bScientistSlot;
 var (Display) bool					bEngineerSlot;
 var (Display) bool					bSoldierSlot;
+var (Display) bool					CreatesGhosts; // Does this staff slot create ghost units
+var (Display) class<XComGameState_HeadquartersProject> AssociatedProjectClass; // Headquarters Project class associated with this staff slot, used for displaying time previews
+var (Display) array<name>			ExcludeClasses; // List of soldier classes which are not allowed in this staff slot
+var (Display) string				MatineeSlotName; // used with avenger crew population matinee's to pick an appropriate matinee seqvar to assign staff too
 
 // Text
 var localized string	EmptyText;
@@ -20,9 +25,7 @@ var localized string	BonusDefaultText;			// Used by staff slots which don't rely
 var localized string	BonusEmptyText;
 var localized string	FilledText;
 var localized string	GhostName;					// If this staff slot can provide ghost units, this is what they will be called
-var bool	CreatesGhosts;							// Does this staff slot create ghost units
 var localized string	LockedText;
-var string MatineeSlotName;                         // used with avenger crew population matinee's to pick an appropriate matinee seqvar to assign staff too
 
 // Functions
 var (Display) delegate<Fill> FillFn; // Call to fill the slot

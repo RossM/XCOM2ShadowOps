@@ -37,6 +37,7 @@ var bool    IsPlayerControlled;
 var bool    ExcludeUnrevealedAI;
 var bool    IncludeWeakAgainstTechLikeRobot;
 var bool	ImpairedIgnoresStuns;
+var bool    IsScampering;
 
 var int		MinRank;
 var int		MaxRank;

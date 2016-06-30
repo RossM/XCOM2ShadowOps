@@ -9,12 +9,12 @@
 class X2Ability_RangerAbilitySet extends X2Ability
 	dependson (XComGameStateContext_Ability) config(GameData_SoldierSkills);
 
-var config int BLADEMASTER_DMG;
+var config int BLADEMASTER_DMG, BLADEMASTER_AIM;
 var config int STEALTH_CHARGES;
 var config int SHADOWSTRIKE_AIM, SHADOWSTRIKE_CRIT;
 var config int MAX_UNTOUCHABLE;
 var config int REAPER_COOLDOWN;
-var config int INSTINCT_DMG;
+var config int INSTINCT_DMG, INSTINCT_CRIT;
 var config int RAPIDFIRE_AIM;
 var config int RUNANDGUN_COOLDOWN;
 
@@ -92,6 +92,7 @@ static function X2AbilityTemplate Blademaster()
 {
 	local X2AbilityTemplate						Template;
 	local X2Effect_BonusWeaponDamage            DamageEffect;
+	local X2Effect_ToHitModifier                HitModEffect;
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'Blademaster');
@@ -110,6 +111,12 @@ static function X2AbilityTemplate Blademaster()
 	DamageEffect.BuildPersistentEffect(1, true, false, false);
 	DamageEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
 	Template.AddTargetEffect(DamageEffect);
+
+	HitModEffect = new class'X2Effect_ToHitModifier';
+	HitModEffect.AddEffectHitModifier(eHit_Success, default.BLADEMASTER_AIM, Template.LocFriendlyName, , true, false, true, true);
+	HitModEffect.BuildPersistentEffect(1, true, false, false);
+	HitModEffect.EffectName = 'BlademasterAim';
+	Template.AddTargetEffect(HitModEffect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!
@@ -136,6 +143,7 @@ static function X2AbilityTemplate AddHuntersInstinctAbility()
 
 	DamageModifier = new class'X2Effect_HuntersInstinctDamage';
 	DamageModifier.BonusDamage = default.INSTINCT_DMG;
+	DamageModifier.BonusCritChance = default.INSTINCT_CRIT;
 	DamageModifier.BuildPersistentEffect(1, true, true, true);
 	DamageModifier.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
 	Template.AddTargetEffect(DamageModifier);
@@ -158,8 +166,9 @@ static function X2AbilityTemplate AddSwordSliceAbility(optional Name AbilityName
 
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildNewGameStateFn = TypicalMoveEndAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildInterruptGameStateFn = TypicalMoveEndAbility_BuildInterruptGameState;	
 	Template.CinescriptCameraType = "Ranger_Reaper";
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_swordSlash";
 	Template.bHideOnClassUnlock = false;
@@ -201,10 +210,7 @@ static function X2AbilityTemplate AddSwordSliceAbility(optional Name AbilityName
 	
 	// Voice events
 	//
-	Template.SourceMissSpeech = 'SwordMiss';
-
-	Template.BuildNewGameStateFn = TypicalMoveEndAbility_BuildGameState;
-	Template.BuildInterruptGameStateFn = TypicalMoveEndAbility_BuildInterruptGameState;
+	Template.SourceMissSpeech = 'SwordMiss';	
 
 	return Template;
 }

@@ -352,7 +352,7 @@ static function TTile GetClosestValidTile(TTile Tile)
 	return World.GetTileCoordinatesFromPosition(ValidLocation);
 }
 
-static function bool GetFurthestReachableTileOnPathToDestination(out TTile BestTile_out, TTile DestinationTile, XComGameState_Unit UnitState)
+static function bool GetFurthestReachableTileOnPathToDestination(out TTile BestTile_out, TTile DestinationTile, XComGameState_Unit UnitState, bool bAllowDash=true)
 {
 	local bool bHasPath;
 	local XComWorldData World;
@@ -387,7 +387,7 @@ static function bool GetFurthestReachableTileOnPathToDestination(out TTile BestT
 
 	if( bHasPath )
 	{
-		if( GetFurthestReachableTileOnPath(BestTile_out, PathTiles, UnitState) )
+		if( GetFurthestReachableTileOnPath(BestTile_out, PathTiles, UnitState, bAllowDash) )
 		{
 			return true;
 		}
@@ -396,20 +396,26 @@ static function bool GetFurthestReachableTileOnPathToDestination(out TTile BestT
 	return false;
 }
 
-static function bool GetFurthestReachableTileOnPath(out TTile FurthestReachable, array<TTile> Path, XComGameState_Unit UnitState)
+static function bool GetFurthestReachableTileOnPath(out TTile FurthestReachable, array<TTile> Path, XComGameState_Unit UnitState, bool bAllowDash=true)
 {
 	local XGUnit UnitVisualizer;
 	local int TileIndex;
 	local TTile PathTile, FloorTile;
 	local XComWorldData World;
+	local float MaxRange;
+
 	World = `XWORLD;
 	UnitVisualizer = XGUnit(UnitState.GetVisualizer());
+	if( !bAllowDash )
+	{
+		MaxRange = UnitState.GetCurrentStat(eStat_Mobility);
+	}
 	if( UnitVisualizer != None )
 	{
 		for( TileIndex = Path.Length - 1; TileIndex > 0; --TileIndex )
 		{
 			PathTile = Path[TileIndex];
-			if( UnitVisualizer.m_kReachableTilesCache.IsTileReachable(PathTile) )
+			if( UnitVisualizer.m_kReachableTilesCache.IsTileReachable(PathTile) && (bAllowDash || UnitVisualizer.m_kReachableTilesCache.GetPathCostToTile(PathTile) <= MaxRange) )
 			{
 				FurthestReachable = PathTile;
 				return true;
@@ -419,7 +425,9 @@ static function bool GetFurthestReachableTileOnPath(out TTile FurthestReachable,
 				// Try floor tile.  Fixes failures with pathing from different elevations returning mid-air points that aren't in the tile cache.
 				FloorTile = PathTile;
 				FloorTile.Z = World.GetFloorTileZ(PathTile);
-				if( FloorTile.Z != PathTile.Z && UnitVisualizer.m_kReachableTilesCache.IsTileReachable(FloorTile) )
+				if( FloorTile.Z != PathTile.Z && 
+				   (UnitVisualizer.m_kReachableTilesCache.IsTileReachable(FloorTile) 
+				    && (bAllowDash || UnitVisualizer.m_kReachableTilesCache.GetPathCostToTile(PathTile) <= MaxRange) ))
 				{
 					FurthestReachable = FloorTile;
 					return true;

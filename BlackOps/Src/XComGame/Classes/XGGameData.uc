@@ -185,6 +185,10 @@ struct native MissionSchedule
 	// If true, the XCom squad will start this mission with Squad Concealment.
 	var bool				XComSquadStartsConcealed;
 
+	// If true, encounter groups will be forcibly selected when spawning pre-placed encounter groups, even if the mission site had already selected groups.  
+	// This should be set to true for multi-part mission schedules beyond the initial map.
+	var bool				bForceReselectAllGroupsForSpawn;
+
 	// This defines how deep in the encounter zone units are allowed to spawn and patrol (In Tiles).
 	// Encounters defined as guard groups will also use this value as their patrol width (square patrol zone).
 	var float				EncounterZonePatrolDepth;
@@ -374,6 +378,8 @@ struct native PlotDefinition
 	var bool ExcludeFromRetailBuilds;
 	var MultiplayerPlotIndex FriendlyNameIndex;
 	var int FloorCount; // number of floors on this plot
+	var float CursorFloorOffset; // if the floor of the plot isn't centered at Z=0, indicates where the base floor is
+	var string AudioPlotTypeOverride; // if specified, will use the specified string for the Biome switch (which is the same as gameplay PlotType) in wWise
 
 	structdefaultproperties
 	{
@@ -381,6 +387,7 @@ struct native PlotDefinition
 		Weight=1.0
 		ExcludeFromRetailBuilds=false
 		FloorCount=3
+		CursorFloorOffset=-16 // most plots are sunk into the ground by 16 units
 	}
 };
 

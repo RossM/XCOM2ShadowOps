@@ -1354,6 +1354,9 @@ function SetGameplayTabSelected()
 	SliderMapping.Length = 0;
 	PartTemplateManager = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager();
 	PartPackNames = PartTemplateManager.GetPartPackNames();
+
+	RenableMechaListItems(ePCTabGameplay_Max + PartPackNames.Length - 1);
+
 	for(Index = 1; Index < PartPackNames.Length; ++Index) //There will always be a NULL entry at the beginning of the list
 	{		
 		PartPackPresetIndex = m_kProfileSettings.Data.PartPackPresets.Find('PartPackName', PartPackNames[Index]);
@@ -1380,13 +1383,17 @@ function SetGameplayTabSelected()
 		MechaItemIndex = ePCTabGameplay_EnableZipMode + Index;
 		m_arrMechaItems[MechaItemIndex].UpdateDataSlider(Label, "", int(m_kProfileSettings.Data.PartPackPresets[PartPackPresetIndex].ChanceToSelect * 100.0f), , UpdatePartChance);
 		m_arrMechaItems[MechaItemIndex].BG.SetTooltipText(Tooltip, , , 10, , , , 0.0f);
+		if( Label == "" )
+		{
+			m_arrMechaItems[MechaItemIndex].Hide();
+			m_arrMechaItems[MechaItemIndex].DisableNavigation();
+		}
 
 		Mapping.Slider = m_arrMechaItems[MechaItemIndex].Slider;
 		Mapping.PresetIndex = PartPackPresetIndex;
 		SliderMapping.AddItem(Mapping);
 	}
 
-	RenableMechaListItems(ePCTabGameplay_Max + PartPackNames.Length - 1);
 }
 
 function SetInterfaceTabSelected()

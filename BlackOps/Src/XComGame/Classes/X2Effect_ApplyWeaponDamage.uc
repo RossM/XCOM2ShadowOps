@@ -15,12 +15,14 @@ var bool    bApplyWorldEffectsForEachTargetLocation;
 var bool	bAllowFreeKill;
 var bool    bAllowWeaponUpgrade;
 var bool    bBypassShields;
+var bool    bIgnoreArmor;
 
 // These values are extra amount an ability may add or apply directly
 var WeaponDamageValue EffectDamageValue;
 var int EnvironmentalDamageAmount;
 
 var config float GRAZE_DMG_MULT;
+var config array<name> HideVisualizationOfResults;
 
 struct ApplyDamageInfo
 {
@@ -254,7 +256,7 @@ simulated function ApplyEffectToWorld(const out EffectAppliedData ApplyEffectPar
 					if( X2AbilityMultiTarget_Cone(TargetStyle) != none )
 					{
 						DamageEvent.bAffectFragileOnly = AbilityTemplate.bFragileDamageOnly;
-						DamageEvent.CosmeticConeEndDiameter = X2AbilityMultiTarget_Cone(TargetStyle).ConeEndDiameter;
+						DamageEvent.CosmeticConeEndDiameter = X2AbilityMultiTarget_Cone(TargetStyle).GetConeEndDiameter(AbilityStateObject);
 						DamageEvent.CosmeticConeLength = X2AbilityMultiTarget_Cone(TargetStyle).GetConeLength(AbilityStateObject);
 						DamageEvent.CosmeticConeLocation = SourceUnitPosition;
 						DamageEvent.CosmeticDamageShape = SHAPE_CONE;
@@ -436,6 +438,7 @@ simulated function GetDamagePreview(StateObjectReference TargetRef, XComGameStat
 
 		EffectDmg = EffectTemplate.GetAttackingDamageModifier(EffectState, SourceUnit, Damageable(TargetUnit), AbilityState, TestEffectParams, MinDamagePreview.Damage);
 		MinDamagePreview.Damage += EffectDmg;
+		EffectDmg = EffectTemplate.GetAttackingDamageModifier(EffectState, SourceUnit, Damageable(TargetUnit), AbilityState, TestEffectParams, MaxDamagePreview.Damage);
 		MaxDamagePreview.Damage += EffectDmg;
 
 		EffectDmg = EffectTemplate.GetExtraArmorPiercing(EffectState, SourceUnit, Damageable(TargetUnit), AbilityState, TestEffectParams);
@@ -689,7 +692,7 @@ simulated function int CalculateDamageAmount(const out EffectAppliedData ApplyEf
 			}
 		}
 
-		if (kTarget != none)
+		if (kTarget != none && !bIgnoreArmor)
 		{
 			ArmorMitigation = kTarget.GetArmorMitigation(ApplyEffectParameters.AbilityResultContext.ArmorMitigation);
 			if (ArmorMitigation != 0)
@@ -765,6 +768,9 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 	
 	if( BuildTrack.StateObject_NewState.IsA('XComGameState_Unit') )
 	{		
+		if (default.HideVisualizationOfResults.Find(EffectApplyResult) != INDEX_NONE)
+			return;
+
 		UnitAction = X2Action_ApplyWeaponDamageToUnit(class'X2Action_ApplyWeaponDamageToUnit'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
 		UnitAction.OriginatingEffect = self;
 

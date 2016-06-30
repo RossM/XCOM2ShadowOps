@@ -465,10 +465,12 @@ function DoNotifyTargetsAbilityAppliedWithMultipleHitLocations(XComGameState Not
 function DoNotifyTargetsAbilityApplied(XComGameState NotifyVisualizeGameState, XComGameStateContext_Ability NotifyAbilityContext,
 									   int HistoryIndex, int PrimaryTargetID = 0, bool bNotifyMultiTargetsAtOnce = true, bool bSingleHitLocation = true)
 {
-	local StateObjectReference Target;		
+	local StateObjectReference Target, RedirectTarget;		
 	local XComGameState_EnvironmentDamage EnvironmentDamageEvent;
 	local XComGameState_InteractiveObject InteractiveObject;
 	local XComGameState_WorldEffectTileData WorldEffectTileData;
+	local int RedirectIndex;
+	local array<int> NotifiedIDs;
 
 	if( !bNotifiedTargets )
 	{
@@ -476,13 +478,38 @@ function DoNotifyTargetsAbilityApplied(XComGameState NotifyVisualizeGameState, X
 		{
 			Target.ObjectID = PrimaryTargetID;
 			VisualizationMgr.SendInterTrackMessage(Target, HistoryIndex);
+			NotifiedIDs.AddItem(PrimaryTargetID);
+			for (RedirectIndex = 0; RedirectIndex < NotifyAbilityContext.ResultContext.EffectRedirects.Length; ++RedirectIndex)
+			{
+				if (NotifyAbilityContext.ResultContext.EffectRedirects[RedirectIndex].OriginalTargetRef.ObjectID == PrimaryTargetID)
+				{
+					if (NotifiedIDs.Find(NotifyAbilityContext.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef.ObjectID) == INDEX_NONE)
+					{
+						RedirectTarget = NotifyAbilityContext.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef;
+						VisualizationMgr.SendInterTrackMessage(RedirectTarget, HistoryIndex);
+						NotifiedIDs.AddItem(RedirectTarget.ObjectID);
+					}
+		}
+			}
 		}
 
-		if (bNotifyMultiTargetsAtOnce && bSingleHitLocation)
+		if( bNotifyMultiTargetsAtOnce && bSingleHitLocation && NotifyAbilityContext != None)
 		{
 			foreach NotifyAbilityContext.InputContext.MultiTargets(Target)
 			{
 				VisualizationMgr.SendInterTrackMessage(Target, HistoryIndex);
+				for (RedirectIndex = 0; RedirectIndex < NotifyAbilityContext.ResultContext.EffectRedirects.Length; ++RedirectIndex)
+				{
+					if (NotifyAbilityContext.ResultContext.EffectRedirects[RedirectIndex].OriginalTargetRef.ObjectID == Target.ObjectID)
+					{
+						if (NotifiedIDs.Find(NotifyAbilityContext.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef.ObjectID) == INDEX_NONE)
+						{
+							RedirectTarget = NotifyAbilityContext.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef;
+							VisualizationMgr.SendInterTrackMessage(RedirectTarget, HistoryIndex);
+							NotifiedIDs.AddItem(RedirectTarget.ObjectID);
+						}
+					}
+				}
 			}
 		}
 

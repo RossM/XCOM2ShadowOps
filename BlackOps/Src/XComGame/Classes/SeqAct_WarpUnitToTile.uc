@@ -15,13 +15,10 @@ var vector DestinationLocation;
 
 event Activated()
 {
-	local XComGameStateHistory History;
 	local XComWorldData WorldData;
 	local TTile DestinationTile;
-	local XComGameStateContext_TacticalGameRule CheatContext;
 	local XComGameState NewGameState;
 
-	History = `XCOMHISTORY;
 	WorldData = `XWORLD;
 
 	if(Unit == none)
@@ -41,12 +38,7 @@ event Activated()
 		return;
 	}
 
-	CheatContext = XComGameStateContext_TacticalGameRule(class'XComGameStateContext_TacticalGameRule'.static.CreateXComGameStateContext());
-	CheatContext.GameRuleType = eGameRule_ReplaySync;
-	NewGameState = History.CreateNewGameState(true, CheatContext);
-
-	// NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("SeqAct_WarpUnitToTile: Warping Unit");
-
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("SeqAct_WarpUnitToTile: Warping Unit");
 	Unit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', Unit.ObjectID));
 	Unit.SetVisibilityLocation(DestinationTile);
 	NewGameState.AddStateObject(Unit);

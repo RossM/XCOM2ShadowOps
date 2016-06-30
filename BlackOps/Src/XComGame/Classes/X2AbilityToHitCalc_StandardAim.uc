@@ -199,7 +199,10 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 	// Aim Assist (miss streak prevention)
 	bRolledResultIsAMiss = class'XComGameStateContext_Ability'.static.IsHitResultMiss(Result);
 	
-	if( UnitState != None && !bReactionFire )           //  reaction fire shots do not get adjusted for difficulty
+	//  reaction  fire shots and guaranteed hits do not get adjusted for difficulty
+	if( UnitState != None &&
+		!bReactionFire &&
+		!bGuaranteedHit)
 	{
 		PlayerState = XComGameState_Player(History.GetGameStateForObjectID(UnitState.GetAssociatedPlayerID()));
 		
@@ -230,7 +233,6 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 	`log("***HIT" @ Result, !bRolledResultIsAMiss, 'XCom_HitRolls');
 	`log("***MISS" @ Result, bRolledResultIsAMiss, 'XCom_HitRolls');
 
-	//  add armor mitigation (regardless of hit/miss as some shots deal damage on a miss)	
 	if (TargetState != none)
 	{
 		//  Check for Lightning Reflexes
@@ -239,8 +241,6 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 			Result = eHit_LightningReflexes;
 			`log("Lightning Reflexes triggered! Shot will miss.", true, 'XCom_HitRolls');
 		}
-
-		class'X2AbilityArmorHitRolls'.static.RollArmorMitigation(m_ShotBreakdown.ArmorMitigation, ArmorMitigated, TargetState);
 	}	
 
 	if (UnitState != none && TargetState != none)
@@ -557,6 +557,8 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 					{
 						if (!bAllowCrit && EffectModifiers[i].ModType == eHit_Crit)
 							continue;
+						if (bIgnoreGraze && EffectModifiers[i].ModType == eHit_Graze)
+							continue;
 						AddModifier(EffectModifiers[i].Value, EffectModifiers[i].Reason, EffectModifiers[i].ModType);
 					}
 				}
@@ -608,10 +610,9 @@ function float GetReactionAdjust(XComGameState_Unit Shooter, XComGameState_Unit 
 	}
 
 	OldTarget = XComGameState_Unit(History.GetGameStateForObjectID(Target.ObjectID, eReturnType_Reference, History.GetCurrentHistoryIndex() - 1));
-	`assert(OldTarget != none);
 
 	//  Add penalty if the target was dashing. Look for the target changing position and spending more than 1 action point as a simple check.
-	if (OldTarget.TileLocation != Target.TileLocation)
+	if (OldTarget != None && OldTarget.TileLocation != Target.TileLocation)
 	{
 		if (OldTarget.NumAllActionPoints() > 1 && Target.NumAllActionPoints() == 0)
 		{		

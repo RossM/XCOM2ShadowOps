@@ -58,10 +58,28 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(RevivalProtocol());
 	Templates.AddItem(ScanningProtocol());
 	Templates.AddItem(PurePassive('ThreatAssessment', "img:///UILibrary_PerkIcons.UIPerk_threat_assesment"));
-	Templates.AddItem(PurePassive('FieldMedic', "img:///UILibrary_PerkIcons.UIPerk_fieldmedic"));
+	Templates.AddItem(FieldMedic());
 	Templates.AddItem(PurePassive('IntrusionProtocolPassive', "img:///UILibrary_PerkIcons.UIPerk_intrusionprotocol"));
 
 	return Templates;
+}
+
+static function X2AbilityTemplate FieldMedic()
+{
+	local X2AbilityTemplate         Template;
+
+	Template = PurePassive('FieldMedic', "img:///UILibrary_PerkIcons.UIPerk_fieldmedic");
+	Template.GetBonusWeaponAmmoFn = FieldMedic_BonusWeaponAmmo;
+
+	return Template;
+}
+
+function int FieldMedic_BonusWeaponAmmo(XComGameState_Unit UnitState, XComGameState_Item ItemState)
+{
+	if (ItemState.GetWeaponCategory() == class'X2Item_DefaultUtilityItems'.default.MedikitCat)
+		return default.FIELD_MEDIC_BONUS;
+
+	return 0;
 }
 
 //******** Cool Under Pressure Ability **********
@@ -188,7 +206,7 @@ static function X2AbilityTemplate AidProtocol()
 	Template.bSkipPerkActivationActions = true;
 	Template.bShowActivation = true;
 
-	Template.CustomSelfFireAnim = 'NO_DefenseProtocolA';
+	Template.CustomSelfFireAnim = 'NO_DefenseProtocol';
 
 	return Template;
 }
@@ -228,9 +246,7 @@ static function XComGameState AttachGremlinToTarget_BuildGameState( XComGameStat
 	GremlinItemState.AttachedUnitRef = TargetUnitState.GetReference();
 
 	//Handle height offset for tall units
-	TargetTile = TargetUnitState.TileLocation;
-	if (TargetUnitState.UnitHeight > 2)
-		TargetTile.Z += TargetUnitState.UnitHeight - 2;
+	TargetTile = TargetUnitState.GetDesiredTileForAttachedCosmeticUnit();
 
 	GremlinUnitState.SetVisibilityLocation(TargetTile);
 
@@ -250,6 +266,7 @@ static simulated function GremlinSingleTarget_BuildVisualization(XComGameState V
 	local XComGameState_Unit			GremlinUnitState, ActivatingUnitState;
 	local array<PathPoint> Path;
 	local TTile                         TargetTile;
+	local TTile							StartTile;
 
 	local VisualizationTrack        EmptyTrack;
 	local VisualizationTrack        BuildTrack;
@@ -314,11 +331,10 @@ static simulated function GremlinSingleTarget_BuildVisualization(XComGameState V
 		// Given the target location, we want to generate the movement data.  
 
 		//Handle tall units.
-		TargetTile = TargetUnitState.TileLocation;
-		if (TargetUnitState.UnitHeight > 2)
-			TargetTile.Z += TargetUnitState.UnitHeight - 2;
+		TargetTile = TargetUnitState.GetDesiredTileForAttachedCosmeticUnit();
+		StartTile = AttachedUnitState.GetDesiredTileForAttachedCosmeticUnit();
 
-		class'X2PathSolver'.static.BuildPath( GremlinUnitState, AttachedUnitState.TileLocation, TargetTile, PathData.MovementTiles );
+		class'X2PathSolver'.static.BuildPath(GremlinUnitState, StartTile, TargetTile, PathData.MovementTiles);
 		class'X2PathSolver'.static.GetPathPointsFromPath( GremlinUnitState, PathData.MovementTiles, Path );
 		class'XComPath'.static.PerformStringPulling(XGUnitNativeBase(BuildTrack.TrackActor), Path);
 
@@ -586,7 +602,7 @@ static function X2AbilityTemplate GremlinHeal()
 	Template.OverrideAbilities.AddItem('MedikitHeal');
 	Template.OverrideAbilities.AddItem('NanoMedikitHeal');
 	Template.bOverrideWeapon = true;
-	Template.CustomSelfFireAnim = 'NO_MedicalProtocolA';
+	Template.CustomSelfFireAnim = 'NO_MedicalProtocol';
 	return Template;
 }
 
@@ -651,7 +667,7 @@ static function X2AbilityTemplate GremlinStabilize()
 
 	Template.OverrideAbilities.AddItem( 'MedikitStabilize' );
 	Template.bOverrideWeapon = true;
-	Template.CustomSelfFireAnim = 'NO_MedicalProtocolA';
+	Template.CustomSelfFireAnim = 'NO_MedicalProtocol';
 
 	return Template;
 }
@@ -1119,6 +1135,7 @@ static function X2AbilityTemplate RestorativeMist()
 	HealTargetCondition.ExcludeFullHealth = true;
 	HealTargetCondition.RequireSquadmates = true;
 	HealTargetCondition.ExcludeDead = false; //See comment below...
+	HealTargetCondition.ExcludeRobotic = true;      //  restorative mist can't affect robots
 	Template.AbilityMultiTargetConditions.AddItem(HealTargetCondition);
 
 	//Hack: Do this instead of ExcludeDead, to only exclude properly-dead or bleeding-out units.
@@ -1129,7 +1146,6 @@ static function X2AbilityTemplate RestorativeMist()
 	UnitEffectsCondition = new class'X2Condition_UnitEffects';
 	UnitEffectsCondition.AddExcludeEffect(class'X2StatusEffects'.default.BleedingOutName, 'AA_UnitIsImpaired');
 	Template.AbilityMultiTargetConditions.AddItem(UnitEffectsCondition);
-
 
 	//Healing effects follow...
 	MedikitHeal = new class'X2Effect_ApplyMedikitHeal';
@@ -1145,7 +1161,6 @@ static function X2AbilityTemplate RestorativeMist()
 	Template.AddMultiTargetEffect(RemoveEffects);
 	Template.AddMultiTargetEffect(RemoveAllEffectsByDamageType());
 	
-
 	//Typical path to build gamestate, but a (very crazy) special-case visualization
 	Template.BuildNewGameStateFn = SendGremlinToOwnerLocation_BuildGameState;
 	Template.BuildVisualizationFn = GremlinRestoration_BuildVisualization;

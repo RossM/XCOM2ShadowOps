@@ -538,7 +538,7 @@ function bool ShouldDisplayMy2KConversionAttempt()
 defaultproperties
 {
 	// If you change any profile ids or anything inside the data blob ( including any game state objects ), increment this number!!!!
-	VersionNumber=107
+	VersionNumber=109
 
 	SessionAttemptedMy2KConversion=false
 

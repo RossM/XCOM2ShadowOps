@@ -865,6 +865,8 @@ simulated function PsiBombStage1_BuildVisualization(XComGameState VisualizeGameS
 		}
 
 		OutVisualizationTracks.AddItem(CyberusBuildTrack);
+
+		TypicalAbility_AddEffectRedirects(VisualizeGameState, OutVisualizationTracks, CyberusBuildTrack);
 	}
 }
 
@@ -958,6 +960,7 @@ static function X2AbilityTemplate CreatePsiBombStage2Ability()
 	RiftDamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	RiftDamageEffect.EffectDamageValue.DamageType = 'Psi';
 	RiftDamageEffect.EffectDamageValue = class'X2Item_DefaultWeapons'.default.CYBERUS_PSI_BOMB_BASEDAMAGE;
+	RiftDamageEffect.bIgnoreArmor = true;
 	Template.AddMultiTargetEffect(RiftDamageEffect);
 
 	Template.bSkipFireAction = true;
@@ -1159,6 +1162,8 @@ simulated function PsiBombStage2_BuildVisualization(XComGameState VisualizeGameS
 			OutVisualizationTracks.AddItem(BuildTrack);
 		}
 	}
+
+	TypicalAbility_AddEffectRedirects(VisualizeGameState, OutVisualizationTracks, CyberusBuildTrack);
 }
 
 static function X2AbilityTemplate CreateImmunitiesAbility()

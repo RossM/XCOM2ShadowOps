@@ -17,6 +17,7 @@ var array<string> Data;
 var public string Title;
 var public string Subtitle;
 var public int StartingIndex;
+var bool bAllowedToCycleSoldiers; 
 
 var delegate<OnItemSelectedCallback> OnSelectionChanged;
 var delegate<OnItemSelectedCallback> OnItemClicked;
@@ -130,8 +131,13 @@ simulated function OnDoubleClickLocal(UIList _list, int itemIndex)
 	CloseScreen();
 }
 
+simulated function bool IsAllowedToCycleSoldiers()
+{
+	return bAllowedToCycleSoldiers;
+}
 //==============================================================================
 
 defaultproperties
 {
+	bAllowedToCycleSoldiers = true;
 }

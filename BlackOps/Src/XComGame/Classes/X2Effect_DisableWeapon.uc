@@ -1,7 +1,10 @@
-class X2Effect_DisableWeapon extends X2Effect;
+class X2Effect_DisableWeapon extends X2Effect
+	config(GameCore);
 
 var localized string DisabledWeapon;
 var localized string FailedDisable;
+
+var config array<name> HideVisualizationOfResults;
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
@@ -27,6 +30,11 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 
 	if( XComGameState_Unit(BuildTrack.StateObject_NewState) != none )
 	{
+		if (default.HideVisualizationOfResults.Find(EffectApplyResult) != INDEX_NONE)
+		{
+			return;
+		}
+
 		// Must be a unit in order to have this occur
 		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyOver'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
 

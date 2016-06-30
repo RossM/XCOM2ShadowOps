@@ -59,8 +59,9 @@ static event InstallNewCampaign(XComGameState StartState)
 
 /// <summary>
 /// Called just before the player launches into a tactical a mission while this DLC / Mod is installed.
+/// Allows dlcs/mods to modify the start state before launching into the mission
 /// </summary>
-static event OnPreMission(XComGameState NewGameState, XComGameState_MissionSite MissionState)
+static event OnPreMission(XComGameState StartGameState, XComGameState_MissionSite MissionState)
 {
 
 }
@@ -69,6 +70,15 @@ static event OnPreMission(XComGameState NewGameState, XComGameState_MissionSite 
 /// Called when the player completes a mission while this DLC / Mod is installed.
 /// </summary>
 static event OnPostMission()
+{
+
+}
+
+/// <summary>
+/// Called when the player is doing a direct tactical->tactical mission transfer. Allows mods to modify the
+/// start state of the new transfer mission if needed
+/// </summary>
+static event ModifyTacticalTransferStartState(XComGameState TransferStartState)
 {
 
 }
@@ -85,6 +95,14 @@ static event OnExitPostMissionSequence()
 /// Called after the Templates have been created (but before they are validated) while this DLC / Mod is installed.
 /// </summary>
 static event OnPostTemplatesCreated()
+{
+
+}
+
+/// <summary>
+/// Called when the difficulty changes and this DLC is active
+/// </summary>
+static event OnDifficultyChanged()
 {
 
 }
@@ -117,5 +135,22 @@ simulated function EnableDLCContentPopupCallback(eUIAction eAction)
 /// </summary>
 static function bool UpdateShadowChamberMissionInfo(StateObjectReference MissionRef)
 {
-	
+	return false;
+}
+
+/// <summary>
+/// Called from X2AbilityTag:ExpandHandler after processing the base game tags. Return true (and fill OutString correctly)
+/// to indicate the tag has been expanded properly and no further processing is needed.
+/// </summary>
+static function bool AbilityTagExpandHandler(string InString, out string OutString)
+{
+	return false;
+}
+/// <summary>
+/// Called from XComGameState_Unit:GatherUnitAbilitiesForInit after the game has built what it believes is the full list of
+/// abilities for the unit based on character, class, equipment, et cetera. You can add or remove abilities in SetupData.
+/// </summary>
+static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out array<AbilitySetupData> SetupData, optional XComGameState StartState, optional XComGameState_Player PlayerState, optional bool bMultiplayerDisplay)
+{
+
 }

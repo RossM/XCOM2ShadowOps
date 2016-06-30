@@ -54,6 +54,8 @@ DefaultProperties
 	bCanTickEveryAction=true
 
 	Begin Object Class=X2Effect_ApplyWeaponDamage Name=BurnDamage
+		bAllowFreeKill=false
+		bIgnoreArmor=true
 	End Object
 
 	ApplyOnTick.Add(BurnDamage)

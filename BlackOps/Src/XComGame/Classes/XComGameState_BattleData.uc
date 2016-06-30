@@ -23,6 +23,8 @@ struct native DirectTransferInformation_UnitStats
 	var StateObjectReference UnitStateRef;
 	var float                HP; // amount of HP this unit had before the transfer
 	var int                  ArmorShred; // amount armor that was shredded on this unit before the transfer
+	var int					 LowestHP; // for injuries, needs to be tracked across all parts of a mission
+	var int					 HighestHP; // for injuries, needs to be tracked across all parts of a mission
 
 	structcpptext
 	{
@@ -45,6 +47,14 @@ struct native DirectTransferInformation
 {
 	var bool IsDirectMissionTransfer; // true if this battle data is being transferred over from another mission directly
 	var array<DirectTransferInformation_UnitStats> TransferredUnitStats;
+
+	// to allow us to correctly talley the number of units killed/seen at the end of the mission,
+	// keep track of what has happened in the previous parts of the mission. Ideally we'd be keeping
+	// all of the state information for these units along for the ride as well, but I don't think we have the
+	// time to ensure that I don't accidentally break something doing that. So for now (DLC3), doing it the
+	// safe way
+	var int AliensSeen;
+	var int AliensKilled;
 
 	structcpptext
 	{
@@ -169,6 +179,8 @@ var() bool bMultiplayer;
 var() bool bRanked;
 var() bool bAutomatch;
 var() string strMapType;
+
+var string BizAnalyticsMissionID;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

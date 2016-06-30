@@ -19,7 +19,7 @@ var localized string HoloTargetEffectDesc;
 
 var config int BULLET_SHRED;
 var config int VOLATILE_DAMAGE;
-var config float VOLATILE_RADIUS;
+var deprecated config float VOLATILE_RADIUS;
 var config int DEMO_HIT_BONUS;
 
 var config int SATURATION_TILE_WIDTH, SATURATION_DESTRUCTION_CHANCE;
@@ -125,8 +125,17 @@ static function X2AbilityTemplate HeavyOrdnance()
 	Template = PurePassive('HeavyOrdnance', "img:///UILibrary_PerkIcons.UIPerk_aceinthehole");	
 	
 	Template.bCrossClassEligible = false;
+	Template.GetBonusWeaponAmmoFn = HeavyOrdnance_BonusWeaponAmmo;
 
 	return Template;
+}
+
+function int HeavyOrdnance_BonusWeaponAmmo(XComGameState_Unit UnitState, XComGameState_Item ItemState)
+{
+	if (ItemState.InventorySlot == eInvSlot_GrenadePocket)
+		return default.ORDNANCE_BONUS;
+
+	return 0;
 }
 
 function GrenadePocketPurchased(XComGameState NewGameState, XComGameState_Unit UnitState)
@@ -142,6 +151,7 @@ function GrenadePocketPurchased(XComGameState NewGameState, XComGameState_Unit U
 		`RedScreen("GrenadePocketPurchased called but the unit doesn't have one? -jbouscher / @gameplay" @ UnitState.ToString());		
 		return;
 	}
+
 	FreeItem = class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate(default.FreeGrenadeForPocket);
 	if (FreeItem == none)
 	{

@@ -13,6 +13,7 @@ var XComGameState_InteractiveObject ObjectState;
 var Actor TargetActor;
 
 var vector                      ToTarget;
+var bool                        bFaceTarget;
 
 var	public	CustomAnimParams	Params;
 //*************************************
@@ -44,7 +45,13 @@ function Init(const out VisualizationTrack InTrack)
 
 	ToTarget = TargetActor.Location - UnitPawn.Location;
 	ToTarget.Z = 0;
+
+	bFaceTarget = false;
+	if( VSizeSq(ToTarget) >= class'XComWorldData'.const.WORLD_StepSize )
+	{
+		bFaceTarget = true;
 	ToTarget = Normal(ToTarget);
+}
 }
 
 function bool CheckInterrupted()
@@ -57,7 +64,12 @@ simulated state Executing
 Begin:
 
 	Params.AnimName = 'HL_SendGremlin';
+
+	if( bFaceTarget )
+	{
+		// Not turning to its own tile
 	Unit.IdleStateMachine.ForceHeading(ToTarget);
+	}
 
 	if( ShouldPlayZipMode() )
 	{

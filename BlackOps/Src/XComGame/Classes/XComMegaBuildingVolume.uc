@@ -26,3 +26,8 @@ simulated function InitInLevel()
 
 	InitInLevelNative(kInternalVolumes);
 }
+
+defaultproperties
+{
+	BrushColor = (R = 128, G = 0, B = 0, A = 255)
+}

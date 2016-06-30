@@ -113,6 +113,7 @@ static function X2AbilityTemplate CreateDimensionalRiftStage1Ability()
 	RiftDamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	RiftDamageEffect.bIgnoreBaseDamage = true;
 	RiftDamageEffect.DamageTag = 'PsiDimensionalRiftStage1';
+	RiftDamageEffect.bIgnoreArmor = true;
 	Template.AddMultiTargetEffect(RiftDamageEffect);
 
 	Template.CustomFireAnim = 'HL_Psi_SelfCast';
@@ -244,6 +245,8 @@ simulated function DimensionalRiftStage1_BuildVisualization(XComGameState Visual
 	}
 
 	OutVisualizationTracks.AddItem(AvatarBuildTrack);
+
+	TypicalAbility_AddEffectRedirects(VisualizeGameState, OutVisualizationTracks, AvatarBuildTrack);
 }
 
 simulated function DimensionalRigt1_BuildAffectedVisualization(name EffectName, XComGameState VisualizeGameState, out VisualizationTrack BuildTrack )
@@ -335,6 +338,7 @@ static function X2AbilityTemplate CreateDimensionalRiftStage2Ability()
 	RiftDamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	RiftDamageEffect.bIgnoreBaseDamage = true;
 	RiftDamageEffect.DamageTag = 'PsiDimensionalRiftStage2';
+	RiftDamageEffect.bIgnoreArmor = true;
 	RiftDamageEffect.EnvironmentalDamageAmount = default.DIMENSIONAL_RIFT_ENVDAMAGE;
 	Template.AddMultiTargetEffect(RiftDamageEffect);
 
@@ -555,6 +559,8 @@ simulated function DimensionalRiftStage2_BuildVisualization(XComGameState Visual
 			OutVisualizationTracks.AddItem(BuildTrack);
 		}
 	}
+
+	TypicalAbility_AddEffectRedirects(VisualizeGameState, OutVisualizationTracks, AvatarBuildTrack);
 }
 
 static function X2DataTemplate CreatePsiMindControlAbility()

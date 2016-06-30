@@ -12,9 +12,9 @@ Begin:
 	UnitPawn.CarryingUnit = None;
 	UnitPawn.HideAllAttachments(false);
 
-	Params.AnimName = 'ShutDownAdditive';
-	Params.TargetWeight = 0.0f;
-	UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(Params);
+	AnimName = "ADD_NO_CarryBody";
+	Params.AnimName = AppendMaleFemaleToAnim(AnimName);
+	UnitPawn.GetAnimTreeController().RemoveAdditiveDynamicAnim(Params);
 
 	Params = default.Params;
 	AnimName = "HL_CarryBodyStop";

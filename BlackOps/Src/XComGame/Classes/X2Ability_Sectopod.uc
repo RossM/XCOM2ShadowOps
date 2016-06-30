@@ -730,6 +730,7 @@ static function X2AbilityTemplate CreateInitialStateAbility()
 	DamageImmunity.ImmuneTypes.AddItem('Poison');
 	DamageImmunity.ImmuneTypes.AddItem(class'X2Item_DefaultDamageTypes'.default.ParthenogenicPoisonType);
 	DamageImmunity.ImmuneTypes.AddItem('Unconscious');
+	DamageImmunity.ImmuneTypes.AddItem('Panic');
 
 	Template.AddTargetEffect(DamageImmunity);
 
@@ -1059,7 +1060,7 @@ simulated function WrathCannonStage2_BuildVisualization(XComGameState VisualizeG
 	local StateObjectReference InteractingUnitRef;
 	local X2AbilityTemplate AbilityTemplate;
 	local VisualizationTrack EmptyTrack;
-	local VisualizationTrack BuildTrack;
+	local VisualizationTrack BuildTrack, SourceTrack;
 	local X2Action_PlaySoundAndFlyOver SoundAndFlyover;
 	local X2Action_Fire FireAction;
 	local X2Action_PersistentEffect	PersistentEffectAction;
@@ -1080,32 +1081,32 @@ simulated function WrathCannonStage2_BuildVisualization(XComGameState VisualizeG
 	//****************************************************************************************
 	//Configure the visualization track for the source
 	//****************************************************************************************
-	BuildTrack = EmptyTrack;
-	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
-	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
-	BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
+	SourceTrack = EmptyTrack;
+	SourceTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
+	SourceTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
+	SourceTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
 
-	SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, AbilityContext));
+	SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(SourceTrack, AbilityContext));
 	SoundAndFlyOver.SetSoundAndFlyOverParameters(None, AbilityTemplate.LocFlyOverText, '', eColor_Good);
 
 	// Remove the override idle animation
-	PersistentEffectAction = X2Action_PersistentEffect(class'X2Action_PersistentEffect'.static.AddToVisualizationTrack(BuildTrack, AbilityContext));
+	PersistentEffectAction = X2Action_PersistentEffect(class'X2Action_PersistentEffect'.static.AddToVisualizationTrack(SourceTrack, AbilityContext));
 	PersistentEffectAction.IdleAnimName = '';
 
 	// Play the firing action.  (Animation set in template.)
-	FireAction = X2Action_Fire(class'X2Action_Fire'.static.AddToVisualizationTrack(BuildTrack, AbilityContext));
+	FireAction = X2Action_Fire(class'X2Action_Fire'.static.AddToVisualizationTrack(SourceTrack, AbilityContext));
 	FireAction.SetFireParameters(true);
 
 	// Play the animation to get him to his looping idle
-	PlayAnimation = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, AbilityContext));
+	PlayAnimation = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(SourceTrack, AbilityContext));
 	PlayAnimation.Params.AnimName = 'NO_WrathCannonStopA';
 
 	for (EffectIndex = 0; EffectIndex < AbilityTemplate.AbilityShooterEffects.Length; ++EffectIndex)
 	{
-		AbilityTemplate.AbilityShooterEffects[ EffectIndex ].AddX2ActionsForVisualization( VisualizeGameState, BuildTrack, 'AA_Success' );
+		AbilityTemplate.AbilityShooterEffects[ EffectIndex ].AddX2ActionsForVisualization( VisualizeGameState, SourceTrack, 'AA_Success' );
 	}
 
-	OutVisualizationTracks.AddItem(BuildTrack);
+	OutVisualizationTracks.AddItem(SourceTrack);
 	//****************************************************************************************
 
 	//****************************************************************************************
@@ -1137,6 +1138,7 @@ simulated function WrathCannonStage2_BuildVisualization(XComGameState VisualizeG
 			OutVisualizationTracks.AddItem(BuildTrack);
 		}
 	}
+	TypicalAbility_AddEffectRedirects(VisualizeGameState, OutVisualizationTracks, SourceTrack);
 	MultiTargetEffects = AbilityTemplate.AbilityMultiTargetEffects;
 	//****************************************************************************************
 	//Configure the visualization tracks for the environment

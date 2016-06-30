@@ -922,6 +922,8 @@ function bool GameStateMoveUnitSingle(XGUnit kUnit, array<TTile> TilePath, optio
 			CosmeticUnitVisualizer = XGUnit(AttachedUnits[Index].GetVisualizer());
 			CosmeticUnitVisualizer.bNextMoveIsFollow = true;
 
+			Destination.Z += MovingUnit.GetDesiredZTileOffsetForAttachedCosmeticUnit();
+
 			CosmeticUnitVisualizer.m_kReachableTilesCache.BuildPathToTile(Destination, TilePath);
 
 			if (TilePath.Length == 0)

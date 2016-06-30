@@ -80,6 +80,8 @@ var protectedwrite name HeadDisplayTag;
 var protectedwrite name LegsCameraTag;
 var protectedwrite name LegsDisplayTag;
 
+var protectedwrite float LargeUnitScale;
+
 var private XComGameStateHistory History;
 var private XComGameState CheckGameState;
 var private X2BodyPartTemplateManager PartManager;
@@ -179,6 +181,7 @@ simulated function bool InShell()
 function UpdateBodyPartFilterForNewUnit(XComGameState_Unit NewUnit)
 {
 	BodyPartFilter.Set(EGender(Unit.kAppearance.iGender), ECharacterRace(Unit.kAppearance.iRace), Unit.kAppearance.nmTorso, !Unit.IsASoldier(), Unit.IsVeteran() || InShell());
+	BodyPartFilter.AddCharacterFilter(NewUnit.GetMyTemplateName());
 }
 
 //BodyPartFilter.FilterAny
@@ -268,6 +271,11 @@ simulated function CreatePawnVisuals(Rotator UseRotation)
 	{
 		PrimaryWeapon = ItemState;
 		XComUnitPawn(ActorPawn).CreateVisualInventoryAttachments(XComPresentationLayerBase(Outer).GetUIPawnMgr(), UpdatedUnitState, CheckGameState);
+	}
+	
+	if (UpdatedUnitState.UseLargeArmoryScale())
+	{
+		XComUnitPawn(ActorPawn).Mesh.SetScale(LargeUnitScale);
 	}
 }
 //==============================================================================
@@ -461,7 +469,7 @@ simulated function OnCategoryValueChange(int categoryIndex, int direction, optio
 	local array<XComGameState_Item> Items; //Used for setting the tint / pattern on items
 	local int Index;
 	local XComUnitPawn CosmeticUnitPawn;
-	local X2BodyPartTemplate BodyPart;	
+	local X2BodyPartTemplate BodyPart;
 
 	//Set the body part filter with latest data so that the filters can operate	
 	BodyPartFilter.Set(EGender(UpdatedUnitState.kAppearance.iGender), ECharacterRace(UpdatedUnitState.kAppearance.iRace), UpdatedUnitState.kAppearance.nmTorso, !UpdatedUnitState.IsASoldier(), UpdatedUnitState.IsVeteran() || InShell());
@@ -496,7 +504,7 @@ simulated function OnCategoryValueChange(int categoryIndex, int direction, optio
 				{
 					UpdatedUnitState.kAppearance.nmArms = BodyPart.DataName;
 				}
-			}
+		}
 		}
 
 		if(!ValidatePartSelection("Legs", UpdatedUnitState.kAppearance.nmLegs))
@@ -564,7 +572,7 @@ simulated function OnCategoryValueChange(int categoryIndex, int direction, optio
 		UpdatedUnitState.StoreAppearance();
 		break;
 	case eUICustomizeCat_Face:		
-		UpdateCategorySimple("Head", direction, BodyPartFilter.FilterByGenderAndRace, UpdatedUnitState.kAppearance.nmHead, specificIndex);
+		UpdateCategorySimple("Head", direction, BodyPartFilter.FilterByGenderAndRaceAndCharacter, UpdatedUnitState.kAppearance.nmHead, specificIndex);
 		break;
 	case eUICustomizeCat_EyeColor:			
 		UpdatedUnitState.kAppearance.iEyeColor = WrapIndex(specificIndex, 0, `CONTENT.GetColorPalette(ePalette_EyeColor).Entries.length);
@@ -603,7 +611,7 @@ simulated function OnCategoryValueChange(int categoryIndex, int direction, optio
 		UpdateCountry(specificIndex);
 		break;
 	case eUICustomizeCat_Voice:
-		UpdateCategorySimple("Voice", direction, BodyPartFilter.FilterByGenderAndNonSpecialized, UpdatedUnitState.kAppearance.nmVoice, specificIndex);
+		UpdateCategorySimple("Voice", direction, BodyPartFilter.FilterByGenderAndCharacterAndNonSpecialized, UpdatedUnitState.kAppearance.nmVoice, specificIndex);
 		XComHumanPawn(ActorPawn).SetVoice(UpdatedUnitState.kAppearance.nmVoice);
 		UpdatedUnitState.StoreAppearance();
 		break;
@@ -657,7 +665,7 @@ simulated function OnCategoryValueChange(int categoryIndex, int direction, optio
 			UpdatedUnitState.kAppearance.iRace = WrapIndex(categoryValue + direction, 0, eRace_MAX);
 		
 		BodyPartFilter.Set(EGender(UpdatedUnitState.kAppearance.iGender), ECharacterRace(UpdatedUnitState.kAppearance.iRace), UpdatedUnitState.kAppearance.nmTorso);
-		UpdateCategorySimple("Head", direction, BodyPartFilter.FilterByGenderAndRace, UpdatedUnitState.kAppearance.nmHead);
+		UpdateCategorySimple("Head", direction, BodyPartFilter.FilterByGenderAndRaceAndCharacter, UpdatedUnitState.kAppearance.nmHead);
 
 		XComHumanPawn(ActorPawn).SetAppearance(UpdatedUnitState.kAppearance);
 		UpdatedUnitState.StoreAppearance();
@@ -1048,7 +1056,7 @@ simulated function string GetCategoryDisplay(int catType)
 		Result = string(UpdatedUnitState.kAppearance.iSkinColor);
 		break;
 	case eUICustomizeCat_Face:
-		Result = GetCategoryDisplayName("Head", UpdatedUnitState.kAppearance.nmHead, BodyPartFilter.FilterByGenderAndRace);
+		Result = GetCategoryDisplayName("Head", UpdatedUnitState.kAppearance.nmHead, BodyPartFilter.FilterByGenderAndRaceAndCharacter);
 		break;
 	case eUICustomizeCat_EyeColor:				
 		Result = string(UpdatedUnitState.kAppearance.iEyeColor);
@@ -1077,7 +1085,7 @@ simulated function string GetCategoryDisplay(int catType)
 		Result = UpdatedUnitState.GetCountryTemplate().DisplayName;
 		break;
 	case eUICustomizeCat_Voice:
-		Result = GetCategoryDisplayName("Voice", UpdatedUnitState.kAppearance.nmVoice, BodyPartFilter.FilterByGenderAndNonSpecialized);
+		Result = GetCategoryDisplayName("Voice", UpdatedUnitState.kAppearance.nmVoice, BodyPartFilter.FilterByGenderAndCharacterAndNonSpecialized);
 		break;
 	case eUICustomizeCat_Gender:				 
 		if( UpdatedUnitState.kAppearance.iGender == eGender_Male ) Result = Gender_Male;
@@ -1163,11 +1171,12 @@ reliable client function array<string> GetCategoryList( int categoryIndex )
 	local X2SoldierClassTemplate SoldierClassTemplate;
 	local array<X2StrategyElementTemplate> PersonalityTemplateList;
 	local X2SoldierPersonalityTemplate PersonalityTemplate;
+	local X2CountryTemplate CountryTemplate;
 
 	switch(categoryIndex)
 	{
 	case eUICustomizeCat_Face:
-		GetGenericCategoryList(Items, "Head", BodyPartFilter.FilterByGenderAndRace, class'UICustomize_Menu'.default.m_strFace);
+		GetGenericCategoryList(Items, "Head", BodyPartFilter.FilterByGenderAndRaceAndCharacter, class'UICustomize_Menu'.default.m_strFace);
 		return Items;
 	case eUICustomizeCat_Hairstyle: 
 		GetGenericCategoryList(Items, "Hair", BodyPartFilter.FilterByGenderAndNonSpecialized, class'UICustomize_Menu'.default.m_strHair);
@@ -1182,7 +1191,7 @@ reliable client function array<string> GetCategoryList( int categoryIndex )
 		}
 		return Items;
 	case eUICustomizeCat_Voice:
-		GetGenericCategoryList(Items, "Voice", BodyPartFilter.FilterByGenderAndNonSpecialized, class'UICustomize_Menu'.default.m_strVoice);
+		GetGenericCategoryList(Items, "Voice", BodyPartFilter.FilterByGenderAndCharacterAndNonSpecialized, class'UICustomize_Menu'.default.m_strVoice);
 		return Items;
 	case eUICustomizeCat_Helmet:
 		GetGenericCategoryList(Items, "Helmets", BodyPartFilter.FilterByGenderAndNonSpecializedAndTechAndArmor, class'UICustomize_Props'.default.m_strHelmet);
@@ -1251,7 +1260,11 @@ reliable client function array<string> GetCategoryList( int categoryIndex )
 		CountryTemplates.Sort(SortCountryTemplates);
 		for( i = 0; i < CountryTemplates.Length; i++ )
 		{
-			Items.AddItem( X2CountryTemplate(CountryTemplates[i]).DisplayName );
+			CountryTemplate = X2CountryTemplate(CountryTemplates[i]);
+			if (!CountryTemplate.bHideInCustomization)
+			{
+				Items.AddItem(X2CountryTemplate(CountryTemplates[i]).DisplayName);
+			}
 		}
 		return Items; 
 	case eUICustomizeCat_Class:
@@ -1837,7 +1850,7 @@ simulated function int GetCategoryIndex(int catType)
 		Result = UpdatedUnitState.kAppearance.iSkinColor;
 		break;
 	case eUICustomizeCat_Face:
-		Result = GetCategoryValue("Head", UpdatedUnitState.kAppearance.nmHead, BodyPartFilter.FilterByGenderAndRace);
+		Result = GetCategoryValue("Head", UpdatedUnitState.kAppearance.nmHead, BodyPartFilter.FilterByGenderAndRaceAndCharacter);
 		break;
 	case eUICustomizeCat_EyeColor:				
 		Result = UpdatedUnitState.kAppearance.iEyeColor;
@@ -1861,7 +1874,7 @@ simulated function int GetCategoryIndex(int catType)
 		Result = UpdatedUnitState.kAppearance.iAttitude;
 		break;
 	case eUICustomizeCat_Voice:
-		Result = GetCategoryValue("Voice", UpdatedUnitState.kAppearance.nmVoice, BodyPartFilter.FilterByGenderAndNonSpecialized);
+		Result = GetCategoryValue("Voice", UpdatedUnitState.kAppearance.nmVoice, BodyPartFilter.FilterByGenderAndCharacterAndNonSpecialized);
 		break;
 	case eUICustomizeCat_Gender:				 
 		Result = UpdatedUnitState.kAppearance.iGender;
@@ -2055,10 +2068,13 @@ simulated function UpdateClass( int iSpecificIndex )
 {
 	local X2SoldierClassTemplateManager TemplateMan;
 	local X2SoldierClassTemplate SoldierClassTemplate;
+	local X2CharacterTemplateManager CharTemplateMgr;
+	local X2CharacterTemplate CharacterTemplate;
 	local array<name> TemplateNames;
-	local name TemplateName; 
+	local name TemplateName, CharacterClassName; 
 	local int iRandomIndex, idx;
 	local Rotator CachedRotation;
+	local TSoldier CharacterGeneratorResult;
 
 	TemplateMan = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager();
 	TemplateMan.GetTemplateNames(TemplateNames);
@@ -2086,13 +2102,29 @@ simulated function UpdateClass( int iSpecificIndex )
 
 	UpdatedUnitState.SetSoldierClassTemplate( TemplateName );
 	
-	if( ActorPawn != none )
+	SoldierClassTemplate = TemplateMan.FindSoldierClassTemplate(TemplateName);
+	CharacterClassName = (SoldierClassTemplate.RequiredCharacterClass != '') ? SoldierClassTemplate.RequiredCharacterClass : 'Soldier';
+	if (CharacterClassName != UpdatedUnitState.GetMyTemplateName())
+	{
+		// If the necessary character class is different than the units current class, apply it here and recreate the character
+		CharTemplateMgr = class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager();
+		CharacterTemplate = CharTemplateMgr.FindCharacterTemplate(SoldierClassTemplate.RequiredCharacterClass);
+		UpdatedUnitState.OnCreation(CharacterTemplate);
+		
+		CharacterGenerator = `XCOMGAME.spawn(CharacterTemplate.CharacterGeneratorClass);
+		CharacterGeneratorResult = CharacterGenerator.CreateTSoldier();
+		UpdatedUnitState.SetTAppearance(CharacterGeneratorResult.kAppearance);
+		UpdatedUnitState.SetUnitName(CharacterGeneratorResult.strFirstName, CharacterGeneratorResult.strLastName, UpdatedUnitState.GetNickName());
+		UpdatedUnitState.SetCountry(CharacterGeneratorResult.nmCountry);
+		UpdatedUnitState.UpdatePersonalityTemplate(); // Grab the personality based on the one set in kAppearance
+	}
+	else if( ActorPawn != none )
 	{
 		CachedRotation = ActorPawn.Rotation;
 		XComPresentationLayerBase(Outer).GetUIPawnMgr().ReleasePawn(XComPresentationLayerBase(Outer), UnitRef.ObjectID);
+		
+		CreatePawnVisuals(CachedRotation);
 	}
-
-	CreatePawnVisuals(CachedRotation);
 }
 
 simulated function UpdateAllowedTypeSoldier(int iSpecificIndex)
@@ -2112,11 +2144,24 @@ simulated function UpdateCountry(int iSpecificIndex)
 {
 	local X2StrategyElementTemplateManager StratMgr;
 	local array<X2StrategyElementTemplate> CountryTemplates;
+	local X2CountryTemplate CountryTemplate;
 	local name TemplateName;
+	local int idx;
 
 	StratMgr = class'X2StrategyElementTemplateManager'.static.GetStrategyElementTemplateManager();
 	CountryTemplates = StratMgr.GetAllTemplatesOfClass(class'X2CountryTemplate');
 	CountryTemplates.Sort(SortCountryTemplates);
+
+	// Remove any country templates that shouldn't be available for customization
+	for (idx = 0; idx < CountryTemplates.Length; idx++)
+	{
+		CountryTemplate = X2CountryTemplate(CountryTemplates[idx]);
+		if (CountryTemplate.bHideInCustomization)
+		{
+			CountryTemplates.RemoveItem(CountryTemplate);
+			idx--;
+		}
+	}
 
 	if(iSpecificIndex < CountryTemplates.Length && iSpecificIndex > -1)
 	{
@@ -2237,4 +2282,6 @@ defaultproperties
 	HeadDisplayTag="UIBlueprint_CustomizeHead"
 	LegsCameraTag="UIBlueprint_CustomizeLegs"
 	LegsDisplayTag="UIBlueprint_CustomizeLegs"
+
+	LargeUnitScale = 0.84
 }

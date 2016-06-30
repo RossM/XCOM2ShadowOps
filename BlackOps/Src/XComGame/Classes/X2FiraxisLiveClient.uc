@@ -65,6 +65,17 @@ enum KVPScope
 	eKVPSCOPE_USERANDGLOBAL
 };
 
+// used in IFiraxisLive.h, update appropriately
+enum EGUIDType
+{
+	EGUID_GUID64,
+	EGUID_GUID64ASCII,
+	EGUID_GUID128,
+	EGUID_GUID128ASCII,
+	EGUID_GUID256,
+	EGUID_GUID256ASCII 
+};
+
 //matches Document struct in X2FiraxisLiveClient_CallbackBridge::My2KLegalNotify::Notify
 struct native LegalDocuments
 {
@@ -134,6 +145,18 @@ native function StatSubValue(name Key, int Value, KVPScope Scope = eKVPSCOPE_USE
 native function AnalyticsGameTutorialCompleted();
 native function AnalyticsGameTutorialExited();
 native function AnalyticsGameProgress(string AchievementName, float pctComplete);
+
+native function BizAnalyticsGameStart( string CampaignID, string GameMode, int Difficulty, bool Ironman );
+native function BizAnalyticsGameEnd( string CampaignID, bool GameSuccess );
+native function BizAnalyticsMissionStart( string CampaignID, string MissionID, string MissionType, string MissionName, int Difficulty, int TeamSize,
+											int NumSpecialists, int NumRangers, int NumSharpshooters, int NumGrenadiers, int NumPsiOps,
+											int NumSparkMECS, int NumRookies, int NumStoryCharacters, int NumVIPS, int NumUnknown );
+native function BizAnalyticsMissionEnd( string CampaignID, string MissionID, int EnemiesKilled, int CiviliansRescued, int NumUninjuredSoldiers, int TurnCount, string Grade, string Status, string StatusReason );
+native function BizAnalyticsGameProgressv2( string CampaignID, string MilestoneName, int TimeToDays );
+native function BizAnalyticsMPStart( string SessionID, string GameMode, string Map, string TeamMakeup );
+native function BizAnalyticsMPEnd( string SessionID, int TurnCount, bool IsWinner, bool IsCompleted );
+
+native function string GetGUID( EGUIDType Type = EGUID_GUID128ASCII );
 
 cpptext
 {

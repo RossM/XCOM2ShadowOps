@@ -61,6 +61,7 @@ function GetUnlocks(out array<StateObjectReference> NewResearch, out array<State
 	local X2ItemTemplate ItemTemplate;
 	local X2FacilityTemplate FacilityTemplate;
 	local X2FacilityUpgradeTemplate UpgradeTemplate;
+	local StrategyRequirement AltReq;
 	local int idx, iUpgrades;
 	
 	History = `XCOMHISTORY;
@@ -79,8 +80,24 @@ function GetUnlocks(out array<StateObjectReference> NewResearch, out array<State
 
 		if(TechState.GetMyTemplate().Requirements.RequiredTechs.Find(DataName) == INDEX_NONE)
 		{
+			if (TechState.GetMyTemplate().AlternateRequirements.Length > 0)
+			{
+				foreach TechState.GetMyTemplate().AlternateRequirements(AltReq)
+				{
+					if (AltReq.RequiredTechs.Find(DataName) == INDEX_NONE)
+					{
+						// If both the default and alternate requirements do not require this tech, remove it from the list
 			NewResearch.Remove(idx, 1);
 			idx--;
+						break;
+		}
+	}
+			}
+			else // There are no alternate requirements, so remove the tech from the new research list
+			{				
+				NewResearch.Remove(idx, 1);
+				idx--;
+			}
 		}
 	}
 
@@ -96,6 +113,17 @@ function GetUnlocks(out array<StateObjectReference> NewResearch, out array<State
 			{
 				NewResearch.AddItem(CompletedResearch[idx]);
 			}
+			else if (TechState.GetMyTemplate().AlternateRequirements.Length > 0)
+			{
+				foreach TechState.GetMyTemplate().AlternateRequirements(AltReq)
+				{
+					if (AltReq.RequiredTechs.Find(DataName) != INDEX_NONE)
+					{
+						NewResearch.AddItem(CompletedResearch[idx]);
+						break;
+					}
+		}
+	}
 		}
 	}
 
@@ -107,9 +135,25 @@ function GetUnlocks(out array<StateObjectReference> NewResearch, out array<State
 
 		if (TechState.GetMyTemplate().Requirements.RequiredTechs.Find(DataName) == INDEX_NONE)
 		{
+			if (TechState.GetMyTemplate().AlternateRequirements.Length > 0)
+			{
+				foreach TechState.GetMyTemplate().AlternateRequirements(AltReq)
+				{
+					if (AltReq.RequiredTechs.Find(DataName) == INDEX_NONE)
+					{
+						// If both the default and alternate requirements do not require this tech, remove it from the list
+						NewProvingGroundProjects.Remove(idx, 1);
+						idx--;
+						break;
+					}
+				}
+			}
+			else // There are no alternate requirements, so remove the tech from the new proving ground project list
+			{
 			NewProvingGroundProjects.Remove(idx, 1);
 			idx--;
 		}
+	}
 	}
 	
 	// Check all completed proving ground projects for projects unlocked by this tech, used for Archive Reports
@@ -124,6 +168,17 @@ function GetUnlocks(out array<StateObjectReference> NewResearch, out array<State
 			{
 				NewProvingGroundProjects.AddItem(CompletedProvingGroundProjects[idx]);
 			}
+			else if (TechState.GetMyTemplate().AlternateRequirements.Length > 0)
+			{
+				foreach TechState.GetMyTemplate().AlternateRequirements(AltReq)
+				{
+					if (AltReq.RequiredTechs.Find(DataName) != INDEX_NONE)
+					{
+						NewProvingGroundProjects.AddItem(CompletedProvingGroundProjects[idx]);
+						break;
+		}
+	}
+			}
 		}
 	}
 
@@ -133,9 +188,25 @@ function GetUnlocks(out array<StateObjectReference> NewResearch, out array<State
 	{
 		if(NewItems[idx].Requirements.RequiredTechs.Find(DataName) == INDEX_NONE)
 		{
+			if (NewItems[idx].AlternateRequirements.Length > 0)
+			{
+				foreach NewItems[idx].AlternateRequirements(AltReq)
+				{
+					if (AltReq.RequiredTechs.Find(DataName) == INDEX_NONE)
+					{
+						// If both the default and alternate requirements do not require this tech, remove it from the list
 			NewItems.Remove(idx, 1);
 			idx--;
+						break;
+					}
+				}
+			}
+			else // There are no alternate requirements, so remove the tech from the new item list
+			{
+				NewItems.Remove(idx, 1);
+				idx--;
 		}
+	}
 	}
 
 	// Check current inventory items for items unlocked by this tech, used for Archive Reports
@@ -149,6 +220,17 @@ function GetUnlocks(out array<StateObjectReference> NewResearch, out array<State
 			if (ItemTemplate.Requirements.RequiredTechs.Find(DataName) != INDEX_NONE)
 			{
 				NewItems.AddItem(ItemTemplate);
+			}
+			else if (ItemTemplate.AlternateRequirements.Length > 0)
+			{
+				foreach ItemTemplate.AlternateRequirements(AltReq)
+				{
+					if (AltReq.RequiredTechs.Find(DataName) != INDEX_NONE)
+					{
+						NewItems.AddItem(ItemTemplate);
+						break;
+					}
+				}
 			}
 		}
 	}

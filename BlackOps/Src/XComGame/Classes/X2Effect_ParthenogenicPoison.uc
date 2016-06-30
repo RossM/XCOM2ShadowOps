@@ -183,6 +183,8 @@ defaultproperties
 	DiedWithParthenogenicPoisonTriggerName="UnitDied"
 
 	Begin Object Class=X2Effect_ApplyWeaponDamage Name=PoisonDamage
+		bAllowFreeKill=false
+		bIgnoreArmor=true
 		DamageTypes.Add("ParthenogenicPoison")
 	End Object
 

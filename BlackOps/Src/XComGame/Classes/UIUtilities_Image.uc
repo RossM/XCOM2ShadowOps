@@ -141,6 +141,7 @@ const HTML_MicActive = "mic_active";
 
 const HTML_AnarchysChildrenIcon = "anarchy_icon";
 const HTML_HunterIcon = "hunter_icon";
+const HTML_GearIcon = "UIEvent_engineer";
 
 // ----------------------------------------------------------------------------------------
 

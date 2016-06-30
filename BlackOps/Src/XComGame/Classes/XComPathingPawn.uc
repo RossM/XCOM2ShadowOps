@@ -158,6 +158,9 @@ var private array<TTile>						    ConcealmentMarkers; // all tiles with a concea
 var protected XComRenderablePathComponent RenderablePath; // component that draws the path ribbon from the unit to the puck
 var private array<GameplayTileData> PathTileData; // gameplay friendly extra info about the path
 
+// switch for derived classes
+var protected bool AllowSelectionOfActiveUnitTile; // if true, allows the puck to target the tile the unit is currently on
+
 native function protected BuildSpline();
 native function protected MarkConcealmentCacheDirty(int UnitID);
 native function MarkAllConcealmentCachesDirty(); // Need this non-private for replay/tutorial purposes
@@ -573,6 +576,7 @@ simulated function GetMaxTileZFromFloorLevel(XComBuildingVolume BuildingVolume, 
 
 simulated event Tick(float DeltaTime)
 {
+	local XComTacticalCheatManager TacticalCheatManager;
 	local XComWorldData WorldData;
 	local Actor TargetActor;
 	local XCom3DCursor Cursor;
@@ -588,8 +592,8 @@ simulated event Tick(float DeltaTime)
 
 	super.Tick(DeltaTime);
 
-`if(`notdefined(FINAL_RELEASE))
-	if (XComTacticalCheatManager(GetALocalPlayerController().CheatManager).bHidePathingPawn)
+	TacticalCheatManager = XComTacticalCheatManager(GetALocalPlayerController().CheatManager);
+	if (TacticalCheatManager != none && TacticalCheatManager.bHidePathingPawn)
 	{
 		PuckMeshComponent.SetHidden(true);
 		SlashingMeshComponent.SetHidden(true);
@@ -600,7 +604,6 @@ simulated event Tick(float DeltaTime)
 		super.SetVisible(false);
 		return;
 	}
-`endif
 
 	//Only update the concealment tiles once the current visualizations are finished
 	if (bConcealmentTilesNeedUpdate && !class'XComGameStateVisualizationMgr'.static.VisualizerBusy())
@@ -674,7 +677,14 @@ simulated event Tick(float DeltaTime)
 		}
 
 		// if not a melee move, just grab the closest valid path destination
-		PathDestination = ActiveCache.GetClosestReachableDestination(CursorTile, , MinZ, MaxZ);
+		if(AllowSelectionOfActiveUnitTile && CursorTile == ActiveUnit.GetVisualizedGameState().TileLocation)
+		{
+			PathDestination = CursorTile;
+		}
+		else
+		{
+			PathDestination = ActiveCache.GetClosestReachableDestination(CursorTile, , MinZ, MaxZ);
+		}
 		TargetObject = none;
 	}
 

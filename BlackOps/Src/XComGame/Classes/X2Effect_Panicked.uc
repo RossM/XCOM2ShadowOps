@@ -102,4 +102,5 @@ DefaultProperties
 {
 	bIsImpairingMomentarily=true
 	DamageTypes.Add("Mental");
+	DamageTypes.Add("Panic");
 }

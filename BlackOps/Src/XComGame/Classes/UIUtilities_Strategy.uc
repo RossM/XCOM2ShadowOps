@@ -24,6 +24,7 @@ struct TPCSAvailabilityData
 	var bool bHasAchievedCombatSimsRank;
 	var bool bHasNeurochipImplantsInInventory;
 	var bool bHasCombatSimsSlotsAvailable;
+	var bool bCanEquipCombatSims;
 };
 
 var localized string m_strCreditsPrefix;
@@ -1297,6 +1298,7 @@ simulated static function GetPCSAvailability(XComGameState_Unit Unit, out TPCSAv
 	PCSAvailabilityData.bHasNeurochipImplantsInInventory = XComHQ.HasCombatSimsInInventory();
 	PCSAvailabilityData.bHasAchievedCombatSimsRank = Unit.IsSufficientRankToEquipPCS();
 	PCSAvailabilityData.bHasGTS = XComHQ.HasFacilityByName('OfficerTrainingSchool');
+	PCSAvailabilityData.bCanEquipCombatSims = (AvailableSlots > 0);
 }
 
 // Used in UIArmory_MainMenu and UIArmory_Promotion
@@ -1428,4 +1430,19 @@ simulated static function int GetMinimumContactCost()
 	}
 
 	return MinContactCost;
+}
+
+simulated static function int GetUnitCurrentHealth(XComGameState_Unit UnitState, optional bool bUseLowestHP)
+{
+	if (bUseLowestHP)
+{
+		return UnitState.LowestHP;
+	}
+
+	return (UnitState.GetCurrentStat(eStat_HP) + UnitState.GetUIStatFromInventory(eStat_HP) + UnitState.GetUIStatFromAbilities(eStat_HP));
+}
+
+simulated static function int GetUnitMaxHealth(XComGameState_Unit UnitState)
+{
+	return (UnitState.GetMaxStat(eStat_HP) + UnitState.GetUIStatFromInventory(eStat_HP) + UnitState.GetUIStatFromAbilities(eStat_HP));
 }

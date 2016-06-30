@@ -126,7 +126,6 @@ var Vector vLookAt;
 var bool bDebugBeginMoveHang;
 var bool bDebugFlight;
 
-var bool bDebugMouseTrace;
 var bool bForceKillCivilians;
 var bool bForceIntimidate;
 
@@ -952,11 +951,6 @@ exec function TestClosestPointToCursorOnAxis()
 	vLoc = kAI.m_kNav.GetClosestPointAlongLineToTestPoint(kAI.m_kNav.m_kAxisOfPlay.v1, kAI.m_kNav.m_kAxisOfPlay.v2, GetCursorLoc());
 	DrawSphereV(vLoc);
 }
-exec function ToggleDebugMouseTrace()
-{
-	bDebugMouseTrace = !bDebugMouseTrace;
-}
-
 //------------------------------------------------------------------------------------------------
 
 exec function EndBattle(optional bool XComWins = true)
@@ -2523,6 +2517,8 @@ function XComGameState_Unit GetClosestUnitToCursor(bool bForceAITeam=false, bool
 			continue;
 		if( !bConsiderDead &&  Unit.IsDead() )
 			continue;
+		if (Unit.GetMyTemplate().bIsCosmetic)
+			continue;
 		Tile = Unit.TileLocation;
 		UnitLocation = WorldData.GetPositionFromTileCoordinates(Tile);
 		UnitDistance = VSize(CursorLocation - UnitLocation);
@@ -2869,7 +2865,7 @@ exec function DamageWholeTeam(optional int iDamageAmt = 1, optional ETeam eTeamT
 	`TACTICALRULES.SubmitGameState(NewGameState);
 }
 
-exec function TestAnimation(name strAnim, optional bool UpperBodyOnly = false)
+exec function TestAnimation(name strAnim, optional bool Additive = false, optional bool UpperBodyOnly = false)
 {
 	local XGUnit kUnit;
 	local CustomAnimParams AnimParams;
@@ -2878,7 +2874,11 @@ exec function TestAnimation(name strAnim, optional bool UpperBodyOnly = false)
 	if (kUnit != None)
 	{
 		AnimParams.AnimName = strAnim;
-		if (UpperBodyOnly)
+		if( Additive )
+		{
+			kUnit.GetPawn().GetAnimTreeController().PlayAdditiveDynamicAnim(AnimParams);
+		}
+		else if (UpperBodyOnly)
 		{
 			kUnit.GetPawn().GetAnimTreeController().PlayUpperBodyDynamicAnim(AnimParams);
 		}
@@ -3705,7 +3705,7 @@ function ShowAvailableActions(XComGameState_Unit kUnit)
 	for (i = 0; i < OutCacheData.AvailableActions.Length; ++i)
 	{
 		kAbility = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID( OutCacheData.AvailableActions[i].AbilityObjectRef.ObjectID ));
-		`log("  " $ i @ kAbility.ToString());
+		`log("  " $ i @ kAbility.ToString(true));
 		`log("      bFreeAim=" $ OutCacheData.AvailableActions[i].bFreeAim);
 		`log("      AvailableCode=" $ OutCacheData.AvailableActions[i].AvailableCode);
 		for (j = 0; j < OutCacheData.AvailableActions[i].AvailableTargets.Length; ++j)
@@ -3822,11 +3822,11 @@ exec function X2AllowSelectAll(bool bSetting)
 {
 	bAllowSelectAll = bSetting;
 
-	if( bSetting && `XWORLD.bEnableFOW )
+	if( bSetting && `XWORLD.bDebugEnableFOW )
 	{
 		ToggleFOW();
 	}
-	else if ( bSetting && !`XWORLD.bEnableFOW )
+	else if ( bSetting && !`XWORLD.bDebugEnableFOW )
 	{
 		ToggleFOW();
 	}
@@ -5650,11 +5650,11 @@ exec function MarkDemoStart()
 exec function X2ForceAllUnitsVisible()
 {
 	ForceAllUnitsVisible = !ForceAllUnitsVisible;
-	if(ForceAllUnitsVisible && `XWORLD.bEnableFOW)
+	if(ForceAllUnitsVisible && `XWORLD.bDebugEnableFOW)
 	{
 		ToggleFOW();
 	}
-	else if(!ForceAllUnitsVisible && !`XWORLD.bEnableFOW)
+	else if(!ForceAllUnitsVisible && !`XWORLD.bDebugEnableFOW)
 	{
 		ToggleFOW();
 	}	
@@ -6056,6 +6056,21 @@ exec function PopulateAnalytics()
 exec function ForceRulerOverlayHidden()
 {
 	`PRES.UIHideSpecialTurnOverlay();
+}
+
+exec function X2ShowFullObject(int ObjectID)
+{
+	local XComGameState_BaseObject Object;
+
+	Object = `XCOMHISTORY.GetGameStateForObjectID(ObjectID);
+	if (Object == none)
+	{
+		`log("No object with ID" @ ObjectID @ "found in the history.");
+	}
+	else
+	{
+		`log(Object.ToString(true));
+	}
 }
 
 DefaultProperties

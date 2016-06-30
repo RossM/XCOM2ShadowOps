@@ -70,6 +70,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(CreateTemplate_Viper());
 	Templates.AddItem(CreateTemplate_PsiZombie());
 	Templates.AddItem(CreateTemplate_PsiZombieHuman());	
+	Templates.AddItem(CreateTemplate_TheLost());	
 	Templates.AddItem(CreateTemplate_AdventTroopTransport());
 	Templates.AddItem(CreateTemplate_ChryssalidCocoon());
 	Templates.AddItem(CreateTemplate_ChryssalidCocoonHuman());
@@ -133,7 +134,10 @@ static function X2CharacterTemplate CreateSoldierTemplate()
 	CharTemplate.bCanBeRevived = true;
 	CharTemplate.bUsePoolSoldiers = true;
 	CharTemplate.bStaffingAllowed = true;
+	CharTemplate.bAppearInBase = true;
 	CharTemplate.strMatineePackages.AddItem("CIN_Soldier");
+	CharTemplate.strIntroMatineeSlotPrefix = "Char";
+	CharTemplate.strLoadingMatineeSlotPrefix = "Soldier";
 
 	CharTemplate.DefaultSoldierClass = 'Rookie';
 	CharTemplate.DefaultLoadout = 'RookieSoldier';
@@ -193,6 +197,9 @@ static function X2CharacterTemplate CreateTutorialCentralTemplate()
 	CharTemplate.bCanBeCarried = true;
 	CharTemplate.bCanBeRevived = true;
 	CharTemplate.strMatineePackages.AddItem("CIN_Soldier");
+	CharTemplate.strIntroMatineeSlotPrefix = "Char";
+	CharTemplate.strLoadingMatineeSlotPrefix = "Soldier";
+
 
 	CharTemplate.DefaultLoadout = 'RookieSoldier';
 	CharTemplate.RequiredLoadout = 'RequiredSoldier';
@@ -265,6 +272,7 @@ static function X2CharacterTemplate CreateStrategyCentralTemplate()
 	CharTemplate.bCanTakeCover = true;
 	CharTemplate.bCanBeCarried = true;
 	CharTemplate.bCanBeRevived = true;
+	CharTemplate.bAppearInBase = true;
 	CharTemplate.strMatineePackages.AddItem("CIN_Soldier");
 
 	CharTemplate.DefaultLoadout = 'RookieSoldier';
@@ -488,6 +496,7 @@ static function X2CharacterTemplate CreateCommanderVIPTemplate(optional name Tem
 
 	CharTemplate.UnitSize = 1;
 	CharTemplate.BehaviorClass = class'XGAIBehavior_Civilian';
+	CharTemplate.strIntroMatineeSlotPrefix = "Char";
 
 	CharTemplate.bCanUse_eTraversal_Normal = true;
 	CharTemplate.bCanUse_eTraversal_ClimbOver = true;
@@ -679,6 +688,7 @@ static function X2CharacterTemplate CreateScientistTemplate()
 	CharTemplate.bCanTakeCover = true;	
 	CharTemplate.bUsePoolVIPs = true;
 	CharTemplate.bStaffingAllowed = true;
+	CharTemplate.bAppearInBase = true;
 
 	CharTemplate.Abilities.AddItem('Evac');
 	CharTemplate.Abilities.AddItem('HunkerDown');
@@ -749,6 +759,7 @@ static function X2CharacterTemplate CreateHeadScientistTemplate()
 	CharTemplate.bIsScientist = true;
 	CharTemplate.bCanTakeCover = true;
 	CharTemplate.bStaffingAllowed = false;
+	CharTemplate.bAppearInBase = true;
 	CharTemplate.strPawnArchetypes.AddItem("GameUnit_HeadScientist.ARC_Unit_HeadScientist");
 
 	CharTemplate.Abilities.AddItem('Evac');
@@ -819,6 +830,7 @@ static function X2CharacterTemplate CreateEngineerTemplate()
 	CharTemplate.bCanTakeCover = true;	
 	CharTemplate.bUsePoolVIPs = true;
 	CharTemplate.bStaffingAllowed = true;
+	CharTemplate.bAppearInBase = true;
 
 	CharTemplate.Abilities.AddItem('Evac');
 	CharTemplate.Abilities.AddItem('HunkerDown');
@@ -889,6 +901,7 @@ static function X2CharacterTemplate CreateHeadEngineerTemplate()
 	CharTemplate.bIsEngineer = true;
 	CharTemplate.bCanTakeCover = true;
 	CharTemplate.bStaffingAllowed = false;
+	CharTemplate.bAppearInBase = true;
 	CharTemplate.strPawnArchetypes.AddItem("GameUnit_HeadEngineer.ARC_Unit_HeadEngineer");	
 
 	CharTemplate.Abilities.AddItem('Evac');
@@ -959,6 +972,7 @@ static function X2CharacterTemplate CreateHeadquartersClerkTemplate()
 	CharTemplate.bCanTakeCover = true;
 	CharTemplate.bUsePoolVIPs = false;
 	CharTemplate.bStaffingAllowed = false;
+	CharTemplate.bAppearInBase = true;
 
 	CharTemplate.Abilities.AddItem('Evac');
 	CharTemplate.Abilities.AddItem('HunkerDown');
@@ -1218,6 +1232,7 @@ static function CreateDefaultTurretTemplate(out X2CharacterTemplate CharTemplate
 	CharTemplate.ImmuneTypes.AddItem('Fire');
 	CharTemplate.ImmuneTypes.AddItem('Poison');
 	CharTemplate.ImmuneTypes.AddItem(class'X2Item_DefaultDamageTypes'.default.ParthenogenicPoisonType);
+	CharTemplate.ImmuneTypes.AddItem('Panic');
 
 	CharTemplate.strHackIconImage = "UILibrary_Common.TargetIcons.Hack_turret_icon";
 	CharTemplate.strTargetIconImage = class'UIUtilities_Image'.const.TargetIcon_Turret;
@@ -3506,6 +3521,23 @@ static function X2CharacterTemplate CreateTemplate_PsiZombieHuman()
 	CharTemplate.strPawnArchetypes.Length = 0;
 	CharTemplate.strPawnArchetypes.AddItem("GameUnit_Zombie.ARC_GameUnit_Zombie_Human_M");
 	CharTemplate.strPawnArchetypes.AddItem("GameUnit_Zombie.ARC_GameUnit_Zombie_Human_F");
+
+	CharTemplate.strTargetIconImage = class'UIUtilities_Image'.const.TargetIcon_Alien;
+
+	return CharTemplate;
+}
+
+static function X2CharacterTemplate CreateTemplate_TheLost()
+{
+	local X2CharacterTemplate CharTemplate;
+	CharTemplate = CreateTemplate_PsiZombie('TheLost');
+	CharTemplate.strPawnArchetypes.Length = 0;
+	CharTemplate.strPawnArchetypes.AddItem("GameUnit_TheLost.ARC_GameUnit_TheLost_Light_A");
+	CharTemplate.strPawnArchetypes.AddItem("GameUnit_TheLost.ARC_GameUnit_TheLost_Light_B");
+	CharTemplate.strPawnArchetypes.AddItem("GameUnit_TheLost.ARC_GameUnit_TheLost_Heavy_A");
+	CharTemplate.strPawnArchetypes.AddItem("GameUnit_TheLost.ARC_GameUnit_TheLost_Heavy_B");
+	CharTemplate.strPawnArchetypes.AddItem("GameUnit_TheLost.ARC_GameUnit_TheLost_Heavy_C");
+	CharTemplate.strPawnArchetypes.AddItem("GameUnit_TheLost.ARC_GameUnit_TheLost_F");
 
 	CharTemplate.strTargetIconImage = class'UIUtilities_Image'.const.TargetIcon_Alien;
 

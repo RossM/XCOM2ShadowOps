@@ -103,7 +103,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 	listX = Clamp((Movie.UI_RES_X / 2) - (listWidth / 2), 10, Movie.UI_RES_X / 2);
 
 	m_kSlotList = Spawn(class'UIList', self);
-	m_kSlotList.InitList('', listX, -400, Movie.UI_RES_X - 20, 310, true).AnchorBottomLeft();
+	m_kSlotList.InitList('', listX, -435, Movie.UI_RES_X - 20, 310, true).AnchorBottomLeft();
 	m_kSlotList.itemPadding = LIST_ITEM_PADDING;
 
 	`XSTRATEGYSOUNDMGR.PlaySquadSelectMusic();
@@ -207,6 +207,7 @@ simulated function UpdateData(optional bool bFillSquad)
 	local int ListX, ListWidth;
 	local UISquadSelect_ListItem ListItem;
 	local XComGameState_Unit UnitState;
+	local XComGameState_MissionSite MissionState;
 	local GeneratedMissionData MissionData;
 	local bool bAllowWoundedSoldiers, bSpecialSoldierFound;
 	local array<name> RequiredSpecialSoldiers;
@@ -371,6 +372,16 @@ simulated function UpdateData(optional bool bFillSquad)
 
 	StoreGameStateChanges();
 	bDirty = false;
+
+	MissionState = XComGameState_MissionSite(History.GetGameStateForObjectID(XComHQ.MissionRef.ObjectID));
+	if (MissionState.GetMissionSource().RequireLaunchMissionPopupFn != none && MissionState.GetMissionSource().RequireLaunchMissionPopupFn(MissionState))
+	{
+		// If the mission source requires a unique launch mission warning popup which has not yet been displayed, show it now
+		if (!MissionState.bHasSeenLaunchMissionWarning)
+		{
+			`HQPRES.UILaunchMissionWarning(MissionState);
+		}
+	}
 }
 
 simulated function SkulljackEvent()
@@ -530,6 +541,7 @@ simulated function UpdateNavHelp()
 	local XComHeadquartersCheatManager CheatMgr;
 
 	LaunchButton.SetDisabled(!CanLaunchMission());
+	LaunchButton.SetTooltipText(GetTooltipText());
 
 	if( `HQPRES != none )
 	{
@@ -629,11 +641,19 @@ simulated function AddHiddenSoldiersToSquad(int NumSoldiersToAdd)
 
 simulated function string GetTooltipText()
 {
+	local XComGameState_MissionSite MissionState;
+
 	if(CanLaunchMission())
 		return "";
 
 	if(!HasEnoughSoldiers())
 		return m_strTooltipNeedsSoldiers;
+	
+	MissionState = XComGameState_MissionSite(`XCOMHISTORY.GetGameStateForObjectID(XComHQ.MissionRef.ObjectID));
+	if (MissionState.GetMissionSource().CanLaunchMissionFn != none && !MissionState.GetMissionSource().CanLaunchMissionFn(MissionState))
+	{
+		return MissionState.GetMissionSource().CannotLaunchMissionTooltip;
+	}
 }
 
 simulated function OnStripItems()
@@ -807,6 +827,7 @@ simulated function ChangeSlot(optional StateObjectReference UnitRef)
 {
 	local bool PrevCanLaunchMission;
 	local StateObjectReference PrevUnitRef;
+	local XComGameState_MissionSite MissionState;
 
 	// Make sure we create the update state before changing XComHQ
 	if(UpdateState == none)
@@ -834,6 +855,16 @@ simulated function ChangeSlot(optional StateObjectReference UnitRef)
 	if(PrevCanLaunchMission != CanLaunchMission())
 		UpdateNavHelp();
 
+	MissionState = XComGameState_MissionSite(`XCOMHISTORY.GetGameStateForObjectID(XComHQ.MissionRef.ObjectID));
+	if (MissionState.GetMissionSource().RequireLaunchMissionPopupFn != none && MissionState.GetMissionSource().RequireLaunchMissionPopupFn(MissionState))
+	{
+		// If the mission source requires a unique launch mission warning popup which has not yet been displayed, show it now
+		if (!MissionState.bHasSeenLaunchMissionWarning)
+		{
+			`HQPRES.UILaunchMissionWarning(MissionState);
+		}
+	}
+	
 	if(PrevUnitRef.ObjectID == 0)
 	{
 		RefreshDisplay();
@@ -1131,7 +1162,15 @@ simulated function OnRemoved()
 
 simulated function bool CanLaunchMission()
 {
+	local XComGameState_MissionSite MissionState;
+	
 	if(class'XComGameState_HeadquartersXCom'.static.GetObjectiveStatus('T0_M5_EquipMedikit') == eObjectiveState_InProgress)
+	{
+		return false;
+	}
+	
+	MissionState = XComGameState_MissionSite(`XCOMHISTORY.GetGameStateForObjectID(XComHQ.MissionRef.ObjectID));
+	if (MissionState.GetMissionSource().CanLaunchMissionFn != none && !MissionState.GetMissionSource().CanLaunchMissionFn(MissionState))
 	{
 		return false;
 	}
@@ -1292,6 +1331,8 @@ simulated function XComUnitPawn CreatePawn(StateObjectReference UnitRef, int ind
 	if (GremlinPawn != none)
 	{
 		SetGremlinMatineeVariable(name("Gremlin"$(index + 1)), GremlinPawn);
+		GremlinPawn.SetLocation(PlacementActor.Location);
+		GremlinPawn.SetRotation(PlacementActor.Rotation);
 
 		GremlinHQAnims.AddItem(AnimSet'HQ_ANIM.Anims.AS_Gremlin');
 		GremlinPawn.XComAddAnimSetsExternal(GremlinHQAnims);

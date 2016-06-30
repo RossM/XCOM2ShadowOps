@@ -25,6 +25,7 @@ var localized string m_strDismissDialogDescription;
 var localized string m_strRookiePromoteTooltip;
 var localized string m_strNoImplantsTooltip;
 var localized string m_strNoGTSTooltip;
+var localized string m_strCantEquiqPCSTooltip;
 var localized string m_strNoModularWeaponsTooltip;
 var localized string m_strCannotUpgradeWeaponTooltip;
 var localized string m_strNoWeaponUpgradesTooltip;
@@ -80,8 +81,10 @@ simulated function PopulateData()
 	// PCS:
 	class'UIUtilities_Strategy'.static.GetPCSAvailability(Unit, PCSAvailabilityData);
 
-	if( !PCSAvailabilityData.bHasAchievedCombatSimsRank ) 
+	if(!PCSAvailabilityData.bHasAchievedCombatSimsRank)
 		ImplantsTooltip = m_strInsufficientRankForImplantsTooltip;
+	else if(!PCSAvailabilityData.bCanEquipCombatSims)
+		ImplantsTooltip = m_strCantEquiqPCSTooltip;
 	else if( !PCSAvailabilityData.bHasCombatSimsSlotsAvailable )
 		ImplantsTooltip = m_strCombatSimsSlotsFull;
 	else if( !PCSAvailabilityData.bHasNeurochipImplantsInInventory )
@@ -89,7 +92,7 @@ simulated function PopulateData()
 	else if( !PCSAvailabilityData.bHasGTS )
 		ImplantsTooltip = m_strNoGTSTooltip;
 
-	bEnableImplantsOption = PCSAvailabilityData.bHasAchievedCombatSimsRank && PCSAvailabilityData.bHasGTS && !bInTutorialPromote;
+	bEnableImplantsOption = PCSAvailabilityData.bCanEquipCombatSims && PCSAvailabilityData.bHasAchievedCombatSimsRank && PCSAvailabilityData.bHasGTS && !bInTutorialPromote;
 	ImplantsOption = m_strImplants;
 	
 	ListItem = Spawn(class'UIListItemString', List.ItemContainer).InitListItem(ImplantsOption).SetDisabled(!bEnableImplantsOption, ImplantsTooltip);
@@ -241,13 +244,16 @@ simulated function OnItemClicked(UIList ContainerList, int ItemIndex)
 
 simulated function OnSelectionChanged(UIList ContainerList, int ItemIndex)
 {
-	local string Description;
+	local XComGameState_Unit UnitState;
+	local string Description, CustomizeDesc;
 
 	// Index order matches order that elements get added in 'PopulateData'
 	switch(ItemIndex)
 	{
 	case 0: // CUSTOMIZE
-		Description = m_strCustomizeSoldierDesc;
+		UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitReference.ObjectID));
+		CustomizeDesc = UnitState.GetMyTemplate().strCustomizeDesc;
+		Description = CustomizeDesc != "" ? CustomizeDesc : m_strCustomizeSoldierDesc;
 		break;
 	case 1: // LOADOUT
 		Description = m_strLoadoutDesc;

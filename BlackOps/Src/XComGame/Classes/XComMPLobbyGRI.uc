@@ -52,7 +52,7 @@ simulated function CreateMPStartState()
 	}
 
 	//Create the basic strategy objects
-	class'XComGameStateContext_StrategyGameRule'.static.CreateStrategyGameStart(,false);
+	class'XComGameStateContext_StrategyGameRule'.static.CreateStrategyGameStart(,false, , , , , false);
 
 	//Create the basic objects
 	NewStartState = class'XComGameStateContext_TacticalGameRule'.static.CreateDefaultTacticalStartState_Multiplayer(BattleData);

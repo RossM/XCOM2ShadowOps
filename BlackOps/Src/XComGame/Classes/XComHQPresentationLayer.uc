@@ -123,7 +123,7 @@ simulated function InitUIScreensComplete()
 
 simulated function bool IsBusy()
 {
-	return (CAMIsBusy() || !Get2DMovie().bIsInited || !m_bPresLayerReady);
+	return (CAMIsBusy() || !Get2DMovie().bIsInited || !IsPresentationLayerReady());
 }
 
 event Destroyed( )
@@ -1152,13 +1152,17 @@ reliable client function UIArmory_WeaponTrait(StateObjectReference UnitOrWeaponR
 											  optional delegate<UICustomize.IsSoldierEligible> _eligibilityCheck,
 											  optional int startingIndex = -1,
 											  optional string _ConfirmButtonLabel,
-											  optional delegate<UIArmory_WeaponTrait.OnItemSelectedCallback> _onConfirmButtonClicked )
+											  optional delegate<UIArmory_WeaponTrait.OnItemSelectedCallback> _onConfirmButtonClicked,
+											  optional bool _bAllowedToCycleSoldiers = true)
 {
+	local UIArmory_WeaponTrait WeaponTraitScreen; 
+
 	if(ScreenStack.IsNotInStack(class'UIArmory_WeaponTrait'))
 	{
-		ScreenStack.Push(Spawn(class'UIArmory_WeaponTrait', self), Get3DMovie());
-		UIArmory_WeaponTrait(ScreenStack.GetCurrentScreen()).InitArmory(UnitOrWeaponRef);
-		UIArmory_WeaponTrait(ScreenStack.GetCurrentScreen()).UpdateTrait( _Title, _Data, _onSelectionChanged, _onItemClicked, _eligibilityCheck, startingIndex, _ConfirmButtonLabel, _onConfirmButtonClicked );
+		WeaponTraitScreen = UIArmory_WeaponTrait(ScreenStack.Push(Spawn(class'UIArmory_WeaponTrait', self), Get3DMovie()));
+		WeaponTraitScreen.bAllowedToCycleSoldiers = _bAllowedToCycleSoldiers; //Set this before init to allow nav help setup to use this value 
+		WeaponTraitScreen.InitArmory(UnitOrWeaponRef);
+		WeaponTraitScreen.UpdateTrait(_Title, _Data, _onSelectionChanged, _onItemClicked, _eligibilityCheck, startingIndex, _ConfirmButtonLabel, _onConfirmButtonClicked);
 	}
 }
 
@@ -2617,13 +2621,13 @@ simulated function PsiTrainingCompleteCB(EUIAction eAction, UIAlert AlertData, o
 	{
 		XComHQ = class'UIUtilities_Strategy'.static.GetXComHQ();
 		
-		if (!XComHQ.bHasSeenFirstPsiOperative)
+		if (XComHQ.bHasSeenFirstPsiOperative || XComHQ.SeenClassMovies.Find('PsiOperative') != INDEX_NONE)
 		{
-			GoToArmoryPromotion(AlertData.UnitInfo.UnitRef, true);
+			GoToPsiChamber(AlertData.UnitInfo.UnitRef, true);
 		}
 		else
 		{
-			GoToPsiChamber(AlertData.UnitInfo.UnitRef, true);
+			GoToArmoryPromotion(AlertData.UnitInfo.UnitRef, true);
 		}
 	}
 }
@@ -3101,6 +3105,34 @@ simulated function UIWoundedSoldiersAllowed()
 }
 
 simulated function WoundedSoldiersAllowedCB(EUIAction eAction, UIAlert AlertData, optional bool bInstant = false)
+{
+
+}
+
+simulated function UILaunchMissionWarning(XComGameState_MissionSite MissionState)
+{
+	local XComGameState NewGameState;
+	local UIAlert Alert;
+	
+	// Flag the warning alert as having been seen and show it, otherwise do nothing
+	if (!MissionState.bHasSeenLaunchMissionWarning)
+	{
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Launch Mission Warning Seen");
+		MissionState = XComGameState_MissionSite(NewGameState.CreateStateObject(class'XComGameState_MissionSite', MissionState.ObjectID));
+		NewGameState.AddStateObject(MissionState);
+		MissionState.bHasSeenLaunchMissionWarning = true;
+		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	}
+
+	Alert = Spawn(class'UIAlert', `HQPRES);
+	Alert.eAlert = eAlert_LaunchMissionWarning;
+	Alert.fnCallback = LaunchMissionWarningCB;
+	Alert.Mission = MissionState;
+	Alert.SoundToPlay = "Geoscape_CrewMemberLevelledUp"; // TODO: Should be warning sound
+	ScreenStack.Push(Alert);
+}
+
+simulated function LaunchMissionWarningCB(EUIAction eAction, UIAlert AlertData, optional bool bInstant = false)
 {
 
 }

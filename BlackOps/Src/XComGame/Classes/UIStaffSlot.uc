@@ -117,6 +117,8 @@ simulated function UpdateData()
 	Update(StaffSlotState.GetNameDisplayString(),
 		Caps(StaffSlotState.GetBonusDisplayString()),
 		UnitTypeImage);
+	
+	SetDisabled(!IsUnitAvailableForThisSlot());
 }
 
 simulated function Update(string StaffName, string StaffBonus, string StaffTypeIcon)
@@ -126,6 +128,40 @@ simulated function Update(string StaffName, string StaffBonus, string StaffTypeI
 	MC.QueueString(StaffBonus);
 	MC.QueueString(StaffTypeIcon);
 	MC.EndOp();
+}
+
+simulated function bool IsUnitAvailableForThisSlot()
+{
+	local int i;
+	local XComGameStateHistory History;
+	local XComGameState_Unit Unit;
+	local XComGameState_StaffSlot SlotState;
+	local StaffUnitInfo UnitInfo;
+	local XComGameState_HeadquartersXCom HQState;
+
+	History = `XCOMHISTORY;
+	SlotState = XComGameState_StaffSlot(History.GetGameStateForObjectID(StaffSlotRef.ObjectID));
+
+	if (SlotState.IsSlotFilled())
+	{
+		return true;
+	}
+
+	HQState = class'UIUtilities_Strategy'.static.GetXComHQ();
+	for (i = 0; i < HQState.Crew.Length; i++)
+	{
+		Unit = XComGameState_Unit(History.GetGameStateForObjectID(HQState.Crew[i].ObjectID));
+
+		UnitInfo.UnitRef = Unit.GetReference();
+		UnitInfo.bGhostUnit = false;
+		UnitInfo.GhostLocation.ObjectID = 0;
+
+		if (SlotState.ValidUnitForSlot(UnitInfo))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 simulated function HandleClick()

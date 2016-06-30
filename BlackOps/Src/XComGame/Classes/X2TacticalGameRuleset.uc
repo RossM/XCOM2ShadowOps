@@ -740,7 +740,7 @@ simulated function StartStateInitializeUnitAbilities(XComGameState StartState)
 	{
 		if( UnitState.GetTeam() == eTeam_XCom )
 		{
-			if(BattleData.DirectTransferInfo.IsDirectMissionTransfer)
+			if(BattleData.DirectTransferInfo.IsDirectMissionTransfer && !UnitState.GetMyTemplate().bIsCosmetic)
 			{
 				// XCom's abilities will have also transferred over, and do not need to be reapplied
 				continue;
@@ -834,6 +834,7 @@ simulated function StartStateInitializeSquads(XComGameState StartState)
 function ApplyStartOfMatchConditions()
 {
 	local XComGameState_Player PlayerState;
+	local XComGameState_BattleData BattleDataState;
 	local XComGameState_Unit UnitState;
 	local XComGameStateHistory History;
 	local XComTacticalMissionManager MissionManager;
@@ -863,11 +864,15 @@ function ApplyStartOfMatchConditions()
 	}
 	else
 	{
-		foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
+		BattleDataState = XComGameState_BattleData(History.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
+		if(!BattleDataState.DirectTransferInfo.IsDirectMissionTransfer) // only apply phantom at the start of the first leg of a multi-part mission
 		{
-			if( UnitState.FindAbility('Phantom').ObjectID > 0 )
+			foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
 			{
-				UnitState.EnterConcealment();
+				if( UnitState.FindAbility('Phantom').ObjectID > 0 )
+				{
+					UnitState.EnterConcealment();
+				}
 			}
 		}
 	}
@@ -962,15 +967,16 @@ private function AddCharacterStreamingCinematicMaps(bool bBlockOnLoad = false)
 	}
 }
 
-private function AddDropshipStreamingCinematicMap()
+private function AddDropshipStreamingCinematicMaps()
 {
 	local XComTacticalMissionManager MissionManager;
+	local MissionIntroDefinition MissionIntro;
+	local AdditionalMissionIntroPackageMapping AdditionalIntroPackage;
 	local XComGroupSpawn kSoldierSpawn;
 	local XComGameState StartState;
 	local Vector ObjectiveLocation;
 	local Vector DirectionTowardsObjective;
 	local Rotator ObjectiveFacing;
-	local MissionIntroDefinition MissionIntro;
 
 	StartState = CachedHistory.GetStartState();
 	ParcelManager = `PARCELMGR; // make sure this is cached
@@ -985,11 +991,21 @@ private function AddDropshipStreamingCinematicMap()
 		ObjectiveFacing = Rotator(DirectionTowardsObjective);
 	}
 
+	// load the base intro matinee package
 	MissionManager = `TACTICALMISSIONMGR;
 	MissionIntro = MissionManager.GetActiveMissionIntroDefinition();
 	if( kSoldierSpawn != none && MissionIntro.MatineePackage != "" && MissionIntro.MatineeSequences.Length > 0)
-	{
+	{	
 		`MAPS.AddStreamingMap(MissionIntro.MatineePackage, kSoldierSpawn.Location, ObjectiveFacing, false).bForceNoDupe = true;
+	}
+
+	// load any additional packages that mods may require
+	foreach MissionManager.AdditionalMissionIntroPackages(AdditionalIntroPackage)
+	{
+		if(AdditionalIntroPackage.OriginalIntroMatineePackage == MissionIntro.MatineePackage)
+		{
+			`MAPS.AddStreamingMap(AdditionalIntroPackage.AdditionalIntroMatineePackage, kSoldierSpawn.Location, ObjectiveFacing, false).bForceNoDupe = true;
+		}
 	}
 }
 
@@ -1319,6 +1335,7 @@ simulated function bool CanToggleWetness()
 			break;
 		case "Facility":
 		case "DerelictFacility":
+		case "LostTower":
 			XComTacticalController(WorldInfo.GetALocalPlayerController()).WeatherControl().SetStormIntensity(NoStorm, 0, 0, 0);
 			break;
 		default:
@@ -1397,6 +1414,8 @@ simulated private function RestoreDirectTransferUnitStats()
 		UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitStats.UnitStateRef.ObjectID));
 		UnitState.SetCurrentStat(eStat_HP, UnitStats.HP);
 		UnitState.AddShreddedValue(UnitStats.ArmorShred);
+		UnitState.LowestHP = UnitStats.LowestHP;
+		UnitState.HighestHP = UnitStats.HighestHP;
 		NewGameState.AddStateObject(UnitState);
 	}
 
@@ -1409,6 +1428,15 @@ simulated function BeginTacticalPlay()
 	local XComGameState_Ability AbilityState;
 	local XComGameState NewGameState;
 
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Begin Tactical Play");
+
+	foreach CachedHistory.IterateByClassType(class'XComGameState_BaseObject', ObjectState)
+	{
+		NewObjectState = NewGameState.CreateStateObject(ObjectState.Class, ObjectState.ObjectID);
+		NewGameState.AddStateObject(NewObjectState);
+		NewObjectState.bInPlay = false;
+	}
+
 	bTacticalGameInPlay = true;
 
 	// have any abilities that are post play activated start up
@@ -1420,14 +1448,10 @@ simulated function BeginTacticalPlay()
 		}
 	}
 
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Begin Tactical Play");
-
 	// iterate through all existing state objects and call BeginTacticalPlay on them
-	foreach CachedHistory.IterateByClassType(class'XComGameState_BaseObject', ObjectState)
+	foreach NewGameState.IterateByClassType(class'XComGameState_BaseObject', ObjectState)
 	{
-		NewObjectState = NewGameState.CreateStateObject(ObjectState.Class, ObjectState.ObjectID);
-		NewGameState.AddStateObject(NewObjectState);
-		NewObjectState.BeginTacticalPlay();
+		ObjectState.BeginTacticalPlay();
 	}
 
 	// if we're playing a challenge, don't do much encounter vo
@@ -1799,41 +1823,11 @@ simulated state CreateTacticalGame
 
 	simulated function StartStateSpawnCosmeticUnits(XComGameState StartState)
 	{
-		local X2EquipmentTemplate EquipmentTemplate;
 		local XComGameState_Item IterateItemState;
-		local XComGameState_Unit OwningUnitState;
-		local XComWorldData WorldData;
-		local Vector SpawnLocation;
-		local XComAISpawnManager SpawnManager;
-		local XComGameState_Unit CosmeticUnit;		
-
-		WorldData = `XWORLD;
-		SpawnManager = `SPAWNMGR;
 				
 		foreach StartState.IterateByClassType(class'XComGameState_Item', IterateItemState)
 		{
-			EquipmentTemplate = X2EquipmentTemplate(IterateItemState.GetMyTemplate());
-			if( EquipmentTemplate != none && EquipmentTemplate.CosmeticUnitTemplate != "" )
-			{	
-				OwningUnitState = XComGameState_Unit(CachedHistory.GetGameStateForObjectID(IterateItemState.OwnerStateObject.ObjectID));
-				if(OwningUnitState != None)
-				{
-					SpawnLocation = WorldData.GetPositionFromTileCoordinates(OwningUnitState.TileLocation);
-					IterateItemState.CosmeticUnitRef = SpawnManager.CreateUnit(SpawnLocation, name(EquipmentTemplate.CosmeticUnitTemplate), OwningUnitState.GetTeam(), true);	
-					
-					//Force the appearance to use the soldier's settings
-					CosmeticUnit = XComGameState_Unit(CachedHistory.GetGameStateForObjectID(IterateItemState.CosmeticUnitRef.ObjectID));
-					CosmeticUnit.kAppearance.nmPatterns = OwningUnitState.kAppearance.nmWeaponPattern;
-					CosmeticUnit.kAppearance.iArmorTint = OwningUnitState.kAppearance.iWeaponTint;
-					CosmeticUnit.kAppearance.iArmorTintSecondary = OwningUnitState.kAppearance.iArmorTintSecondary;
-					XGUnit(CosmeticUnit.GetVisualizer()).GetPawn().SetAppearance(CosmeticUnit.kAppearance);
-
-					if (OwningUnitState.GetMyTemplate().OnCosmeticUnitCreatedFn != None)
-					{
-						OwningUnitState.GetMyTemplate().OnCosmeticUnitCreatedFn(CosmeticUnit, OwningUnitState, IterateItemState, StartState);
-					}
-				}
-			}
+			IterateItemState.CreateCosmeticItemUnit(StartState);
 		}
 	}
 
@@ -2102,7 +2096,7 @@ Begin:
 	bShowDropshipInteriorWhileGeneratingMap = ShowDropshipInterior();
 	if(bShowDropshipInteriorWhileGeneratingMap)
 	{		
-		`MAPS.AddStreamingMap("CIN_Loading_Interior", DropshipLocation, DropshipRotation, false);
+		`MAPS.AddStreamingMap(`MAPS.GetTransitionMap(), DropshipLocation, DropshipRotation, false);
 		while(!`MAPS.IsStreamingComplete())
 		{
 			sleep(0.0f);
@@ -2153,7 +2147,7 @@ Begin:
 
 	if( `XENGINE.IsSinglePlayerGame() )
 	{
-		AddDropshipStreamingCinematicMap();
+		AddDropshipStreamingCinematicMaps();
 	}
 
 	//Wait for the drop ship and all other maps to stream in
@@ -2175,7 +2169,7 @@ Begin:
 		`XTACTICALSOUNDMGR.StopHQMusicEvent();
 
 		`MAPS.ClearPreloadedLevels();
-		`MAPS.RemoveStreamingMapByName("CIN_Loading_Interior", false);
+		`MAPS.RemoveStreamingMapByName(`MAPS.GetTransitionMap(), false);
 	}
 
 	if( XComTacticalController(WorldInfo.GetALocalPlayerController()).WeatherControl() != none )
@@ -2454,6 +2448,16 @@ simulated state LoadTacticalGame
 		return false;
 	}
 
+	function RefreshEventManagerUnitRegistration()
+	{
+		local XComGameState_Unit UnitState;
+
+		foreach CachedHistory.IterateByClassType(class'XComGameState_Unit', UnitState)
+		{
+			UnitState.RefreshEventManagerRegistrationOnLoad();
+		}
+	}
+
 Begin:
 	`SETLOC("Start of Begin Block");
 
@@ -2505,6 +2509,8 @@ Begin:
 	class'XComEngine'.static.ClearLPV();
 
 	WorldInfo.MyLocalEnvMapManager.SetEnableCaptures(TRUE);
+
+	RefreshEventManagerUnitRegistration();
 
 	//Have the event manager check for errors
 	`XEVENTMGR.ValidateEventManager("while loading a saved game! This WILL result in buggy behavior during game play continued with this save.");
@@ -2823,7 +2829,7 @@ Begin:
 
 	if (!`ONLINEEVENTMGR.bInitiateValidationAfterLoad)
 	{
-		AddDropshipStreamingCinematicMap();
+		AddDropshipStreamingCinematicMaps();
 	}
 
 	//Wait for the drop ship and all other maps to stream in

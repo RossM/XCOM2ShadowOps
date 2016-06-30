@@ -35,6 +35,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	DamageTypes.AddItem(CreateUnconsciousDamageType());
 	DamageTypes.AddItem(CreateNonflammableExplosionDamageType());
 	DamageTypes.AddItem(CreateDisorientDamageType());
+	DamageTypes.AddItem(CreatePanicDamageType());
 	
 	return DamageTypes;
 }
@@ -305,6 +306,19 @@ static function X2DamageTypeTemplate CreateDisorientDamageType()
 	local X2DamageTypeTemplate Template;
 
 	`CREATE_X2TEMPLATE(class'X2DamageTypeTemplate', Template, default.DisorientDamageType);
+
+	Template.bCauseFracture = false;
+	Template.MaxFireCount = 0;
+	Template.bAllowAnimatedDeath = true;
+
+	return Template;
+}
+
+static function X2DamageTypeTemplate CreatePanicDamageType()
+{
+	local X2DamageTypeTemplate Template;
+
+	`CREATE_X2TEMPLATE(class'X2DamageTypeTemplate', Template, 'Panic');
 
 	Template.bCauseFracture = false;
 	Template.MaxFireCount = 0;

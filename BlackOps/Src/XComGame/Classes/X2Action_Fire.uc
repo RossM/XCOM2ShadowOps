@@ -27,21 +27,29 @@ var private XComPresentationLayer PresentationLayer;
 var private bool			 bComingFromEndMove;
 var private bool			 bUseKillAnim;
 var protected CustomAnimParams AnimParams;
+var protected CustomAnimParams AdditiveAnimParams;
 var private vector MoveEndDestination;
 var private vector MoveEndDirection;
 var private vector ToTarget;
 var private array<X2UnifiedProjectile> ProjectileVolleys; //Tracks projectiles created during this fire action
 var protected bool			 bHaltAimUpdates;
+var protected array<name>    ShooterAdditiveAnims;
 
 var XComGameStateContext_Ability AbilityContext;
 var XComGameState VisualizeGameState;
 var XComGameState_Unit SourceUnitState;
 var XComGameState_Item SourceItemGameState;
 var X2AbilityTemplate AbilityTemplate;
+var XComPerkContent kPerkContent;
 var bool bUpdatedMusicState;
 
 var Actor FOWViewer;
 var Actor SourceFOWViewer;
+var bool AllowInterrupt;
+
+var private array<XComPerkContent> Perks;
+var private array<name> PerkAdditiveAnimNames;
+var private int x;
 
 function Init(const out VisualizationTrack InTrack)
 {
@@ -59,6 +67,9 @@ function Init(const out VisualizationTrack InTrack)
 	local XComGameState_Item Item;
 	local XGWeapon AmmoWeapon;
 	local XComWeapon Entity;
+	local XComGameState_Effect EffectState;
+	local StateObjectReference EffectRef;
+	local name AdditiveAnim;
 
 	super.Init(InTrack);
 
@@ -234,6 +245,14 @@ function Init(const out VisualizationTrack InTrack)
 			bUseAnimToSetNotifyTimer = true;
 		}
 	}
+
+	foreach SourceUnitState.AppliedEffects(EffectRef)
+	{
+		EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
+		AdditiveAnim = EffectState.GetX2Effect().ShooterAdditiveAnimOnFire(StateChangeContext, SourceUnitState, EffectState);
+		if (AdditiveAnim != '')
+			ShooterAdditiveAnims.AddItem(AdditiveAnim);
+	}
 }
 
 function SetFireParameters(bool bHit, optional int OverrideTargetID, optional bool NotifyMultiTargetsAtOnce=true)
@@ -245,8 +264,11 @@ function SetFireParameters(bool bHit, optional int OverrideTargetID, optional bo
 
 function HandleTrackMessage()
 {
-	//Currently we only receive a message when being counterattacked, indicating that we should stop right now and move to our hit react
-	CompleteAction();
+	if( AllowInterrupt )
+	{
+		//Currently we only receive a message when being counterattacked, indicating that we should stop right now and move to our hit react
+		CompleteAction();
+	}
 }
 
 function NotifyTargetsAbilityApplied()
@@ -491,7 +513,43 @@ Begin:
 	
 	UnitPawn.EnableRMA(true, true);
 	UnitPawn.EnableRMAInteractPhysics(true);
-	FinishAnim(UnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams));	
+
+	class'XComPerkContent'.static.GetAssociatedPerks(Perks, UnitPawn, AbilityContext.InputContext.AbilityTemplateName);
+	for( x = 0; x < Perks.Length; ++x )
+	{
+		kPerkContent = Perks[x];
+
+		if( (kPerkContent.IsInState('ActionActive') || kPerkContent.IsInState('DurationAction')) &&
+			kPerkContent.CasterActivationAnim.PlayAnimation &&
+			kPerkContent.CasterActivationAnim.AdditiveAnim )
+		{
+			PerkAdditiveAnimNames.AddItem(class'XComPerkContent'.static.ChooseAnimationForCover(Unit, kPerkContent.CasterActivationAnim));
+		}
+	}
+
+	for( x =0; x < PerkAdditiveAnimNames.Length; ++x )
+	{
+		AdditiveAnimParams.AnimName = PerkAdditiveAnimNames[x];
+		UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(AdditiveAnimParams);
+	}
+	for (x = 0; x < ShooterAdditiveAnims.Length; ++x)
+	{
+		AdditiveAnimParams.AnimName = ShooterAdditiveAnims[x];
+		UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(AdditiveAnimParams);
+	}
+
+	FinishAnim(UnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams));
+
+	for( x =0; x < PerkAdditiveAnimNames.Length; ++x )
+	{
+		AdditiveAnimParams.AnimName = PerkAdditiveAnimNames[x];
+		UnitPawn.GetAnimTreeController().RemoveAdditiveDynamicAnim(AdditiveAnimParams);
+	}
+	for (x = 0; x < ShooterAdditiveAnims.Length; ++x)
+	{
+		AdditiveAnimParams.AnimName = ShooterAdditiveAnims[x];
+		UnitPawn.GetAnimTreeController().RemoveAdditiveDynamicAnim(AdditiveAnimParams);
+	}
 
 	// Taking a shot causes overwatch to be removed
 	PresentationLayer.m_kUnitFlagManager.RealizeOverwatch(Unit.ObjectID, History.GetCurrentHistoryIndex());
@@ -534,4 +592,5 @@ DefaultProperties
 	TimeoutSeconds = 10.0f; //Should eventually be an estimate of how long we will run
 	bNotifyMultiTargetsAtOnce = true
 	bCauseTimeDilationWhenInterrupting = true
+	AllowInterrupt = true
 }

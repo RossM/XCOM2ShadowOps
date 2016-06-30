@@ -69,6 +69,7 @@ var private int TempIterator;
 var private int FillerSlotStart;
 var private int StaffSlotIndex;
 var private XComGameState_Unit StaffedUnit; //Unit that is occupying the currently processing staff slot
+var private XComGameState_StaffSlot StaffSlotState; // The staff slot currently being processed
 var private Vector TempRoomOffset; //Offset of the currently processing room
 var private array<string> DelayedEventsToStart;
 var private string TempStartEvent;
@@ -1408,15 +1409,16 @@ Begin:
 			TempRoomOffset = `GAME.GetGeoscape().m_kBase.m_arrLvlStreaming_Anim[ProcessingRoomUpdates[TempIterator].RoomIndex].Offset;
 			for(StaffSlotIndex = 0; StaffSlotIndex < ProcessingRoomUpdates[TempIterator].StaffSlotArray.Length; ++StaffSlotIndex)
 			{	
-				StaffedUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ProcessingRoomUpdates[TempIterator].StaffSlotArray[StaffSlotIndex].AssignedStaff.ObjectID));
-				if(StaffedUnit != none)
+				StaffSlotState = ProcessingRoomUpdates[TempIterator].StaffSlotArray[StaffSlotIndex];
+				StaffedUnit = StaffSlotState.GetAssignedStaff();
+				if(StaffedUnit != none && (StaffedUnit.CanAppearInBase() || (StaffedUnit.GetMyTemplate().AppearInStaffSlots.Find(StaffSlotState.GetMyTemplateName()) != INDEX_NONE)))
 				{					
-					if(StaffedUnit.StaffingSlot.ObjectID == ProcessingRoomUpdates[TempIterator].StaffSlotArray[StaffSlotIndex].ObjectID)
+					if(StaffedUnit.StaffingSlot.ObjectID == StaffSlotState.ObjectID)
 					{
 						if(!IsAlreadyPlaced(StaffedUnit.GetReference(), ProcessingRoomUpdates[TempIterator].RoomIndex))
 						{
 							//The unit is actually at the location
-							AddCrew(ProcessingRoomUpdates[TempIterator].RoomIndex, TempFacilityTemplate, StaffedUnit.GetReference(), ProcessingRoomUpdates[TempIterator].StaffSlotArray[StaffSlotIndex].GetMyTemplate().MatineeSlotName, TempRoomOffset, true);
+							AddCrew(ProcessingRoomUpdates[TempIterator].RoomIndex, TempFacilityTemplate, StaffedUnit.GetReference(), StaffSlotState.GetMyTemplate().MatineeSlotName, TempRoomOffset, true);
 						}
 					}
 					else

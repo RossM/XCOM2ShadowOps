@@ -13,22 +13,19 @@ static function bool AllowOverrideActionDeath(const out VisualizationTrack Build
 
 function Init(const out VisualizationTrack InTrack)
 {
-	local int ChainHistoryIndex;
+	local XComGameStateContext ChainContext;
 	local XComGameStateContext_Ability TestContext;
-	local XComGameStateHistory History;
 
 	super.Init(InTrack);
 
-	History = `XCOMHISTORY;
+	ChainContext = StateChangeContext;
 
-	TestContext = XComGameStateContext_Ability(StateChangeContext);
-
-	for( ChainHistoryIndex = TestContext.AssociatedState.HistoryIndex + 1; !TestContext.bLastEventInChain && ChainHistoryIndex < History.GetNumGameStates(); ++ChainHistoryIndex )
+	for( ChainContext = StateChangeContext.GetNextStateInEventChain().GetContext(); ChainContext != none && !ChainContext.bLastEventInChain; ChainContext = ChainContext.GetNextStateInEventChain().GetContext() )
 	{
-		TestContext = XComGameStateContext_Ability(History.GetGameStateFromHistory(ChainHistoryIndex).GetContext());
+		TestContext = XComGameStateContext_Ability(ChainContext);
 
 		if( TestContext != None &&
-			TestContext.InputContext.AbilityTemplateName == 'DeathExplosion' &&
+			TestContext.InputContext.AbilityTemplateName == GetAssociatedAbilityName() &&
 			TestContext.InputContext.PrimaryTarget.ObjectID == Unit.ObjectID)
 		{
 			// We are looking for an associated (Gatekeeper, Sectopod, etc.) Unit's DeathExplosion ability that is being brought forward
@@ -37,6 +34,11 @@ function Init(const out VisualizationTrack InTrack)
 			break;
 		}
 	}
+}
+
+simulated function name GetAssociatedAbilityName()
+{
+	return 'DeathExplosion';
 }
 
 simulated function Name ComputeAnimationToPlay()

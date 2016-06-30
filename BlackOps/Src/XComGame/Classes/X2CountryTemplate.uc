@@ -8,6 +8,7 @@
 class X2CountryTemplate extends X2StrategyElementTemplate dependson(X2StrategyGameRulesetDataStructures) config(GameBoard);
 
 var() array<CountryNames>			Names;  // Valid lists of names for units
+var() bool							bHideInCustomization; // Should this country be hidden in the nationality list
 
 var() config string					FlagImage; // UI image path
 var() config string					FlagArchetype; // image path to pawn texture

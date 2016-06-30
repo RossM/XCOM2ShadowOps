@@ -24,6 +24,7 @@ var int  m_iSoldierRank;
 var name m_nPrimaryWeaponTemplate;
 var name m_nSecondaryWeaponTemplate;
 var name m_nHeavyWeaponTemplate;
+var name m_nGrenadeSlotTemplate;
 var name m_nArmorTemplate;
 var name m_nUtilityItem1Template;
 var name m_nUtilityItem2Template;
@@ -56,6 +57,7 @@ var UIDropdown m_SoldierRankDropdown;
 var UIDropdown m_PrimaryWeaponDropdown;
 var UIDropdown m_SecondaryWeaponDropdown;
 var UIDropdown m_HeavyWeaponDropdown;
+var UIDropdown m_GrenadeSlotDropdown;
 var UIDropdown m_ArmorDropdown;
 var UIDropdown m_UtilityItem1Dropdown;
 var UIDropdown m_UtilityItem2Dropdown;
@@ -87,9 +89,12 @@ simulated function UITacticalQuickLaunch_UnitSlot InitSlot(optional bool bMPSlot
 	m_PrimaryWeaponDropdown.SetY(40); // position it above Secondary Weapon dropdown
 	m_ArmorDropdown = CreateDropdown("Armor");
 	m_ArmorDropdown.SetY(40);
+	m_GrenadeSlotDropdown = CreateDropdown("Grenade Slot", false);
+	m_GrenadeSlotDropdown.SetY(170);
 	m_UtilityItem2Dropdown = CreateDropdown("Utility Item 2", false);
-	m_UtilityItem1Dropdown = CreateDropdown("Utility Item 1");
-	m_UtilityItem1Dropdown.SetY(40);    
+	m_UtilityItem2Dropdown.SetY(105);
+	m_UtilityItem1Dropdown = CreateDropdown("Utility Item 1", false);
+	m_UtilityItem1Dropdown.SetY(40); 	
 
 	if (!bMPSlot)
 	{
@@ -132,6 +137,34 @@ simulated function bool CanHaveHeavyWeapon()
 	{
 		SoldierTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate(m_nSoldierClassTemplate);
 		foreach class'X2AbilityTemplateManager'.default.AbilityUnlocksHeavyWeapon(CheckAbility)
+		{
+			Progression = SoldierTemplate.GetSCATProgressionForAbility(CheckAbility);
+			if (Progression.iRank != INDEX_NONE && Progression.iBranch != INDEX_NONE)
+			{
+				for (i = 0; i < m_arrSoldierProgression.Length; ++i)
+				{
+					if (m_arrSoldierProgression[i].iBranch == Progression.iBranch && m_arrSoldierProgression[i].iRank == Progression.iRank)
+						return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+simulated function bool CanHaveGrenadeSlot()
+{
+	local X2SoldierClassTemplate SoldierTemplate;
+	local SCATProgression Progression;
+	local name CheckAbility;
+	local int i;
+
+	//  this has to mimic the functionality in XComGameState_Unit:HasGrenadePocket because we have no state objects to operate on
+
+	if (m_nSoldierClassTemplate != '')
+	{
+		SoldierTemplate = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager().FindSoldierClassTemplate(m_nSoldierClassTemplate);
+		foreach class'X2AbilityTemplateManager'.default.AbilityUnlocksGrenadePocket(CheckAbility)
 		{
 			Progression = SoldierTemplate.GetSCATProgressionForAbility(CheckAbility);
 			if (Progression.iRank != INDEX_NONE && Progression.iBranch != INDEX_NONE)
@@ -196,6 +229,17 @@ simulated function RefreshDropdowns()
 			m_nHeavyWeaponTemplate = '';
 			m_HeavyWeaponDropdown.Hide();
 		}
+
+		if (CanHaveGrenadeSlot())
+		{
+			m_GrenadeSlotDropdown.Show();
+			RefreshGrenadeSlotDropdown();
+		}
+		else
+		{
+			m_nGrenadeSlotTemplate = '';
+			m_GrenadeSlotDropdown.Hide();
+		}
 	}
 	else
 	{
@@ -204,6 +248,7 @@ simulated function RefreshDropdowns()
 		m_PrimaryWeaponDropdown.Hide();
 		m_SecondaryWeaponDropdown.Hide();
 		m_HeavyWeaponDropdown.Hide();
+		m_GrenadeSlotDropdown.Hide();
 		m_ArmorDropdown.Hide();
 		m_CharacterPoolDropdown.Hide();
 		m_UtilityItem1Dropdown.Hide();
@@ -307,6 +352,11 @@ simulated function RefreshHeavyWeaponDropdown()
 	m_nHeavyWeaponTemplate = PopulateItemDropdown(m_HeavyWeaponDropdown, m_nHeavyWeaponTemplate, eInvSlot_HeavyWeapon);
 }
 
+simulated function RefreshGrenadeSlotDropdown()
+{
+	m_nGrenadeSlotTemplate = PopulateItemDropdown(m_GrenadeSlotDropdown, m_nGrenadeSlotTemplate, eInvSlot_GrenadePocket);
+}
+
 simulated function RefreshArmorDropdown()
 {
 	m_nArmorTemplate = PopulateItemDropdown(m_ArmorDropdown, m_nArmorTemplate, eInvSlot_Armor);
@@ -360,7 +410,7 @@ simulated function name PopulateItemDropdown(UIDropdown kDropdown, name nCurrent
 			continue;
 		if( X2EquipmentTemplate(kEquipmentTemplate) != none &&
 			X2EquipmentTemplate(kEquipmentTemplate).iItemSize > 0 &&  // xpad is only item with size 0, that is always equipped
-			X2EquipmentTemplate(kEquipmentTemplate).InventorySlot == eEquipmentType)
+			((X2EquipmentTemplate(kEquipmentTemplate).InventorySlot == eEquipmentType) || (X2EquipmentTemplate(kEquipmentTemplate).InventorySlot == eInvSlot_Utility && eEquipmentType == eInvSlot_GrenadePocket)))
 		{
 			if (kSoldierClassTemplate != None && kEquipmentTemplate.IsA('X2WeaponTemplate'))
 			{
@@ -382,6 +432,16 @@ simulated function name PopulateItemDropdown(UIDropdown kDropdown, name nCurrent
 				}
 			}
 
+			if (eEquipmentType == eInvSlot_GrenadePocket)
+			{
+				if (X2GrenadeTemplate(kEquipmentTemplate) == None)
+				{
+					if (nCurrentEquipped == kEquipmentTemplate.DataName)
+						nCurrentEquipped = '';
+					continue;
+				}
+			}
+
 			kDropdown.AddItem(X2EquipmentTemplate(kEquipmentTemplate).GetItemFriendlyName() @ GetStringFormatPoints(X2EquipmentTemplate(kEquipmentTemplate).PointsToComplete), string(kEquipmentTemplate.DataName));
 
 			if (kEquipmentTemplate.DataName == nCurrentEquipped)
@@ -391,7 +451,7 @@ simulated function name PopulateItemDropdown(UIDropdown kDropdown, name nCurrent
 			}
 		}
 	}
-	if (eEquipmentType == eInvSlot_PrimaryWeapon || eEquipmentType == eInvSlot_SecondaryWeapon)
+	if (eEquipmentType == eInvSlot_PrimaryWeapon || eEquipmentType == eInvSlot_SecondaryWeapon || eEquipmentType == eInvSlot_GrenadePocket)
 	{
 		if (!bFoundCurrent)
 		{
@@ -457,6 +517,7 @@ simulated function DropdownSelectionChange(UIDropdown kDropdown)
 	case m_PrimaryWeaponDropdown:   m_nPrimaryWeaponTemplate = name(kDropdown.GetSelectedItemData());   break;
 	case m_SecondaryWeaponDropdown: m_nSecondaryWeaponTemplate = name(kDropdown.GetSelectedItemData()); break;
 	case m_HeavyWeaponDropdown:     m_nHeavyWeaponTemplate = name(kDropdown.GetSelectedItemData());     break;
+	case m_GrenadeSlotDropdown:     m_nGrenadeSlotTemplate = name(kDropdown.GetSelectedItemData());     break;
 	case m_ArmorDropdown:           m_nArmorTemplate = name(kDropdown.GetSelectedItemData());           break;
 	case m_UtilityItem1Dropdown:    m_nUtilityItem1Template = name(kDropdown.GetSelectedItemData());    break;
 	case m_UtilityItem2Dropdown:    m_nUtilityItem2Template = name(kDropdown.GetSelectedItemData());    break;
@@ -567,13 +628,11 @@ simulated function XComGameState_Unit AddUnitToGameState(XComGameState NewGameSt
 	Unit.SetSoldierClassTemplate(m_nSoldierClassTemplate); //Inventory needs this to work
 	UpdateUnit(Unit, NewGameState); //needs to be before adding to inventory or 2nd util item gets thrown out
 	Unit.bIgnoreItemEquipRestrictions = true;
-	AddFullInventory(NewGameState, Unit);
+	UpdateUnitItems(Unit, NewGameState);
 
 	// add required loadout items
 	if (Unit.GetMyTemplate().RequiredLoadout != '')
 		Unit.ApplyInventoryLoadout(NewGameState, Unit.GetMyTemplate().RequiredLoadout);
-
-	
 
 	return Unit;
 }
@@ -585,11 +644,12 @@ simulated function AddFullInventory(XComGameState GameState, XComGameState_Unit 
 	AddItemToUnit(GameState, Unit, m_nSecondaryWeaponTemplate);
 	AddItemToUnit(GameState, Unit, m_nArmorTemplate);
 	AddItemToUnit(GameState, Unit, m_nHeavyWeaponTemplate);
+	AddItemToUnit(GameState, Unit, m_nGrenadeSlotTemplate, eInvSlot_GrenadePocket);
 	AddItemToUnit(GameState, Unit, m_nUtilityItem1Template);
 	AddItemToUnit(GameState, Unit, m_nUtilityItem2Template);
 }
 
-simulated function AddItemToUnit(XComGameState NewGameState, XComGameState_Unit Unit, name EquipmentTemplateName)
+simulated function AddItemToUnit(XComGameState NewGameState, XComGameState_Unit Unit, name EquipmentTemplateName, optional EInventorySlot SpecificSlot)
 {
 	local XComGameState_Item ItemInstance;
 	local X2EquipmentTemplate EquipmentTemplate;
@@ -601,7 +661,7 @@ simulated function AddItemToUnit(XComGameState NewGameState, XComGameState_Unit 
 	if(EquipmentTemplate != none)
 	{
 		ItemInstance = EquipmentTemplate.CreateInstanceFromTemplate(NewGameState);
-		Unit.AddItemToInventory(ItemInstance, EquipmentTemplate.InventorySlot, NewGameState);
+		Unit.AddItemToInventory(ItemInstance, SpecificSlot == eInvSlot_Unknown ? EquipmentTemplate.InventorySlot : SpecificSlot, NewGameState);
 		NewGameState.AddStateObject(ItemInstance);
 	}
 }
@@ -718,6 +778,9 @@ simulated function LoadTemplatesFromCharacter(XComGameState_Unit Unit, XComGameS
 
 	Item = Unit.GetItemInSlot(eInvSlot_HeavyWeapon, FromGameState, bExcludeHistory);
 	m_nHeavyWeaponTemplate = (Item == none) ? '' : Item.GetMyTemplateName();
+
+	Item = Unit.GetItemInSlot(eInvSlot_GrenadePocket, FromGameState, bExcludeHistory);
+	m_nGrenadeSlotTemplate = (Item == none) ? '' : Item.GetMyTemplateName();
 
 	Item = Unit.GetItemInSlot(eInvSlot_Armor, FromGameState, bExcludeHistory);
 	m_nArmorTemplate = (Item == none) ? '' : Item.GetMyTemplateName();

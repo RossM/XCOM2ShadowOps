@@ -176,7 +176,7 @@ function bool FixAppearanceOfInvalidAttributes_FixSingle(string PartsType, out n
 		else
 		{
 			PartTemplateManager.GetFilteredUberTemplates(PartsType, BodyPartFilter,
-														 ArmorTorsoFilter ? BodyPartFilter.FilterByTorsoAndArmorMatch : BodyPartFilter.FilterByGenderAndNonSpecializedAndTech, listPartTemplate);
+														 ArmorTorsoFilter ? BodyPartFilter.FilterByTorsoAndArmorMatch : BodyPartFilter.FilterByGenderAndCharacterAndNonSpecializedAndTech, listPartTemplate);
 		}
 		
 		PartsName = (listPartTemplate.length > 0) ? listPartTemplate[0].DataName : '';
@@ -446,6 +446,7 @@ function XComGameState_Unit CreateCharacter(XComGameState StartState, optional E
 		class'XComGameState_Unit'.static.NameCheck(CharacterGenerator, SoldierState, eNameType_Full);
 	}
 
+	SoldierState.StoreAppearance(); // Save the soldiers appearance so char pool customizations are correct if you swap armors
 	return SoldierState;
 
 }
@@ -453,6 +454,10 @@ function XComGameState_Unit CreateCharacter(XComGameState StartState, optional E
 //Returns true if the character CharacterFromPool can be used as a unit of type CharacterTemplate.
 function bool TypeFilterPassed(XComGameState_Unit CharacterFromPool, X2CharacterTemplate CharacterTemplate)
 {
+	// First make sure that the character template of the pool unit matches the filter
+	if (CharacterFromPool.GetMyTemplateName() != CharacterTemplate.DataName)
+		return false;
+
 	if (CharacterTemplate.bUsePoolSoldiers && CharacterFromPool.bAllowedTypeSoldier)
 		return true;
 

@@ -19,7 +19,7 @@ cpptext
 
 }
 
-var notforconsole Material LevelBoundsMaterial;
+var Material LevelBoundsMaterial;
 var() const editconst StaticMeshComponent StaticMeshComponent;
 
 var XComWorldData WorldData;
@@ -27,32 +27,32 @@ var XComDestructionInstData DestructionData;
 var DestructionDecoEmitterPool DecoEmitterPool;
 
 //Rendering for the vismap
-var notforconsole StaticMesh  TileMesh;
-var notforconsole Material NeverSeenTileMaterial;
-var notforconsole MaterialInstanceConstant NeverSeenMIC;
-var() notforconsole const editconst InstancedStaticMeshComponent InstancedMeshComponentNeverSeen;
-var notforconsole Material HaveSeenTileMaterial;
-var notforconsole MaterialInstanceConstant HaveSeenMIC;
-var() notforconsole const editconst InstancedStaticMeshComponent InstancedMeshComponentHaveSeen;
-var notforconsole Material BlockingTileMaterial;
-var notforconsole MaterialInstanceConstant BlockingMIC;
-var() notforconsole const editconst InstancedStaticMeshComponent InstancedMeshComponentBlocking;
+var StaticMesh  TileMesh;
+var Material NeverSeenTileMaterial;
+var MaterialInstanceConstant NeverSeenMIC;
+var() const editconst InstancedStaticMeshComponent InstancedMeshComponentNeverSeen;
+var Material HaveSeenTileMaterial;
+var MaterialInstanceConstant HaveSeenMIC;
+var() const editconst InstancedStaticMeshComponent InstancedMeshComponentHaveSeen;
+var Material BlockingTileMaterial;
+var MaterialInstanceConstant BlockingMIC;
+var() const editconst InstancedStaticMeshComponent InstancedMeshComponentBlocking;
 
-var() notforconsole const editconst XComWorldDataRenderingComponent WorldDataRenderingComponent;
-var() notforconsole const editconst XComCoverRenderingComponent CoverRenderingComponent;
+var() const editconst XComWorldDataRenderingComponent WorldDataRenderingComponent;
+var() const editconst XComCoverRenderingComponent CoverRenderingComponent;
 
-var() notforconsole const editconst InstancedStaticMeshComponent LowCoverComponent;
-var() notforconsole const editconst InstancedStaticMeshComponent HighCoverComponent;
-var() notforconsole const editconst InstancedStaticMeshComponent PeekLeftComponent;
-var() notforconsole const editconst InstancedStaticMeshComponent PeekRightComponent;
+var() const editconst InstancedStaticMeshComponent LowCoverComponent;
+var() const editconst InstancedStaticMeshComponent HighCoverComponent;
+var() const editconst InstancedStaticMeshComponent PeekLeftComponent;
+var() const editconst InstancedStaticMeshComponent PeekRightComponent;
 
-var() notforconsole const editconst InstancedStaticMeshComponent CoverTileRenderingComponent;
-var() notforconsole const editconst InstancedStaticMeshComponent CoverNeighborRenderingComponent;
-var() notforconsole const editconst InstancedStaticMeshComponent FloorRenderingComponent;
-var() notforconsole const editconst InstancedStaticMeshComponent RampRenderingComponent;
-var() notforconsole const editconst InstancedStaticMeshComponent WallRenderingComponent;
+var() const editconst InstancedStaticMeshComponent CoverTileRenderingComponent;
+var() const editconst InstancedStaticMeshComponent CoverNeighborRenderingComponent;
+var() const editconst InstancedStaticMeshComponent FloorRenderingComponent;
+var() const editconst InstancedStaticMeshComponent RampRenderingComponent;
+var() const editconst InstancedStaticMeshComponent WallRenderingComponent;
 
-var() notforconsole const editconst InstancedStaticMeshComponent InteractRenderingComponent;
+var() const editconst InstancedStaticMeshComponent InteractRenderingComponent;
 
 // Component Used to outline moveable area
 var const XComMovementGridComponent BorderComponent;

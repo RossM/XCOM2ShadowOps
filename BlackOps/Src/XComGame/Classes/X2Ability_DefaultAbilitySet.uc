@@ -58,7 +58,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(AddInteractAbility());
 	Templates.AddItem(AddInteractAbility('Interact_OpenDoor'));
 	Templates.AddItem(AddInteractAbility('Interact_OpenChest'));
-	Templates.AddItem(AddObjectiveInteractAbility('Interact_PlantBomb'));
+	Templates.AddItem(AddPlantBombAbility());
 	Templates.AddItem(AddObjectiveInteractAbility('Interact_TakeVial'));
 	Templates.AddItem(AddObjectiveInteractAbility('Interact_StasisTube'));
 	Templates.AddItem(AddHackAbility());
@@ -181,6 +181,8 @@ simulated static function XComGameState MoveAbility_FillOutGameState( XComGameSt
 	MoveAbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(AbilityContext.InputContext.AbilityRef.ObjectID, eReturnType_Reference));	
 	AbilityTemplate = MoveAbilityState.GetMyTemplate();
 
+	AbilityContext.ResultContext.bPathCausesDestruction = false;
+
 	//Set the unit's new location
 	for(MovingUnitIndex = 0; MovingUnitIndex < AbilityContext.InputContext.MovementPaths.Length; ++MovingUnitIndex)
 	{
@@ -252,7 +254,7 @@ simulated static function XComGameState MoveAbility_FillOutGameState( XComGameSt
 			// TO DO - apply movement cost to treads-only on ACV!  ???
 		}
 
-		AbilityContext.ResultContext.bPathCausesDestruction = MoveAbility_StepCausesDestruction(MovingUnitState, AbilityContext.InputContext, MovingUnitIndex, NumMovementTiles - 1);
+		AbilityContext.ResultContext.bPathCausesDestruction = AbilityContext.ResultContext.bPathCausesDestruction || MoveAbility_StepCausesDestruction(MovingUnitState, AbilityContext.InputContext, MovingUnitIndex, NumMovementTiles - 1);
 
 		MoveAbility_AddTileStateObjects(NewGameState, MovingUnitState, AbilityContext.InputContext, MovingUnitIndex, NumMovementTiles - 1);
 		MoveAbility_AddNewlySeenUnitStateObjects(NewGameState, MovingUnitState, AbilityContext.InputContext, MovingUnitIndex);
@@ -346,6 +348,8 @@ simulated static function XComGameState MoveAbility_BuildInterruptGameState( XCo
 			NumMovementTiles = Max(NumMovementTiles, AbilityContext.InputContext.MovementPaths[MovingUnitIndex].MovementTiles.Length);
 		}
 
+		AbilityContext.ResultContext.bPathCausesDestruction = false;
+
 		if(InterruptStep < (NumMovementTiles - 1))
 		{
 			//Build the new game state frame, and unit state object for the moving unit
@@ -411,7 +415,7 @@ simulated static function XComGameState MoveAbility_BuildInterruptGameState( XCo
 					NewGameState.AddStateObject(MovingSubsystem);
 				}
 
-				AbilityContext.ResultContext.bPathCausesDestruction = MoveAbility_StepCausesDestruction(MovingUnitState, AbilityContext.InputContext, MovingUnitIndex, UseInterruptStep);
+				AbilityContext.ResultContext.bPathCausesDestruction = (AbilityContext.ResultContext.bPathCausesDestruction || MoveAbility_StepCausesDestruction(MovingUnitState, AbilityContext.InputContext, MovingUnitIndex, UseInterruptStep));
 
 				// Jwats: Commented out after discussing with McFall.  We would get multiple interacts when kicking down doors.
 				//MoveAbility_AddTileStateObjects( NewGameState, MovingUnitState, AbilityContext.InputContext, UseInterruptStep );
@@ -1415,7 +1419,6 @@ static function X2AbilityTemplate AddObjectiveInteractAbility(optional name Temp
 	return AbilityTemplate;
 }
 
-
 //******** Hack Ability **********
 static function X2AbilityTemplate FinalizeHack()
 {
@@ -2000,6 +2003,51 @@ static function X2AbilityTemplate AddObjectiveHackAbility(optional name Template
 	return AbilityTemplate;
 }
 
+//******** Plant Bomb Ability **********
+static function X2AbilityTemplate AddPlantBombAbility()
+{
+	local X2AbilityTemplate Template;
+
+	Template = AddObjectiveInteractAbility('Interact_PlantBomb');
+	Template.BuildVisualizationFn = PlantBombAbility_BuildVisualization;
+
+	return Template;
+}
+
+simulated function PlantBombAbility_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{
+	local XComGameStateHistory History;
+	local VisualizationTrack BuildTrack;
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameState_Unit SourceUnit;
+	local X2Action_PlayAnimation PlayAnimAction;
+
+	History = `XCOMHISTORY;
+	AbilityContext = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+	SourceUnit = XComGameState_Unit(History.GetGameStateForObjectID(AbilityContext.InputContext.SourceObject.ObjectID,,VisualizeGameState.HistoryIndex));
+
+	// soldiers play a matinee from kismet, non-soldiers just play a loot animation (since the skeleton won't match the matinee)
+	if(SourceUnit.GetMyTemplateName() != 'Soldier')
+	{
+		BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(SourceUnit.ObjectID,, VisualizeGameState.HistoryIndex - 1);
+		BuildTrack.StateObject_NewState = SourceUnit;
+		BuildTrack.TrackActor = SourceUnit.GetVisualizer();
+
+		class'X2Action_ExitCover'.static.AddToVisualizationTrack(BuildTrack, AbilityContext);
+
+		PlayAnimAction = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, AbilityContext));
+		PlayAnimAction.bFinishAnimationWait = true;
+		PlayAnimAction.Params.AnimName = 'HL_LootBodyStart';
+
+		PlayAnimAction = X2Action_PlayAnimation(class'X2Action_PlayAnimation'.static.AddToVisualizationTrack(BuildTrack, AbilityContext));
+		PlayAnimAction.bFinishAnimationWait = true;
+		PlayAnimAction.Params.AnimName = 'HL_LootBodyStop';
+
+		class'X2Action_EnterCover'.static.AddToVisualizationTrack(BuildTrack, AbilityContext);
+
+		OutVisualizationTracks.AddItem(BuildTrack);
+	}
+}
 
 //*******************************************
 

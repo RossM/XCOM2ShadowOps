@@ -142,9 +142,6 @@ private static function XComGameState_Unit AddStrategyUnitToBoard(XComGameState_
 	local XComGameState_Player PlayerState;
 	local StateObjectReference ItemReference;
 	local XComGameState_Item ItemState;
-	local X2EquipmentTemplate EquipmentTemplate;
-	local XComWorldData WorldData;
-	local XComAISpawnManager SpawnManager;
 
 	if(Unit == none)
 	{
@@ -160,9 +157,11 @@ private static function XComGameState_Unit AddStrategyUnitToBoard(XComGameState_
 	// create the history frame with the new tactical unit state
 	NewGameStateContext = class'XComGameStateContext_TacticalGameRule'.static.BuildContextFromGameRule(eGameRule_UnitAdded);
 	NewGameState = History.CreateNewGameState(true, NewGameStateContext);
+
 	Unit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', Unit.ObjectID));
 	Unit.SetVisibilityLocationFromVector(SpawnLocation);
 	Unit.bSpawnedFromAvenger = true;
+	NewGameState.AddStateObject(Unit);
 
 	// assign the new unit to the human team
 	foreach History.IterateByClassType(class'XComGameState_Player', PlayerState)
@@ -174,9 +173,6 @@ private static function XComGameState_Unit AddStrategyUnitToBoard(XComGameState_
 		}
 	}
 
-	WorldData = `XWORLD;
-	SpawnManager = `SPAWNMGR;
-
 	// add item states. This needs to be done so that the visualizer sync picks up the IDs and
 	// creates their visualizers
 	foreach Unit.InventoryItems(ItemReference)
@@ -184,21 +180,22 @@ private static function XComGameState_Unit AddStrategyUnitToBoard(XComGameState_
 		ItemState = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', ItemReference.ObjectID));
 		NewGameState.AddStateObject(ItemState);
 
-		// add the gremlin to Specialists
-		if( ItemState.OwnerStateObject.ObjectID == Unit.ObjectID )
-		{
-			EquipmentTemplate = X2EquipmentTemplate(ItemState.GetMyTemplate());
-			if( EquipmentTemplate != none && EquipmentTemplate.CosmeticUnitTemplate != "" )
-			{
-				SpawnLocation = WorldData.GetPositionFromTileCoordinates(Unit.TileLocation);
-				ItemState.CosmeticUnitRef = SpawnManager.CreateUnit(SpawnLocation, name(EquipmentTemplate.CosmeticUnitTemplate), Unit.GetTeam(), true);
+		// add any cosmetic items that might exists
+		ItemState.CreateCosmeticItemUnit(NewGameState);
 			}
-		}
-	}
+
+	Rules = `TACTICALRULES;
+
+	// submit it
+	XComGameStateContext_TacticalGameRule(NewGameState.GetContext()).UnitRef = Unit.GetReference();
+	Rules.SubmitGameState(NewGameState);
+
+	// make sure the visualizer has been created so self-applied abilities have a target in the world
+	Unit.FindOrCreateVisualizer(NewGameState);
 
 	// add abilities
-	// Must happen after items are added, to do ammo merging properly.
-	Rules = `TACTICALRULES;
+	// Must happen after unit is submitted, or it gets confused about when the unit is in play or not 
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Adding Reserve Unit Abilities");
 	Rules.InitializeUnitAbilities(NewGameState, Unit);
 
 	// make the unit concealed, if they have Phantom
@@ -208,9 +205,6 @@ private static function XComGameState_Unit AddStrategyUnitToBoard(XComGameState_
 		Unit.EnterConcealmentNewGameState(NewGameState);
 	}
 
-	// submit it
-	NewGameState.AddStateObject(Unit);
-	XComGameStateContext_TacticalGameRule(NewGameState.GetContext()).UnitRef = Unit.GetReference();
 	Rules.SubmitGameState(NewGameState);
 
 	return Unit;

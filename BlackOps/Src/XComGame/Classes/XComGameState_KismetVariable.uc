@@ -22,7 +22,7 @@ var private string StringValue;
 var private vector VectorValue;
 var private string ObjectName;
 
-native function string ToString();
+native function string ToString(optional bool bAllFields);
 
 DefaultProperties
 {	

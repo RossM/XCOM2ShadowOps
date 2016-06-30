@@ -18,18 +18,15 @@ event Activated()
 
 function BuildVisualization(XComGameState GameState, out array<VisualizationTrack> VisualizationTracks)
 {
-	local X2Effect_World WorldEffect;
-	local XComGameState_WorldEffectTileData WorldEffectData;
-	local VisualizationTrack BuildTrack;
+	local XComTileEffectVolume EffectVolume;
 
-	foreach GameState.IterateByClassType(class'XComGameState_WorldEffectTileData', WorldEffectData)
+	// find all volumes with the given tag, and visualize their effects
+	foreach class'WorldInfo'.static.GetWorldInfo().AllActors(class'XComTileEffectVolume', EffectVolume)
 	{
-		BuildTrack.StateObject_OldState = WorldEffectData;
-		BuildTrack.StateObject_NewState = WorldEffectData;
-		WorldEffect = X2Effect_World(class'XComEngine'.static.GetClassDefaultObjectByName(WorldEffectData.WorldEffectClassName));
-		WorldEffect.AddX2ActionsForVisualization(GameState, BuildTrack, '');
-		VisualizationTracks.AddItem(BuildTrack);
-		break;
+		if(EffectVolume.Tag == VolumeTag)
+		{
+			EffectVolume.AddVisualizationTracks(GameState, VisualizationTracks);
+		}
 	}
 }
 
@@ -50,6 +47,7 @@ function ModifyKismetGameState(out XComGameState GameState)
 				EffectVolume.GetAffectedTiles(AffectedTiles, AffectedIntensities);
 				WorldEffect = X2Effect_World(class'XComEngine'.static.GetClassDefaultObject(EffectVolume.TileEffect));
 				WorldEffect.AddLDEffectToTiles(WorldEffect.GetWorldEffectClassName(), GameState, AffectedTiles, AffectedIntensities);
+				EffectVolume.ApplyToUnits(AffectedTiles, AffectedIntensities, GameState);
 			}
 			else
 			{

@@ -71,7 +71,7 @@ simulated function UISaveLoadGameListItem InitSaveLoadItem(int listIndex, Online
 
 	DeleteButton = Spawn(class'UIButton', ButtonBG);
 	DeleteButton.bIsNavigable = false;
-	DeleteButton.InitButton('Button1', GetDeleteLabel(), DeleteClickedDelegate);
+	DeleteButton.InitButton('Button1', m_sDeleteLabel, DeleteClickedDelegate);
 	DeleteButton.OnMouseEventDelegate = OnChildMouseEvent;
 	
 	if(bIsSaving && ID == -1)
@@ -134,24 +134,7 @@ simulated function string GetAcceptLabel( bool bIsNewSave )
 		acceptLabel = m_sLoadLabel;
 	}
 
-	if( bIsFocused && XComInputBase(XComPlayerController(Movie.Pres.Owner).PlayerInput).IsControllerActive() )
-	{
-		acceptLabel = class'UIUtilities_Input'.static.InsertGamepadIcons("%A" @ acceptLabel);
-	}
 	return acceptLabel;
-}
-
-simulated function string GetDeleteLabel()
-{
-	local string deleteLabel;
-
-	deleteLabel = m_sDeleteLabel;
-
-	if( bIsFocused &&  XComInputBase(XComPlayerController(Movie.Pres.Owner).PlayerInput).IsControllerActive() )
-	{
-		deleteLabel = class'UIUtilities_Input'.static.InsertGamepadIcons("%Y" @ deleteLabel);
-	}
-	return deleteLabel; 
 }
 
 simulated function OnChildMouseEvent(UIPanel control, int cmd)
@@ -190,7 +173,7 @@ simulated function ShowHighlight()
 	DeleteButton.OnLoseFocus();
 	AcceptButton.OnLoseFocus();
 	AcceptButton.SetText(GetAcceptLabel(Index == 0));
-	DeleteButton.SetText(GetDeleteLabel());
+	DeleteButton.SetText(m_sDeleteLabel);
 }
 
 simulated function HideHighlight()
@@ -200,7 +183,7 @@ simulated function HideHighlight()
 	AcceptButton.OnLoseFocus();
 	DeleteButton.OnLoseFocus();
 	AcceptButton.SetText(GetAcceptLabel( Index == 0 ));
-	DeleteButton.SetText(GetDeleteLabel());
+	DeleteButton.SetText(m_sDeleteLabel);
 }
 
 simulated function UpdateData(OnlineSaveGame save)
@@ -290,7 +273,7 @@ simulated function UpdateData(OnlineSaveGame save)
 	myArray.AddItem(myValue);
 
 	//delete label
-	myValue.s = GetDeleteLabel();
+	myValue.s = m_sDeleteLabel;
 	myArray.AddItem(myValue);
 	DeleteButton.SetText(myValue.s);
 

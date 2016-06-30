@@ -17,6 +17,7 @@ var bool bOnlyAcceptAdventUnits;
 var bool bRandomlySelectOne;
 var bool bDontAcceptNeutralUnits;
 var int RandomChance;
+var bool bUseAbilitySourceAsPrimaryTarget;
 
 simulated native function GetMultiTargetOptions(const XComGameState_Ability Ability, out array<AvailableTarget> Targets);
 simulated native function GetMultiTargetsForLocation(const XComGameState_Ability Ability, const vector Location, out AvailableTarget Target);

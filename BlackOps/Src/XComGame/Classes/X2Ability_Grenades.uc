@@ -23,7 +23,7 @@ static function X2AbilityTemplate ThrowGrenade()
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityTarget_Cursor            CursorTarget;
-	local X2AbilityMultiTarget_SoldierBonusRadius RadiusMultiTarget;
+	local X2AbilityMultiTarget_Radius       RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2Condition_UnitInventory         UnitInventoryCondition;
 	local X2Condition_AbilitySourceWeapon   GrenadeCondition, ProximityMineCondition;
@@ -54,10 +54,8 @@ static function X2AbilityTemplate ThrowGrenade()
 	CursorTarget.bRestrictToWeaponRange = true;
 	Template.AbilityTargetStyle = CursorTarget;
 
-	RadiusMultiTarget = new class'X2AbilityMultiTarget_SoldierBonusRadius';
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
 	RadiusMultiTarget.bUseWeaponRadius = true;
-	RadiusMultiTarget.SoldierAbilityName = 'VolatileMix';
-	RadiusMultiTarget.BonusRadius = class'X2Ability_GrenadierAbilitySet'.default.VOLATILE_RADIUS;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
@@ -124,7 +122,7 @@ static function X2DataTemplate LaunchGrenade()
 	local X2AbilityCost_ActionPoints        ActionPointCost;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityTarget_Cursor            CursorTarget;
-	local X2AbilityMultiTarget_SoldierBonusRadius RadiusMultiTarget;
+	local X2AbilityMultiTarget_Radius       RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2Condition_AbilitySourceWeapon   GrenadeCondition, ProximityMineCondition;
 	local X2Effect_ProximityMine            ProximityMineEffect;
@@ -156,10 +154,8 @@ static function X2DataTemplate LaunchGrenade()
 	CursorTarget.bRestrictToWeaponRange = true;
 	Template.AbilityTargetStyle = CursorTarget;
 
-	RadiusMultiTarget = new class'X2AbilityMultiTarget_SoldierBonusRadius';
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
 	RadiusMultiTarget.bUseWeaponRadius = true;
-	RadiusMultiTarget.SoldierAbilityName = 'VolatileMix';
-	RadiusMultiTarget.BonusRadius = class'X2Ability_GrenadierAbilitySet'.default.VOLATILE_RADIUS;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
@@ -221,7 +217,7 @@ static function X2AbilityTemplate ProximityMineDetonation()
 	local X2Condition_UnitProperty					UnitPropertyCondition;
 	local X2Condition_AbilitySourceWeapon			GrenadeCondition;
 	local X2AbilityTarget_Cursor					CursorTarget;
-	local X2AbilityMultiTarget_SoldierBonusRadius	RadiusMultiTarget;
+	local X2AbilityMultiTarget_Radius	            RadiusMultiTarget;
 	local X2Effect_ApplyWeaponDamage				WeaponDamage;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, default.ProximityMineDetonationAbilityName);
@@ -236,11 +232,9 @@ static function X2AbilityTemplate ProximityMineDetonation()
 
 	Template.AddShooterEffect(new class'X2Effect_BreakUnitConcealment');
 
-	RadiusMultiTarget = new class'X2AbilityMultiTarget_SoldierBonusRadius';
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
 	RadiusMultiTarget.bUseWeaponRadius = true;
 	RadiusMultiTarget.fTargetRadius = 2;
-	RadiusMultiTarget.SoldierAbilityName = 'VolatileMix';
-	RadiusMultiTarget.BonusRadius = class'X2Ability_GrenadierAbilitySet'.default.VOLATILE_RADIUS;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
@@ -360,7 +354,7 @@ static function X2AbilityTemplate GrenadeFuse()
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
-	local X2AbilityMultiTarget_SoldierBonusRadius RadiusMultiTarget;
+	local X2AbilityMultiTarget_Radius       RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2Condition_AbilitySourceWeapon   GrenadeCondition;
 	local X2AbilityTrigger_EventListener    EventListener;
@@ -390,11 +384,9 @@ static function X2AbilityTemplate GrenadeFuse()
 	EventListener.ListenerData.Filter = eFilter_None;
 	Template.AbilityTriggers.AddItem(EventListener);
 
-	RadiusMultiTarget = new class'X2AbilityMultiTarget_SoldierBonusRadius';
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
 	RadiusMultiTarget.bAddPrimaryTargetAsMultiTarget = true;
 	RadiusMultiTarget.bUseWeaponRadius = true;
-	RadiusMultiTarget.SoldierAbilityName = 'VolatileMix';
-	RadiusMultiTarget.BonusRadius = class'X2Ability_GrenadierAbilitySet'.default.VOLATILE_RADIUS;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';

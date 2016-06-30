@@ -1,7 +1,8 @@
-class X2TargetingMethod_Line extends X2TargetingMethod;
+class X2TargetingMethod_Line extends X2TargetingMethod
+	native(Core);
 
 var protected XCom3DCursor Cursor;
-var protected vector NewTargetLocation, FiringLocation;
+var protected vector NewTargetLocation, FiringLocation, AimingLocation;
 var protected XComWorldData WorldData;
 var protected bool bGoodTarget;
 var protected TTile FiringTile;
@@ -61,6 +62,8 @@ function Update(float DeltaTime)
 	local TTile TargetTile;
 	local array<TTile> Tiles;
 	local Rotator LineRotator;
+	local Vector Direction;
+	local float VisibilityRadius;
 
 	NewTargetLocation = Cursor.GetCursorFeetLocation();
 	TargetTile = WorldData.GetTileCoordinatesFromPosition(NewTargetLocation);
@@ -90,13 +93,20 @@ function Update(float DeltaTime)
 		}
 	}
 
+	Direction = NewTargetLocation - FiringLocation;
+	VisibilityRadius = UnitState.GetVisibilityRadius() * class'XComWorldData'.const.WORLD_StepSize;
+	AimingLocation = FiringLocation + (Direction / VSize(Direction)) * VisibilityRadius;
+
+	AimingLocation = ClampTargetLocation(FiringLocation, AimingLocation, WorldData.Volume);
 	super.Update(DeltaTime);
 }
+
+native function Vector ClampTargetLocation(const out Vector StartingLocation, const out Vector EndLocation, Actor LevelVolume);
 
 function GetTargetLocations(out array<Vector> TargetLocations)
 {
 	TargetLocations.Length = 0;
-	TargetLocations.AddItem(NewTargetLocation);
+	TargetLocations.AddItem(AimingLocation);
 }
 
 function name ValidateTargetLocations(const array<Vector> TargetLocations)

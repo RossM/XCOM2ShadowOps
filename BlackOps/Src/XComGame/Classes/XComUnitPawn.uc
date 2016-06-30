@@ -135,8 +135,12 @@ var() float NormalMissAngleMultiplier;
 // The miss angle multiplier to use for close distances
 var() float CloseRangeMissAngleMultiplier;
 
+var() bool EvacWithRope;
+
 var protected float fHiddenTime;      //  used in STRATEGY to track how long the pawn has been loading itself
 var bool bAllowPersistentFX;          //  used in STRATEGY only
+
+var bool bUseDesiredEndingAtomOnDeath;
 
 var private bool m_bWasIdleBeforeMatinee;
 var private name QueuedDialogAnim; //Temp storage for a line of dialog that this pawn should play.
@@ -422,6 +426,7 @@ simulated function PlayMetaHitEffect(vector HitLocation, name DamageTypeName, ve
 	local XComPawnHitEffect HitEffectTemplate, RuptureEffectTemplate;
 	local vector HitNormal;
 	local DamageTypeHitEffectContainer DamageContainer;
+	local XComPerkContent kPerkContent;
 
 	// The HitNormal used to have noise applied, via "* 0.5 * VRand();", but S.Jameson requested 
 	// that it be removed, since he can add noise with finer control via the editor.  mdomowicz 2015_07_06
@@ -455,6 +460,11 @@ simulated function PlayMetaHitEffect(vector HitLocation, name DamageTypeName, ve
 		{
 			Spawn(class'XComPawnHitEffect', , , HitLocation, Rotator(HitNormal), RuptureEffectTemplate);
 		}
+	}
+
+	foreach arrTargetingPerkContent( kPerkContent )
+	{
+		kPerkContent.OnMetaDamage( self );
 	}
 }
 
@@ -516,6 +526,11 @@ simulated function PlayDying(class<DamageType> DamageTypeClass, vector HitLoc, o
 	local bool bRagdollImmediately;
 	local bool bCanPlayAnim;
 
+	local X2Action CurrentAction;
+	local X2Action_Death DeathAction;
+	local bool bPlayDamageContainerEffect;
+	local bool bPlayDamageContainerSound;
+
 	HitDamageType = DamageTypeClass;
 	TakeHitLocation = HitLoc;	 
 	DeathRestingLocation = Destination;
@@ -541,11 +556,26 @@ simulated function PlayDying(class<DamageType> DamageTypeClass, vector HitLoc, o
 		CarriedPawn.StartRagDoll();
 	}
 
-	if (DamageContainer != none && DamageContainer.DeathEffect != none)
-		WorldInfo.MyEmitterPool.SpawnEmitter(DamageContainer.DeathEffect, HitLoc, rot(0,0,1) );
+	bPlayDamageContainerEffect = true;
+	bPlayDamageContainerSound = true;
 
-	if (DamageContainer != none && DamageContainer.DeathSound != none)
+	CurrentAction = `XCOMVISUALIZATIONMGR.GetCurrentTrackActionForVisualizer(m_kGameUnit);
+	DeathAction = X2Action_Death(CurrentAction);
+	if (DeathAction != none)
+	{
+		bPlayDamageContainerEffect = DeathAction.ShouldPlayDamageContainerDeathEffect();
+		bPlayDamageContainerSound = DeathAction.DamageContainerDeathSound();
+	}
+	
+	if (bPlayDamageContainerEffect && DamageContainer != none && DamageContainer.DeathEffect != none)
+	{
+		WorldInfo.MyEmitterPool.SpawnEmitter(DamageContainer.DeathEffect, HitLoc, rot(0,0,1) );
+	}
+
+	if (bPlayDamageContainerSound && DamageContainer != none && DamageContainer.DeathSound != none)
+	{
 		PlaySound(DamageContainer.DeathSound);
+	}
 	
 	//Gather information on how this unit died
 	ItemTemplateManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
@@ -572,11 +602,14 @@ simulated function PlayDying(class<DamageType> DamageTypeClass, vector HitLoc, o
 
 	XComSuperPlayDying( DamageTypeClass, HitLoc );
 
-	AnimParams.HasDesiredEndingAtom = true;
-	AnimParams.DesiredEndingAtom.Translation = Destination;
-	AnimParams.DesiredEndingAtom.Translation.Z = GetGameUnit().GetDesiredZForLocation(AnimParams.DesiredEndingAtom.Translation);
-	AnimParams.DesiredEndingAtom.Rotation = QuatFromRotator(Rotation);
-	AnimParams.DesiredEndingAtom.Scale = 1.0f;
+	if( bUseDesiredEndingAtomOnDeath )
+	{
+		AnimParams.HasDesiredEndingAtom = true;
+		AnimParams.DesiredEndingAtom.Translation = Destination;
+		AnimParams.DesiredEndingAtom.Translation.Z = GetGameUnit().GetDesiredZForLocation(AnimParams.DesiredEndingAtom.Translation); // TODO: Need to somehow let this know we don't want to goto Z
+		AnimParams.DesiredEndingAtom.Rotation = QuatFromRotator(Rotation);
+		AnimParams.DesiredEndingAtom.Scale = 1.0f;
+	}
 
 	if(bCanPlayAnim)
 	{
@@ -1105,7 +1138,7 @@ simulated function GameStateResetVisualizer(XComGameState_Unit UnitState)
 	PawnState = GetStateName();
 				
 	NewLocation = `XWORLD.GetPositionFromTileCoordinates(UnitState.TileLocation);
-	NewLocation.Z = m_kGameUnit.GetDesiredZForLocation(NewLocation);
+	NewLocation.Z = m_kGameUnit.GetDesiredZForLocation(NewLocation, `XWORLD.IsFloorTile(UnitState.TileLocation));
 
 	bCollideWorld = false;
 	SetLocation(NewLocation);
@@ -1654,10 +1687,21 @@ simulated function bool IsSelected()
 
 simulated function SetCurrentWeapon(XComWeapon kWeapon)
 {
+	local XComGameState_Item Item;
+	local name AkEventWeaponSwitch;
+
 	Weapon = kWeapon;
 	if( kWeapon != None )
 	{
 		kWeapon.m_kPawn = self;
+
+		// Set the Wwise switch on this unit for unit-pawn-based weapon sounds e.g. reloads
+		Item = XComGameState_Item(`XCOMHISTORY.GetGameStateForObjectID(kWeapon.m_kGameWeapon.ObjectID));
+		if (Item != none)
+		{
+			AkEventWeaponSwitch = Item.GetWeaponTech();
+			SetSwitch('WeaponType', AkEventWeaponSwitch);
+		}
 	}
 	MarkAuxParametersAsDirty(m_bAuxParamNeedsPrimary, m_bAuxParamNeedsSecondary, m_bAuxParamUse3POutline);
 }
@@ -1759,6 +1803,8 @@ simulated function SpawnCosmeticUnitPawn(UIPawnMgr PawnMgr, EInventorySlot InvSl
 	local string ArchetypeStr;
 	local Vector PawnLoc;
 	local TAppearance UseAppearance;
+	local XComGameState_Unit OwnersUnitState;
+	local TTile TileLocation;
 
 	EquipCharacterTemplate = class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager().FindCharacterTemplate(name(CosmeticUnitTemplate));
 	if (EquipCharacterTemplate == none)
@@ -1780,9 +1826,16 @@ simulated function SpawnCosmeticUnitPawn(UIPawnMgr PawnMgr, EInventorySlot InvSl
 		return;
 
 	PawnLoc = Location;
+	OwnersUnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ObjectID));
 	if (OffsetForArmory)
 	{
 		PawnLoc += EquipCharacterTemplate.AvengerOffset;
+	}
+	else
+	{
+		TileLocation = `XWORLD.GetTileCoordinatesFromPosition(PawnLoc);
+		TileLocation.Z += OwnersUnitState.GetDesiredZTileOffsetForAttachedCosmeticUnit();
+		PawnLoc = `XWORLD.GetPositionFromTileCoordinates(TileLocation);
 	}
 	
 	CosmeticPawn = PawnMgr.AssociateCosmeticPawn(InvSlot, ArchetypePawn, OwningUnit.ObjectID, self, PawnLoc, Rotation);
@@ -3025,7 +3078,6 @@ state PlayDialogLineOneshot
 
 		PlayAnimParams.AnimName = AnimationName;
 		PlayAnimParams.Looping = false;
-		PlayAnimParams.PlayRate = class'XComIdleAnimationStateMachine'.static.GetNextIdleRate();
 
 		return AnimTreeController.PlayFullBodyDynamicAnim(PlayAnimParams);
 	}
@@ -3363,4 +3415,7 @@ defaultproperties
 	fFallImpactSoundEffectTimer = 0.0f
 
 	bHidden=true // spawn invisible, until we request being set to visible
+
+	bUseDesiredEndingAtomOnDeath=true
+	EvacWithRope = true
 }

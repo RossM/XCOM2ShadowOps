@@ -117,7 +117,7 @@ simulated function string GetOrStartWaitingForStaffImage(XComGameState_Unit Unit
 	{
 		if (!Photo.HasPendingHeadshot(UnitRef, UpdateItemCardImage))
 		{
-			Photo.AddHeadshotRequest(UnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, UpdateItemCardImage, class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook());
+			Photo.AddHeadshotRequest(UnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, UpdateItemCardImage,, false, true);
 		}
 		bWaitingForImageUpdate = true;
 		return "";

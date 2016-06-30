@@ -374,7 +374,7 @@ function StartAllAmbience(bool bStartMissionSoundtrack=true)
 
 	local string sBiome;
 	local string sEnvironmentLightingMapName;
-	local string sPlotType;
+	local PlotDefinition PlotDef;
 	local name nBiomeSwitch;
 	local name nClimateSwitch;
 	local name nLightingSwitch;
@@ -385,10 +385,10 @@ function StartAllAmbience(bool bStartMissionSoundtrack=true)
 		BattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData', true));
 		sBiome = BattleData.MapData.Biome;
 		sEnvironmentLightingMapName = BattleData.MapData.EnvironmentLightingMapName;
-		sPlotType = `PARCELMGR.GetPlotDefinition(BattleData.MapData.PlotMapName).strType;
+		PlotDef = `PARCELMGR.GetPlotDefinition(BattleData.MapData.PlotMapName);
 
 		// Convert the ambiance settings to their corresponding AkAudio Switch names.
-		nBiomeSwitch = Name(sPlotType);
+		nBiomeSwitch = Name(PlotDef.AudioPlotTypeOverride != "" ? PlotDef.AudioPlotTypeOverride : PlotDef.strType);
 		nClimateSwitch = Name(sBiome);
 		nLightingSwitch = GetSwitchNameFromEnvLightingString(sEnvironmentLightingMapName);
 

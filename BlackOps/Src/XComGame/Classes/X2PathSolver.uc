@@ -41,6 +41,8 @@ cpptext
 
 		// cache variables to speed up expensive repeat function calls
 		const UBOOL UnitShouldAvoidPathingNearCover;
+		const UBOOL UnitShouldAvoidWallSmashing; // should we avoid large unit only wall smashes?
+		const UBOOL UnitShouldAvoidDestruction; // should this unit avoid smashing through smaller things, like windows?
 		const UBOOL UnitShouldExtraAvoidDestruction; //Optional "extra" bias against destruction. Motivating use-case: AI unit, not yet seen by player.
 		const UBOOL DisallowHazardPathing; // if true, tiles with hazards on them will be completely disregarded
 		const struct FConcealmentBreakingTilesCache* ConcealmentCache; // concealment cache for the unit, if any

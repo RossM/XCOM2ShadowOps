@@ -264,7 +264,7 @@ simulated function InitCheckboxes()
 			Checkbox_UnitFlags.SetChecked(!TacticalCheatManager.bShowUnitFlags);
 			Checkbox_WorldMessages.SetChecked(TacticalCheatManager.bDisableWorldMessages);
 			Checkbox_LootEffects.SetChecked(class'XComGameState_Cheats'.static.GetCheatsObject().DisableLooting);
-			Checkbox_FOW.SetChecked(!`XWORLD.bEnableFOW);
+			Checkbox_FOW.SetChecked(!`XWORLD.bDebugEnableFOW);
 			Checkbox_BuildingVisibility.SetChecked(!TacticalCheatManager.m_bEnableBuildingVisibility_Cheat);
 			Checkbox_CutoutBox.SetChecked(!TacticalCheatManager.m_bEnableCutoutBox_Cheat);		
 			Checkbox_PeripheryHiding.SetChecked(!TacticalCheatManager.m_bEnablePeripheryHiding_Cheat);
@@ -280,7 +280,7 @@ simulated function InitCheckboxes()
 		{
 			Checkbox_Narrative.SetChecked(GeneralCheatManager.bNarrativeDisabled);
 			Checkbox_DisableMusic.SetChecked(GeneralCheatManager.bMusicDisabled);
-			Checkbox_DisableTooltips.SetChecked(PlayerController.Pres.m_kTooltipMgr.bEnableTooltips);
+			Checkbox_DisableTooltips.SetChecked(!PlayerController.Pres.m_kTooltipMgr.bEnableTooltips);
 		}
 	}
 }
@@ -308,9 +308,9 @@ simulated function ApplyChanges(UIButton button)
 	local XComWorldData WorldData;
 	local XGUnit Unit;	
 
+	SaveMarketingPresetToProfile('Checkbox_2DUI', Checkbox_2DUI.bChecked);
 	if(Checkbox_2DUI.bChecked)
 	{
-		ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_2DUI');
 		if(Pres.Get2DMovie().bIsVisible)
 		{
 			Pres.Get2DMovie().Hide();
@@ -318,16 +318,15 @@ simulated function ApplyChanges(UIButton button)
 	}
 	else
 	{
-		ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_2DUI');
 		if(!Pres.Get2DMovie().bIsVisible)
 		{
 			Pres.Get2DMovie().Show();
 		}
 	}
 
+	SaveMarketingPresetToProfile('Checkbox_3DUI', Checkbox_3DUI.bChecked);
 	if(Checkbox_3DUI.bChecked)
 	{
-		ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_3DUI');
 		if(Pres.Get3DMovie().bIsVisible)
 		{
 			Pres.Get3DMovie().Hide();
@@ -335,7 +334,6 @@ simulated function ApplyChanges(UIButton button)
 	}
 	else
 	{
-		ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_3DUI');
 		if(!Pres.Get3DMovie().bIsVisible)
 		{
 			Pres.Get3DMovie().Show();
@@ -344,94 +342,31 @@ simulated function ApplyChanges(UIButton button)
 	
 	if(TacticalCheatManager != none)
 	{
-		if(Checkbox_UnitFlags.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_UnitFlags');
-			TacticalCheatManager.bShowUnitFlags = false;
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_UnitFlags');
-			TacticalCheatManager.bShowUnitFlags = true;
-		}
+		SaveMarketingPresetToProfile('Checkbox_UnitFlags', Checkbox_UnitFlags.bChecked);
+		TacticalCheatManager.bShowUnitFlags = !Checkbox_UnitFlags.bChecked;
 
-		if(Checkbox_WorldMessages.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_WorldMessages');
-			TacticalCheatManager.bDisableWorldMessages = true;
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_WorldMessages');
-			TacticalCheatManager.bDisableWorldMessages = false;
-		}
+		SaveMarketingPresetToProfile('Checkbox_WorldMessages', Checkbox_WorldMessages.bChecked);
+		TacticalCheatManager.bDisableWorldMessages = Checkbox_WorldMessages.bChecked;
 
-		if(Checkbox_LootEffects.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_LootEffects');
-			TacticalCheatManager.SetLootDisabled(true);
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_LootEffects');
-			TacticalCheatManager.SetLootDisabled(false);
-		}
+		SaveMarketingPresetToProfile('Checkbox_LootEffects', Checkbox_LootEffects.bChecked);
+		TacticalCheatManager.SetLootDisabled(Checkbox_LootEffects.bChecked);
 
-		if(Checkbox_FOW.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_FOW');
-			if(`XWORLD.bEnableFOW)
-			{
-				TacticalCheatManager.ToggleFOW();
-			}
-			
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_FOW');
-			if(!`XWORLD.bEnableFOW)
-			{
-				TacticalCheatManager.ToggleFOW();
-			}
-		}
+		SaveMarketingPresetToProfile('Checkbox_FOW', Checkbox_FOW.bChecked);
+		if(Checkbox_FOW.bChecked == `XWORLD.bDebugEnableFOW) TacticalCheatManager.ToggleFOW();
+			if(!`XWORLD.bDebugEnableFOW)
 
-		if(Checkbox_BuildingVisibility.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_BuildingVisibility');
-			TacticalCheatManager.BuildingVisEnable(false);
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_BuildingVisibility');
-			TacticalCheatManager.BuildingVisEnable(true);
-		}
+		SaveMarketingPresetToProfile('Checkbox_BuildingVisibility', Checkbox_BuildingVisibility.bChecked);
+		TacticalCheatManager.BuildingVisEnable(!Checkbox_BuildingVisibility.bChecked);
 
-		if(Checkbox_CutoutBox.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_CutoutBox');
-			TacticalCheatManager.CutoutBoxEnable(false);
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_CutoutBox');
-			TacticalCheatManager.CutoutBoxEnable(true);
-		}
+		SaveMarketingPresetToProfile('Checkbox_CutoutBox', Checkbox_CutoutBox.bChecked);
+		TacticalCheatManager.CutoutBoxEnable(!Checkbox_CutoutBox.bChecked);
 
-		if (Checkbox_PeripheryHiding.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_PeripheryHiding');
-			TacticalCheatManager.PeripheryHidingEnable(false);
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_PeripheryHiding');
-			TacticalCheatManager.PeripheryHidingEnable(true);
-		}
+		SaveMarketingPresetToProfile('Checkbox_PeripheryHiding', Checkbox_PeripheryHiding.bChecked);
+		TacticalCheatManager.PeripheryHidingEnable(!Checkbox_PeripheryHiding.bChecked);
 
+		SaveMarketingPresetToProfile('Checkbox_Pathing', Checkbox_Pathing.bChecked);
 		if(Checkbox_Pathing.bChecked)
 		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_Pathing');
-
 			TacticalCheatManager.bHidePathingPawn = true;
 			TacticalCheatManager.m_bAllowTether = false;
 
@@ -450,8 +385,6 @@ simulated function ApplyChanges(UIButton button)
 		}
 		else
 		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_Pathing');
-
 			TacticalCheatManager.bHidePathingPawn = false;
 			TacticalCheatManager.m_bAllowTether = true;
 
@@ -470,100 +403,48 @@ simulated function ApplyChanges(UIButton button)
 			}
 		}
 
-		if(Checkbox_SoldierChatter.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_SoldierChatter');
-			`XPROFILESETTINGS.Data.m_bEnableSoldierSpeech = false;
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_SoldierChatter');
-			`XPROFILESETTINGS.Data.m_bEnableSoldierSpeech = true;
-		}
+		SaveMarketingPresetToProfile('Checkbox_SoldierChatter', Checkbox_SoldierChatter.bChecked);
+		`XPROFILESETTINGS.Data.m_bEnableSoldierSpeech = !Checkbox_SoldierChatter.bChecked;
 
+		SaveMarketingPresetToProfile('Checkbox_DisableAmbience', Checkbox_DisableAmbience.bChecked);
 		if(Checkbox_DisableAmbience.bChecked)
 		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_DisableAmbience');
 			GeneralCheatManager.bAmbienceDisabled = true;
 			`XTACTICALSOUNDMGR.StopAllAmbience();
 		}
 		else
 		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_DisableAmbience');
 			GeneralCheatManager.bAmbienceDisabled = false;
 			`XTACTICALSOUNDMGR.StartAllAmbience();
 		}
 
-		if(Checkbox_ConcealmentTiles.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_ConcealmentTiles');
-			GeneralCheatManager.bConcealmentTilesHidden = true;
-			XComTacticalController(PlayerController).m_kPathingPawn.UpdateConcealmentTilesVisibility(true);
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_ConcealmentTiles');
-			GeneralCheatManager.bConcealmentTilesHidden = false;
-			XComTacticalController(PlayerController).m_kPathingPawn.UpdateConcealmentTilesVisibility(false);
-		}
+		SaveMarketingPresetToProfile('Checkbox_ConcealmentTiles', Checkbox_ConcealmentTiles.bChecked);
+		GeneralCheatManager.bConcealmentTilesHidden = Checkbox_ConcealmentTiles.bChecked;
+		XComTacticalController(PlayerController).m_kPathingPawn.UpdateConcealmentTilesVisibility(Checkbox_ConcealmentTiles.bChecked);
 
-		if(Checkbox_DisableUnitShaders.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_DisableUnitShaders');
-			TacticalCheatManager.bDisableTargetingOutline = true;
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_DisableUnitShaders');
-			TacticalCheatManager.bDisableTargetingOutline = false;
-		}
-
-		if(Checkbox_DisableLookAtBack.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_DisableLookAtBack');
-			TacticalCheatManager.bDisableLookAtBackPenalty = true;
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_DisableLookAtBack');
-			TacticalCheatManager.bDisableLookAtBackPenalty = false;
-		}
+		SaveMarketingPresetToProfile('Checkbox_DisableUnitShaders', Checkbox_DisableUnitShaders.bChecked);
+		TacticalCheatManager.bDisableTargetingOutline = Checkbox_DisableUnitShaders.bChecked;
+		
+		SaveMarketingPresetToProfile('Checkbox_DisableLookAtBack', Checkbox_DisableLookAtBack.bChecked);
+		TacticalCheatManager.bDisableLookAtBackPenalty = Checkbox_DisableLookAtBack.bChecked;
 	}
 	
 	if(GeneralCheatManager != none)
 	{
-		if(Checkbox_Narrative.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_Narrative');
-			GeneralCheatManager.bNarrativeDisabled = true;
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_Narrative');
-			GeneralCheatManager.bNarrativeDisabled = false;
-		}
+		SaveMarketingPresetToProfile('Checkbox_Narrative', Checkbox_Narrative.bChecked);
+		GeneralCheatManager.bNarrativeDisabled = Checkbox_Narrative.bChecked;
 
-		if(Checkbox_DisableMusic.bChecked)
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_DisableMusic');
-			GeneralCheatManager.bMusicDisabled = true;
-			PlayerController.SetAudioGroupVolume('Music', 0.0f);
-		}
-		else
-		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_DisableMusic');
-			GeneralCheatManager.bMusicDisabled = false;
-			PlayerController.SetAudioGroupVolume('Music', 0.0f);
-		}
+		SaveMarketingPresetToProfile('Checkbox_DisableMusic', Checkbox_DisableMusic.bChecked);
+		GeneralCheatManager.bMusicDisabled = Checkbox_DisableMusic.bChecked;
+		PlayerController.SetAudioGroupVolume('Music', 0.0f);
 
+		SaveMarketingPresetToProfile('Checkbox_DisableTooltips', Checkbox_DisableTooltips.bChecked);
 		if(Checkbox_DisableTooltips.bChecked)
 		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem('Checkbox_DisableTooltips');
 			GeneralCheatManager.UIDisableTooltips();
 		}
 		else
 		{
-			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem('Checkbox_DisableTooltips');
 			GeneralCheatManager.UIEnableTooltips();
 		}		
 	}
@@ -571,6 +452,27 @@ simulated function ApplyChanges(UIButton button)
 	`ONLINEEVENTMGR.SaveProfileSettings();
 
 	Movie.Stack.Pop(self);
+}
+
+simulated protected function SaveMarketingPresetToProfile(name Preset, bool Enabled)
+{
+	// rather than copy and paste this for each setting, pulled off into a separate function.
+	// Guarantees that we will only ever add one instance of Preset if enabled, and that we
+	// clear every instance of instance if we remove it
+	if(Enabled)
+	{
+		if(ProfileSettings.Data.MarketingPresets.CheckboxSettings.Find(Preset) == INDEX_NONE)
+		{
+			ProfileSettings.Data.MarketingPresets.CheckboxSettings.AddItem(Preset);
+		}
+	}
+	else
+	{
+		while(ProfileSettings.Data.MarketingPresets.CheckboxSettings.Find(Preset) != INDEX_NONE)
+		{
+			ProfileSettings.Data.MarketingPresets.CheckboxSettings.RemoveItem(Preset);
+		}
+	}
 }
 
 simulated function ToggleCheckbox(UICheckbox checkboxControl)

@@ -64,6 +64,7 @@ function XComGameState ContextBuildGameState()
 	local XComGameStateHistory History;
 	local XComGameState_AIPlayerData AIState, UpdatedAIState;
 	local XComGameState_AIUnitData AIUnitState;
+	local bool bHadActionPoints;
 	local int iComponentID;
 	//local bool bClaimCoverAnyChanges;		//True if the claim cover game state contains meaningful changes
 	local XComGameState_Player CurrentPlayer;
@@ -91,7 +92,17 @@ function XComGameState ContextBuildGameState()
 		`assert(UnitRef.ObjectID > 0);
 		NewGameState = History.CreateNewGameState(true, self);		
 		UpdatedUnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitRef.ObjectID));
+		bHadActionPoints = UpdatedUnitState.ActionPoints.Length > 0;
 		UpdatedUnitState.ActionPoints.Length = 0;//Clear all action points for this unit
+		if( bHadActionPoints )
+		{
+			`XEVENTMGR.TriggerEvent('ExhaustedActionPoints', UpdatedUnitState, UpdatedUnitState, NewGameState);
+		}
+		else
+		{
+			`XEVENTMGR.TriggerEvent('NoActionPointsAvailable', UpdatedUnitState, UpdatedUnitState, NewGameState);
+		}
+
 		NewGameState.AddStateObject(UpdatedUnitState);
 		foreach UpdatedUnitState.ComponentObjectIds(iComponentID)
 		{
@@ -561,6 +572,16 @@ private function SyncAllVisualizers(out array<VisualizationTrack> VisualizationT
 
 	History = `XCOMHISTORY;
 
+	// Sync the map first so that the tile data is in the proper state for all the individual SyncVisualizer calls
+	BattleState = XComGameState_BattleData( History.GetSingleGameStateObjectForClass( class'XComGameState_BattleData' ) );
+	BuildTrack = EmptyTrack;
+	BuildTrack.StateObject_OldState = BattleState;
+	BuildTrack.StateObject_NewState = BattleState;
+	MapVisualizer = X2Action_SyncMapVisualizers( class'X2Action_SyncMapVisualizers'.static.AddToVisualizationTrack( BuildTrack, self ) );
+	VisualizationTracks.AddItem( BuildTrack );
+
+	MapVisualizer.Syncing = true;
+
 	foreach AssociatedState.IterateByClassType(class'XComGameState_BaseObject', VisualizedObject)
 	{
 		if(X2VisualizedInterface(VisualizedObject) != none)
@@ -583,15 +604,6 @@ private function SyncAllVisualizers(out array<VisualizationTrack> VisualizationT
 			VisualizationTracks.AddItem( BuildTrack );
 		}
 	}
-
-	BattleState = XComGameState_BattleData( History.GetSingleGameStateObjectForClass( class'XComGameState_BattleData' ) );
-	BuildTrack = EmptyTrack;
-	BuildTrack.StateObject_OldState = BattleState;
-	BuildTrack.StateObject_NewState = BattleState;
-	MapVisualizer = X2Action_SyncMapVisualizers( class'X2Action_SyncMapVisualizers'.static.AddToVisualizationTrack( BuildTrack, self ) );
-	VisualizationTracks.AddItem( BuildTrack );
-
-	MapVisualizer.Syncing = true;
 
 	kAIPlayer = XGAIPlayer(`BATTLE.GetAIPlayer());
 	if (kAIPlayer.m_iDataID == 0)
@@ -694,6 +706,7 @@ static function XComGameState CreateDefaultTacticalStartState_Singleplayer(optio
 	StartState = History.CreateNewGameState(false, TacticalStartContext);
 
 	BattleDataState = XComGameState_BattleData(StartState.CreateStateObject(class'XComGameState_BattleData'));
+	BattleDataState.BizAnalyticsMissionID = `FXSLIVE.GetGUID( );
 	BattleDataState = XComGameState_BattleData(StartState.AddStateObject(BattleDataState));
 	
 	XComPlayerState = class'XComGameState_Player'.static.CreatePlayer(StartState, eTeam_XCom);
@@ -739,6 +752,7 @@ static function XComGameState CreateDefaultTacticalStartState_Multiplayer(option
 	StartState = History.CreateNewGameState(false, TacticalStartContext);
 
 	BattleDataState = XComGameState_BattleDataMP(StartState.CreateStateObject(class'XComGameState_BattleDataMP'));
+	BattleDataState.BizAnalyticsSessionID = `FXSLIVE.GetGUID( );
 	BattleDataState = XComGameState_BattleDataMP(StartState.AddStateObject(BattleDataState));
 	
 	XComPlayerState = XComGameState_Player(StartState.CreateStateObject(class'XComGameState_Player'));

@@ -25,7 +25,7 @@ var private const config float MaxProjectileHalfAngle;			 // Controls the arc wh
 var protected X2AbilityToHitCalc_DeadEye    DeadEye;
 var protected X2AbilityToHitCalc_StandardAim SimpleStandardAim;
 var protected X2Condition_UnitProperty      LivingShooterProperty;
-var protected X2Condition_UnitProperty      LivingHostileTargetProperty, LivingHostileUnitOnlyProperty, LivingTargetUnitOnlyProperty, LivingHostileUnitDisallowMindControlProperty;
+var protected X2Condition_UnitProperty      LivingHostileTargetProperty, LivingHostileUnitOnlyProperty, LivingTargetUnitOnlyProperty, LivingTargetOnlyProperty, LivingHostileUnitDisallowMindControlProperty;
 var protected X2AbilityTrigger_PlayerInput  PlayerInputTrigger;
 var protected X2AbilityTrigger_UnitPostBeginPlay UnitPostBeginPlayTrigger;
 var protected X2AbilityTarget_Self          SelfTarget;
@@ -183,7 +183,7 @@ static function GenerateDamageEvents(XComGameState NewGameState, XComGameStateCo
 					DamageEvent.DEBUG_SourceCodeLocation = "UC: X2Ability:GenerateProjectileTouchEvents";
 					DamageEvent.DamageTypeTemplateName = DamageTypeTemplateName;
 					DamageEvent.HitLocation = AbilityContext.InputContext.ProjectileEvents[Index].HitLocation;
-					DamageEvent.Momentum = (AbilityRadius == 0.0f) ? AbilityContext.InputContext.ProjectileEvents[Index].HitNormal : vect(0, 0, 0);
+					DamageEvent.Momentum = (AbilityRadius == 0.0f) ? -AbilityContext.InputContext.ProjectileEvents[Index].HitNormal : vect(0, 0, 0);
 					DamageEvent.PhysImpulse = PhysicalImpulseAmount;
 					DamageEvent.DamageRadius = 16.0f;					
 					DamageEvent.DamageCause = SourceStateObject.GetReference();
@@ -583,14 +583,18 @@ static function bool ApplyEffectsToTarget( XComGameStateContext_Ability AbilityC
 												EffectTemplateLookupType EffectLookupType,
 												optional OverriddenEffectsByType TargetEffectsOverrides)
 {
-	local XComGameState_Unit UnitState, SourceUnit;
-	local EffectAppliedData ApplyData;
+	local XComGameState_Unit UnitState, SourceUnit, RedirectUnit;
+	local EffectAppliedData ApplyData, RedirectData;
 	local int EffectIndex;
 	local StateObjectReference NoWeapon;
-	local bool bHit, bMiss;
+	local bool bHit, bMiss, bRedirected;
 	local StateObjectReference DefaultPlayerStateObjectRef;
+	local name AffectingRedirectorName, OverrideRedirectResult;
+	local XComGameState_Effect RedirectorEffectState;
+	local EffectRedirect Redirection, EmptyRedirection;
 
 	UnitState = XComGameState_Unit(kNewTargetState);
+	SourceUnit = XComGameState_Unit(kSource);
 
 	`XEVENTMGR.TriggerEvent('UnitAttacked', UnitState, UnitState, NewGameState);
 
@@ -626,17 +630,62 @@ static function bool ApplyEffectsToTarget( XComGameStateContext_Ability AbilityC
 			if (Effects[EffectIndex].bUseSourcePlayerState)
 			{
 				// If the source unit's controlling player needs to be saved in
-				// ApplyData.PlayerStateObjectRef
-				SourceUnit = XComGameState_Unit(kSource);
-			
+				// ApplyData.PlayerStateObjectRef							
 				if (SourceUnit != none)
 				{
 					ApplyData.PlayerStateObjectRef = SourceUnit.ControllingPlayer;
 				}
 			}
-
 			ApplyData.EffectRef.TemplateEffectLookupArrayIndex = EffectIndex;
-			EffectResults.ApplyResults.AddItem(Effects[EffectIndex].ApplyEffect(ApplyData, kNewTargetState, NewGameState));
+
+			//  Check for a redirect
+			bRedirected = false;
+			foreach class'X2AbilityTemplateManager'.default.AffectingEffectRedirectors(AffectingRedirectorName)
+			{
+				RedirectorEffectState = UnitState.GetUnitAffectedByEffectState(AffectingRedirectorName);
+				if (RedirectorEffectState != None)
+				{
+					Redirection = EmptyRedirection;
+					Redirection.OriginalTargetRef = kOriginalTarget.GetReference();
+					OverrideRedirectResult = 'AA_Success';        //  assume the redirected effect will apply normally
+					if (RedirectorEffectState.GetX2Effect().EffectShouldRedirect(AbilityContext, kSourceAbility, RedirectorEffectState, Effects[EffectIndex], SourceUnit, UnitState, Redirection.RedirectedToTargetRef, Redirection.RedirectReason, OverrideRedirectResult))
+					{
+						RedirectUnit = XComGameState_Unit(NewGameState.GetGameStateForObjectID(Redirection.RedirectedToTargetRef.ObjectID));
+						if (RedirectUnit == None)
+						{
+							RedirectUnit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(Redirection.RedirectedToTargetRef.ObjectID));
+							if (RedirectUnit == None)
+							{
+								`RedScreen("Attempted effect redirection wanted to redirect to unit ID" @ Redirection.RedirectedToTargetRef.ObjectID @ "but no such unit was found. @gameplay @jbouscher");
+								break;
+							}
+							RedirectUnit = XComGameState_Unit(NewGameState.CreateStateObject(RedirectUnit.Class, RedirectUnit.ObjectID));
+							NewGameState.AddStateObject(RedirectUnit);
+						}
+						bRedirected = true;
+						break;
+					}
+				}
+			}
+			
+			if (bRedirected)
+			{
+				EffectResults.ApplyResults.AddItem(Redirection.RedirectReason);
+				
+				RedirectData = ApplyData;
+				RedirectData.TargetStateObjectRef = Redirection.RedirectedToTargetRef;
+				Redirection.RedirectResults.Effects.AddItem(Effects[EffectIndex]);
+				Redirection.RedirectResults.TemplateRefs.AddItem(ApplyData.EffectRef);
+				if (OverrideRedirectResult == 'AA_Success')
+					Redirection.RedirectResults.ApplyResults.AddItem(Effects[EffectIndex].ApplyEffect(RedirectData, RedirectUnit, NewGameState));
+				else
+					Redirection.RedirectResults.ApplyResults.AddItem(OverrideRedirectResult);
+				AbilityContext.ResultContext.EffectRedirects.AddItem(Redirection);
+			}
+			else
+			{				
+				EffectResults.ApplyResults.AddItem(Effects[EffectIndex].ApplyEffect(ApplyData, kNewTargetState, NewGameState));
+			}
 		}
 		else
 		{
@@ -719,7 +768,7 @@ function TypicalAbility_BuildVisualization(XComGameState VisualizeGameState, out
 
 	local X2Action_ExitCover ExitCoverAction;
 	local X2Action_Delay MoveDelay;
-		
+			
 	History = `XCOMHISTORY;
 	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
 	AbilityContext = Context.InputContext;
@@ -783,7 +832,7 @@ function TypicalAbility_BuildVisualization(XComGameState VisualizeGameState, out
 		SoundAndFlyOver.SetSoundAndFlyOverParameters(None, "", AbilityTemplate.SourceHitSpeech, eColor_Good);
 	}
 
-	if (!AbilityTemplate.bSkipFireAction)
+	if( !AbilityTemplate.bSkipFireAction || Context.InputContext.MovementPaths.Length > 0 )
 	{
 		ExitCoverAction = X2Action_ExitCover(class'X2Action_ExitCover'.static.AddToVisualizationTrack(SourceTrack, Context));
 		ExitCoverAction.bSkipExitCoverVisualization = AbilityTemplate.bSkipExitCoverWhenFiring;
@@ -879,8 +928,11 @@ function TypicalAbility_BuildVisualization(XComGameState VisualizeGameState, out
 				}
 			}
 
-			// add our fire action
-			AddedAction = AbilityTemplate.ActionFireClass.static.AddToVisualizationTrack(SourceTrack, Context);
+			if( !AbilityTemplate.bSkipFireAction )
+			{
+				// add our fire action
+				AddedAction = AbilityTemplate.ActionFireClass.static.AddToVisualizationTrack(SourceTrack, Context);
+			}
 			
 			if (!bInterruptPath)
 			{
@@ -910,49 +962,52 @@ function TypicalAbility_BuildVisualization(XComGameState VisualizeGameState, out
 				InterruptMsg.SendTrackMessageToRef = InterruptContext.InputContext.SourceObject;
 			}
 		}
-		else
+		else if( !AbilityTemplate.bSkipFireAction )
 		{
 			// no move, just add the fire action
 			AddedAction = AbilityTemplate.ActionFireClass.static.AddToVisualizationTrack(SourceTrack, Context);
 		}
 
-		if( AbilityTemplate.AbilityToHitCalc != None )
+		if( !AbilityTemplate.bSkipFireAction )
 		{
-			X2Action_Fire(AddedAction).SetFireParameters( Context.IsResultContextHit() );
-		}
-
-		//Process a potential counter attack from the target here
-		if (Context.ResultContext.HitResult == eHit_CounterAttack)
-		{
-			CounterAttackContext = class'X2Ability'.static.FindCounterAttackGameState(Context, XComGameState_Unit(SourceTrack.StateObject_OldState));
-			if (CounterAttackContext != none)
+			if( AbilityTemplate.AbilityToHitCalc != None )
 			{
-				//Entering this code block means that we were the target of a counter attack to our original attack. Here, we look forward in the history
-				//and append the necessary visualization tracks so that the counter attack can happen visually as part of our original attack.
+				X2Action_Fire(AddedAction).SetFireParameters(Context.IsResultContextHit());
+			}
 
-				//Get the ability template for the counter attack against us
-				CounterattackTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(CounterAttackContext.InputContext.AbilityTemplateName);
-				CounterattackTemplate.BuildVisualizationFn(CounterAttackContext.AssociatedState, OutCounterattackVisualizationTracks);
-
-				//Take the visualization actions from the counter attack game state ( where we are the target )
-				for(TrackIndex = 0; TrackIndex < OutCounterattackVisualizationTracks.Length; ++TrackIndex)
+			//Process a potential counter attack from the target here
+			if( Context.ResultContext.HitResult == eHit_CounterAttack )
+			{
+				CounterAttackContext = class'X2Ability'.static.FindCounterAttackGameState(Context, XComGameState_Unit(SourceTrack.StateObject_OldState));
+				if( CounterAttackContext != none )
 				{
-					if(OutCounterattackVisualizationTracks[TrackIndex].StateObject_OldState.ObjectID == SourceTrack.StateObject_OldState.ObjectID)
+					//Entering this code block means that we were the target of a counter attack to our original attack. Here, we look forward in the history
+					//and append the necessary visualization tracks so that the counter attack can happen visually as part of our original attack.
+
+					//Get the ability template for the counter attack against us
+					CounterattackTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(CounterAttackContext.InputContext.AbilityTemplateName);
+					CounterattackTemplate.BuildVisualizationFn(CounterAttackContext.AssociatedState, OutCounterattackVisualizationTracks);
+
+					//Take the visualization actions from the counter attack game state ( where we are the target )
+					for( TrackIndex = 0; TrackIndex < OutCounterattackVisualizationTracks.Length; ++TrackIndex )
 					{
-						for(ActionIndex = 0; ActionIndex < OutCounterattackVisualizationTracks[TrackIndex].TrackActions.Length; ++ActionIndex)
+						if( OutCounterattackVisualizationTracks[TrackIndex].StateObject_OldState.ObjectID == SourceTrack.StateObject_OldState.ObjectID )
 						{
-							//Don't include waits
-							if(!OutCounterattackVisualizationTracks[TrackIndex].TrackActions[ActionIndex].IsA('X2Action_WaitForAbilityEffect'))
+							for( ActionIndex = 0; ActionIndex < OutCounterattackVisualizationTracks[TrackIndex].TrackActions.Length; ++ActionIndex )
 							{
-								SourceTrack.TrackActions.AddItem(OutCounterattackVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+								//Don't include waits
+								if( !OutCounterattackVisualizationTracks[TrackIndex].TrackActions[ActionIndex].IsA('X2Action_WaitForAbilityEffect') )
+								{
+									SourceTrack.TrackActions.AddItem(OutCounterattackVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+								}
 							}
+							break;
 						}
-						break;
 					}
+
+					//Notify the visualization mgr that the counter attack visualization is taken care of, so it can be skipped
+					`XCOMVISUALIZATIONMGR.SkipVisualization(CounterAttackContext.AssociatedState.HistoryIndex);
 				}
-				
-				//Notify the visualization mgr that the counter attack visualization is taken care of, so it can be skipped
-				`XCOMVISUALIZATIONMGR.SkipVisualization(CounterAttackContext.AssociatedState.HistoryIndex);
 			}
 		}
 	}
@@ -1167,7 +1222,7 @@ function TypicalAbility_BuildVisualization(XComGameState VisualizeGameState, out
 				{
 					//If TargetStateObject is none, it means that the visualize game state does not contain an entry for the primary target. Use the history version
 					//and show no change.
-					BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.PrimaryTarget.ObjectID);
+					BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.MultiTargets[TargetIndex].ObjectID);
 					BuildTrack.StateObject_NewState = BuildTrack.StateObject_OldState;
 				}
 
@@ -1242,9 +1297,13 @@ function TypicalAbility_BuildVisualization(XComGameState VisualizeGameState, out
 		{
 			class'X2Action_EnterCover'.static.AddToVisualizationTrack(SourceTrack, Context);
 		}
-	}
-	
+	}	
+
 	OutVisualizationTracks.AddItem(SourceTrack);
+
+	//  Handle redirect visualization
+	TypicalAbility_AddEffectRedirects(VisualizeGameState, OutVisualizationTracks, SourceTrack);
+
 	//****************************************************************************************
 
 	//Configure the visualization tracks for the environment
@@ -1326,6 +1385,131 @@ function TypicalAbility_BuildVisualization(XComGameState VisualizeGameState, out
 			class'X2Action_BreakInteractActor'.static.AddToVisualizationTrack(BuildTrack, Context);
 
 			OutVisualizationTracks.AddItem(BuildTrack);
+		}
+	}
+}
+
+function TypicalAbility_AddEffectRedirects(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks, out VisualizationTrack SourceTrack)
+{
+	local XComGameStateHistory History;
+	local XComGameStateContext_Ability Context;
+	local Actor                     TargetVisualizer;
+	local X2VisualizerInterface     TargetVisualizerInterface;
+	local VisualizationTrack    BuildTrack, EmptyTrack;
+	local XComGameState_BaseObject  TargetStateObject;
+	local X2Action_PlaySoundAndFlyOver SoundAndFlyover;
+	local name ApplyResult;
+	local X2AbilityTemplate AbilityTemplate;
+	local int RedirectIndex, TrackIndex, EffectIndex;
+	local array<int> RedirectTargets;
+	local string RedirectText;
+
+	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+	if (Context.ResultContext.EffectRedirects.Length == 0)
+		return;
+
+	History = `XCOMHISTORY;
+	AbilityTemplate = class'XComGameState_Ability'.static.GetMyTemplateManager().FindAbilityTemplate(Context.InputContext.AbilityTemplateName);
+
+    for (RedirectIndex = 0; RedirectIndex < Context.ResultContext.EffectRedirects.Length; ++RedirectIndex)
+	{
+		//  Look for an existing track for the redirect target
+		for (TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex)
+		{
+			if (OutVisualizationTracks[TrackIndex].StateObject_OldState.ObjectID == Context.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef.ObjectID)
+			{
+				BuildTrack = OutVisualizationTracks[TrackIndex];
+				break;
+			}
+		}
+		if (TrackIndex == OutVisualizationTracks.Length)
+		{
+			//  need to make a new track
+			BuildTrack = EmptyTrack;
+			TargetVisualizer = History.GetVisualizer(Context.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef.ObjectID);
+			TargetVisualizerInterface = X2VisualizerInterface(TargetVisualizer);
+			BuildTrack.TrackActor = TargetVisualizer;
+			TargetStateObject = VisualizeGameState.GetGameStateForObjectID(Context.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef.ObjectID);
+			if( TargetStateObject != none )
+			{
+				History.GetCurrentAndPreviousGameStatesForObjectID(Context.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef.ObjectID, 
+																	BuildTrack.StateObject_OldState, BuildTrack.StateObject_NewState,
+																	eReturnType_Reference,
+																	VisualizeGameState.HistoryIndex);
+				`assert(BuildTrack.StateObject_NewState == TargetStateObject);
+			}			
+			else
+			{
+				//If TargetStateObject is none, it means that the visualize game state does not contain an entry for the primary target. Use the history version
+				//and show no change.
+				BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(Context.ResultContext.EffectRedirects[RedirectIndex].RedirectedToTargetRef.ObjectID);
+				BuildTrack.StateObject_NewState = BuildTrack.StateObject_OldState;
+			}
+		}
+
+		//Make the target wait until signaled by the shooter that the projectiles are hitting
+		if (!AbilityTemplate.bSkipFireAction)
+		{
+			X2Action_WaitForAbilityEffect(class'X2Action_WaitForAbilityEffect'.static.AddToVisualizationTrack(BuildTrack, Context));
+		}
+
+		//  add the redirect effects
+		for (EffectIndex = 0; EffectIndex < Context.ResultContext.EffectRedirects[RedirectIndex].RedirectResults.Effects.Length; ++EffectIndex)
+		{
+			ApplyResult = Context.ResultContext.EffectRedirects[RedirectIndex].RedirectResults.ApplyResults[EffectIndex];
+
+			// Target effect visualization
+			Context.ResultContext.EffectRedirects[RedirectIndex].RedirectResults.Effects[EffectIndex].AddX2ActionsForVisualization(VisualizeGameState, BuildTrack, ApplyResult);
+
+			// Source effect visualization
+			Context.ResultContext.EffectRedirects[RedirectIndex].RedirectResults.Effects[EffectIndex].AddX2ActionsForVisualizationSource(VisualizeGameState, SourceTrack, ApplyResult);
+		}
+
+		//  Do other typical visualization if this track wasn't created before
+		if (TrackIndex == OutVisualizationTracks.Length)
+		{
+			//the following is used to handle Rupture flyover text
+			if (XComGameState_Unit(BuildTrack.StateObject_OldState).GetRupturedValue() == 0 &&
+				XComGameState_Unit(BuildTrack.StateObject_NewState).GetRupturedValue() > 0)
+			{
+				//this is the frame that we realized we've been ruptured!
+				class 'X2StatusEffects'.static.RuptureVisualization(VisualizeGameState, BuildTrack);
+			}
+
+			if( TargetVisualizerInterface != none )
+			{
+				//Allow the visualizer to do any custom processing based on the new game state. For example, units will create a death action when they reach 0 HP.
+				TargetVisualizerInterface.BuildAbilityEffectsVisualization(VisualizeGameState, BuildTrack);
+			}
+
+			OutVisualizationTracks.AddItem(BuildTrack);
+		}
+		else
+		{
+			//  update the track in the array
+			OutVisualizationTracks[TrackIndex] = BuildTrack;
+		}
+
+		//  only visualize a flyover once for any given target
+		if (RedirectTargets.Find(Context.ResultContext.EffectRedirects[RedirectIndex].OriginalTargetRef.ObjectID) != INDEX_NONE)
+			continue;
+		RedirectTargets.AddItem(Context.ResultContext.EffectRedirects[RedirectIndex].OriginalTargetRef.ObjectID);
+
+		//  Look for an existing track for the original target - this should be guaranteed to exist
+		RedirectText = class'X2AbilityTemplateManager'.static.GetDisplayStringForAvailabilityCode(Context.ResultContext.EffectRedirects[RedirectIndex].RedirectReason);
+		if (RedirectText != "")
+		{
+			for (TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex)
+			{
+				if (OutVisualizationTracks[TrackIndex].StateObject_OldState.ObjectID == Context.ResultContext.EffectRedirects[RedirectIndex].OriginalTargetRef.ObjectID)
+				{
+					BuildTrack = OutVisualizationTracks[TrackIndex];
+					SoundAndFlyover = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, Context));
+					SoundAndFlyover.SetSoundAndFlyOverParameters(none, RedirectText, '', eColor_Good);
+					OutVisualizationTracks[TrackIndex] = BuildTrack;
+					break;
+				}
+			}
 		}
 	}
 }
@@ -1535,6 +1719,14 @@ DefaultProperties
 		FailOnNonUnits=true
 	End Object
 	LivingTargetUnitOnlyProperty = DefaultLivingTargetUnitOnlyProperty;
+
+	Begin Object Class=X2Condition_UnitProperty Name=DefaultLivingTargetOnlyProperty
+		ExcludeAlive=false
+		ExcludeDead=true
+		ExcludeFriendlyToSource=false
+		ExcludeHostileToSource=false
+	End Object
+	LivingTargetOnlyProperty = DefaultLivingTargetOnlyProperty;
 
 	Begin Object Class=X2AbilityTrigger_PlayerInput Name=DefaultPlayerInputTrigger
 	End Object

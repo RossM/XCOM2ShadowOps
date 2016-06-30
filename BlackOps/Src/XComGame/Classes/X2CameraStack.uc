@@ -534,7 +534,7 @@ private function CleanupCameraAnims()
 	{
 		if(CameraAnims[Index].PendingCleanup)
 		{
-			Cam.StopCameraAnim(CameraAnims[CameraAnims.Length - 1].AnimInstance, true);
+			Cam.StopCameraAnim(CameraAnims[Index].AnimInstance, true);
 			CameraAnims.Remove(Index, 1);
 		}
 	}

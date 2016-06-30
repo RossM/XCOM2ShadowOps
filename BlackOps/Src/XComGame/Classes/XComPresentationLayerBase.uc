@@ -1717,7 +1717,7 @@ simulated function UIRedScreen()
 		m_RedScreen = Spawn(class'UIRedScreen', self);
 
 	//Can't fire up RedScreens before the UI is ready, else they are sucked in to the ether. 
-	if( !m_bPresLayerReady )
+	if( !IsPresentationLayerReady() )
 	{
 		if( !IsTimerActive('UIRedScreen') )
 			SetTimer(0.1, true, 'UIRedScreen');
@@ -2326,6 +2326,14 @@ simulated function ClickPathUnderMouse( optional bool bDebugLogs = false )
 simulated function ClickPathUnderMouse3D( optional bool bDebugLogs = false )
 {
 	Get3DMovie().ClickPathUnderMouse(bDebugLogs);
+}
+
+simulated function bool IsPresentationLayerReady()
+{
+	local X2GameRuleset Ruleset;
+	Ruleset = `GAMERULES;
+
+	return m_bPresLayerReady && (Ruleset != None && !Ruleset.bProcessingLoad);
 }
 
 DefaultProperties

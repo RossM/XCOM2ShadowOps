@@ -7,6 +7,7 @@
 class XComAnimNotify_PlayAdditiveAnim extends AnimNotify
 	native(Animation);
 
+// Jwats: If we are allowed to change content I need to update this to work correctly with additives
 var() bool Enable;
 var() Name AnimName;
 var() float BlendTime;

@@ -129,7 +129,7 @@ function bool PointsToLocation()
 	return !PointsToUnit();
 }
 
-function string ToString()
+function string ToString(optional bool bAllFields)
 {
 	return "Indicator Arrows";
 }

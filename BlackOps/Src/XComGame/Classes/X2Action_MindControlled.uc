@@ -4,6 +4,7 @@ var XGUnit          ControlledUnit;
 var XComUnitPawn    ControlledPawn;
 var name            MindControlledAnim;
 var CustomAnimParams            Params;
+var bool bForceAllowNewAnimations;
 
 function Init(const out VisualizationTrack InTrack)
 {
@@ -37,6 +38,12 @@ Begin:
 			Sleep(0.0f);
 		}
 		Params.AnimName = MindControlledAnim;
+
+		if(bForceAllowNewAnimations)
+		{
+			ControlledPawn.GetAnimTreeController().SetAllowNewAnimations(true);
+		}
+		
 		FinishAnim(ControlledPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(Params));
 	}
 

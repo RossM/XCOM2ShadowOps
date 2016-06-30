@@ -11,6 +11,8 @@ class X2AbilityTemplateManager extends X2DataTemplateManager
 var const config array<name> AbilityAvailabilityCodes;          //  values passed in code to determine why something is failing.
 var localized array<string>  AbilityAvailabilityStrings;        //  user facing strings to describe the above codes. assumes the arrays line up exactly.
 var const config array<name> EffectUpdatesOnMove;               //  names of effects to be updated on each tile change while a unit is moving.
+var const config array<name> AffectingEffectRedirectors;        //  names of effects affecting a unit that could trigger an effect redirect.
+var const config array<name> EffectsForProjectileVolleys;       //  names of effects that want to add projectiles conditionally to a volley.
 
 var protected array<name> StandardMoveAbilityActionTypes;
 

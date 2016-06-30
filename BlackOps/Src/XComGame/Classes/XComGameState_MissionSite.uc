@@ -40,6 +40,7 @@ var String m_strShadowCrew;
 var int ManualDifficultySetting;
 var bool bUsePartialSuccessText;
 var bool bHasSeenSkipPopup;
+var bool bHasSeenLaunchMissionWarning;
 
 // Doom Related variables
 var() int Doom;
@@ -431,7 +432,13 @@ function SetMissionData(X2RewardTemplate MissionReward, bool bUseSpecifiedLevelS
 
 	// do a weighted selection of our plot
 	GeneratedMission.Plot = SelectPlotDefinition(GeneratedMission.Mission, Biome);
-	GeneratedMission.Biome = ParcelMgr.GetBiomeDefinition(Biome);
+
+	// the plot we find should either have no defined biomes, or the requested biome type
+	`assert( (GeneratedMission.Plot.ValidBiomes.Length == 0) || (GeneratedMission.Plot.ValidBiomes.Find( Biome ) != -1) );
+	if (GeneratedMission.Plot.ValidBiomes.Length > 0)
+	{
+		GeneratedMission.Biome = ParcelMgr.GetBiomeDefinition(Biome);
+	}
 
 	if(GetMissionSource().BattleOpName != "")
 	{
@@ -1121,6 +1128,7 @@ function SquadSelectionCompleted()
 function SquadSelectionCancelled()
 {
 	ClearIntelOptions();
+	ResetLaunchMissionWarning();
 	InteractionComplete(true); // RTB after backing out of squad selection
 }
 
@@ -1175,7 +1183,7 @@ simulated function ClearIntelOptions()
 	local MissionIntelOption IntelOption;
 
 	History = `XCOMHISTORY;
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Buy Mission Intel Options");
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Clear Mission Intel Options");
 	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 	XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 	NewGameState.AddStateObject(XComHQ);
@@ -1188,10 +1196,26 @@ simulated function ClearIntelOptions()
 	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 }
 
+simulated function ResetLaunchMissionWarning()
+{
+	local XComGameState NewGameState;
+	local XComGameState_MissionSite MissionState;
+	
+	if (bHasSeenLaunchMissionWarning)
+	{
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Reset Launch Mission Warning");
+		MissionState = XComGameState_MissionSite(NewGameState.CreateStateObject(class'XComGameState_MissionSite', ObjectID));
+		NewGameState.AddStateObject(MissionState);
+		MissionState.bHasSeenLaunchMissionWarning = false;
+		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	}	
+}
+
 function CancelMission()
 {
 	ClearIntelOptions();
 	ResumePsiOperativeTraining();
+	ResetLaunchMissionWarning();
 
 	`XSTRATEGYSOUNDMGR.PlayGeoscapeMusic();
 	InteractionComplete(true);

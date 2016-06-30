@@ -38,12 +38,22 @@ static function array<X2DataTemplate> CreateTemplates()
 static function X2AbilityTemplate CreateUseElevatorAbility()
 {
 	local X2AbilityTemplate Template;
+	local X2Condition ShooterCondition;
 
 	Template = class'X2Ability_DefaultAbilitySet'.static.AddInteractAbility('Interact_UseElevator');
 	Template.RemoveTemplateAvailablility(Template.BITFIELD_GAMEAREA_Multiplayer);
 
 	// No cost, allows it to be used anytime, even at end of turn if available
 	Template.AbilityCosts.Length = 0;
+
+	// You can use the elevator even if you are carrying somebody
+	foreach Template.AbilityShooterConditions(ShooterCondition)
+	{
+		if(X2Condition_UnitEffects(ShooterCondition) != none)
+		{
+			X2Condition_UnitEffects(ShooterCondition).RemoveExcludeEffect(class'X2Ability_CarryUnit'.default.CarryUnitEffectName);
+		}
+	}
 
 	return Template;
 }

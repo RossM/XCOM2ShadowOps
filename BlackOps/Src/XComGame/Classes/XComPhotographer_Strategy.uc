@@ -7,7 +7,17 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
-class XComPhotographer_Strategy extends Actor;
+class XComPhotographer_Strategy extends Actor
+	config(GameCore);
+
+struct CameraDistanceMapping
+{
+	var name UnitTemplateName;
+	var float DistanceToCamera;
+};
+
+var config array<CameraDistanceMapping> UnitToCameraDistanceMapping;
+var config float DefaultDistanceToCamera;
 
 struct HeadshotRequestInfo
 {
@@ -16,6 +26,7 @@ struct HeadshotRequestInfo
 	var name CaptureTag;
 	var int Height;
 	var int Width;
+	var float DistanceFromCamera;
 };
 
 struct HeadshotRequest
@@ -81,11 +92,13 @@ function AddHeadshotRequest(const out StateObjectReference UnitRef, name LocTag,
 {
 	local HeadshotRequest NewRequest;
 	local XComGameState_Unit Unit;
+	local CameraDistanceMapping UnitMapping;
+
+	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
 
 	if (Personality == none)
 	{
-		Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
-		Personality = Unit.GetPersonalityTemplate();
+		Personality = Unit.GetPhotoboothPersonalityTemplate();
 	}
 
 	NewRequest.RequestInfo.UnitRef = UnitRef;
@@ -94,6 +107,17 @@ function AddHeadshotRequest(const out StateObjectReference UnitRef, name LocTag,
 	NewRequest.RequestInfo.Height = ImgHeight;
 	NewRequest.RequestInfo.Width = ImgWidth;
 	NewRequest.Personality = Personality;
+
+	NewRequest.RequestInfo.DistanceFromCamera = DefaultDistanceToCamera;
+	foreach UnitToCameraDistanceMapping(UnitMapping)
+	{
+		if (UnitMapping.UnitTemplateName == Unit.GetMyTemplateName())
+		{
+			NewRequest.RequestInfo.DistanceFromCamera = UnitMapping.DistanceToCamera;
+			break;
+		}
+	}
+
 	if (FinishedDelegate != none)
 	{
 		NewRequest.FinishedDelegates.AddItem(FinishedDelegate);
@@ -144,6 +168,7 @@ private function StartHeadshot()
 {
     local XComUnitPawn Pawn;
 	local HeadshotRequestInfo RequestInfo;
+	local name PictureTakingAnimationName;
 
 	`assert(PendingHeadshotRequests.Length > 0);
 
@@ -159,7 +184,16 @@ private function StartHeadshot()
 	    Pawn.GotoState('PortraitCapture');	
         ExecutingRequest.PicturePawn = Pawn;
 
-        StartHeadshotCapture();
+		PictureTakingAnimationName = ExecutingRequest.Personality.IdleAnimName;
+		if (!ExecutingRequest.PicturePawn.GetAnimTreeController().CanPlayAnimation(PictureTakingAnimationName))
+		{
+			//We couldn't play the personality anim specified, try pod idles, which aliens and civilians should have
+			PictureTakingAnimationName = 'POD_Idle';
+		}
+
+		ExecutingRequest.PicturePawn.PlayFullBodyAnimOnPawn(PictureTakingAnimationName, true);
+
+        SetTimer(0.25f, false, nameof(StartHeadshotCapture));
 
     }
     else
@@ -202,18 +236,9 @@ private function StartHeadshotCapture()
 	local TextureRenderTarget2D RenderTarget;
 	local SceneCapture2DComponent ActorSceneCapture;
 	local vector CapLocation;
-	local name PictureTakingAnimationName;
 
 	`assert(PendingHeadshotRequests.Length > 0);
 
-	PictureTakingAnimationName = ExecutingRequest.Personality.IdleAnimName;
-	if(!ExecutingRequest.PicturePawn.GetAnimTreeController().CanPlayAnimation(PictureTakingAnimationName))
-	{
-		//We couldn't play the personality anim specified, try pod idles, which aliens and civilians should have
-		PictureTakingAnimationName = 'POD_Idle';
-	}
-
-	ExecutingRequest.PicturePawn.PlayFullBodyAnimOnPawn(PictureTakingAnimationName, true);
 	RenderTarget = AcquireRenderTarget(ExecutingRequest.RequestInfo.Width, ExecutingRequest.RequestInfo.Height);
 
 	//Capture an image of the newly created pawn
@@ -222,7 +247,8 @@ private function StartHeadshotCapture()
 		if(CaptureActor.Tag == ExecutingRequest.RequestInfo.CaptureTag)
 		{
 			CapLocation = CaptureActor.Location;
-			CapLocation.Z = ExecutingRequest.PicturePawn.GetHeadLocation().Z;
+			CapLocation = ExecutingRequest.PicturePawn.GetHeadLocation();
+			CapLocation.Y = CapLocation.Y - ExecutingRequest.RequestInfo.DistanceFromCamera;
 
 			ActorSceneCapture = SceneCapture2DComponent(CaptureActor.SceneCapture);
 			`assert(ActorSceneCapture != none);
@@ -243,7 +269,7 @@ private function StartHeadshotCapture()
 			}
 
 			CaptureActor.SetLocation(CapLocation);
-			CaptureActor.CaptureByTag(ExecutingRequest.RequestInfo.CaptureTag, RenderTarget, OnSoldierHeadCaptureFinished, 4);
+			CaptureActor.CaptureByTag(ExecutingRequest.RequestInfo.CaptureTag, RenderTarget, OnSoldierHeadCaptureFinished, 0);
 		}
 	}
 }
@@ -312,14 +338,22 @@ private function XComUnitPawn CreateUnitPawn(name PawnPlacementActorTag, const o
 	if(!UnitStateObject.IsAlien())
 	{
 		PrevPawnType = UnitStateObject.kAppearance.nmPawn;
-		if(UnitStateObject.kAppearance.iGender == 1)
+
+		if (UnitStateObject.GetMyTemplate().GetPhotographerPawnNameFn != none)
 		{
-			UnitStateObject.kAppearance.nmPawn = 'XCom_Soldier_M';
+			UnitStateObject.kAppearance.nmPawn = UnitStateObject.GetMyTemplate().GetPhotographerPawnNameFn();
 		}
 		else
 		{
-			UnitStateObject.kAppearance.nmPawn = 'XCom_Soldier_F';
-		}		
+			if (UnitStateObject.kAppearance.iGender == 1)
+			{
+				UnitStateObject.kAppearance.nmPawn = 'XCom_Soldier_M';
+			}
+			else
+			{
+				UnitStateObject.kAppearance.nmPawn = 'XCom_Soldier_F';
+			}
+		}
 	}
 
     `log( "Requesting Unit Pawn Creation" $ UnitStateObject.ObjectID);

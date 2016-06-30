@@ -407,7 +407,45 @@ function BuildHavenETA(out int MinDays, out int MaxDays)
 //----------------   UPDATE   -----------------------------------------------------------------
 //#############################################################################################
 
+
+// THIS FUNCTION SHOULD RETURN TRUE IN ALL THE SAME CASES AS Update
+function bool ShouldUpdate( )
+{
+	local UIStrategyMap StrategyMap;
+	StrategyMap = `HQPRES.StrategyMap2D;
+
+	// Do not trigger anything while the Avenger or Skyranger are flying, or if another popup is already being presented
+	if (StrategyMap != none && StrategyMap.m_eUIState != eSMS_Flight && !`HQPRES.ScreenStack.IsCurrentClass( class'UIAlert' ))
+	{
+		if (bUpdateShortestPathsToMissions)
+		{
+			return true;
+		}
+
+		// check for end of temporary unlocked state
+		if (ResistanceLevel == eResLevel_Unlocked && bTemporarilyUnlocked && class'X2StrategyGameRulesetDataStructures'.static.LessThan( TempUnlockedEndTime, `STRATEGYRULES.GameTime ))
+		{
+			return true;
+		}
+
+		// Check if making contact is complete
+		if (bCanScanForContact && IsScanComplete( ))
+		{
+			return true;
+		}
+
+		// Check if building outpost is complete
+		if (bCanScanForOutpost && IsScanComplete( ))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 //---------------------------------------------------------------------------------------
+// IF ADDING NEW CASES WHERE bModified = true, UPDATE FUNCTION ShouldUpdate ABOVE
 function bool Update(XComGameState NewGameState)
 {
 	local UIStrategyMap StrategyMap;
@@ -1069,30 +1107,21 @@ function UpdateGameBoard()
 {
 	local XComGameState NewGameState;
 	local XComGameState_WorldRegion RegionState;
-	local XComGameStateHistory History;
 	//local XComGameState_HeadquartersXCom XComHQ;
 	local XComHeadquartersCheatManager CheatMgr;
+	local bool bSuccess;
 
-	History = `XCOMHISTORY;
-//	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
-
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Update Regions");
-
-	RegionState = XComGameState_WorldRegion(NewGameState.CreateStateObject(class'XComGameState_WorldRegion', ObjectID));
-	NewGameState.AddStateObject(RegionState);
-
-	if(!RegionState.Update(NewGameState))
+	if (ShouldUpdate())
 	{
-		NewGameState.PurgeGameStateForObjectID(RegionState.ObjectID);
-	}
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState( "Update Regions" );
 
-	if(NewGameState.GetNumGameStateObjects() > 0)
-	{
-		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-	}
-	else
-	{
-		History.CleanupPendingGameState(NewGameState);
+		RegionState = XComGameState_WorldRegion( NewGameState.CreateStateObject( class'XComGameState_WorldRegion', ObjectID ) );
+		NewGameState.AddStateObject( RegionState );
+
+		bSuccess = RegionState.Update(NewGameState);
+		`assert( bSuccess ); // why did Update & ShouldUpdate return different bools?
+
+		`XCOMGAME.GameRuleset.SubmitGameState( NewGameState );
 	}
 
 	if( bControlPopup )

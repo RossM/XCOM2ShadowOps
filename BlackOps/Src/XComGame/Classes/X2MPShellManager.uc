@@ -786,17 +786,17 @@ static function XComGameState_Unit CreateUnitLoadoutGameState(XComGameState_Unit
 
 	// Add Unit
 	NewGameState.AddStateObject(NewUnit);
-	UpdateUnit(FromUnit, NewUnit, FromGameState); //needs to be before adding to inventory or 2nd util item gets thrown out
+	UpdateUnit(FromUnit, NewUnit, NewGameState); //needs to be before adding to inventory or 2nd util item gets thrown out
 
-	// Add Inventory
-	CopyFullInventory(FromUnit, FromGameState, NewUnit, NewGameState);
+	// Copy Inventory Customization
+	CopyInventoryCustomization(FromUnit, FromGameState, NewUnit, NewGameState);
 
 	NewUnit.MPSquadLoadoutIndex = FromUnit.MPSquadLoadoutIndex;
 
 	return NewUnit;
 }
 
-static function UpdateUnit(XComGameState_Unit FromUnit, XComGameState_Unit NewUnit, XComGameState UseGameState)
+static function UpdateUnit(XComGameState_Unit FromUnit, XComGameState_Unit NewUnit, XComGameState NewGameState)
 {
 	local int Index, SoldierRank;
 	local name SoldierClassTemplateName;
@@ -805,6 +805,8 @@ static function UpdateUnit(XComGameState_Unit FromUnit, XComGameState_Unit NewUn
 
 	NewUnit.SetMPCharacterTemplate(FromUnit.GetMPCharacterTemplateName());
 	MPCharacterTemplate = NewUnit.GetMPCharacterTemplate();
+
+	`log("X2MPShellManager:UpdateUnit -" @ FromUnit.GetMPName(eNameType_FullNick) @ "-" @ FromUnit.GetMyTemplateName() @ "-" @ FromUnit.GetMPCharacterTemplateName() @ "-" @ ((MPCharacterTemplate.Loadout == '') ? "''" : string(MPCharacterTemplate.Loadout)),,'XCom_Online');
 
 	if (NewUnit.IsSoldier())
 	{
@@ -815,7 +817,7 @@ static function UpdateUnit(XComGameState_Unit FromUnit, XComGameState_Unit NewUn
 		SoldierRank = FromUnit.GetRank();
 		for(Index = 0; Index < SoldierRank; ++Index)
 		{
-			NewUnit.RankUpSoldier(UseGameState, SoldierClassTemplateName);
+			NewUnit.RankUpSoldier(NewGameState, SoldierClassTemplateName);
 		}
 
 		class'X2MPData_Common'.static.GiveSoldierAbilities(NewUnit, MPCharacterTemplate.Abilities);
@@ -832,10 +834,6 @@ static function UpdateUnit(XComGameState_Unit FromUnit, XComGameState_Unit NewUn
 			NewUnit.SetCurrentStat(eStat_PsiOffense, 95);
 		}
 
-		// TODO: Check that the inventory is correct. -ttalley
-		//NewUnit.ApplyInventoryLoadout(UseGameState, MPCharacterTemplate.Loadout);
-		//NewUnit.MPBaseLoadoutItems = NewUnit.InventoryItems;
-
 		// Make sure that the appearance is valid.
 		CharacterPoolMgr = CharacterPoolManager(`XENGINE.GetCharacterPoolManager());
 		CharacterPoolMgr.FixAppearanceOfInvalidAttributes(NewUnit.kAppearance);
@@ -845,11 +843,72 @@ static function UpdateUnit(XComGameState_Unit FromUnit, XComGameState_Unit NewUn
 		NewUnit.ClearSoldierClassTemplate();
 	}
 	
+	// Add default loadout items
+	NewUnit.ApplyInventoryLoadout(NewGameState, MPCharacterTemplate.Loadout);
+	NewUnit.MPBaseLoadoutItems = NewUnit.InventoryItems;
+
 	NewUnit.m_RecruitDate = FromUnit.m_RecruitDate;
 	NewUnit.SetCharacterName(FromUnit.GetFirstName(), FromUnit.GetLastName(), FromUnit.GetNickName());
 	NewUnit.SetBackground(FromUnit.GetBackground());
 	NewUnit.SetCountry(FromUnit.GetCountry());
 	NewUnit.UpdatePersonalityTemplate();
+}
+
+static function CopyInventoryCustomization(XComGameState_Unit FromUnit, XComGameState FromGameState, XComGameState_Unit NewUnit, XComGameState NewGameState)
+{
+	CopyCustomizationFromItems(eInvSlot_PrimaryWeapon, FromUnit, FromGameState, NewUnit, NewGameState);
+	CopyCustomizationFromItems(eInvSlot_SecondaryWeapon, FromUnit, FromGameState, NewUnit, NewGameState);
+	CopyCustomizationFromItems(eInvSlot_HeavyWeapon, FromUnit, FromGameState, NewUnit, NewGameState);
+	CopyCustomizationFromItems(eInvSlot_Armor, FromUnit, FromGameState, NewUnit, NewGameState);
+	CopyCustomizationFromItems(eInvSlot_Utility, FromUnit, FromGameState, NewUnit, NewGameState, true /*bCopyMissingItems*/);
+}
+
+static function CopyCustomizationFromItems(EInventorySlot ItemSlot, XComGameState_Unit FromUnit, XComGameState FromGameState, XComGameState_Unit NewUnit, XComGameState NewGameState, optional bool bCopyMissingItems=false)
+{
+	local array<XComGameState_Item> FromItems, NewItems;
+	local string FromString, NewString;
+	local int f;
+
+	f = 0;
+	if( ItemSlot == eInvSlot_Backpack || ItemSlot == eInvSlot_Utility || ItemSlot == eInvSlot_CombatSim )
+	{
+		FromItems = FromUnit.GetAllItemsInSlot(ItemSlot, FromGameState, true /*bExcludeHistory*/);
+		NewItems = NewUnit.GetAllItemsInSlot(ItemSlot, NewGameState, true /*bExcludeHistory*/);
+	}
+	else
+	{
+		FromItems.AddItem(FromUnit.GetItemInSlot(ItemSlot, FromGameState, true));
+		NewItems.AddItem(NewUnit.GetItemInSlot(ItemSlot, NewGameState, true));
+	}
+
+	for(f = 0; f < FromItems.Length; ++f )
+	{
+		FromString = ""; NewString = "";
+		FromString = "  FromItems["$f$"]:" @ ((FromItems[f] != None) ? FromItems[f].GetMyTemplate().GetItemFriendlyName() : "None");
+		if( f < NewItems.Length )
+		{
+			NewString = "  NewItems["$f$"]:" @ ((NewItems[f] != None) ? NewItems[f].GetMyTemplate().GetItemFriendlyName() : "None");
+		}
+		else if( bCopyMissingItems )
+		{
+			// Missing Item!
+			NewItems.AddItem(CopyItemToUnit(FromItems[f], NewUnit, NewGameState));
+			NewString = "  Adding - NewItems["$f$"]:" @ ((NewItems[f] != None) ? NewItems[f].GetMyTemplate().GetItemFriendlyName() : "None");
+		}
+		`log("X2MPShellManager:CopyCustomizationFromItems" @ `ShowEnum(EInventorySlot, ItemSlot, ItemSlot) @ FromString @ NewString,,'XCom_Online');
+		if( FromItems[f] != none )
+		{
+			if( (NewItems[f] != none) && (FromItems[f].GetMyTemplateName() == NewItems[f].GetMyTemplateName()) )
+			{
+				// Copy the appearance information
+				NewItems[f].WeaponAppearance = FromItems[f].WeaponAppearance;
+			}
+			else
+			{
+				`warn("X2MPShellManager:CopyCustomizationFromItems - Error copying: " @ FromString @ NewString);
+			}
+		}
+	}
 }
 
 static function CopyFullInventory(XComGameState_Unit FromUnit, XComGameState FromGameState, XComGameState_Unit NewUnit, XComGameState NewGameState)
@@ -864,11 +923,7 @@ static function CopyFullInventory(XComGameState_Unit FromUnit, XComGameState Fro
 static function CopyItemsToUnit(EInventorySlot ItemSlot, XComGameState_Unit FromUnit, XComGameState FromGameState, XComGameState_Unit NewUnit, XComGameState NewGameState)
 {
 	local array<XComGameState_Item> Items;
-	local XComGameState_Item NewItem, FromItem;
-	local X2EquipmentTemplate EquipmentTemplate;
-	local X2ItemTemplateManager ItemTemplateManager;
-
-	ItemTemplateManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	local XComGameState_Item FromItem;
 
 	if( ItemSlot == eInvSlot_Backpack || ItemSlot == eInvSlot_Utility || ItemSlot == eInvSlot_CombatSim )
 	{
@@ -880,6 +935,17 @@ static function CopyItemsToUnit(EInventorySlot ItemSlot, XComGameState_Unit From
 	}
 	foreach Items(FromItem)
 	{
+		CopyItemToUnit(FromItem, NewUnit, NewGameState);
+	}
+}
+
+static function XComGameState_Item CopyItemToUnit(XComGameState_Item FromItem, XComGameState_Unit NewUnit, XComGameState NewGameState)
+{
+	local X2ItemTemplateManager ItemTemplateManager;
+	local X2EquipmentTemplate EquipmentTemplate;
+	local XComGameState_Item NewItem;
+
+	ItemTemplateManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 		EquipmentTemplate = X2EquipmentTemplate(ItemTemplateManager.FindItemTemplate((FromItem == none) ? '' : FromItem.GetMyTemplateName()));
 
 		if(EquipmentTemplate != none)
@@ -889,7 +955,7 @@ static function CopyItemsToUnit(EInventorySlot ItemSlot, XComGameState_Unit From
 			NewUnit.AddItemToInventory(NewItem, EquipmentTemplate.InventorySlot, NewGameState);
 			NewGameState.AddStateObject(NewItem);
 		}
-	}
+	return NewItem;
 }
 
 

@@ -115,6 +115,11 @@ simulated function CreateVIPPawn(XComGameState_Unit Unit)
 	{
 		ActorPawn.CreateVisualInventoryAttachments(`HQPRES.GetUIPawnMgr(), Unit);
 	}
+
+	if(Unit.UseLargeArmoryScale())
+	{
+		ActorPawn.Mesh.SetScale(class'UIArmory'.default.LargeUnitScale);
+	}
 }
 
 simulated function Cleanup()

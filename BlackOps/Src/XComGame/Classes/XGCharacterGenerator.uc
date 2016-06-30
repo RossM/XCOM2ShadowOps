@@ -445,7 +445,8 @@ function TSoldier CreateTSoldier( optional name CharacterTemplateName, optional 
 		RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHaircut, "Hair", BodyPartFilter.FilterByGenderAndNonSpecializedCivilian);
 	}
 
-	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHead, "Head", BodyPartFilter.FilterByGenderAndRaceAndArmor);
+	BodyPartFilter.AddCharacterFilter(CharacterTemplate.DataName); // Make sure heads get filtered properly
+	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmHead, "Head", BodyPartFilter.FilterByGenderAndRaceAndCharacter);
 	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmEye, "Eyes", BodyPartFilter.FilterAny);
 	RandomizeSetBodyPart(PartTemplateManager, kSoldier.kAppearance.nmTeeth, "Teeth", BodyPartFilter.FilterAny);
 	
@@ -709,14 +710,12 @@ function name GetVoiceFromCountryAndGender(name CountryName, int iGender)
 	PartTemplateManager = class'X2BodyPartTemplateManager'.static.GetBodyPartTemplateManager();
 	PartTemplateManager.GetUberTemplates("Voice", AllVoiceTemplates);
 
-
 	// Filter Voice templates, selecting ones that match the determined language and given gender.
 	foreach AllVoiceTemplates(VoiceTemplate)
 	{
-		if (VoiceTemplate.Gender == iGender && VoiceTemplate.Language == nmLanguage)
+		if (VoiceTemplate.Gender == iGender && VoiceTemplate.Language == nmLanguage && !VoiceTemplate.SpecializedType)
 			FilteredVoiceTemplates.AddItem(VoiceTemplate);
 	}
-
 
 	// From the filtered list, select and return a random template.
 	if (FilteredVoiceTemplates.Length > 0)
@@ -730,7 +729,7 @@ function name GetVoiceFromCountryAndGender(name CountryName, int iGender)
 
 	BodyPartFilter = `XCOMGAME.SharedBodyPartFilter;
 	BodyPartFilter.Set(EGender(iGender), ECharacterRace(0), ''); //Just picking voice, only need gender
-	VoiceTemplate = PartTemplateManager.GetRandomUberTemplate("Voice", BodyPartFilter, BodyPartFilter.FilterByGenderAndNonSpecialized);
+	VoiceTemplate = PartTemplateManager.GetRandomUberTemplate("Voice", BodyPartFilter, BodyPartFilter.FilterByGenderAndCharacterAndNonSpecialized);
 
 	return VoiceTemplate.DataName;
 }

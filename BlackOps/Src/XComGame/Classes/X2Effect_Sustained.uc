@@ -142,4 +142,5 @@ defaultproperties
 	FragileAmount=0
 	bBringRemoveVisualizationForward=false
 	SustainedAbilityName=""
+	bCanBeRedirected=false
 }

@@ -25,11 +25,18 @@ Begin:
 		if (bResetWeaponsToDefaultSockets)
 			Unit.ResetWeaponsToDefaultSockets();
 
-		PlayingSequence = UnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(Params);
-
-		if (bFinishAnimationWait)
+		if (Params.Additive)
 		{
-			FinishAnim(PlayingSequence);
+			UnitPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(Params);
+		}
+		else
+		{
+			PlayingSequence = UnitPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(Params);
+
+			if (bFinishAnimationWait)
+			{
+				FinishAnim(PlayingSequence);
+			}
 		}
 	}
 	else

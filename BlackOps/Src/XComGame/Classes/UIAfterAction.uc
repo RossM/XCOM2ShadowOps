@@ -59,7 +59,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 	listX = Clamp((Movie.UI_RES_X / 2) - (listWidth / 2), 100, Movie.UI_RES_X / 2);
 
 	m_kSlotList = Spawn(class'UIList', self);
-	m_kSlotList.InitList('', listX, -360, Movie.UI_RES_X, 310, true).AnchorBottomLeft();
+	m_kSlotList.InitList('', listX, -390, Movie.UI_RES_X, 310, true).AnchorBottomLeft();
 	m_kSlotList.itemPadding = listItemPadding;
 
 	UpdateData();
@@ -81,12 +81,16 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 function StartPostMissionCinematic()
 {
 	local int PawnIndex;
+	local int SlotIndex;
 	local XComLevelActor AvengerSunShade;	
 	local SkeletalMeshActor CineDummy;
 	local SkeletalMeshActor IterateActor;	
 	local XComGameState_MissionSite MissionState;
+	local XComGameState_Unit UnitState;
 	local XComGameStateHistory History;
 		
+	History = `XCOMHISTORY;
+
 	`GAME.GetGeoscape().m_kBase.SetAvengerCapVisibility(true);
 	`GAME.GetGeoscape().m_kBase.SetPostMissionSequenceVisibility(true);
 
@@ -120,18 +124,25 @@ function StartPostMissionCinematic()
 	
 	//Link the cinematic pawns to the matinee
 	WorldInfo.MyKismetVariableMgr.RebuildVariableMap();
+	SlotIndex = 1;
 	for(PawnIndex = 0; PawnIndex < XComHQ.Squad.Length; ++PawnIndex)
 	{
 		if(XComHQ.Squad[PawnIndex].ObjectID > 0)
 		{
 			if(UnitPawnsCinematic[PawnIndex] != none)
 			{
+				UnitState = XComGameState_Unit(History.GetGameStateForObjectID(XComHQ.Squad[PawnIndex].ObjectID));
 				UnitPawnsCinematic[PawnIndex].Mesh.bUpdateSkelWhenNotRendered = true;
 				UnitPawnsCinematic[PawnIndex].SetBase(CineDummy);				
 				UnitPawnsCinematic[PawnIndex].SetupForMatinee(, true);
-				SetPawnVariable(UnitPawnsCinematic[PawnIndex], string(PawnIndex+1));
+				if(SetPawnVariable(UnitPawnsCinematic[PawnIndex], UnitState, SlotIndex))
+				{
+					// only increment if we could fill the slot. We want to fill as many of the "important"
+					// matinee slots as possible
+					SlotIndex++; 
 			}
 		}
+	}	
 	}	
 
 	WorldInfo.MyLocalEnvMapManager.SetEnableCaptures(true);
@@ -140,7 +151,6 @@ function StartPostMissionCinematic()
 
 	WorldInfo.RemoteEventListeners.AddItem(self);
 
-	History = `XCOMHISTORY;	
 	MissionState = XComGameState_MissionSite(History.GetGameStateForObjectID(XComHQ.MissionRef.ObjectID));
 
 	if(!MissionState.GetMissionSource().bRequiresSkyrangerTravel)
@@ -155,14 +165,20 @@ function StartPostMissionCinematic()
 	`HQPRES.HideLoadingScreen();
 }
 
-function SetPawnVariable(XComUnitPawn UnitPawn, string IndexStr)
+function bool SetPawnVariable(XComUnitPawn UnitPawn, XComGameState_Unit UnitState, int SlotIndex)
 {
 	local array<SequenceVariable> OutVariables;
 	local SequenceVariable SeqVar;
 	local SeqVar_Object SeqVarPawn;
 	local string VariableName;
 
-	VariableName = "Soldier"$IndexStr;
+	if(UnitPawn == none || UnitState == none)
+	{
+		return false;
+	}
+
+	// matinee slot names match the one's used for the loading screens
+	VariableName = UnitState.GetMyTemplate().strLoadingMatineeSlotPrefix $ SlotIndex;
 	WorldInfo.MyKismetVariableMgr.GetVariable(name(VariableName), OutVariables);
 	foreach OutVariables(SeqVar)
 	{
@@ -170,8 +186,13 @@ function SetPawnVariable(XComUnitPawn UnitPawn, string IndexStr)
 		if(SeqVarPawn != none)
 		{
 			SeqVarPawn.SetObjectValue(UnitPawn);
+			return true;
 		}
 	}
+
+	// if we couldn't find a place for the pawn, just hide it
+	UnitPawn.SetVisible(false);
+	return false;
 }
 
 event OnRemoteEvent(name RemoteEventName)

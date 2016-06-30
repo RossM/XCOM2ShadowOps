@@ -8,6 +8,9 @@
 class X2AbilityToHitCalc_PercentChance extends X2AbilityToHitCalc;
 
 var int PercentToHit;
+var bool bNoGameStateOnMiss;
+
+function bool NoGameStateOnMiss() { return bNoGameStateOnMiss; }
 
 function RollForAbilityHit(XComGameState_Ability kAbility, AvailableTarget kTarget, out AbilityResultContext ResultContext)
 {

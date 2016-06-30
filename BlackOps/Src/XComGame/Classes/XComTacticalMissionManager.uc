@@ -69,6 +69,12 @@ struct native ProxyRewardUnitTemplateMapping
 	var name ProxyTemplate;
 };
 
+struct native AdditionalMissionIntroPackageMapping
+{
+	var string OriginalIntroMatineePackage; // original matinee package in the MissionIntroDefinition structure for a mission
+	var string AdditionalIntroMatineePackage; // additional matinee package to load when OriginalIntroMatineePackage is loaded
+};
+
 // config information
 var const config private array<ProxyRewardUnitTemplateMapping> ProxyRewardUnitMappings;
 var const config array<string> arrTMissionTypes;
@@ -82,6 +88,7 @@ var const config array<ObjectiveSpawnInfo> arrObjectiveSpawnInfo;
 var const config array<PlotLootDefinition> arrPlotLootDefinitions;
 var const config array<string> VIPMissionFamilies;
 var const config MissionIntroDefinition DefaultMissionIntroDefinition;
+var const config array<AdditionalMissionIntroPackageMapping> AdditionalMissionIntroPackages; // for modding, allows packages with intros for new character types to be loaded
 
 //Used to allow mods to alias themselves to an existing mission type ( baked into shipping maps )
 struct native MissionTypeAliasEntry
@@ -106,6 +113,7 @@ var private bool HasCachedCards; // Allows us to only cache the deck cards once 
 var private transient Name LastSelectedRewardName;
 var private transient bool BuildingChallengeMission;
 
+var config array<Name> CharactersExcludedFromEvacZoneCounts;
 
 private function CacheMissionManagerCards()
 {
@@ -808,6 +816,8 @@ private function XComGameState_Unit CreatePawnCommon(XComGameState NewGameState,
 	local XComGameStateHistory History;
 	local XComAISpawnManager SpawnManager;
 	local StateObjectReference NewUnitRef;
+	local X2CharacterTemplate CharacterTemplate;
+	local X2CharacterTemplate ProxyTemplate;
 	local XComGameState_Unit Unit;
 	local XComGameState_BattleData BattleData;
 	local ObjectiveSpawnInfo SpawnInfo;
@@ -827,8 +837,17 @@ private function XComGameState_Unit CreatePawnCommon(XComGameState NewGameState,
 		SpawnManager = `SPAWNMGR;
 		
 		SpawnInfo = GetObjectiveSpawnInfoByType(ActiveMission.sType);
+		
+		// use the same proxy discovery logic that strategy does
+		CharacterTemplate = class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager().FindCharacterTemplate(SpawnInfo.DefaultVIPTemplate);
+		ProxyTemplate = GetProxyTemplateFromOriginalTemplate(CharacterTemplate);
+		if(ProxyTemplate != none)
+		{
+			CharacterTemplate = ProxyTemplate;
+		}
+
 		NewUnitRef = SpawnManager.CreateUnit(SpawnLocation, 
-											 SpawnInfo.DefaultVIPTemplate != '' ? SpawnInfo.DefaultVIPTemplate : 'Civilian', 
+											 CharacterTemplate != none ? CharacterTemplate.DataName : 'Civilian', 
 											 eTeam_Neutral, 
 											 History.GetStartState() != none);
 

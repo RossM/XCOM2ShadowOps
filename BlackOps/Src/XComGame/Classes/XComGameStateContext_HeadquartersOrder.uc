@@ -208,7 +208,7 @@ private function BuildNewUnit(XComGameState AddToGameState, name UseTemplate)
 	local X2ItemTemplateManager ItemTemplateManager;
 	local X2SoldierClassTemplateManager SoldierClassTemplateManager;
 	local array<name> aTemplateNames;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 
 	History = `XCOMHISTORY;
@@ -274,9 +274,9 @@ private function BuildNewUnit(XComGameState AddToGameState, name UseTemplate)
 
 	if(XComHQ != none)
 	{
-		NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+		XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 		XComHQ.AddToCrew(AddToGameState, NewUnitState);
-		AddToGameState.AddStateObject(NewXComHQ);
+		AddToGameState.AddStateObject(XComHQ);
 	}
 }
 
@@ -341,7 +341,7 @@ private function FireUnit(XComGameState AddToGameState, StateObjectReference Uni
 private function CompleteResearch(XComGameState AddToGameState, StateObjectReference TechReference)
 {
 	local XComGameStateHistory History;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_FacilityXCom FacilityState;
 	local XComGameState_HeadquartersProjectResearch ResearchProject;
 	local XComGameState_HeadquartersProjectProvingGround ProvingGroundProject;
@@ -355,12 +355,12 @@ private function CompleteResearch(XComGameState AddToGameState, StateObjectRefer
 
 	if(XComHQ != none)
 	{
-		NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-		NewXComHQ.TechsResearched.AddItem(TechReference);
-		for(idx = 0; idx < NewXComHQ.Projects.Length; idx++)
+		XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+		XComHQ.TechsResearched.AddItem(TechReference);
+		for(idx = 0; idx < XComHQ.Projects.Length; idx++)
 		{
-			ProvingGroundProject = XComGameState_HeadquartersProjectProvingGround(History.GetGameStateForObjectID(NewXComHQ.Projects[idx].ObjectID));
-			ResearchProject = XComGameState_HeadquartersProjectResearch(History.GetGameStateForObjectID(NewXComHQ.Projects[idx].ObjectID));
+			ProvingGroundProject = XComGameState_HeadquartersProjectProvingGround(History.GetGameStateForObjectID(XComHQ.Projects[idx].ObjectID));
+			ResearchProject = XComGameState_HeadquartersProjectResearch(History.GetGameStateForObjectID(XComHQ.Projects[idx].ObjectID));
 			
 			if (ProvingGroundProject != None && ProvingGroundProject.ProjectFocus == TechReference)
 			{
@@ -376,18 +376,18 @@ private function CompleteResearch(XComGameState AddToGameState, StateObjectRefer
 
 			if(ResearchProject != none && ResearchProject.ProjectFocus == TechReference)
 			{
-				NewXComHQ.Projects.RemoveItem(ResearchProject.GetReference());
+				XComHQ.Projects.RemoveItem(ResearchProject.GetReference());
 				AddToGameState.RemoveStateObject(ResearchProject.GetReference().ObjectID);
 
 				if (ResearchProject.bShadowProject)
 				{
-					NewXComHQ.EmptyShadowChamber(AddToGameState);
+					XComHQ.EmptyShadowChamber(AddToGameState);
 				}
 
 				break;
 			}
 		}
-		AddToGameState.AddStateObject(NewXComHQ);
+		AddToGameState.AddStateObject(XComHQ);
 	}
 
 	TechState = XComGameState_Tech(AddToGameState.CreateStateObject(class'XComGameState_Tech', TechReference.ObjectID));
@@ -427,7 +427,7 @@ private function CompleteFacilityConstruction(XComGameState AddToGameState, Stat
 {
 	local XComGameState_HeadquartersRoom Room, NewRoom;
 	local XComGameState_FacilityXCom Facility, NewFacility;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_HeadquartersProjectBuildFacility FacilityProject;
 	local XComGameStateHistory History;
 	local int idx;
@@ -463,33 +463,33 @@ private function CompleteFacilityConstruction(XComGameState AddToGameState, Stat
 
 		if(XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			NewXComHQ.Facilities.AddItem(FacilityReference);
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			XComHQ.Facilities.AddItem(FacilityReference);
 
-			for(idx = 0; idx < NewXComHQ.Projects.Length; idx++)
+			for(idx = 0; idx < XComHQ.Projects.Length; idx++)
 			{
-				FacilityProject = XComGameState_HeadquartersProjectBuildFacility(`XCOMHISTORY.GetGameStateForObjectID(NewXComHQ.Projects[idx].ObjectID));
+				FacilityProject = XComGameState_HeadquartersProjectBuildFacility(`XCOMHISTORY.GetGameStateForObjectID(XComHQ.Projects[idx].ObjectID));
 				
 				if(FacilityProject != none)
 				{
 					if(FacilityProject.ProjectFocus == FacilityReference)
 					{
-						NewXComHQ.Projects.RemoveItem(FacilityProject.GetReference());
+						XComHQ.Projects.RemoveItem(FacilityProject.GetReference());
 						AddToGameState.RemoveStateObject(FacilityProject.ObjectID);
 						break;
 					}
 				}
 			}
-			AddToGameState.AddStateObject(NewXComHQ);
+			AddToGameState.AddStateObject(XComHQ);
 		}
 
-		`XEVENTMGR.TriggerEvent('FacilityConstructionCompleted', NewFacility, NewXComHQ, AddToGameState);
+		`XEVENTMGR.TriggerEvent('FacilityConstructionCompleted', NewFacility, XComHQ, AddToGameState);
 	}
 }
 
 private function CancelFacilityConstruction(XComGameState AddToGameState, StateObjectReference ProjectReference)
 {
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_HeadquartersProjectBuildFacility ProjectState;
 	local XComGameState_HeadquartersRoom Room, NewRoom;
 	local XComGameStateHistory History;
@@ -520,10 +520,10 @@ private function CancelFacilityConstruction(XComGameState AddToGameState, StateO
 
 		if(XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.RefundStrategyCost(AddToGameState, FacilityTemplate.Cost, NewXComHQ.FacilityBuildCostScalars, ProjectState.SavedDiscountPercent);
-			NewXComHQ.Projects.RemoveItem(ProjectReference);
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.RefundStrategyCost(AddToGameState, FacilityTemplate.Cost, XComHQ.FacilityBuildCostScalars, ProjectState.SavedDiscountPercent);
+			XComHQ.Projects.RemoveItem(ProjectReference);
 			AddToGameState.RemoveStateObject(ProjectState.ProjectFocus.ObjectID);
 			AddToGameState.RemoveStateObject(ProjectReference.ObjectID);
 		}
@@ -566,7 +566,7 @@ static function CompleteItemConstruction(XComGameState AddToGameState, StateObje
 {
 	local XComGameState_FacilityXcom FacilityState, NewFacilityState;
 	local XComGameState_HeadquartersProjectBuildItem ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_Item ItemState;
 	local XComGameStateHistory History;
 
@@ -588,19 +588,19 @@ static function CompleteItemConstruction(XComGameState AddToGameState, StateObje
 
 		if(XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			ItemState = XComGameState_Item(`XCOMHISTORY.GetGameStateForObjectID(ProjectState.ProjectFocus.ObjectID));
 			//if(NewFacilityState.RefundPercent > 0)
 			//{
-			//	NewXComHQ.AddResource(AddToGameState, 'Supplies', Round(float(ItemState.GetMyTemplate().SupplyCost) * 
+			//	XComHQ.AddResource(AddToGameState, 'Supplies', Round(float(ItemState.GetMyTemplate().SupplyCost) * 
 			//		class'X2StrategyGameRulesetDataStructures'.default.BuildItemProject_CostScalar * (float(NewFacilityState.RefundPercent)/100.0)));
 			//}
 			
 			ItemState.OnItemBuilt(AddToGameState);
 
-			NewXComHQ.PutItemInInventory(AddToGameState, ItemState);
+			XComHQ.PutItemInInventory(AddToGameState, ItemState);
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 
 			`XEVENTMGR.TriggerEvent('ItemConstructionCompleted', ItemState, ItemState, AddToGameState);
@@ -612,7 +612,7 @@ static function CancelItemConstruction(XComGameState AddToGameState, StateObject
 {
 	local XComGameState_FacilityXCom FacilityState, NewFacilityState;
 	local XComGameState_HeadquartersProjectBuildItem ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 	local XComGameState_Item ItemState;
 
@@ -636,10 +636,10 @@ static function CancelItemConstruction(XComGameState AddToGameState, StateObject
 
 		if(XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.RefundStrategyCost(AddToGameState, ItemState.GetMyTemplate().Cost, NewXComHQ.ItemBuildCostScalars, ProjectState.SavedDiscountPercent);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.RefundStrategyCost(AddToGameState, ItemState.GetMyTemplate().Cost, XComHQ.ItemBuildCostScalars, ProjectState.SavedDiscountPercent);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ProjectFocus.ObjectID);
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
@@ -650,7 +650,7 @@ static function CancelProvingGroundProject(XComGameState AddToGameState, StateOb
 {
 	local XComGameState_FacilityXCom FacilityState, NewFacilityState;
 	local XComGameState_HeadquartersProjectProvingGround ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 	local XComGameState_Tech TechState;
 
@@ -674,10 +674,10 @@ static function CancelProvingGroundProject(XComGameState AddToGameState, StateOb
 
 		if (XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.RefundStrategyCost(AddToGameState, TechState.GetMyTemplate().Cost, NewXComHQ.ProvingGroundCostScalars, ProjectState.SavedDiscountPercent);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.RefundStrategyCost(AddToGameState, TechState.GetMyTemplate().Cost, XComHQ.ProvingGroundCostScalars, ProjectState.SavedDiscountPercent);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 	}
@@ -687,7 +687,7 @@ static function CompleteClearRoom(XComGameState AddToGameState, StateObjectRefer
 {
 	local XComGameState_HeadquartersRoom RoomState, NewRoomState;
 	local XComGameState_HeadquartersProjectClearRoom ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 	local StateObjectReference EmptyRef;
 
@@ -699,8 +699,8 @@ static function CompleteClearRoom(XComGameState AddToGameState, StateObjectRefer
 
 	if(XComHQ != none)
 	{
-		NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-		AddToGameState.AddStateObject(NewXComHQ);
+		XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+		AddToGameState.AddStateObject(XComHQ);
 	}
 
 	if(ProjectState != none)
@@ -727,10 +727,10 @@ static function CompleteClearRoom(XComGameState AddToGameState, StateObjectRefer
 				NewRoomState.SpecialFeature = '';
 			}
 
-			NewXComHQ.UnlockAdjacentRooms(AddToGameState, NewRoomState);
+			XComHQ.UnlockAdjacentRooms(AddToGameState, NewRoomState);
 		}
 
-		NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+		XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 		AddToGameState.RemoveStateObject(ProjectState.ObjectID);		
 	}
 }
@@ -739,7 +739,7 @@ static function CancelClearRoom(XComGameState AddToGameState, StateObjectReferen
 {
 	local XComGameState_HeadquartersRoom RoomState, NewRoomState;
 	local XComGameState_HeadquartersProjectClearRoom ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 
 	History = `XCOMHISTORY;
@@ -767,9 +767,9 @@ static function CancelClearRoom(XComGameState AddToGameState, StateObjectReferen
 
 		if(XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 	}
@@ -779,7 +779,7 @@ static function StartUnitHealing(XComGameState AddToGameState, StateObjectRefere
 {
 	local XComGameState_Unit UnitState, NewUnitState;
 	local XComGameState_HeadquartersProjectHealSoldier ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 
 	History = `XCOMHISTORY;
@@ -801,9 +801,9 @@ static function StartUnitHealing(XComGameState AddToGameState, StateObjectRefere
 
 		if(XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.AddItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.AddItem(ProjectState.GetReference());
 
 			`GAME.GetGeoscape().m_kBase.m_kCrewMgr.RefreshFacilityPatients();
 		}
@@ -815,7 +815,7 @@ static function CompleteUnitHealing(XComGameState AddToGameState, StateObjectRef
 	local XComGameState_Unit UnitState, NewUnitState;
 	local XComGameState_HeadquartersProjectHealSoldier ProjectState;
 	local XComGameState_HeadquartersProjectPsiTraining PsiProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_FacilityXCom FacilityState;
 	local XComGameStateHistory History;
 	local StaffUnitInfo UnitInfo;
@@ -842,9 +842,9 @@ static function CompleteUnitHealing(XComGameState AddToGameState, StateObjectRef
 		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 		if (XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 			
 			`GAME.GetGeoscape().m_kBase.m_kCrewMgr.RefreshFacilityPatients();
@@ -879,7 +879,7 @@ static function CompleteUpgradeFacility(XComGameState AddToGameState, StateObjec
 	local XComGameState_FacilityXcom FacilityState, NewFacilityState;
 	local XComGameState_FacilityUpgrade UpgradeState;
 	local XComGameState_HeadquartersProjectUpgradeFacility ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 
 	History = `XCOMHISTORY;
@@ -904,9 +904,9 @@ static function CompleteUpgradeFacility(XComGameState AddToGameState, StateObjec
 
 		if(XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 
@@ -917,7 +917,7 @@ static function CompleteUpgradeFacility(XComGameState AddToGameState, StateObjec
 static function CancelUpgradeFacility(XComGameState AddToGameState, StateObjectReference ProjectRef)
 {
 	local XComGameState_HeadquartersProjectUpgradeFacility ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_FacilityXCom FacilityState;
 	local XComGameState_HeadquartersRoom RoomState;
 	local XComGameStateHistory History;
@@ -947,9 +947,9 @@ static function CancelUpgradeFacility(XComGameState AddToGameState, StateObjectR
 
 		if(XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 	}
@@ -958,7 +958,7 @@ static function CancelUpgradeFacility(XComGameState AddToGameState, StateObjectR
 static function CompleteTrainRookie(XComGameState AddToGameState, StateObjectReference ProjectRef)
 {
 	local XComGameState_HeadquartersProjectTrainRookie ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_Unit UnitState;
 	local XComGameState_StaffSlot StaffSlotState;
 	local XComGameStateHistory History;
@@ -971,9 +971,9 @@ static function CompleteTrainRookie(XComGameState AddToGameState, StateObjectRef
 		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 		if (XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 
@@ -1003,7 +1003,7 @@ static function CompleteTrainRookie(XComGameState AddToGameState, StateObjectRef
 static function CancelTrainRookie(XComGameState AddToGameState, StateObjectReference ProjectRef)
 {
 	local XComGameState_HeadquartersProjectTrainRookie ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_Unit UnitState;
 	local XComGameState_StaffSlot StaffSlotState;
 	local XComGameStateHistory History;
@@ -1033,9 +1033,9 @@ static function CancelTrainRookie(XComGameState AddToGameState, StateObjectRefer
 		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 		if (XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 	}
@@ -1044,7 +1044,7 @@ static function CancelTrainRookie(XComGameState AddToGameState, StateObjectRefer
 static function CompleteRespecSoldier(XComGameState AddToGameState, StateObjectReference ProjectRef)
 {
 	local XComGameState_HeadquartersProjectRespecSoldier ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_Unit UnitState;
 	local XComGameState_StaffSlot StaffSlotState;
 	local XComGameStateHistory History;
@@ -1058,9 +1058,9 @@ static function CompleteRespecSoldier(XComGameState AddToGameState, StateObjectR
 		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 		if (XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 
@@ -1091,7 +1091,7 @@ static function CompleteRespecSoldier(XComGameState AddToGameState, StateObjectR
 static function CancelRespecSoldier(XComGameState AddToGameState, StateObjectReference ProjectRef)
 {
 	local XComGameState_HeadquartersProjectRespecSoldier ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_Unit UnitState;
 	local XComGameState_StaffSlot StaffSlotState;
 	local XComGameStateHistory History;
@@ -1121,9 +1121,9 @@ static function CancelRespecSoldier(XComGameState AddToGameState, StateObjectRef
 		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 		if (XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 	}
@@ -1132,7 +1132,7 @@ static function CancelRespecSoldier(XComGameState AddToGameState, StateObjectRef
 static function CompletePsiTraining(XComGameState AddToGameState, StateObjectReference ProjectRef)
 {
 	local XComGameState_HeadquartersProjectPsiTraining ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_Unit UnitState;
 	local XComGameState_StaffSlot StaffSlotState;
 	local XComGameStateHistory History;
@@ -1145,9 +1145,9 @@ static function CompletePsiTraining(XComGameState AddToGameState, StateObjectRef
 		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 		if (XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 
@@ -1186,7 +1186,7 @@ static function CompletePsiTraining(XComGameState AddToGameState, StateObjectRef
 static function CancelPsiTraining(XComGameState AddToGameState, StateObjectReference ProjectRef)
 {
 	local XComGameState_HeadquartersProjectPsiTraining ProjectState;
-	local XComGameState_HeadquartersXCom XComHQ, NewXComHQ;
+	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_Unit UnitState;
 	local XComGameState_StaffSlot StaffSlotState;
 	local XComGameStateHistory History;
@@ -1216,9 +1216,9 @@ static function CancelPsiTraining(XComGameState AddToGameState, StateObjectRefer
 		XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 		if (XComHQ != none)
 		{
-			NewXComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			AddToGameState.AddStateObject(NewXComHQ);
-			NewXComHQ.Projects.RemoveItem(ProjectState.GetReference());
+			XComHQ = XComGameState_HeadquartersXCom(AddToGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			AddToGameState.AddStateObject(XComHQ);
+			XComHQ.Projects.RemoveItem(ProjectState.GetReference());
 			AddToGameState.RemoveStateObject(ProjectState.ObjectID);
 		}
 	}

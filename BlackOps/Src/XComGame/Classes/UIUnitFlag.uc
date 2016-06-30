@@ -243,7 +243,7 @@ simulated function UpdateFromUnitState(XComGameState_Unit NewUnitState, bool bIn
 	}
 	
 	// concealment & buffs now realized dynamically; only force an update during a resync
-	if( bForceUpdate )
+	if( bForceUpdate || bInitialUpdate )
 	{
 		RealizeConcealmentState(NewUnitState);
 		RealizeBuffs(NewUnitState);

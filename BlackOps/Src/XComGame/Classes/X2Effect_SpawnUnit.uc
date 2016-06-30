@@ -227,4 +227,5 @@ defaultproperties
 	bKnockbackAffectsSpawnLocation=true
 
 	DuplicateResponse=eDupe_Allow
+	bCanBeRedirected=false
 }

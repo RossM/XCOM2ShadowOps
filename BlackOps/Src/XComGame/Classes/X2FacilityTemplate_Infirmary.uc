@@ -82,11 +82,13 @@ function PopulateImportantFacilityCrew(XGBaseCrewMgr Mgr, StateObjectReference F
 			PatientUnit = XComGameState_Unit(History.GetGameStateForObjectID(HealingSoldier.ProjectFocus.ObjectID));
 			`assert(PatientUnit != none);
 			
+			if(PatientUnit.CanAppearInBase()) // Check if the healing unit is allowed to visually appear in infirmary patient staff slots
+			{
 			++PatientIdx;
 			HoursToHeal = HealingSoldier.GetProjectedNumHoursRemaining();
 			bGravelyInjured = PatientUnit.IsGravelyInjured(HoursToHeal);
 
-			bWillHaveVisitor = (VisitorCount < VisitorLimit) && FRand() < 0.25f; //Chance for a visitor / vigil keeper
+				bWillHaveVisitor = (VisitorCount < VisitorLimit) && FRand() < 0.25f; //Chance for a visitor / vigil keepre
 			if(bGravelyInjured || !bWillHaveVisitor)
 			{
 				Mgr.AddCrew(RoomIdx, self, HealingSoldier.ProjectFocus, "PatientSlot"$PatientIdx, RoomOffset, true); //Character lying down, unconscious
@@ -110,6 +112,8 @@ function PopulateImportantFacilityCrew(XGBaseCrewMgr Mgr, StateObjectReference F
 				
 				for(SoldierIndex = 0; SoldierIndex < PotentialVisitors.Length; ++SoldierIndex)
 				{
+						if(PotentialVisitors[SoldierIndex].CanAppearInBase()) // First check if the potential visitor is eligible to appear
+						{
 					if(!Mgr.IsAlreadyPlaced(PotentialVisitors[SoldierIndex].GetReference(), RoomIdx))
 					{
 						if(Mgr.AddCrew(RoomIdx, self, PotentialVisitors[SoldierIndex].GetReference(), VisitorSlotName, RoomOffset, true))
@@ -120,6 +124,8 @@ function PopulateImportantFacilityCrew(XGBaseCrewMgr Mgr, StateObjectReference F
 				}
 			}
 		}
+	}
+}
 	}
 }
 

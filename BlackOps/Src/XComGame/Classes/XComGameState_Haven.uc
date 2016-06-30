@@ -56,7 +56,29 @@ static function SetUpHavens(XComGameState StartState)
 //----------------   UPDATE   -----------------------------------------------------------------
 //#############################################################################################
 
+// THIS FUNCTION SHOULD RETURN TRUE IN ALL THE SAME CASES AS Update
+function bool ShouldUpdate( )
+{
+	local XComGameState_HeadquartersResistance ResHQ;
+	local UIStrategyMap StrategyMap;
+
+	ResHQ = class'UIUtilities_Strategy'.static.GetResistanceHQ( );
+	StrategyMap = `HQPRES.StrategyMap2D;
+
+	// Do not trigger anything while the Avenger or Skyranger are flying, or if another popup is already being presented
+	if (ResHQ.bIntelMode && StrategyMap != none && StrategyMap.m_eUIState != eSMS_Flight && !`HQPRES.ScreenStack.IsCurrentClass( class'UIAlert' ))
+	{
+		if (IsScanComplete( ))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 //---------------------------------------------------------------------------------------
+// IF ADDING NEW CASES WHERE bUpdated = true, UPDATE FUNCTION ShouldUpdate ABOVE
 function bool Update(XComGameState NewGameState)
 {
 	local XComGameState_HeadquartersXCom XComHQ;
@@ -272,27 +294,19 @@ function UpdateGameBoard()
 {
 	local XComGameState NewGameState;
 	local XComGameState_Haven HavenState;
-	local XComGameStateHistory History;
+	local bool bSuccess;
 
-	History = `XCOMHISTORY;
-
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Update Haven");
-
-	HavenState = XComGameState_Haven(NewGameState.CreateStateObject(class'XComGameState_Haven', ObjectID));
-	NewGameState.AddStateObject(HavenState);
-
-	if(!HavenState.Update(NewGameState))
+	if (ShouldUpdate())
 	{
-		NewGameState.PurgeGameStateForObjectID(HavenState.ObjectID);
-	}
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Update Haven");
 
-	if(NewGameState.GetNumGameStateObjects() > 0)
-	{
+		HavenState = XComGameState_Haven(NewGameState.CreateStateObject(class'XComGameState_Haven', ObjectID));
+		NewGameState.AddStateObject(HavenState);
+
+		bSuccess = HavenState.Update(NewGameState);
+		`assert( bSuccess );
+
 		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-	}
-	else
-	{
-		History.CleanupPendingGameState(NewGameState);
 	}
 
 	if (AmountForFlyoverPopup > 0)

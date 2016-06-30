@@ -1567,7 +1567,7 @@ state ActiveUnit_Moving
 		HideBorder = VisualizationManager.IsActorBeingVisualized(GetActiveUnit()) 
 			|| ActiveUnitState.NumActionPointsForMoving() == 0
 			|| ActiveUnitState.GetCurrentStat(eStat_Mobility) == 0;
-		HideBorder = HideBorder || (ActiveUnitState.NumActionPointsForMoving() == 0);
+		HideBorder = HideBorder || (ActiveUnitState.NumActionPointsForMoving() == 0) || ActiveUnitState.bRemovedFromPlay;
 		HideBorder = HideBorder || VisualizationManager.VisualizerBlockingAbilityActivation();
 
 		// determine pathing ribbon hide

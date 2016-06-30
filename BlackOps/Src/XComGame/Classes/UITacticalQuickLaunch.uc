@@ -43,13 +43,16 @@ var XComParcel HighlightedParcel;
 
 var UIButton	Button_StartBattle;
 var UIButton	Button_GenerateMap;
+var UIButton	Button_ToggleMapSize;
 var UIButton    Button_RerollSpawnPoint;
 var UIButton    Button_ChooseMapData;
 var UIButton    Button_ChooseSquadLoadout;
 var UIButton    Button_ToggleDebugCamera;
 var UIButton    Button_ReturnToShell;
 var UIButton	Button_StartChallenge;
+var UIButton	Button_ChallengeControls;
 
+var bool ChallengeControlsVisible;
 var UIDropdown Challenge_SquadSize;
 var UIDropdown Challenge_ClassSelector;
 var UIDropdown Challenge_AlienSelector;
@@ -306,6 +309,13 @@ simulated private function BuildChallengeControls()
 	Button_StartChallenge.SetGamepadIcon( class'UIUtilities_Input'.const.ICON_A_X );
 	Button_StartChallenge.SetPosition( 50, 200 );
 
+	Button_ChallengeControls = Spawn( class'UIButton', self );
+	Button_ChallengeControls.InitButton( 'Button_ChallengeControls', "Show Challenge Controls", OnButtonChallengeControlsClicked, eUIButtonStyle_HOTLINK_BUTTON );
+	Button_ChallengeControls.SetGamepadIcon( class'UIUtilities_Input'.const.ICON_A_X );
+	Button_ChallengeControls.SetPosition( 200, 200 );
+
+	ChallengeControlsVisible = true;
+
 	Challenge_UtilityItemSelector		= SpawnChallengeDropdown( 'ChallengeUtility',			"Utility Items Template",		80, 230 + 65 * 8, class'X2ChallengeUtility', ChallengeTemplateManager );
 	Challenge_SecondaryWeaponSelector	= SpawnChallengeDropdown( 'ChallengeSecondaryWeapon',	"Secondary Weapon Template",	80, 230 + 65 * 7, class'X2ChallengeSecondaryWeapon', ChallengeTemplateManager );
 	Challenge_PrimaryWeaponSelector		= SpawnChallengeDropdown( 'ChallengePrimaryWeapon',		"Primary Weapon Template",		80, 230 + 65 * 6, class'X2ChallengePrimaryWeapon', ChallengeTemplateManager );
@@ -317,6 +327,8 @@ simulated private function BuildChallengeControls()
 
 	Challenge_EnemyForcesSelector		= SpawnChallengeDropdown( 'ChallengeEnemyForces',		"Enemy Forces Template",		80 + 350, 230 + 65 * 2, class'X2ChallengeEnemyForces', ChallengeTemplateManager );
 	Challenge_AlertForceLevelSelector	= SpawnChallengeDropdown( 'ChallengeAlertForce',		"Alert & Force Level Template",	80 + 350, 230 + 65 * 1, class'X2ChallengeAlertForce', ChallengeTemplateManager );
+
+	OnButtonChallengeControlsClicked( Button_ChallengeControls );
 }
 
 simulated private function OnButtonStartChallengeClicked( UIButton button )
@@ -339,12 +351,55 @@ simulated private function OnButtonStartChallengeClicked( UIButton button )
 	}
 }
 
+simulated private function OnButtonChallengeControlsClicked( UIButton button )
+{
+	ChallengeControlsVisible = !ChallengeControlsVisible;
+
+	if (ChallengeControlsVisible)
+	{
+		Button_ChallengeControls.SetText( "Hide Challenge Controls" );
+
+		Challenge_UtilityItemSelector.Show();
+		Challenge_SecondaryWeaponSelector.Show();
+		Challenge_PrimaryWeaponSelector.Show();
+		Challenge_ArmorSelector.Show();
+		Challenge_RankSelector.Show();
+		Challenge_AlienSelector.Show();
+		Challenge_ClassSelector.Show();
+		Challenge_SquadSize.Show();
+
+		Challenge_EnemyForcesSelector.Show();
+		Challenge_AlertForceLevelSelector.Show();
+	}
+	else
+	{
+		Button_ChallengeControls.SetText( "Show Challenge Controls" );
+
+		Challenge_UtilityItemSelector.Hide();
+		Challenge_SecondaryWeaponSelector.Hide();
+		Challenge_PrimaryWeaponSelector.Hide();
+		Challenge_ArmorSelector.Hide();
+		Challenge_RankSelector.Hide();
+		Challenge_AlienSelector.Hide();
+		Challenge_ClassSelector.Hide();
+		Challenge_SquadSize.Hide();
+
+		Challenge_EnemyForcesSelector.Hide();
+		Challenge_AlertForceLevelSelector.Hide();
+	}
+}
+
 simulated private function BuildButton_GenerateMap()
 {
 	Button_GenerateMap = Spawn(class'UIButton', self);
 	Button_GenerateMap.InitButton('Button_GenerateMap', "Generate Map", OnButtonGenerateMapClicked, eUIButtonStyle_HOTLINK_BUTTON);		
 	Button_GenerateMap.SetGamepadIcon(class'UIUtilities_Input'.const.ICON_B_CIRCLE);
 	Button_GenerateMap.SetPosition(200, 50);
+
+	Button_ToggleMapSize = Spawn(class'UIButton', self);
+	Button_ToggleMapSize.InitButton('Button_ToggleMapSize', "Toggle Map Size", OnButtonToggleMapSizeClicked, eUIButtonStyle_HOTLINK_BUTTON);
+	Button_ToggleMapSize.SetGamepadIcon(class'UIUtilities_Input'.const.ICON_B_CIRCLE);
+	Button_ToggleMapSize.SetPosition(500, 50);
 }
 
 simulated private function OnButtonGenerateMapClicked(UIButton button)
@@ -365,6 +420,18 @@ simulated private function OnButtonGenerateMapClicked(UIButton button)
 	else
 	{
 		PlaySound( SoundCue'SoundUI.NegativeSelection2Cue', true );
+	}
+}
+
+simulated private function OnButtonToggleMapSizeClicked(UIButton button)
+{
+	if (CanvasDrawScale == 4)
+	{
+		CanvasDrawScale = 8;
+	}
+	else
+	{
+		CanvasDrawScale = 4;
 	}
 }
 

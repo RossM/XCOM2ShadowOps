@@ -26,9 +26,10 @@ var init localized string m_aAbilityHitResultStrings[EAbilityHitResult.EnumCount
 
 struct native ArmorMitigationResults
 {
-	var bool bNaturalArmor;
-	var ECoverType CoverType;
-	var init array<StateObjectReference> BonusArmorEffects;
+	var bool bNaturalArmor;             //  deprecated - will always consider eStat_ArmorMitigation
+	var ECoverType CoverType;           //  deprecated - cover as armor is not a thing
+	var init array<StateObjectReference> BonusArmorEffects;         //  refs to the XComGameState_Effects which are granting an X2Effect_BonusArmor to the unit
+	var int TotalMitigation;            //  total of all bonus armor effects plus eStat_ArmorMitigation
 };
 
 enum EInventorySlot
@@ -65,6 +66,13 @@ enum EffectTemplateLookupType
 	TELT_ThrownGrenadeEffects,
 	TELT_LaunchedGrenadeEffects,
 	TELT_WeaponEffects,
+};
+
+enum EXComUnitPawn_RagdollFlag
+{
+	ERagdoll_IfDamageTypeSaysTo,
+	ERagdoll_Always,
+	ERagdoll_Never
 };
 
 struct native X2EffectTemplateRef
@@ -266,12 +274,20 @@ struct native PathingResultData
 	var init array<GameplayTileData> PathTileData;
 };
 
+struct native EffectRedirect
+{
+	var StateObjectReference    OriginalTargetRef;      //  the effect's original intended target
+	var StateObjectReference    RedirectedToTargetRef;  //  the new target
+	var EffectResults           RedirectResults;        //  result of applying to the new target
+	var name                    RedirectReason;         //  should be from AbilityAvailabilityCodes so localized text can used
+};
+
 //Ability Result Context
 struct native AbilityResultContext
 {
 	var int CalculatedHitChance; // The hit chance calculated at the time this HitResult was applied
 	var EAbilityHitResult HitResult; //Abilities that have a ToHitCalc set will fill this with the result during their initial ContextBuildGameState
-	var ArmorMitigationResults ArmorMitigation;  //Set along with HitResult, can modify damage when effects are applied
+	var ArmorMitigationResults ArmorMitigation;  // DEPRECATED - armor is always applied
 	var int StatContestResult;  //Potentially set along with HitResult, to show the outcome of a stat contest (e.g. Psi attacks, Tech attacks)
 	var OverriddenEffectsByType TargetEffectsOverrides;  // CURRENTLY USED PURELY TO PASS INFORMATION WHEN APPLYING THE EFFECT
 	var EffectResults ShooterEffectResults;
@@ -281,6 +297,7 @@ struct native AbilityResultContext
 	var array<ArmorMitigationResults> MultiTargetArmorMitigation;
 	var array<int> MultiTargetStatContestResult;
 	var array<OverriddenEffectsByType> MultiTargetEffectsOverrides;
+	var array<EffectRedirect> EffectRedirects;
 
 	var int InterruptionStep; //If this ability was interrupted, this defines what 'step' of the ability was interrupted.
 	var class ObserverClass;  //Observer class that handled the interruption
@@ -363,8 +380,8 @@ enum ECharStatType
 	eStat_AlertLevel,
 	eStat_BackpackSize,
 	eStat_Dodge,
-	eStat_ArmorChance,
-	eStat_ArmorMitigation,
+	eStat_ArmorChance,          //  DEPRECATED - armor will always be used regardless of this value
+	eStat_ArmorMitigation,      
 	eStat_ArmorPiercing,
 	eStat_PsiOffense,
 	eStat_HackDefense,          // Units use this when defending against hacking attempts.

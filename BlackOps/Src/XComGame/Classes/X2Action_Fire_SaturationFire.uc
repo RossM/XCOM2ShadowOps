@@ -127,7 +127,7 @@ function Init(const out VisualizationTrack InTrack)
 		ConeLength = coneTemplate.GetConeLength(AbilityState);
 
 		// Widen the cone a little bit so the sweep looks more natural when hitting outer units
-		ConeWidth = coneTemplate.ConeEndDiameter + class'XComWorldData'.const.WORLD_STEPSIZE;
+		ConeWidth = coneTemplate.GetConeEndDiameter(AbilityState) + class'XComWorldData'.const.WORLD_STEPSIZE;
 
 		StartLocation = UnitPawn.Location;
 		EndLocation = AbilityContext.InputContext.TargetLocations[0];

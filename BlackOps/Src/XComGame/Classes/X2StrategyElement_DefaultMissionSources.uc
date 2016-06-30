@@ -1025,6 +1025,7 @@ static function X2DataTemplate CreateCouncilTemplate()
 	Template.SpawnMissionsFn = SpawnCouncilMission;
 	Template.MissionPopupFn = CouncilPopup;
 	Template.WasMissionSuccessfulFn = OneStrategyObjectiveCompleted;
+	Template.RequireLaunchMissionPopupFn = CouncilRequireLaunchMissionPopup;
 
 	DeckEntry.RewardName = 'Reward_Supplies';
 	DeckEntry.Quantity = 1;
@@ -1274,6 +1275,17 @@ function SpawnCouncilMission(XComGameState NewGameState, int MissionMonthIndex)
 function CouncilPopup()
 {
 	`HQPRES.UICouncilMission();
+}
+
+function bool CouncilRequireLaunchMissionPopup(XComGameState_MissionSite MissionState)
+{
+	// If this is a neutralize mission, make sure a soldier can carry them out
+	if (MissionState.GeneratedMission.Mission.MissionName == 'NeutralizeTarget')
+	{
+		return IsNoCarryUnitSoldierInSquad(MissionState);
+	}
+
+	return false;
 }
 
 // LANDED UFO
@@ -1564,6 +1576,8 @@ static function X2DataTemplate CreateMissionSource_ForgeTemplate()
 	Template.GetMissionDifficultyFn = GetMissionDifficultyFromTemplate;
 	Template.CalculateDoomRemovalFn = CalculateForgeDoomRemoval;
 	Template.WasMissionSuccessfulFn = OneStrategyObjectiveCompleted;
+	Template.CanLaunchMissionFn = IsCarryUnitSoldierInSquad;
+	Template.RequireLaunchMissionPopupFn = IsNoCarryUnitSoldierInSquad;
 	Template.SpawnUFOChance = 75;
 
 	return Template;
@@ -1573,7 +1587,6 @@ function CalculateForgeDoomRemoval(XComGameState_MissionSite MissionState)
 {
 	MissionState.FixedDoomToRemove = GetForgeMinDoomRemoval() + `SYNC_RAND(GetForgeMaxDoomRemoval() - GetForgeMinDoomRemoval() + 1);
 }
-
 
 static function X2DataTemplate CreateMissionSource_PsiGateTemplate()
 {
@@ -2355,6 +2368,35 @@ function bool OneStrategyObjectiveCompleted(XComGameState_BattleData BattleDataS
 function bool StrategyObjectivePlusSweepCompleted(XComGameState_BattleData BattleDataState)
 {
 	return (BattleDataState.OneStrategyObjectiveCompleted() && BattleDataState.AllTacticalObjectivesCompleted());
+}
+
+//---------------------------------------------------------------------------------------
+function bool IsCarryUnitSoldierInSquad(XComGameState_MissionSite MissionState)
+{
+	local XComGameStateHistory History;
+	local XComGameState_HeadquartersXCom XComHQ;
+	local XComGameState_Unit UnitState;
+	local int i;
+
+	History = `XCOMHISTORY;
+	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
+
+	for (i = 0; i < XComHQ.Squad.Length; ++i)
+	{
+		UnitState = XComGameState_Unit(History.GetGameStateForObjectID(XComHQ.Squad[i].ObjectID));
+		if (UnitState != none && UnitState.GetMyTemplate().Abilities.Find('CarryUnit') != INDEX_NONE)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//---------------------------------------------------------------------------------------
+function bool IsNoCarryUnitSoldierInSquad(XComGameState_MissionSite MissionState)
+{
+	return !IsCarryUnitSoldierInSquad(MissionState);
 }
 
 // #######################################################################################

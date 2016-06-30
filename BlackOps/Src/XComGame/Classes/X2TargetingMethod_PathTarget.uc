@@ -11,9 +11,9 @@
 class X2TargetingMethod_PathTarget extends X2TargetingMethod;
 
 var private X2PathTargetPathingPawn PathingPawn;
-var private XComActionIconManager   IconManager;
-var private XComLevelBorderManager  LevelBorderManager;
-var private XCom3DCursor            Cursor;
+var privatewrite XComActionIconManager   IconManager;
+var privatewrite XComLevelBorderManager  LevelBorderManager;
+var privatewrite XCom3DCursor            Cursor;
 var private X2Camera_Midpoint       TargetingCamera;
 var private XGUnit					TargetUnit;
 
@@ -89,7 +89,7 @@ function name ValidateTargetLocations(const array<Vector> TargetLocations)
 	return 'AA_Success';
 }
 
-private function Vector GetPathDestination()
+protected function Vector GetPathDestination()
 {
 	local XComWorldData WorldData;
 	local TTile Tile;

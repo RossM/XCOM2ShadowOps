@@ -35,7 +35,7 @@ simulated function UIAfterAction_ListItem InitListItem()
 
 simulated function UpdateData(optional StateObjectReference UnitRef)
 {
-	local int days;
+	local int days, injuryHours;
 	local bool bCanPromote;
 	local string statusLabel, statusText, daysLabel, daysText, ClassStr;
 	local XComGameState_Unit Unit;
@@ -56,13 +56,13 @@ simulated function UpdateData(optional StateObjectReference UnitRef)
 
 		if(Unit.IsInjured())
 		{
-			statusText = Caps(Unit.GetWoundStatus(,true));
+			statusText = Caps(Unit.GetWoundStatus(injuryHours, true));
 			statusLabel = "wounded"; // corresponds to timeline label on 'AfterActionBG' mc in SquadList.fla
 			
-			if (Unit.m_iInjuryHours > 0) 
+			if( injuryHours > 0 )
 			{
-				days = Unit.m_iInjuryHours / 24;
-				if( Unit.m_iInjuryHours % 24 > 0 )
+				days = injuryHours / 24;
+				if( injuryHours % 24 > 0 )
 					days += 1;
 
 				daysLabel = class'UIUtilities_Text'.static.GetDaysString(days);
@@ -104,6 +104,8 @@ simulated function UpdateData(optional StateObjectReference UnitRef)
 				(bCanPromote) ? class'UISquadSelect_ListItem'.default.m_strPromote : "",
 				statusLabel, statusText, daysLabel, daysText, m_strMissionsLabel, string(Unit.GetNumMissions()),
 				m_strKillsLabel, string(Unit.GetNumKills()), false, ClassStr);
+
+	AS_SetUnitHealth(class'UIUtilities_Strategy'.static.GetUnitCurrentHealth(Unit, true), class'UIUtilities_Strategy'.static.GetUnitMaxHealth(Unit));
 
 	if( bCanPromote )
 	{
@@ -156,7 +158,7 @@ event OnRemoteEvent(name RemoteEventName)
 			if (!Photo.HasPendingHeadshot(UnitReference, UpdateAfterActionImage,true))
 			{
 				//Take a picture if one isn't available - this could happen in the initial mission prior to any soldier getting their picture taken
-				Photo.AddHeadshotRequest(UnitReference, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Passport_Armory', 128, 128, UpdateAfterActionImage, class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook(),,true);
+				Photo.AddHeadshotRequest(UnitReference, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Passport_Armory', 128, 128, UpdateAfterActionImage,,,true);
 			}
 
 			`GAME.GetGeoscape().m_kBase.m_kCrewMgr.TakeCrewPhotobgraph(UnitReference,,true);
@@ -225,6 +227,14 @@ simulated function AS_SetData( string firstName, string lastName, string nickNam
 	mc.QueueString(killsText);
 	mc.QueueBoolean(isPsiPromote);
 	mc.QueueString(className);
+	mc.EndOp();
+}
+
+simulated function AS_SetUnitHealth(int CurrentHP, int MaxHP)
+{
+	mc.BeginFunctionOp("setUnitHealth");
+	mc.QueueNumber(CurrentHP);
+	mc.QueueNumber(MaxHP);
 	mc.EndOp();
 }
 

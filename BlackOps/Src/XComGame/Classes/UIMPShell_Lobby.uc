@@ -575,7 +575,7 @@ function SetupStartState()
 	///
 
 	// Create the basic strategy objects
-	StrategyStartState = class'XComGameStateContext_StrategyGameRule'.static.CreateStrategyGameStart();
+	StrategyStartState = class'XComGameStateContext_StrategyGameRule'.static.CreateStrategyGameStart(, , , , , , false, , class'X2DataTemplate'.const.BITFIELD_GAMEAREA_Multiplayer, false /*SetupDLCContent*/);
 
 
 	///

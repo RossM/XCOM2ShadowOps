@@ -577,6 +577,7 @@ function bool DoesEffectAllowUnitToBeLooted(XComGameState NewGameState, XComGame
 function bool CanAbilityHitUnit(name AbilityName) { return true; }
 function bool PreDeathCheck(XComGameState NewGameState, XComGameState_Unit UnitState, XComGameState_Effect EffectState) { return false; }
 function bool PreBleedoutCheck(XComGameState NewGameState, XComGameState_Unit UnitState, XComGameState_Effect EffectState) { return false; }
+function Actor GetProjectileVolleyTemplate(XComGameState_Unit UnitState, XComGameState_Effect EffectState, XComGameStateContext_Ability AbilityContext) { return none; }
 
 //  Modify the value that is displayed by XComGameState_Unit:GetUISummary_UnitStats (e.g. tooltip of stats in lower left)
 function ModifyUISummaryUnitStats(XComGameState_Effect EffectState, XComGameState_Unit UnitState, const ECharStatType Stat, out int StatValue);
@@ -587,9 +588,14 @@ function EGameplayBlocking ModifyGameplayPathBlockingForTarget(const XComGameSta
 // By default this returns eGameplayBlocking_DoesNotModify because most effects don't change blocking
 function EGameplayBlocking ModifyGameplayDestinationBlockingForTarget(const XComGameState_Unit UnitState, const XComGameState_Unit TargetUnit) { return eGameplayBlocking_DoesNotModify; }
 
-
 //  Register an effect in the config array EffectUpdatesOnMove on AbilityTemplateManager in order to receive these callbacks
 function OnUnitChangedTile(const out TTile NewTileLocation, XComGameState_Effect EffectState, XComGameState_Unit TargetUnit);
+
+//  Add the name of the effect to X2AbilityTemplateManager AffectingEffectRedirectors and implement this function to handle potential redirects
+function bool EffectShouldRedirect(XComGameStateContext_Ability AbilityContext, XComGameState_Ability SourceAbility, XComGameState_Effect EffectState, const X2Effect PotentialRedirect, XComGameState_Unit SourceUnit, XComGameState_Unit TargetUnit, out StateObjectReference RedirectTarget, out name Reason, out name OverrideEffectResult) { return false; }
+
+function name TargetAdditiveAnimOnApplyWeaponDamage(XComGameStateContext Context, XComGameState_Unit TargetUnit, XComGameState_Effect EffectState) { return ''; }
+function name ShooterAdditiveAnimOnFire(XComGameStateContext Context, XComGameState_Unit ShooterUnit, XComGameState_Effect EffectState) { return ''; }
 
 // This is used to test if the effect being visualized is the first
 // visualization of that particular effect on a particular unit in the
@@ -660,6 +666,10 @@ function bool IsFirstMatchingEffectInEventChain(XComGameState VisualizeGameState
 	return false;
 }
 
+function bool HasOverrideDeathAnimOnLoad(out Name DeathAnim)
+{
+	return false;
+}
 
 defaultproperties
 {

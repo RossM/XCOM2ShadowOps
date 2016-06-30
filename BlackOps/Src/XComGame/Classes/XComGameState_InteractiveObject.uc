@@ -367,7 +367,7 @@ event Interacted( XComGameState_Unit InstigatingUnit, XComGameState NewGameState
 /// <summary>
 /// Returns a string representation of this object.
 /// </summary>
-function string ToString()
+function string ToString(optional bool bAllFields)
 {
 	return ToStringT3D();
 }

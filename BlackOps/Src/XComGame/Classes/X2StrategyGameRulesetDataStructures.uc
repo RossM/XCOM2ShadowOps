@@ -1914,80 +1914,58 @@ static function name PromoteSoldier(StateObjectReference UnitRef)
 
 static function bool ShowClassMovie(name SoldierClassName, StateObjectReference SoldierRef)
 {
-	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState NewGameState;
+	local X2SoldierClassTemplateManager SoldierClassMgr;
+	local X2SoldierClassTemplate SoldierClassTemplate;
 	local bool MovieShown;
 
-	History = `XCOMHISTORY;
-	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
+	XComHQ = XComGameState_HeadquartersXCom(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 	MovieShown = false;
 
-	switch(SoldierClassName)
+	// First Update Seen Class Movies if necessary (will be needed for campaigns already in progress)
+	if(XComHQ.SeenClassMovies.Length == 0)
 	{
-	case 'Grenadier':
-		if(!XComHQ.bHasSeenFirstGrenadier)
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Initial Soldier Class Movie Update");
+			XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+			NewGameState.AddStateObject(XComHQ);
+
+		if(XComHQ.bHasSeenFirstGrenadier)
+			XComHQ.SeenClassMovies.AddItem('Grenadier');
+		if(XComHQ.bHasSeenFirstPsiOperative)
+			XComHQ.SeenClassMovies.AddItem('PsiOperative');
+		if(XComHQ.bHasSeenFirstRanger)
+			XComHQ.SeenClassMovies.AddItem('Ranger');
+		if(XComHQ.bHasSeenFirstSharpshooter)
+			XComHQ.SeenClassMovies.AddItem('Sharpshooter');
+		if(XComHQ.bHasSeenFirstSpecialist)
+			XComHQ.SeenClassMovies.AddItem('Specialist');
+
+		if(XComHQ.SeenClassMovies.Length > 0)
+		{
+			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+			XComHQ = XComGameState_HeadquartersXCom(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
+		}
+		else
+		{
+			`XCOMHISTORY.CleanupPendingGameState(NewGameState);
+		}
+
+		}
+
+	SoldierClassMgr = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager();
+	SoldierClassTemplate = SoldierClassMgr.FindSoldierClassTemplate(SoldierClassName);
+
+	if(SoldierClassTemplate != none && SoldierClassTemplate.bHasClassMovie && XComHQ.SeenClassMovies.Find(SoldierClassName) == INDEX_NONE)
 		{
 			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Soldier Class Movie");
 			XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 			NewGameState.AddStateObject(XComHQ);
-			XComHQ.bHasSeenFirstGrenadier = true;
+		XComHQ.SeenClassMovies.AddItem(SoldierClassName);
 			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 			`HQPRES.UISoldierIntroCinematic(SoldierClassName, SoldierRef);
 			MovieShown = true;
 		}
-		break;
-	case 'PsiOperative':
-		if(!XComHQ.bHasSeenFirstPsiOperative)
-		{
-			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Soldier Class Movie");
-			XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			NewGameState.AddStateObject(XComHQ);
-			XComHQ.bHasSeenFirstPsiOperative = true;
-			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-			`HQPRES.UISoldierIntroCinematic(SoldierClassName, SoldierRef);
-			MovieShown = true;
-		}
-		break;
-	case 'Ranger':
-		if(!XComHQ.bHasSeenFirstRanger)
-		{
-			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Soldier Class Movie");
-			XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			NewGameState.AddStateObject(XComHQ);
-			XComHQ.bHasSeenFirstRanger = true;
-			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-			`HQPRES.UISoldierIntroCinematic(SoldierClassName, SoldierRef);
-			MovieShown = true;
-		}
-		break;
-	case 'Sharpshooter':
-		if(!XComHQ.bHasSeenFirstSharpshooter)
-		{
-			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Soldier Class Movie");
-			XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			NewGameState.AddStateObject(XComHQ);
-			XComHQ.bHasSeenFirstSharpshooter = true;
-			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-			`HQPRES.UISoldierIntroCinematic(SoldierClassName, SoldierRef);
-			MovieShown = true;
-		}
-		break;
-	case 'Specialist':
-		if(!XComHQ.bHasSeenFirstSpecialist)
-		{
-			NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Soldier Class Movie");
-			XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
-			NewGameState.AddStateObject(XComHQ);
-			XComHQ.bHasSeenFirstSpecialist = true;
-			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-			`HQPRES.UISoldierIntroCinematic(SoldierClassName, SoldierRef);
-			MovieShown = true;
-		}
-		break;
-	default:
-		break;
-	}
 
 	return MovieShown;
 }

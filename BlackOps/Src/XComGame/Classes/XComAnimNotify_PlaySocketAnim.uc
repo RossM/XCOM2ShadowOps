@@ -10,6 +10,7 @@ class XComAnimNotify_PlaySocketAnim extends AnimNotify
 var() Name AnimName;
 var() Name SocketName;
 var() bool Looping;
+var() bool Additive;
 
 cpptext
 {
@@ -21,5 +22,6 @@ cpptext
 
 defaultproperties
 {
-	Looping = false;
+	Looping = false
+	Additive = false
 }

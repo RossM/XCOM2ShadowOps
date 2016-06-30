@@ -34,6 +34,7 @@ var private SeqEvent_OnTacticalIntro TacticalIntro;
 var bool bSeamlessTravelDestinationLoaded;
 var UIScreen BriefingScreen;
 var array<XComUnitPawn> DropshipPawns; //List of pawns riding in the dropship, so we can destroy / clean them up when done.
+var array<string> DropshipPawnVariables; //List of pawn variables we used, so we can cleanup
 var bool bProcessedTravelDestinationLoaded;
 var string MapImagePath;
 var Object MapImage;
@@ -430,7 +431,7 @@ simulated private function OnControllerConnected()
 {
 	 if( bIsControllerConnected )
 	 {
-		if( Pres != none && Pres.m_bPresLayerReady )
+		 if( Pres != none && Pres.IsPresentationLayerReady() )
 		{
 			Pres.UICloseControllerUnplugDialog();
 		}
@@ -450,7 +451,7 @@ simulated private function OnControllerDisconnected()
 
 	if( !bIsControllerConnected && LP != none )
 	{
-		if( Pres != none && Pres.m_bPresLayerReady && 
+		if( Pres != none && Pres.IsPresentationLayerReady() &&
 			!Pres.IsInState('State_ProgressDialog') &&
 			!`XENGINE.IsMoviePlaying("1080_PropLoad_001") )
 		{
@@ -1319,6 +1320,7 @@ event NotifyStartTacticalSeamlessLoad()
 simulated function SetupDropshipMatinee()
 {
 	local array<SequenceObject> Events;
+	local array<XComGameState_Unit> UnitsInDropship;
 	local XComGameStateHistory History;
 	local XComGameState_Unit Unit;
 	local StateObjectReference UnitRef;
@@ -1329,7 +1331,7 @@ simulated function SetupDropshipMatinee()
 	local int UnitIndex;
 	local Vector ZeroVector;
 	local Rotator ZeroRotation;
-	local string UnitIndexString;
+	local string PawnVariableString;
 	local string RemoteEventString;
 	local string SoldierEmotion;
 	local XComGameState_BattleData BattleData;
@@ -1339,12 +1341,14 @@ simulated function SetupDropshipMatinee()
 
 	bProcessedTravelDestinationLoaded = false;
 
+	DropshipPawns.Length = 0;
+	DropshipPawnVariables.Length = 0;
+
 	WorldInfo.GetGameSequence().FindSeqObjectsByClass(class'SeqEvent_OnTacticalIntro', TRUE, Events);
 	if(Events.Length > 0)
 	{
 		TacticalIntro = SeqEvent_OnTacticalIntro(Events[0]);
 	}
-
 	
 	foreach AllActors(class'SkeletalMeshActor', IterateActor)
 	{
@@ -1359,6 +1363,44 @@ simulated function SetupDropshipMatinee()
 
 	History = `XCOMHISTORY;
 	Headquarters = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
+	BattleData = XComGameState_BattleData(History.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
+
+	// collect all the units we want to appear in the drophip. Start with everybody on your squad
+	foreach Headquarters.Squad(UnitRef)
+	{
+		Unit = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
+		UnitsInDropship.AddItem(Unit);
+	}
+
+	// delicious hackery for the dlc spark. Ideally this will be extended to a "show reward unit in dropship" 
+	// flag, but right now the sparks don't go through the usual reward unit paths and it wouldn't work,
+	// and we don't have time to do it well.
+	if(BattleData.MapData.ActiveMission.sType == "LastGiftC")
+	{
+	foreach History.IterateByClassType(class'XComGameState_Unit', Unit)
+	{
+		if(Unit.GetMyTemplateName() == 'LostTowersSpark')
+		{
+			if(UnitsInDropship.Length >= 6)
+			{
+				// remove the first unit that isn't shen so we have space for the spark
+				for(UnitIndex = 0; UnitIndex < UnitsInDropship.Length; UnitIndex++)
+				{
+					if(UnitsInDropship[UnitIndex].GetMyTemplateName() != 'LostTowersShen')
+					{
+						UnitsInDropship.Remove(UnitIndex, 1);
+						break;
+					}
+				}
+			}
+
+			// stick the spark in the front of the list so appears at the front of the dropship and is easily seen
+			UnitsInDropship.InsertItem(0, Unit);
+			break;
+		}
+	}
+	}
+	// end of hackery
 
 	if (`TACTICALGRI != none)
 	{
@@ -1370,9 +1412,8 @@ simulated function SetupDropshipMatinee()
 		//See what percentage of soldiers are alive
 		NumLost = 0.0f;
 		TotalNum = 0.0f;
-		foreach Headquarters.Squad(UnitRef)
+		foreach UnitsInDropship(Unit)
 		{
-			Unit = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
 			if(Unit.IsASoldier()) //No gremlins, VIPs, etc.		   
 			{
 				TotalNum += 1.0f;
@@ -1387,8 +1428,6 @@ simulated function SetupDropshipMatinee()
 		PercentLost = NumLost / TotalNum;
 
 		//Figure out the emotion of the soldier in the dropship based on the mission performance
-		BattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
-
 		if(BattleData.bLocalPlayerWon && PercentLost <= 0.5f)
 		{
 			if(PercentLost == 0.0f)
@@ -1406,10 +1445,9 @@ simulated function SetupDropshipMatinee()
 		}
 	}
 
-	UnitIndex = 0;		
-	foreach Headquarters.Squad(UnitRef)
+	UnitIndex = 1;		
+	foreach UnitsInDropship(Unit)
 	{
-		Unit = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
 		if(Unit.IsASoldier() && //No gremlins, VIPs, etc.
 		   Unit.IsAlive() && !Unit.bCaptured && !Unit.IsBleedingOut()) //No dead or MIA soldiers in the seats
 		{
@@ -1421,10 +1459,11 @@ simulated function SetupDropshipMatinee()
 			UnitPawn.SetVisibleToTeams(eTeam_All);
 			DropshipPawns.AddItem(UnitPawn);
 
-			UnitIndexString = string(UnitIndex + 1);
-			SetDropshipPawnVariable(UnitPawn, UnitIndexString);
+			PawnVariableString = Unit.GetMyTemplate().strLoadingMatineeSlotPrefix$string(UnitIndex);
+			SetDropshipPawnVariable(UnitPawn, PawnVariableString);
+			DropshipPawnVariables.AddItem(PawnVariableString);
 
-			RemoteEventString = "Soldier"$UnitIndexString$"_"$SoldierEmotion;
+			RemoteEventString = PawnVariableString$"_"$SoldierEmotion;
 			`XCOMGRI.DoRemoteEvent(name(RemoteEventString));
 
 			++UnitIndex;
@@ -1432,14 +1471,12 @@ simulated function SetupDropshipMatinee()
 	}
 }
 
-private function SetDropshipPawnVariable(XComUnitPawn UnitPawn, string IndexStr)
+private function SetDropshipPawnVariable(XComUnitPawn UnitPawn, string VariableName)
 {
 	local array<SequenceVariable> OutVariables;
 	local SequenceVariable SeqVar;
 	local SeqVar_Object SeqVarPawn;
-	local string VariableName;
 
-	VariableName = "Soldier"$IndexStr;
 	WorldInfo.MyKismetVariableMgr.GetVariable(name(VariableName), OutVariables);
 	foreach OutVariables(SeqVar)
 	{
@@ -1449,7 +1486,6 @@ private function SetDropshipPawnVariable(XComUnitPawn UnitPawn, string IndexStr)
 			SeqVarPawn.SetObjectValue(UnitPawn);
 		}
 	}
-	
 }
 
 simulated function InitDropshipUI()
@@ -1503,7 +1539,7 @@ function StartDropshipNarrative()
 	GeneratedMission = class'UIUtilities_Strategy'.static.GetXComHQ().GetGeneratedMissionData(BattleData.m_iMissionID);
 	MissionTemplate = class'X2MissionTemplateManager'.static.GetMissionTemplateManager().FindMissionTemplate(GeneratedMission.Mission.MissionName);	
 
-	if(MissionTemplate.PreMissionNarratives.Length > 0)
+	if(MissionTemplate.PreMissionNarratives.Length > 0 && !BattleData.DirectTransferInfo.IsDirectMissionTransfer)
 	{
 		DropshipNarrative = XComNarrativeMoment(`CONTENT.RequestGameArchetype(MissionTemplate.PreMissionNarratives[`SYNC_RAND(MissionTemplate.PreMissionNarratives.Length)]));
 		if(DropshipNarrative != None)
@@ -1558,7 +1594,6 @@ function CleanupDropshipStart()
 function CleanupDropshipEnd()
 {
 	local int Index;
-	local string UnitIndexString;
 
 	if(!class'WorldInfo'.static.GetWorldInfo().IsInSeamlessTravel())
 	{
@@ -1572,10 +1607,11 @@ function CleanupDropshipEnd()
 	//Clean up the dropship pawns
 	for(Index = 0; Index < DropshipPawns.Length; ++Index)
 	{
-		UnitIndexString = string(Index + 1);
-		SetDropshipPawnVariable(none, UnitIndexString);
+		SetDropshipPawnVariable(none, DropshipPawnVariables[Index]);
 		DropshipPawns[Index].Destroy();
 	}
+
+	DropshipPawns.Length = 0;
 }
 
 event NotifyLoadedDestinationMap(name WorldPackageName)
@@ -1613,22 +1649,40 @@ private function TransferUnitToNewMission(XComGameState_Unit UnitState,
 {
 	local XComGameStateHistory History;
 	local DirectTransferInformation_UnitStats TransferredUnitStats;
+	local XComGameState_Unit StatsUnit;
 	local XComGameState_Effect EffectState;
 	local StateObjectReference StateRef;
 
 	History = `XCOMHISTORY;
 	if(UnitState.ControllingPlayer.ObjectID == LocalPlayerObjectID && !UnitState.GetMyTemplate().bIsCosmetic)
 	{
-		if(UnitState.IsDead())
-		{
-			// remove this unit from the headquarters squad. This will need to be carried along in some way at
-			// some point so they show up in the after action report
-			XComHQ.Squad.RemoveItem(UnitState.GetReference());
-		}
-		else
+		if(!UnitState.IsDead())
 		{
 			UnitState = XComGameState_Unit(NewStartState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
 			NewStartState.AddStateObject(UnitState);
+
+			// if the unit was removed from play, it's stat buffs from armor and such have also been removed.
+			// In order to get the correct health and armor values, we need to go back in time
+			// to the point they left the level
+			if(UnitState.bRemovedFromPlay)
+			{
+				StatsUnit = UnitState;
+				while(StatsUnit != none && StatsUnit.bRemovedFromPlay)
+				{
+					StatsUnit = XComGameState_Unit(History.GetPreviousGameStateForObject(StatsUnit));
+				}
+			}
+			if(StatsUnit == none)
+			{
+				StatsUnit = UnitState; // no pre-evac vesion found, so just use current
+			}
+
+			if(StatsUnit.IsBeingCarried() || StatsUnit.bRemovedFromPlay)
+			{
+				// units that were being carried at the time of evac or have been removed
+				// for the entire mission don't get to come along to the next part of the mission.
+				return;   
+			}
 
 			// clear their evac state. Most multi-part missions have unit's evac at the end of each section,
 			// and we need them to be not evac'd again for the next map
@@ -1637,8 +1691,10 @@ private function TransferUnitToNewMission(XComGameState_Unit UnitState,
 			// copy their stats to the transfer info. This needs to happen before we remove abilities and effects, as
 			// they could change the stat values
 			TransferredUnitStats.UnitStateRef = UnitState.GetReference();
-			TransferredUnitStats.HP = UnitState.GetCurrentStat(eStat_HP);
-			TransferredUnitStats.ArmorShred = UnitState.Shredded;
+			TransferredUnitStats.HP = StatsUnit.GetCurrentStat(eStat_HP);
+			TransferredUnitStats.ArmorShred = StatsUnit.Shredded;
+			TransferredUnitStats.LowestHP = StatsUnit.LowestHP;
+			TransferredUnitStats.HighestHP = StatsUnit.HighestHP;
 			BattleData.DirectTransferInfo.TransferredUnitStats.AddItem(TransferredUnitStats);
 
 			// copy over the unit's abilities
@@ -1690,9 +1746,11 @@ exec function TransferToNewMission(string MissionType)
 	local XComGameState_Player PlayerState;
 	local XComGameState_Player NewPlayerState;
 	local XComGameState_Unit UnitState;
-	local XComGameState_Cheats CheatState;
+	local XComGameState_BaseObject BaseState;
 	local XComGameState_HeadquartersXCom XComHQ;
-	local XComGameState_HeadquartersAlien AlienHQ;
+	local array<X2DownloadableContentInfo> DLCInfos;
+	local X2DownloadableContentInfo DLCInfo;
+	local XComGameState_MissionSite MissionState;
 
 	History = `XCOMHISTORY;
 	ParcelManager = `PARCELMGR;
@@ -1720,8 +1778,6 @@ exec function TransferToNewMission(string MissionType)
 	NewPlot = ValidPlots[0];
 
 	// generate a new start state
-	//StartState = class'XComGameStateContext_TacticalGameRule'.static.CreateDefaultTacticalStartState_Singleplayer(BattleData);
-	
 	TacticalStartContext = XComGameStateContext_TacticalGameRule(class'XComGameStateContext_TacticalGameRule'.static.CreateXComGameStateContext());
 	TacticalStartContext.GameRuleType = eGameRule_TacticalGameStart;
 	StartState = History.CreateNewGameState(false, TacticalStartContext);
@@ -1737,14 +1793,13 @@ exec function TransferToNewMission(string MissionType)
 	BattleData.MapData.ObjectiveParcelIndex = -1;
 	StartState.AddStateObject(BattleData);
 
-	// copy over the headquarters objects
+	// save off the aliens we've seen/killed up 'till now
+	BattleData.DirectTransferInfo.AliensKilled = class'UIMissionSummary'.static.GetNumEnemiesKilled(BattleData.DirectTransferInfo.AliensSeen);
+
+	// copy over the xcom headquarters object. Need to do this first so it's available for the unit transfer
 	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 	XComHQ = XComGameState_HeadquartersXCom(StartState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 	StartState.AddStateObject(XComHQ);
-
-	AlienHQ = XComGameState_HeadquartersAlien(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersAlien'));
-	AlienHQ = XComGameState_HeadquartersAlien(StartState.CreateStateObject(class'XComGameState_HeadquartersAlien', AlienHQ.ObjectID));
-	StartState.AddStateObject(AlienHQ);
 
 	// Copy over the XCOM player state and create new states for the alien and civilian players
 	LocalPlayerObjectID = Rules.GetLocalClientPlayerObjectID();
@@ -1770,18 +1825,46 @@ exec function TransferToNewMission(string MissionType)
 		}
 	}
 
-	// copy over the XCom units
-	foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
+	// copy over any other non-transient state objects, excepting player objects and alien units
+	foreach History.IterateByClassType(class'XComGameState_BaseObject', BaseState)
 	{
-		TransferUnitToNewMission(UnitState, StartState, XComHQ, BattleData, LocalPlayerObjectID);
+		UnitState = XComGameState_Unit(BaseState);
+		if(UnitState != none)
+		{
+			TransferUnitToNewMission(UnitState, StartState, XComHQ, BattleData, LocalPlayerObjectID);
+		}
+		else if(XComGameState_Player(BaseState) == none // we already handled players above
+			&& XComGameState_HeadquartersXCom(BaseState) == none // we also handled xcom headquarters
+			&& class'XComGameInfo'.default.TransientTacticalClassNames.Find(BaseState.Class.Name) == INDEX_NONE)
+		{
+			// not a transient state, so bring it along
+			BaseState = StartState.CreateStateObject(BaseState.Class, BaseState.ObjectID);
+			
+			if(XComGameState_ObjectivesList(BaseState) != none)
+			{
+				XComGameState_ObjectivesList(BaseState).ClearTacticalObjectives();
+			}
+
+			StartState.AddStateObject(BaseState);
+		}
 	}
 
-	// copy over the cheat state
-	CheatState = XComGameState_Cheats(History.GetSingleGameStateObjectForClass(class'XComGameState_Cheats'));
-	CheatState = XComGameState_Cheats(StartState.CreateStateObject(class'XComGameState_Cheats', CheatState.ObjectID));
-	StartState.AddStateObject(CheatState);
+	// give mods/dlcs a chance to modify the transfer state
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	foreach DLCInfos(DLCInfo)
+	{
+		DLCInfo.ModifyTacticalTransferStartState(StartState);
+	}
 
 	History.AddGameStateToHistory(StartState);
+
+	// if this mission has a custom loading map, play it
+	MissionState = XComGameState_MissionSite(History.GetGameStateForObjectID(BattleData.m_iMissionID));
+	if(MissionState.GetMissionSource().CustomLoadingMovieName_Intro != "")
+	{
+		`XENGINE.PlaySpecificLoadingMovie(MissionState.GetMissionSource().CustomLoadingMovieName_Intro, MissionState.GetMissionSource().CustomLoadingMovieName_IntroSound);
+		`XENGINE.PlayLoadMapMovie(-1);
+	}
 
 	// and do the client transfer to the new map!
 	ClientTravel(NewPlot.MapName, TRAVEL_Relative);

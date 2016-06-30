@@ -59,6 +59,8 @@ var config float	RunFlinchDuration;
 var float			RunFlinchCurrentTime;
 var bool			CurrentlyRunFlinching;
 var float			AnimationRateModifier;
+var float			LastAnimPlayRate;
+var config float	RunSlopeRateModifier;
 
 function Init(const out VisualizationTrack InTrack)
 {
@@ -191,6 +193,7 @@ simulated function SetupNextMoveIsEndMove()
 			AwayFromCover.Z = 0;
 			AwayFromCover = Normal(AwayFromCover) * UnitPawn.DistanceFromCoverToCenter;
 			Destination = kCoverPointHandle.CoverLocation + AwayFromCover;
+			Destination.Z = MoveEndAction.Destination.Z;
 			MoveEndAction.Destination = Destination;
 		}
 	}
@@ -436,6 +439,8 @@ simulated function SwitchAnimation(AnimationState anim)
 			}
 		break;
 	}
+
+	LastAnimPlayRate = AnimParams.PlayRate;
 }
 
 function BumpCover()
@@ -549,6 +554,9 @@ simulated state Executing
 
 	function Tick(float dt)
 	{
+		local PathPoint CurrPoint, NextPoint;
+		local int LocalPathIndex;
+
 		if( CurrentlyRunFlinching )
 		{
 			if( UnitPawn.GetAnimTreeController().IsPlayingCurrentAnimation('MV_RunFlinch') )
@@ -562,6 +570,28 @@ simulated state Executing
 			else
 			{
 				CurrentlyRunFlinching = false;
+			}
+		}
+		else if( UnitPawn.m_kLastPhysicsState.m_ePhysics == PHYS_Walking )
+		{
+			LocalPathIndex = Unit.VisualizerUsePath.GetPathIndexFromPathDistance(UnitPawn.m_fDistanceMovedAlongPath);
+			if( (LocalPathIndex + 1) >= Unit.CurrentMoveData.MovementData.Length ) // >= to handle the empty path case (such as a full teleport on a hidden unit)
+			{
+				SwitchAnimNodeSequence.Rate = LastAnimPlayRate;
+			}
+			else
+			{
+				CurrPoint = Unit.CurrentMoveData.MovementData[LocalPathIndex];
+				NextPoint = Unit.CurrentMoveData.MovementData[LocalPathIndex + 1];
+
+				if( abs(CurrPoint.Position.Z - NextPoint.Position.Z) > 10.0 )
+				{
+					SwitchAnimNodeSequence.Rate = LastAnimPlayRate * RunSlopeRateModifier;
+				}
+				else
+				{
+					SwitchAnimNodeSequence.Rate = LastAnimPlayRate;
+				}
 			}
 		}
 	}

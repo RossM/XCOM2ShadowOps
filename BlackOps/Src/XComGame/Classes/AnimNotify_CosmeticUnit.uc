@@ -9,6 +9,7 @@ class AnimNotify_CosmeticUnit extends AnimNotify
 	native(Animation);
 
 var() private name AnimationName;
+var() private bool Looping;
 
 cpptext
 {

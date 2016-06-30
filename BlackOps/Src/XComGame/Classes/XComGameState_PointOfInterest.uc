@@ -63,14 +63,14 @@ simulated function X2PointOfInterestTemplate GetMyTemplate()
 }
 
 //---------------------------------------------------------------------------------------
-static function SetUpPOIs(XComGameState StartState)
+static function SetUpPOIs(XComGameState StartState, optional int UseTemplateGameArea=-1)
 {
 	local array<X2StrategyElementTemplate> POITemplates;
 	local XComGameState_PointOfInterest POIState;
 	local int idx;
 
 	// Grab all DarkEvent Templates
-	POITemplates = GetMyTemplateManager().GetAllTemplatesOfClass(class'X2PointOfInterestTemplate');
+	POITemplates = GetMyTemplateManager().GetAllTemplatesOfClass(class'X2PointOfInterestTemplate', UseTemplateGameArea);
 
 	// Iterate through the templates and build each POI State Object
 	for (idx = 0; idx < POITemplates.Length; idx++)
@@ -305,7 +305,47 @@ function StartScan()
 	SetDespawnTime();
 }
 
+// THIS FUNCTION SHOULD RETURN TRUE IN ALL THE SAME CASES AS Update
+function bool ShouldUpdate( )
+{
+	local UIStrategyMap StrategyMap;
+	local XComGameState_HeadquartersXCom XComHQ;
+
+	StrategyMap = `HQPRES.StrategyMap2D;
+
+	// Do not trigger anything while the Avenger or Skyranger are flying, or if another popup is already being presented
+	if (bAvailable && StrategyMap != none && StrategyMap.m_eUIState != eSMS_Flight && !`HQPRES.ScreenStack.IsCurrentClass( class'UIAlert' ))
+	{
+		XComHQ = class'UIUtilities_Strategy'.static.GetXComHQ( );
+
+		// If the Avenger is not at the location and time runs out, despawn the POI
+		if (XComHQ.GetCurrentScanningSite( ).GetReference( ).ObjectID != ObjectID && !GetMyTemplate( ).bNeverExpires && class'X2StrategyGameRulesetDataStructures'.static.LessThan( DespawnTime, GetCurrentTime( ) ))
+		{
+			return true;
+		}
+
+		if (bTriggerAppearedPopup)
+		{
+			return true;
+		}
+
+		// Check if scanning is complete
+		if (IsScanComplete( ))
+		{
+			return true;
+		}
+	}
+
+	if (bCheckForWeightUpdate && class'X2StrategyGameRulesetDataStructures'.static.LessThan( NextWeightUpdateDate, GetCurrentTime( ) ))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 //---------------------------------------------------------------------------------------
+// IF ADDING NEW CASES WHERE bModified = true, UPDATE FUNCTION ShouldUpdate ABOVE
 function bool Update(XComGameState NewGameState)
 {
 	local XComGameState_HeadquartersXCom XComHQ;
@@ -574,30 +614,23 @@ protected function bool DisplaySelectionPrompt()
 
 function UpdateGameBoard()
 {
-	local XComGameStateHistory History;
 	local XComGameState NewGameState;
 	local XComGameState_PointOfInterest NewPOIState;
 	local UIStrategyMap StrategyMap;
-	
-	History = `XCOMHISTORY;
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Update Point of Interest");
+	local bool bSuccess;
 
-	NewPOIState = XComGameState_PointOfInterest(NewGameState.CreateStateObject(class'XComGameState_PointOfInterest', ObjectID));
-	NewGameState.AddStateObject(NewPOIState);
+	if (ShouldUpdate())
+	{
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState( "Update Point of Interest" );
 
-	if (!NewPOIState.Update(NewGameState))
-	{
-		NewGameState.PurgeGameStateForObjectID(NewPOIState.ObjectID);
-	}
+		NewPOIState = XComGameState_PointOfInterest( NewGameState.CreateStateObject( class'XComGameState_PointOfInterest', ObjectID ) );
+		NewGameState.AddStateObject( NewPOIState );
 
-	if (NewGameState.GetNumGameStateObjects() > 0)
-	{
-		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-		`HQPRES.StrategyMap2D.UpdateMissions();
-	}
-	else
-	{
-		History.CleanupPendingGameState(NewGameState);
+		bSuccess = NewPOIState.Update(NewGameState);
+		`assert( bSuccess ); // why did Update & ShouldUpdate return different bools?
+
+		`XCOMGAME.GameRuleset.SubmitGameState( NewGameState );
+		`HQPRES.StrategyMap2D.UpdateMissions( );
 	}
 
 	StrategyMap = `HQPRES.StrategyMap2D;

@@ -338,10 +338,10 @@ simulated state Executing
 			return;
 		}
 
-		Matinee = MatineeSelectingCamera.MatineeInfo.Matinee;
+		Matinees.AddItem(MatineeSelectingCamera.MatineeInfo.Matinee);
 
 		// find the base for the selected matinee. By convention, it's the package name with "_Base" appended to it
-		MapPackage = Matinee.Outer;
+		MapPackage = MatineeSelectingCamera.MatineeInfo.Matinee.Outer;
 		while(MapPackage.Outer != none) // the map will be the outermost (GetOutermost() is not script accessible)
 		{
 			MapPackage = MapPackage.Outer;
@@ -429,6 +429,9 @@ Begin:
 			{
 				Sleep(0.0f);
 			}
+
+			// Jwats: Some Units are locked down after the pod idle to prevent turning
+			FocusUnitPawn.GetAnimTreeController().SetAllowNewAnimations(true);
 		}
 
 		//Select and play a reveal matinee, wait for it to finish
@@ -440,7 +443,7 @@ Begin:
 			// to put the timeout back here, since we will be doing other things afterwards
 			TimeoutSeconds += default.TimeoutSeconds;
 
-			while( Matinee != none )
+			while( Matinees.Length > 0 )
 			{
 				Sleep(0.0f);
 			}

@@ -639,6 +639,7 @@ simulated function GetOriginalUnits(out array<XComGameState_Unit> Units, bool bS
 	local XComGameStateHistory History;
 	local XComGameState_Unit CurrentUnitState, OldUnitState;
 	local XComGameState_Effect MindControlEffect, OriginalEffect;
+	local array<StateObjectReference> UnitRefs;
 
 	History = `XCOMHISTORY;
 	foreach History.IterateByClassType(class'XComGameState_Unit', CurrentUnitState, eReturnType_Reference)
@@ -657,14 +658,16 @@ simulated function GetOriginalUnits(out array<XComGameState_Unit> Units, bool bS
 		{
 			OriginalEffect = XComGameState_Effect(History.GetOriginalGameStateRevision(MindControlEffect.ObjectID));
 			OldUnitState = XComGameState_Unit(History.GetGameStateForObjectID(CurrentUnitState.ObjectID,,OriginalEffect.GetParentGameState().HistoryIndex - 1));
-			if (OldUnitState.ControllingPlayer.ObjectID == ObjectID)
+			if(OldUnitState.ControllingPlayer.ObjectID == ObjectID && UnitRefs.Find('ObjectID', CurrentUnitState.ObjectID) == INDEX_NONE)
 			{
 				Units.AddItem(CurrentUnitState);
+				UnitRefs.AddItem(CurrentUnitState.GetReference());
 			}
 		}
-		else if (CurrentUnitState.ControllingPlayer.ObjectID == ObjectID)
+		else if(CurrentUnitState.ControllingPlayer.ObjectID == ObjectID && UnitRefs.Find('ObjectID', CurrentUnitState.ObjectID) == INDEX_NONE)
 		{
 			Units.AddItem(CurrentUnitState);
+			UnitRefs.AddItem(CurrentUnitState.GetReference());
 		}
 	}
 }

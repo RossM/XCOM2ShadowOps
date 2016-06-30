@@ -160,6 +160,7 @@ static function X2AbilityTemplate CreateImmunitiesAbility()
 	DamageImmunity.ImmuneTypes.AddItem('Poison');
 	DamageImmunity.ImmuneTypes.AddItem(class'X2Item_DefaultDamageTypes'.default.ParthenogenicPoisonType);
 	DamageImmunity.ImmuneTypes.AddItem('Unconscious');
+	DamageImmunity.ImmuneTypes.AddItem('Panic');
 
 	Template.AddTargetEffect(DamageImmunity);
 

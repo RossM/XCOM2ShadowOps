@@ -2507,7 +2507,7 @@ exec function AddItem(string strItemTemplate, optional int Quantity = 1, optiona
 	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Add Item Cheat: Complete");
 	HQState = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(HQState.Class, HQState.ObjectID));
-	HQState.PutItemInInventory(NewGameState, ItemState, bLoot);
+	HQState.AddItemToHQInventory(ItemState);
 	NewGameState.AddStateObject(HQState);
 	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 	`log("Added item" @ strItemTemplate @ "object id" @ ItemState.ObjectID);
@@ -2533,7 +2533,7 @@ exec function LevelUpBarracks(optional int Ranks = 1)
 	{
 		UnitState = XComGameState_Unit(History.GetGameStateForObjectID(XComHQ.Crew[idx].ObjectID));
 
-		if(UnitState != none && UnitState.GetMyTemplateName() == 'Soldier' && UnitState.GetRank() < (class'X2ExperienceConfig'.static.GetMaxRank() - 1))
+		if(UnitState != none && UnitState.IsSoldier() && UnitState.GetRank() < (class'X2ExperienceConfig'.static.GetMaxRank() - 1))
 		{
 			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
 			NewGameState.AddStateObject(UnitState);
@@ -2827,9 +2827,9 @@ exec function DV3()
 
 function OnVolunteerMatineeIsVisible(name LevelPackageName, optional LevelStreaming LevelStreamedIn = new class'LevelStreaming')
 {
-	`HQPRES.UINarrative(XComNarrativeMoment'X2NarrativeMoments.Strategy.GP_DarkVolunteerPT2_a');
+	//`HQPRES.UINarrative(XComNarrativeMoment'X2NarrativeMoments.Strategy.GP_DarkVolunteerPT2_a');
 	`HQPRES.UINarrative(XComNarrativeMoment'X2NarrativeMoments.Strategy.GP_DarkVolunteerPT2_Hallway');
-	`HQPRES.UINarrative(XComNarrativeMoment'X2NarrativeMoments.Strategy.GP_DarkVolunteerPT2_b');
+	//`HQPRES.UINarrative(XComNarrativeMoment'X2NarrativeMoments.Strategy.GP_DarkVolunteerPT2_b');
 }
 
 exec function DV123()

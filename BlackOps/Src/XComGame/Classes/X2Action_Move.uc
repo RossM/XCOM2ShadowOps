@@ -165,6 +165,9 @@ function NotifyEnvironmentDamage(int PreviousPathTileIndex, bool bFragileOnly = 
 
 		foreach LastInGameStateChain.IterateByClassType(class'XComGameState_EnvironmentDamage', EnvironmentDamage)
 		{
+			if (EnvironmentDamage.DamageCause.ObjectID != Unit.ObjectID)
+				continue;
+
 			HitLocation = WorldData.GetPositionFromTileCoordinates(EnvironmentDamage.HitLocationTile);			
 			PathTile = AbilityContext.InputContext.MovementPaths[MovePathIndex].MovementTiles[Index];
 			TileLocation = WorldData.GetPositionFromTileCoordinates(PathTile);

@@ -47,6 +47,8 @@ var bool bSimulatingCombat; // SimCombat in progress
 
 var bool bNarrativeDisabled;
 
+var bool bDebugMouseTrace;
+
 // Animation Debugging Variables START
 var bool bDebugAnims;
 var bool bDebugAnimsPawn;
@@ -1440,7 +1442,7 @@ exec function ToggleFOW(optional string strCommand)
 		}
 		else
 		{
-			`XWORLD.bEnableFOW = !`XWORLD.bEnableFOW;
+			`XWORLD.bDebugEnableFOW = !`XWORLD.bDebugEnableFOW;
 		}
 
 		LP = LocalPlayer(Player);
@@ -1466,7 +1468,7 @@ exec function ToggleFOW(optional string strCommand)
 					}
 					else
 					{
-						FOWEffect.bShowFOW = `XWORLD.bEnableFOW;
+						FOWEffect.bShowFOW = `XWORLD.bEnableFOW && `XWORLD.bDebugEnableFOW;
 					}
 				}
 			}
@@ -1482,7 +1484,7 @@ exec function SetFOW(bool value)
 	local PostProcessChain PPChain;
 	local XComFOWEffect FOWEffect;
 
-	`XWORLD.bEnableFOW = value;
+	`XWORLD.bDebugEnableFOW = value;
 
 	LP = LocalPlayer(Player);
 	for(i=0;i<LP.PlayerPostProcessChains.Length;i++)
@@ -1493,7 +1495,7 @@ exec function SetFOW(bool value)
 			FOWEffect = XComFOWEffect(PPChain.Effects[j]);
 			if(FOWEffect != none)
 			{
-				FOWEffect.bShowFOW = value;
+				FOWEffect.bShowFOW = `XWORLD.bEnableFOW && `XWORLD.bDebugEnableFOW;
 			}
 		}
 	}
@@ -1766,6 +1768,11 @@ exec function ToggleDebugVisibilityToCursor( optional Name unitName='')
 exec function UIListScreens()
 {
 	XComPlayerController(Outer).Pres.Get2DMovie().PrintCurrentScreens();
+}
+
+exec function ToggleDebugMouseTrace()
+{
+	bDebugMouseTrace = !bDebugMouseTrace;
 }
 
 exec function UIToggleVisibility()

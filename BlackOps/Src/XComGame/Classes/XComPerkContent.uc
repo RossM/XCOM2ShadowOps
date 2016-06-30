@@ -28,6 +28,7 @@ struct native TAnimContent
 	var() name NoCoverAnim<EditCondition=PlayAnimation>;
 	var() name HighCoverAnim<EditCondition=PlayAnimation>;
 	var() name LowCoverAnim<EditCondition=PlayAnimation>;
+	var() bool AdditiveAnim<EditCondition=PlayAnimation>;
 };
 
 // just want need a 2D Array and unreal script won't do that directly
@@ -83,6 +84,7 @@ var(CasterDamage) array<TParticleContent> CasterOnDamageFX<ToolTip="Delay data i
 var(CasterDamage) bool OnCasterDeathPlayDamageFX;
 var(CasterDamage) SoundCue CasterOnDamageSound;
 var(CasterDamage) editinline AnimNotify_MITV CasterDamageMITV;
+var(CasterDamage) array<TParticleContent> CasterOnMetaDamageFX<ToolTip="This damage FX plays once per volley, rather than with every projectile.">;
 
 var(TargetActivation) array<TParticleContent> TargetActivationFX<ToolTip="Only the delay value for element 0 is used.  All effects will start at the same time as element 0.">;
 var(TargetActivation) TAnimContent TargetActivationAnim;
@@ -121,6 +123,7 @@ var private init array<ParticleSystemComponent> m_CasterDurationParticles; // ac
 var private init array<ParticleSystemComponent> m_CasterDurationEndedParticles; // active particle systems matching CasterDurationEndedFX
 var private init array<ParticleSystemComponent> m_CasterDeactivationParticles; // active particle systems matching CasterDeactivationFX
 var private init array<ParticleSystemComponent> m_CasterOnDamageParticles; // active particle systems matching CasterOnDamageFX
+var private init array<ParticleSystemComponent> m_CasterOnMetaDamageParticles; // active particle systems matching CasterOnMetaDamageFX
 
 var private init array< TTargetParticles > m_TargetActivationParticles; // active particle systems matching TargetActivationFX
 var private init array< TTargetParticles > m_TargetDurationParticles; // active particle systems matching TargetDurationFX
@@ -705,6 +708,14 @@ simulated function OnDamage( XComUnitPawn Pawn )
 	}
 }
 
+simulated function OnMetaDamage( XComUnitPawn Pawn )
+{
+	if (Pawn == m_kPawn)
+	{
+		DoCasterParticleFXOnMetaDamage();
+	}
+}
+
 simulated protected function StartCasterParticleFX( const array<TParticleContent> FX, out array<ParticleSystemComponent> Particles, bool sync = false )
 {
 	local int i;
@@ -887,6 +898,11 @@ simulated protected function StopTargetActivationParticleFX( )
 simulated protected function DoCasterParticleFXOnDamage()
 {
 	StartCasterParticleFX( CasterOnDamageFX, m_CasterOnDamageParticles );
+}
+
+simulated protected function DoCasterParticleFXOnMetaDamage()
+{
+	StartCasterParticleFX( CasterOnMetaDamageFX, m_CasterOnMetaDamageParticles );
 }
 
 simulated protected function DoTargetParticleFXForDuration()

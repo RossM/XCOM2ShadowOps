@@ -462,7 +462,7 @@ function AddPlayerTurnEnd( )
 
 	foreach History.IterateByClassType( class'XComGameState_Unit', Unit )
 	{
-		if ((Unit.GetTeam() == eTeam_XCom) && (!Unit.IsDead()))
+		if ((Unit.GetTeam() == eTeam_XCom) && (!Unit.IsDead()) && Unit.GetMyTemplate().bCanTakeCover)
 		{
 			UnitRef.ObjectID = Unit.ObjectID;
 			AnalyticsObject.AddTacticalValue( ANALYTICS_UNIT_COVER_COUNT, 1, UnitRef );
@@ -1095,6 +1095,7 @@ protected function name GetAlienStatName( name TemplateName, bool WasKilled )
 		case 'AdvMEC_M2':			StatString = "ADVENT_MEC_MK2";
 			break;
 
+		case 'LostTowersTurretM1':
 		case 'AdvShortTurretM3':
 		case 'AdvShortTurretM2':
 		case 'AdvShortTurretM1':
@@ -1155,6 +1156,14 @@ protected function name GetAlienStatName( name TemplateName, bool WasKilled )
 			break;
 
 		case 'AndromedonRobot':		StatString = "ANDROMEDON_ROBOT";
+			break;
+
+		case 'FeralMEC_M1':			
+		case 'FeralMEC_M2':
+		case 'FeralMEC_M3':			StatString = "FERAL_MEC";
+			break;
+
+		case 'Sectopod_Markov':		StatString = "MARKOV_SECTOPOD";
 			break;
 
 		default:					StatString = "UNKNOWN_ENEMY_TYPE";
@@ -1251,14 +1260,22 @@ protected function PlayerKilledOther(XComGameState_Unit SourceUnit, XComGameStat
 				AddValue('TOTAL_ROOKIE_KILLS', 1, UnitRef);
 				break;
 
+			case 'CentralOfficer':
+				AddValue( 'TOTAL_CENTRAL_KILLS', 1, UnitRef );
+				break;
+
+			case 'ChiefEngineer':
+				AddValue( 'SHEN_KILLS', 1, UnitRef );
+				break;
+
+			case 'Spark':
+				AddValue( 'SPARK_MEC_KILLS', 1, UnitRef );
+				break;
+
 			default:
 				AddValue('TOTAL_UNKNOWN_SOLDIER_CLASS_KILLS', 1, UnitRef);
 				break;
 		}
-	}
-	else if (SourceTemplate.DataName == 'NestCentral')
-	{
-		AddValue('TOTAL_CENTRAL_KILLS', 1, UnitRef );
 	}
 	else if (SourceTemplate.DataName == 'AdvPsiWitchM2')
 	{
@@ -1367,14 +1384,22 @@ protected function OtherKilledPlayer(XComGameState_Unit SourceUnit, XComGameStat
 				AddValue('ROOKIE_SOLIDER_KILLED', 1);
 				break;
 
+			case 'CentralOfficer':
+				AddValue( 'CENTRALS_KILLED', 1, UnitRef );
+				break;
+
+			case 'ChiefEngineer':
+				AddValue( 'SHEN_KILLED', 1, UnitRef );
+				break;
+
+			case 'Spark':
+				AddValue( 'SPARK_MEC_KILLED', 1, UnitRef );
+				break;
+
 			default:
 				AddValue( 'UNKNOWN_SOLDIER_CLASS_KILLED', 1);
 				break;
 		}
-	}
-	else if (KilledUnit.GetMyTemplateName( ) == 'NestCentral')
-	{
-		AddValue( 'CENTRALS_KILLED', 1, UnitRef );
 	}
 }
 
@@ -1485,6 +1510,7 @@ protected function HandleWeaponKill(XComGameState_Unit SourceUnit, XComGameState
 		case 'Gremlin_CV':
 		case 'Gremlin_MG':
 		case 'Gremlin_BM':
+		case 'Gremlin_Shen':
 			AddValue('KILLS_WITH_GREMLIN', 1, UnitRef);
 			break;
 
@@ -1532,6 +1558,18 @@ protected function HandleWeaponKill(XComGameState_Unit SourceUnit, XComGameState
 			AddValue('KILLS_WITH_ALIEN_ARMOR', 1, UnitRef);
 			break;
 
+		case 'SparkRifle_CV':
+		case 'SparkRifle_MG':
+		case 'SparkRifle_BM':
+			AddValue('KILLS_WITH_SPARK_RIFLE', 1, UnitRef);
+			break;
+
+		case 'SparkBit_CV':
+		case 'SparkBit_MG':
+		case 'SparkBit_BM':
+			AddValue('KILLS_WITH_SPARK_BIT', 1, UnitRef);
+			break;
+
 		default:
 			if ((X2GrenadeTemplate( Item.GetMyTemplate( ) ) != none) || (X2GrenadeTemplate( Item.GetLoadedAmmoTemplate( Ability ) ) != none))
 			{
@@ -1539,7 +1577,23 @@ protected function HandleWeaponKill(XComGameState_Unit SourceUnit, XComGameState
 			}
 			else
 			{
-				AddValue('KILLS_WITH_UNKNOWN_WEAPONS', 1, UnitRef);
+				// Some of the SPARK abilities deal damage without using an item
+				TemplateName = Ability.GetMyTemplateName();
+				switch (TemplateName)
+				{
+					case 'Strike':	AddValue( 'KILLS_WITH_SPARK_STRIKE', 1, UnitRef );
+						break;
+
+					case 'Nova': AddValue( 'KILLS_WITH_SPARK_NOVA', 1, UnitRef );
+						break;
+
+					case 'SparkDeathExplosion': AddValue( 'KILLS_WITH_SPARK_DEATH_EXPLOSION', 1, UnitRef );
+						break;
+
+					default:
+						AddValue( 'KILLS_WITH_UNKNOWN_WEAPONS', 1, UnitRef );
+						break;
+				}
 			}
 			break;
 	}

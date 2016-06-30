@@ -106,6 +106,8 @@ static function X2AbilityTemplate Add_StandardShot( Name AbilityName='StandardSh
 	KnockbackEffect.bUseTargetLocation = true;
 	Template.AddTargetEffect(KnockbackEffect);
 
+	Template.PostActivationEvents.AddItem('StandardShotActivated');
+
 	return Template;	
 }
 

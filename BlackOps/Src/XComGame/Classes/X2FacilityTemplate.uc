@@ -159,10 +159,8 @@ function bool PlaceCrewMember(XGBaseCrewMgr Mgr, StateObjectReference FacilityRe
 	NumStaffSlots = StaffSlots.Length;
 
 	Unit = XComGameState_Unit(History.GetGameStateForObjectID(CrewMemberRef.ObjectID));
-	if(Unit.IsAlive())
+	if(Unit.CanAppearInBase())
 	{
-		if(Unit.CanBeStaffed())
-		{
 			if(Unit.GetMyTemplateName() == 'Soldier')
 			{	
 				if(Mgr.AddCrew(RoomIdx, self, Unit.GetReference(), "Soldier", RoomOffset, bStaffSlot))
@@ -213,7 +211,6 @@ function bool PlaceCrewMember(XGBaseCrewMgr Mgr, StateObjectReference FacilityRe
 					return true;
 				}
 			}
-		}
 		else if(Unit.GetMyTemplateName() == 'Clerk') //Clerks can fit in any slot
 		{
 			if(Mgr.AddCrew(RoomIdx, self, Unit.GetReference(), "Engineer", RoomOffset, bStaffSlot))

@@ -7,6 +7,7 @@ var config string SecondaryFire_ParticleEffectPath;
 var config float LengthUpdateSpeed;
 var config float SweepDuration;
 var config float FireChance_Level1, FireChance_Level2, FireChance_Level3;
+var config array<Name> ParticleSystemsForLength;
 
 var X2AbilityMultiTarget_Cone coneTemplate;
 var float ConeLength, ConeWidth;
@@ -88,7 +89,7 @@ function Init(const out VisualizationTrack InTrack)
 		coneTemplate = X2AbilityMultiTarget_Cone(AbilityState.GetMyTemplate().AbilityMultiTargetStyle);
 
 		ConeLength = coneTemplate.GetConeLength(AbilityState);
-		ConeWidth = coneTemplate.ConeEndDiameter * 1.35;
+		ConeWidth = coneTemplate.GetConeEndDiameter(AbilityState) * 1.35;
 
 		StartLocation = UnitPawn.Location;
 		EndLocation = AbilityContext.InputContext.TargetLocations[0];
@@ -102,13 +103,13 @@ function Init(const out VisualizationTrack InTrack)
 
 		TempDir.x = UnitDir.x * cos(-ConeAngle / 2) - UnitDir.y * sin(-ConeAngle / 2);
 		TempDir.y = UnitDir.x * sin(-ConeAngle / 2) + UnitDir.y * cos(-ConeAngle / 2);
-		TempDir.z = 0;
+		TempDir.z = UnitDir.z;
 
 		SweepEndLocation_Begin = StartLocation + (TempDir * ConeLength);
 
 		TempDir.x = UnitDir.x * cos(ConeAngle / 2) - UnitDir.y * sin(ConeAngle / 2);
 		TempDir.y = UnitDir.x * sin(ConeAngle / 2) + UnitDir.y * cos(ConeAngle / 2);
-		TempDir.z = 0;
+		TempDir.z = UnitDir.z;
 
 		SweepEndLocation_End = StartLocation + (TempDir * ConeLength);
 
@@ -168,7 +169,7 @@ simulated state Executing
 
 		TempDir.x = UnitDir.x * cos(angle) - UnitDir.y * sin(angle);
 		TempDir.y = UnitDir.x * sin(angle) + UnitDir.y * cos(angle);
-		TempDir.z = 0;
+		TempDir.z = UnitDir.z;
 
 		EndLocation = StartLocation + (TempDir * ConeLength);
 
@@ -191,14 +192,14 @@ simulated state Executing
 
 			//find all the tiles in the current line of fire
 			tempTile = tile;
-			tempTile.Z = 0;
+			//tempTile.Z = 0;
 			lineTiles.AddItem(tempTile);
 			lineEndLoc = EndLocation;
 			while (VSize(lineEndLoc - StartLocation) > class'XComWorldData'.const.WORLD_StepSize)
 			{
 				lineEndLoc -= (TempDir * class'XComWorldData'.const.WORLD_HalfStepSize);
 				tempTile = `XWORLD.GetTileCoordinatesFromPosition(lineEndLoc);
-				tempTile.Z = 0;
+				//tempTile.Z = 0;
 				if (FindTile(tempTile, lineTiles) == false)
 				{
 					lineTiles.AddItem(tempTile);
@@ -301,12 +302,7 @@ simulated state Executing
 
 		foreach UnitPawn.AllOwnedComponents(class'ParticleSystemComponent', p)
 		{
-			if (p.Template.Name == 'P_Heavy_Flamethrower_Blast')
-			{
-				p.SetFloatParameter('Flamethrower_Length', CurrentFlameLength);
-				p.SetVectorParameter('Flamethrower_Length', SetParticleVector);
-			}
-			else if (p.Template.Name == 'P_Char')
+			if( ParticleSystemsForLength.Find(p.Template.Name) != INDEX_NONE )
 			{
 				p.SetFloatParameter('Flamethrower_Length', CurrentFlameLength);
 				p.SetVectorParameter('Flamethrower_Length', SetParticleVector);

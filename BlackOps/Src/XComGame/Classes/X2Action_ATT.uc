@@ -62,6 +62,7 @@ function bool IsTimedOut()
 private function FindATTMatinee()
 {
 	local array<SequenceObject> FoundMatinees;
+	local SeqAct_Interp Matinee;
 	local Sequence GameSeq;
 	local int Index;
 
@@ -75,6 +76,7 @@ private function FindATTMatinee()
 		`log("Matinee:"@ Matinee.ObjComment);
 		if( Instr(Matinee.ObjComment, MatineeCommentPrefix, , true) >= 0 )
 		{
+			Matinees.AddItem(Matinee);
 			return;
 		}
 	}

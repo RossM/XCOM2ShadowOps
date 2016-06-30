@@ -84,7 +84,8 @@ function string ToString()
 /// Returns an XComGameState that is used to launch the X-Com 2 campaign.
 /// </summary>
 static function XComGameState CreateStrategyGameStart(optional XComGameState StartState, optional bool bSetRandomSeed=true, optional bool bTutorialEnabled=false, 
-													  optional int SelectedDifficulty=1, optional bool bSuppressFirstTimeVO=false, optional array<name> EnabledOptionalNarrativeDLC)
+													  optional int SelectedDifficulty=1, optional bool bSuppressFirstTimeVO=false, optional array<name> EnabledOptionalNarrativeDLC, 
+													  optional bool SendCampaignAnalytics=true, optional bool IronManEnabled=false, optional int UseTemplateGameArea=-1, optional bool bSetupDLCContent=true)
 {	
 	local XComGameStateHistory History;
 	local XComGameStateContext_StrategyGameRule StrategyStartContext;
@@ -93,7 +94,9 @@ static function XComGameState CreateStrategyGameStart(optional XComGameState Sta
 	local array<X2DownloadableContentInfo> DLCInfos;
 	local int i;
 	local int Seed;
+	local bool NewCampaign;
 
+	NewCampaign = false;
 	if( StartState == None )
 	{
 		History = `XCOMHISTORY;
@@ -102,6 +105,8 @@ static function XComGameState CreateStrategyGameStart(optional XComGameState Sta
 		StrategyStartContext.GameRuleType = eStrategyGameRule_StrategyGameStart;
 		StartState = History.CreateNewGameState(false, StrategyStartContext);
 		History.AddGameStateToHistory(StartState);
+
+		NewCampaign = true;
 	}
 
 	if (bSetRandomSeed)
@@ -142,7 +147,7 @@ static function XComGameState CreateStrategyGameStart(optional XComGameState Sta
 	class'XComGameState_ResourceCache'.static.SetUpResourceCache(StartState);
 
 	// Create the POIs
-	class'XComGameState_PointOfInterest'.static.SetUpPOIs(StartState);
+	class'XComGameState_PointOfInterest'.static.SetUpPOIs(StartState, UseTemplateGameArea);
 	
 	//Create XCom Techs
 	class'XComGameState_Tech'.static.SetUpTechs(StartState);
@@ -168,12 +173,20 @@ static function XComGameState CreateStrategyGameStart(optional XComGameState Sta
 	// Finish initializing Havens
 	class'XComGameState_Haven'.static.SetUpHavens(StartState);
 
+	if (NewCampaign && SendCampaignAnalytics)
+	{
+		class'AnalyticsManager'.static.SendGameStartTelemetry( History, IronManEnabled );
+	}
+
+	if( bSetupDLCContent )
+	{
 	// Let the DLC / Mods hook the creation of a new campaign
 	EventManager = `ONLINEEVENTMGR;
 	DLCInfos = EventManager.GetDLCInfos(false);
 	for(i = 0; i < DLCInfos.Length; ++i)
 	{
 		DLCInfos[i].InstallNewCampaign(StartState);
+	}
 	}
 
 	return StartState;
@@ -258,13 +271,7 @@ static function XComGameState CreateStrategyGameStartFromTactical()
 	StartState.AddStateObject(ObjectivesList);
 
 	// clear completed & failed objectives on transition back to strategy
-	for( Index = ObjectivesList.ObjectiveDisplayInfos.Length - 1; Index >= 0; --Index )
-	{
-		if( !ObjectivesList.ObjectiveDisplayInfos[Index].GPObjective )
-		{
-			ObjectivesList.ObjectiveDisplayInfos.Remove(Index, 1);
-		}
-	}
+	ObjectivesList.ClearTacticalObjectives();
 
 	// if we have a narrative tracker, pass it along
 	NarrativeTracker = XComGameState_WorldNarrativeTracker(History.GetSingleGameStateObjectForClass(class'XComGameState_WorldNarrativeTracker', true));
@@ -499,8 +506,8 @@ static function SquadTacticalToStrategyTransfer()
 			NewGameState.AddStateObject(UnitState);
 			UnitState.iNumMissions++;
 
-			// Bleeding out soldiers die if not rescued
-			if (UnitState.bBleedingOut)
+			// Bleeding out soldiers die if not rescued, some characters die when captured
+			if (UnitState.bBleedingOut || (UnitState.bCaptured && UnitState.GetMyTemplate().bDiesWhenCaptured))
 			{
 				UnitState.SetCurrentStat(eStat_HP, 0);
 			}

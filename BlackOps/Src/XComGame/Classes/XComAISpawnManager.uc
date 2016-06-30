@@ -248,7 +248,6 @@ function StateObjectReference CreateUnit( Vector Position, Name CharacterTemplat
 	local bool NeedsToSubmitGameState;
 	local StateObjectReference ItemRef;
 	local XComGameState_Item ItemState;
-	local X2EquipmentTemplate ItemTemplate;
 
 	History = `XCOMHISTORY;
 
@@ -300,13 +299,7 @@ function StateObjectReference CreateUnit( Vector Position, Name CharacterTemplat
 	foreach NewUnitState.InventoryItems(ItemRef)
 	{
 		ItemState = XComGameState_Item(NewGameState.GetGameStateForObjectID(ItemRef.ObjectID));
-		ItemTemplate = X2EquipmentTemplate(ItemState.GetMyTemplate());
-		if(ItemState.CosmeticUnitRef.ObjectID <= 0 && ItemTemplate.CosmeticUnitTemplate != "")
-		{
-			// this item needs a cosmetic unit, but it has not yet been created. Do so here
-			CharacterTemplate = class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager().FindCharacterTemplate(Name(ItemTemplate.CosmeticUnitTemplate));
-			ItemState.CosmeticUnitRef = CreateUnitInternal(Position, CharacterTemplate, Team, NewGameState, RollForLoot, false, none).GetReference();
-		}
+		ItemState.CreateCosmeticItemUnit(NewGameState);
 	}
 
 	if( NeedsToSubmitGameState )

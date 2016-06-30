@@ -627,7 +627,7 @@ simulated function UIMechaListItem GetCustomizeItem(int ItemIndex)
 simulated function CustomizeWeaponPattern()
 {
 	XComHQPresentationLayer(Movie.Pres).UIArmory_WeaponTrait(WeaponRef, class'UICustomize_Props'.default.m_strWeaponPattern, GetWeaponPatternList(),
-		PreviewWeaponPattern, UpdateWeaponPattern, CanCycleTo, GetWeaponPatternIndex());
+		PreviewWeaponPattern, UpdateWeaponPattern, CanCycleTo, GetWeaponPatternIndex(),,, false);
 }
 
 function PreviewWeaponPattern(UIList _list, int itemIndex)
@@ -654,6 +654,7 @@ function UpdateWeaponPattern(UIList _list, int itemIndex)
 	local int newIndex;
 	local array<X2BodyPartTemplate> BodyParts;
 	local X2BodyPartTemplateManager PartManager;
+	local XComGameState_Unit Unit;
 
 	CreateCustomizationState();
 
@@ -664,6 +665,15 @@ function UpdateWeaponPattern(UIList _list, int itemIndex)
 	
 	UpdatedWeapon.WeaponAppearance.nmWeaponPattern = BodyParts[newIndex].DataName;
 	XComWeapon(ActorPawn).m_kGameWeapon.SetAppearance(UpdatedWeapon.WeaponAppearance);
+	
+	// Transfer the new weapon pattern back to the owner Unit's appearance data ONLY IF the weapon is otherwise unmodified
+	Unit = GetUnit();
+	if (Unit != none && !UpdatedWeapon.HasBeenModified())
+	{
+		Unit = XComGameState_Unit(CustomizationState.CreateStateObject(class'XComGameState_Unit', Unit.ObjectID));
+		CustomizationState.AddStateObject(Unit);
+		Unit.kAppearance.nmWeaponPattern = UpdatedWeapon.WeaponAppearance.nmWeaponPattern;
+	}
 
 	SubmitCustomizationChanges();
 }
@@ -772,12 +782,23 @@ function PreviewWeaponColor(int iColorIndex)
 }
 function SetWeaponColor(int iColorIndex)
 {
+	local XComGameState_Unit Unit;
 	local array<string> Colors;
 
 	Colors = GetWeaponColorList();
 	CreateCustomizationState();
 	UpdatedWeapon.WeaponAppearance.iWeaponTint = WrapIndex(iColorIndex, 0, Colors.Length);
 	XComWeapon(ActorPawn).m_kGameWeapon.SetAppearance(UpdatedWeapon.WeaponAppearance);
+
+	// Transfer the new weapon color back to the owner Unit's appearance data ONLY IF the weapon is otherwise unmodified
+	Unit = GetUnit();
+	if (Unit != none && !UpdatedWeapon.HasBeenModified())
+	{
+		Unit = XComGameState_Unit(CustomizationState.CreateStateObject(class'XComGameState_Unit', Unit.ObjectID));
+		CustomizationState.AddStateObject(Unit);
+		Unit.kAppearance.iWeaponTint = UpdatedWeapon.WeaponAppearance.iWeaponTint;
+	}
+
 	SubmitCustomizationChanges();
 
 	CloseColorSelector();
@@ -869,10 +890,12 @@ simulated function bool HasWeaponChanged()
 
 simulated function CreateCustomizationState()
 {
-	local XComGameStateContext_ChangeContainer ChangeContainer;
-	ChangeContainer = class'XComGameStateContext_ChangeContainer'.static.CreateEmptyChangeContainer("Weapon Customize");
-	CustomizationState = `XCOMHISTORY.CreateNewGameState(true, ChangeContainer);
- 	UpdatedWeapon = XComGameState_Item(CustomizationState.CreateStateObject(class'XComGameState_Item', WeaponRef.ObjectID));
+	if (CustomizationState == none) // Only create a new customization state if one doesn't already exist
+	{
+		CustomizationState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Weapon Customize");
+	}
+	UpdatedWeapon = XComGameState_Item(CustomizationState.CreateStateObject(class'XComGameState_Item', WeaponRef.ObjectID));
+	CustomizationState.AddStateObject(UpdatedWeapon);
 }
 
 simulated function OpenWeaponNameInputBox()
@@ -910,7 +933,6 @@ simulated function SubmitCustomizationChanges()
 {
 	if(HasWeaponChanged()) 
 	{
-		CustomizationState.AddStateObject(UpdatedWeapon);
 		`GAMERULES.SubmitGameState(CustomizationState);
 	}
 	else
@@ -923,7 +945,10 @@ simulated function SubmitCustomizationChanges()
 
 simulated function CleanupCustomizationState()
 {
-	`XCOMHISTORY.CleanupPendingGameState(CustomizationState);
+	if (CustomizationState != none) // Only cleanup the CustomizationState if it isn't already none
+	{
+		`XCOMHISTORY.CleanupPendingGameState(CustomizationState);
+	}
 	CustomizationState = none;
 	UpdatedWeapon = none;
 }
@@ -941,7 +966,7 @@ simulated static function bool CanCycleTo(XComGameState_Unit Unit)
 	class'UIUtilities_Strategy'.static.GetWeaponUpgradeAvailability(Unit, Data);
 
 	// Logic taken from UIArmory_MainMenu
-	return super.CanCycleTo(Unit) && Data.bHasWeaponUpgrades && Data.bHasModularWeapons;
+	return super.CanCycleTo(Unit) && Data.bHasWeaponUpgrades && Data.bHasModularWeapons && Data.bCanWeaponBeUpgraded;
 }
 
 function InterpolateWeapon()

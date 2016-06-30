@@ -273,13 +273,15 @@ simulated function OnClassRowMouseEvent(UIPanel Panel, int Cmd)
 
 simulated function RequestPawn(optional Rotator DesiredRotation)
 {
+	local XComGameState_Unit UnitState;
 	local name IdleAnimName;
 
 	super.RequestPawn(DesiredRotation);
 
-	if(!GetUnit().IsInjured())
+	UnitState = GetUnit();
+	if(!UnitState.IsInjured())
 	{
-		IdleAnimName =  class'XComCharacterCustomization'.default.StandingStillAnimName;
+		IdleAnimName = UnitState.GetMyTemplate().CustomizationManagerClass.default.StandingStillAnimName;
 
 		// Play the "By The Book" idle to minimize character overlap with UI elements
 		XComHumanPawn(ActorPawn).PlayHQIdleAnim(IdleAnimName);

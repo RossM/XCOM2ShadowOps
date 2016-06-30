@@ -42,7 +42,9 @@ var localized String			MissionPinLabel;
 var localized String			MissionFlavorText;
 var localized String			BattleOpName;
 var localized String			DoomLabel;
-var localized String			MissionExpiredText;		
+var localized String			MissionExpiredText;
+var localized String			MissionLaunchWarningText; // Display in the popup warning the player about launching the mission with the current squad
+var localized String			CannotLaunchMissionTooltip; // Tooltip if the mission cannot be launched for a specific reason
 
 var Delegate<OnTriadSuccessDelegate> OnTriadSuccessFn;
 var Delegate<OnTriadFailureDelegate> OnTriadFailureFn;
@@ -55,6 +57,8 @@ var Delegate<CalculateDoomRemoval> CalculateDoomRemovalFn;
 var Delegate<CalculateStartingDoom> CalculateStartingDoomFn;
 var Delegate<GetOverworldMeshPath> GetOverworldMeshPathFn;
 var Delegate<WasMissionSuccessful> WasMissionSuccessfulFn;
+var Delegate<CanLaunchMissionDelegate> CanLaunchMissionFn; // Determine if the mission should be prevented from launching
+var Delegate<RequireLaunchMissionPopupDelegate> RequireLaunchMissionPopupFn; // Determine if a popup should be shown before launching the mission
 
 // Calendar Mission functions
 var Delegate<CreateMissionsDelegate> CreateMissionsFn;
@@ -75,10 +79,13 @@ delegate bool WasMissionSuccessful(XComGameState_BattleData BattleDataState);
 delegate CreateMissionsDelegate(XComGameState NewGameState, int MissionMonthIndex);
 delegate SpawnMissionsDelegate(XComGameState NewGameState, int MissionMonthIndex);
 delegate MissionPopupDelegate();
+delegate bool CanLaunchMissionDelegate(XComGameState_MissionSite MissionState);
+delegate bool RequireLaunchMissionPopupDelegate(XComGameState_MissionSite MissionState);
 
 //---------------------------------------------------------------------------------------
 DefaultProperties
 {
 	bShouldCreateDifficultyVariants = true
 	bRequiresSkyrangerTravel = true
+	CustomLoadingMovieName_IntroSound = "LoadingScreenVS_Propaganda" // fallback if a custom intro movie is specified but no sound is
 }

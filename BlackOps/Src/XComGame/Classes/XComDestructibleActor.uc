@@ -494,8 +494,6 @@ simulated function ApplyDamageToMe(XComGameState_EnvironmentDamage Dmg)
 
 	DamageAmount = DamageEvent.DamageAmount;
 
-	LastDamageStateObject = DamageEvent.GetReference( );
-
 	if (bTargetable) // Targetable and fragile things use health as a bucket
 	{
 		// Sync to the health value from the already modified gamestate
@@ -504,12 +502,14 @@ simulated function ApplyDamageToMe(XComGameState_EnvironmentDamage Dmg)
 
 		if (Health <= 0)
 		{
+			LastDamageStateObject = DamageEvent.GetReference( );
 			GoToState( '_DestructionStarted' );
 		}
 		else if (!IsInState('_Damaged')) 
 		{
 			if ((Health <= (TotalHealth * DestructibleActorDamagedThreshold)) || bFragile || bIsDestructibleObjective)
 			{
+				LastDamageStateObject = DamageEvent.GetReference( );
 				GotoState( '_DamageStarted' );
 			}
 		}
@@ -520,10 +520,12 @@ simulated function ApplyDamageToMe(XComGameState_EnvironmentDamage Dmg)
 
 		if (GotoDamaged == 1)
 		{
+			LastDamageStateObject = DamageEvent.GetReference( );
 			GotoState( '_DamageStarted' );
 		}
 		else if (GotoDestroyed == 1)
 		{
+			LastDamageStateObject = DamageEvent.GetReference( );
 			GoToState( '_DestructionStarted' );
 		}
 	}

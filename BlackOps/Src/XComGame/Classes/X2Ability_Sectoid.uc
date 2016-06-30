@@ -292,6 +292,7 @@ static function X2AbilityTemplate AddPsiExplosionAbility()
 	PsiDamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	PsiDamageEffect.EffectDamageValue = class'X2Item_DefaultWeapons'.default.SECTOID_PSI_DEATHDETONATION_BASEDAMAGE;
 	PsiDamageEffect.EffectDamageValue.DamageType = 'Psi';
+	PsiDamageEffect.bIgnoreArmor = true;
 	Template.AddMultiTargetEffect(PsiDamageEffect);
 
 	// Causes environmental damage too

@@ -351,14 +351,16 @@ function string GetEnemiesKilled()
 	return class'UIUtilities_Text'.static.GetColoredText(string(iKilled)$"/"$string(iTotal), ColorState);
 }
 
-function int GetNumEnemiesKilled(out int iTotal)
+static function int GetNumEnemiesKilled(out int iOutTotal)
 {
-	local int iKilled, i;
+	local int iKilled, iTotal, i;
 	local array<XComGameState_Unit> arrUnits;
+	local XComGameState_BattleData StaticBattleData;
 
-	if(BattleData.IsMultiplayer())
+	StaticBattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
+	if(StaticBattleData.IsMultiplayer())
 	{
-		`BATTLE.GetEnemyPlayer(XComTacticalController(GetALocalPlayerController()).m_XGPlayer).GetOriginalUnits(arrUnits);
+		BATTLE().GetEnemyPlayer(XComTacticalController(Battle().GetALocalPlayerController()).m_XGPlayer).GetOriginalUnits(arrUnits);
 	}
 	else
 	{
@@ -375,7 +377,16 @@ function int GetNumEnemiesKilled(out int iTotal)
 		}
 	}
 	
+	// add in any aliens from the transfer state
+	if(StaticBattleData.DirectTransferInfo.IsDirectMissionTransfer)
+	{
+		iTotal += StaticBattleData.DirectTransferInfo.AliensSeen;
+		iKilled += StaticBattleData.DirectTransferInfo.AliensKilled;
+	}
 
+	// since it's possible (and currently the case) that you pass a value used in this function into
+	// the function as the out value, do computations on a local to prevent memory aliasing
+	iOutTotal = iTotal;
 	return iKilled;
 }
 
@@ -471,7 +482,7 @@ function int GetNumSoldiersInjured(out int iTotal)
 	return iInjured;
 }
 
-function XGBattle_SP BATTLE()
+static function XGBattle_SP BATTLE()
 {
 	return XGBattle_SP(`BATTLE);
 }

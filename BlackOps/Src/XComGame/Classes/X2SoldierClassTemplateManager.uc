@@ -77,7 +77,7 @@ function array<SoldierClassAbilityType> GetCrossClassAbilities(optional X2Soldie
 				{
 					AbilityTemplate = AbilityMgr.FindAbilityTemplate(AbilityTree[iBranch].AbilityName);
 
-					if(AbilityTemplate != none && AbilityTemplate.bCrossClassEligible)
+					if(AbilityTemplate != none && AbilityTemplate.bCrossClassEligible && CrossClassAbilities.Find('AbilityName', AbilityTree[iBranch].AbilityName) == INDEX_NONE)
 					{
 						CrossClassAbilities.AddItem(AbilityTree[iBranch]);
 					}
@@ -90,7 +90,7 @@ function array<SoldierClassAbilityType> GetCrossClassAbilities(optional X2Soldie
 	{
 		AbilityTemplate = AbilityMgr.FindAbilityTemplate(default.ExtraCrossClassAbilities[idx].AbilityName);
 
-		if(AbilityTemplate != none && AbilityTemplate.bCrossClassEligible)
+		if(AbilityTemplate != none && AbilityTemplate.bCrossClassEligible && CrossClassAbilities.Find('AbilityName', default.ExtraCrossClassAbilities[idx].AbilityName) == INDEX_NONE)
 		{
 			CrossClassAbilities.AddItem(default.ExtraCrossClassAbilities[idx]);
 		}

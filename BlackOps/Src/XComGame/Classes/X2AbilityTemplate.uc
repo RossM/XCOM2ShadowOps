@@ -199,6 +199,7 @@ var delegate<OnSoldierAbilityPurchased> SoldierAbilityPurchasedFn;
 var delegate<OnVisualizationTrackInserted> VisualizationTrackInsertedFn;			// This method allows a visualization track that has been brought forward to modify existing tracks after being inserted into the visualization array.
 var delegate<ModifyActivatedAbilityContext> ModifyNewContextFn;
 var delegate<DamagePreviewDelegate> DamagePreviewFn;
+var delegate<GetBonusWeaponAmmo> GetBonusWeaponAmmoFn;
 
 var name						MP_PerkOverride;					// The name of the SP ability this MP ability overrides and should use the perks from
 
@@ -210,6 +211,7 @@ delegate OnSoldierAbilityPurchased(XComGameState NewGameState, XComGameState_Uni
 delegate OnVisualizationTrackInserted(out array<VisualizationTrack> VisualizationTracks, XComGameStateContext_Ability Context, int OuterIndex, int InnerIndex);
 delegate ModifyActivatedAbilityContext(XComGameStateContext Context);
 delegate bool DamagePreviewDelegate(XComGameState_Ability AbilityState, StateObjectReference TargetRef, out WeaponDamageValue MinDamagePreview, out WeaponDamageValue MaxDamagePreview, out int AllowsShield);
+delegate int GetBonusWeaponAmmo(XComGameState_Unit UnitState, XComGameState_Item ItemState);
 
 function InitAbilityForUnit(XComGameState_Ability AbilityState, XComGameState_Unit UnitState, XComGameState NewGameState)
 {

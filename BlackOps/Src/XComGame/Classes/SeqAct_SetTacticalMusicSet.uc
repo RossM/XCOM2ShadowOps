@@ -9,10 +9,16 @@
 class SeqAct_SetTacticalMusicSet extends SequenceAction;
 
 var name TacticalMusicOverride;
+var string TacticalMusicOverrideString; // This is duplicated to prevent recooking maps that already use this sequence action.
 
 event Activated()
 {
 	local XComTacticalCheatManager CheatsManager;
+
+	if(TacticalMusicOverrideString != "")
+	{
+		TacticalMusicOverride = name(TacticalMusicOverrideString);
+	}
 
 	if(TacticalMusicOverride == '')
 	{
@@ -25,6 +31,11 @@ event Activated()
 	}
 }
 
+static event int GetObjClassVersion()
+{
+	return super.GetObjClassVersion() + 1;
+}
+
 defaultproperties
 {
 	ObjCategory = "Audio"
@@ -35,5 +46,5 @@ defaultproperties
 
 	bAutoActivateOutputLinks = true
 
-	VariableLinks(0)=(ExpectedType=class'SeqVar_Name', LinkDesc="Music Set", PropertyName=TacticalMusicOverride)
+	VariableLinks(0)=(ExpectedType = class'SeqVar_String', LinkDesc = "Music Set", PropertyName = TacticalMusicOverrideString)
 }

@@ -141,6 +141,7 @@ simulated function PopulateBattleStatistics()
 	}
 	Spawn(class'UIDropShipBriefing_ListItem', ItemContainer).InitListItem(ItemID, Label, Value);
 
+	Value = "--";
 	Label = m_strAverageEnemiesKilledPerTurn;
 	if (bShowStats)
 	{
@@ -156,6 +157,7 @@ simulated function PopulateBattleStatistics()
 	}
 	Spawn(class'UIDropShipBriefing_ListItem', ItemContainer).InitListItem(ItemID, Label, Value);
 
+	Value = "--";
 	Label = m_strAverageCoverBonus;
 	if (bShowStats)
 	{

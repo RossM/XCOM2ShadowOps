@@ -163,7 +163,7 @@ function DeferredUpdateSoldierPicture()
 	Photo = `GAME.StrategyPhotographer;	
 	if (!Photo.HasPendingHeadshot(UnitRef, OnSoldierHeadCaptureFinished))
 	{
-		Photo.AddHeadshotRequest(UnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, OnSoldierHeadCaptureFinished, class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook());
+		Photo.AddHeadshotRequest(UnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, OnSoldierHeadCaptureFinished,, false, true);
 	}	
 }
 
@@ -172,6 +172,8 @@ function OnSoldierHeadCaptureFinished(const out HeadshotRequestInfo ReqInfo, Tex
 	local string TextureName;
 	local Texture2D SoldierPicture;
 	local X2ImageCaptureManager CaptureManager;
+	local StateObjectReference UnitRef;
+	local XComGameState_Unit Recruit;
 	
 	CaptureManager = X2ImageCaptureManager(`XENGINE.GetImageCaptureManager());
 
@@ -179,7 +181,11 @@ function OnSoldierHeadCaptureFinished(const out HeadshotRequestInfo ReqInfo, Tex
 	SoldierPicture = RenderTarget.ConstructTexture2DScript(CaptureManager, TextureName, false, false, false);
 	CaptureManager.StoreImage(ReqInfo.UnitRef, SoldierPicture, name(TextureName));
 	
-	AS_SetPicture("img:///"$PathName(SoldierPicture));
+	Recruit = m_arrRecruits[DeferredSoldierPictureListIndex];
+	UnitRef = Recruit.GetReference();
+	
+	if (ReqInfo.UnitRef == UnitRef)
+		AS_SetPicture("img:///"$PathName(SoldierPicture));
 }
 
 simulated function OnRecruitSelected( UIList kList, int itemIndex )

@@ -18,8 +18,7 @@ var XComUnitPawn UnitPawn12;
 
 var() Actor CineDummy;
 
-//var() array<name> CrewTypes; //Only need this for soldiers now, but this can be extended to handle non soldiers
-
+var() array<name> AllowedCharacterTemplates; // If Length > 0, will restrict to only the specified types of characters
 var int NumAvailable;
 
 event Activated()
@@ -47,16 +46,18 @@ event Activated()
 		{
 			UnitState = Soldiers[Index];
 
+			if(AllowedCharacterTemplates.Length == 0 || AllowedCharacterTemplates.Find(UnitState.GetMyTemplateName()) != INDEX_NONE)
+			{
 			kPawn = UnitState.CreatePawn(CineDummy, ZeroLoc, ZeroRotator, false);			
 			kPawn.SetBase(CineDummy);
 			kPawn.SetupForMatinee(, true);
 			SetSlot(iNumSlotsUsed, kPawn);
 			iNumSlotsUsed++;
 		}		
+		}		
 
 		NumAvailable = iNumSlotsUsed;
 	}
-	
 }
 
 function SetSlot(int iSlot, XComUnitPawn kPawn)
@@ -95,6 +96,11 @@ function ClearSlots()
 	UnitPawn10 = none;
 	UnitPawn11 = none;
 	UnitPawn12 = none;
+}
+
+static event int GetObjClassVersion()
+{
+	return super.GetObjClassVersion() + 1;
 }
 
 defaultproperties

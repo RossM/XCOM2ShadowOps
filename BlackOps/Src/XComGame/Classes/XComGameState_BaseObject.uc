@@ -15,7 +15,7 @@ var() private int PreviousHistoryFrameIndex; // Linked list to the history frame
 
 var() privatewrite bool bReadOnly;  //This flag is set when game state objects are accessed and indicates whether this object is a copy (read only) or a reference (can modify an XComGameState)
 var() privatewrite bool bRemoved;   //Set true by calls to XComGameState::RemoveStateObject() - 
-var() privatewrite bool bInPlay;	// Set to true following a BeginTacticalPlay() call and set to false after a EndTacticalPlay() call
+var() bool bInPlay;	// Set to true following a BeginTacticalPlay() call and set to false after a EndTacticalPlay() call
 
 var() privatewrite int OwningObjectId; // Parent object state component of this base object
 var() privatewrite array<int> ComponentObjectIds; // Child object state components of this base object
@@ -85,7 +85,7 @@ native final function Actor GetVisualizer() const;
 /// <summary>
 /// Returns a string representation of this object.
 /// </summary>
-native function string ToString();
+native function string ToString(optional bool bAllFields);
 
 /// <summary>
 /// Returns a string representation of StateObjectReference.

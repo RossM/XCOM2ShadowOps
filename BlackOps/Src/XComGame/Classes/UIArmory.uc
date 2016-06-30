@@ -18,6 +18,7 @@ var bool bUseNavHelp;
 
 var Actor ActorPawn;
 var name PawnLocationTag;
+var float LargeUnitScale;
 
 var UISoldierHeader Header;
 var UINavigationHelp NavHelp;
@@ -227,7 +228,7 @@ simulated function SetUnitReference(StateObjectReference NewUnitRef)
 simulated function CreateSoldierPawn(optional Rotator DesiredRotation)
 {
 	local Rotator NoneRotation;
-
+	
 	// Don't do anything if we don't have a valid UnitReference
 	if( UnitReference.ObjectID == 0 ) return;
 
@@ -241,6 +242,11 @@ simulated function CreateSoldierPawn(optional Rotator DesiredRotation)
 
 	RequestPawn(DesiredRotation);
 	LoadSoldierEquipment();
+	
+	if(GetUnit().UseLargeArmoryScale())
+	{
+		XComUnitPawn(ActorPawn).Mesh.SetScale(LargeUnitScale);
+	}
 
 	// Prevent the pawn from obstructing mouse raycasts that are used to determine the position of the mouse cursor in 3D screens.
 	XComHumanPawn(ActorPawn).bIgnoreFor3DCursorCollision = true;
@@ -481,7 +487,6 @@ simulated function OnRemoved()
 	// Only destroy the pawn when all UIArmory screens are closed
 	if(ActorPawn != none)
 	{
-		`XCOMGRI.DoRemoteEvent('CIN_UnhideArmoryStaff'); //Show the armory staff now that we are done
 		if(bIsIn3D) Movie.Pres.Get3DMovie().HideDisplay(DisplayTag);
 		ReleasePawn();
 	}
@@ -498,6 +503,8 @@ defaultproperties
 	//UIDisplayCam    = "UIBlueprint_Customize"; // overridden in child screens
 	bUseNavHelp = true;
 	bAnimateOnInit = true;
+
+	LargeUnitScale = 0.84;
 
 	bConsumeMouseEvents = true;
 	MouseGuardClass = class'UIMouseGuard_RotatePawn';

@@ -98,6 +98,7 @@ enum EAlertType
 	eAlert_PowerCoilShielded, // 80
 	eAlert_StaffInfo,
 	eAlert_ItemReceivedProvingGround,
+	eAlert_LaunchMissionWarning,
 };
 
 struct TAlertCompletedInfo
@@ -516,6 +517,9 @@ var public localized String m_strPowerCoilShieldedTitle;
 var public localized String m_strPowerCoilShieldedBody;
 var public localized array<String> m_strPowerCoilShieldedList;
 
+var public localized String m_strLaunchMissionWarningHeader;
+var public localized String m_strLaunchMissionWarningTitle;
+
 var EAlertType eAlert;
 var XComGameState_MissionSite Mission;
 var StaffUnitInfo UnitInfo;
@@ -826,6 +830,9 @@ simulated function BuildAlert()
 	case eAlert_PowerCoilShielded:
 		BuildPowerCoilShieldedAlert();
 		break;
+	case eAlert_LaunchMissionWarning:
+		BuildLaunchMissionWarningAlert();
+		break;
 
 	default:
 		AddBG(MakeRect(0, 0, 1000, 500), eUIState_Normal).SetAlpha(0.75f);
@@ -968,6 +975,7 @@ simulated function Name GetLibraryID()
 	case eAlert_LowEngineersSmall:				return 'Alert_XComGeneric';
 	case eAlert_SupplyDropReminder:				return 'Alert_XComGeneric';
 	case eAlert_PowerCoilShielded:				return 'Alert_XComGeneric';
+	case eAlert_LaunchMissionWarning:			return 'Alert_XComGeneric';
 
 	default:
 		return ''; 
@@ -2967,6 +2975,11 @@ simulated function BuildNewStaffAvailableAlert()
 		LibraryPanel.MC.EndOp();
 	}
 
+	if(UnitState.GetMyTemplate().strAcquiredText != "")
+	{
+		StaffBonusStr = UnitState.GetMyTemplate().strAcquiredText;
+	}
+
 	// Send over to flash
 	LibraryPanel.MC.BeginFunctionOp("UpdateData");
 	LibraryPanel.MC.QueueString(m_strAttentionCommander);
@@ -3236,7 +3249,7 @@ simulated function string GetOrStartWaitingForStaffImage()
 		// if we have a photo queued then setup a callback so we can sqap in the image when it is taken
 		if (!Photo.HasPendingHeadshot(UnitInfo.UnitRef, UpdateAlertImage))
 		{
-			Photo.AddHeadshotRequest(UnitInfo.UnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, UpdateAlertImage, class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook());
+			Photo.AddHeadshotRequest(UnitInfo.UnitRef, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, UpdateAlertImage);
 		}
 
 		return "";
@@ -3657,6 +3670,20 @@ simulated function BuildPowerCoilShieldedAlert()
 	LibraryPanel.MC.QueueString(m_strSoldierShakenHeader); // Header (ATTENTION)
 	LibraryPanel.MC.QueueString(m_strPowerCoilShieldedTitle); // Title
 	LibraryPanel.MC.QueueString(PowerCoilShieldedBody); // Body
+	LibraryPanel.MC.QueueString(""); // Button 0
+	LibraryPanel.MC.QueueString(m_strOK); // Button 1
+	LibraryPanel.MC.EndOp();
+
+	Button1.Hide();
+}
+
+simulated function BuildLaunchMissionWarningAlert()
+{
+	// Send over to flash
+	LibraryPanel.MC.BeginFunctionOp("UpdateData");
+	LibraryPanel.MC.QueueString(m_strLaunchMissionWarningHeader); // Header (ATTENTION)
+	LibraryPanel.MC.QueueString(m_strLaunchMissionWarningTitle); // Title
+	LibraryPanel.MC.QueueString(Mission.GetMissionSource().MissionLaunchWarningText); // Body
 	LibraryPanel.MC.QueueString(""); // Button 0
 	LibraryPanel.MC.QueueString(m_strOK); // Button 1
 	LibraryPanel.MC.EndOp();

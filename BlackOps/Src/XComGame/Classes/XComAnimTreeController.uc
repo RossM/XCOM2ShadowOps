@@ -66,6 +66,8 @@ native function SetGenderBlenderBlendTarget(float BlendTarget, float BlendTime);
 native function AnimNodeSequence PlayFullBodyDynamicAnim(out CustomAnimParams Params);
 native function AnimNodeSequence PlayUpperBodyDynamicAnim(out CustomAnimParams Params);
 native function AnimNodeSequence PlayAdditiveDynamicAnim(out CustomAnimParams Params);
+native function RemoveAdditiveDynamicAnim(out CustomAnimParams Params);
+native function bool RemoveAdditiveDynamicAnimBySequence(AnimNodeSequence PlayingSequence, float BlendTime);
 native function BlendOutAdditiveDynamicNode(float BlendTime);
 native function AnimNodeSequence TurnToTarget(const out Vector Target, optional bool TurnAwayFromCover = false);
 native function int GetNumProjectileVolleys();
@@ -102,7 +104,6 @@ private:
 	void SetAnim(UAnimNodeSequence* Anim, FName AnimName);
 	void SetBlendTarget(UAnimNodeBlend* BlendNode, FLOAT BlendTarget, FLOAT BlendTime);
 	void SetActiveProfileByName(UAnimNodeAimOffset* AnimAimOffset, FName Profile);
-	FName FindRandomAnimMatchingName(FName AnimName);
 };
 
 defaultproperties

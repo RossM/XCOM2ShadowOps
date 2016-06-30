@@ -55,6 +55,12 @@ function DirectSetTarget(int TargetIndex)
 	local UITacticalHUD TacticalHud;
 	local Actor TargetedActor;
 	local array<TTile> Tiles;
+	local TTile TargetedActorTile;
+	local XGUnit TargetedPawn;
+	local vector TargetedLocation;
+	local XComWorldData World;
+
+	World = `XWORLD;
 
 	// advance the target counter
 	LastTarget = TargetIndex % Action.AvailableTargets.Length;
@@ -78,14 +84,26 @@ function DirectSetTarget(int TargetIndex)
 		LookatCamera.ActorToFollow = FiringUnit;
 	}
 
+	TargetedPawn = XGUnit(TargetedActor);
+	if( TargetedPawn != none )
+	{
+		TargetedLocation = TargetedPawn.GetFootLocation();
+		TargetedActorTile = World.GetTileCoordinatesFromPosition(TargetedLocation);
+		TargetedLocation = World.GetPositionFromTileCoordinates(TargetedActorTile);
+	}
+	else
+	{
+		TargetedLocation = TargetedActor.Location;
+	}
+
 	if (Ability.GetMyTemplate().AbilityMultiTargetStyle != none)
 	{
-		Ability.GetMyTemplate().AbilityMultiTargetStyle.GetValidTilesForLocation(Ability, TargetedActor.Location, Tiles);	
+		Ability.GetMyTemplate().AbilityMultiTargetStyle.GetValidTilesForLocation(Ability, TargetedLocation, Tiles);	
 	}
 
 	if( Ability.GetMyTemplate().AbilityTargetStyle != none )
 	{
-		Ability.GetMyTemplate().AbilityTargetStyle.GetValidTilesForLocation(Ability, TargetedActor.Location, Tiles);
+		Ability.GetMyTemplate().AbilityTargetStyle.GetValidTilesForLocation(Ability, TargetedLocation, Tiles);
 	}
 
 	if( Tiles.Length > 1 )

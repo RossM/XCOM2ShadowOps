@@ -11,7 +11,6 @@ var private Rotator                 RotatorBetween;
 var private float                   AngleBetween;
 var private Rotator                 MoveDirectionRotator;
 var private vector                  RunStartDestination;	
-var private float					DefaultFollowDelay;			//If this move is one unit following another, the follower is delayed by this many seconds
 var private float					DefaultGroupFollowDelay;
 var private float					RunStartRequiredDistance;
 var private float					AnimationRateModifier;
@@ -198,7 +197,7 @@ Begin:
 	//If this unit is set to follow another unit, insert a delay into the beginning of the move
 	if (Unit.bNextMoveIsFollow)
 	{
-		sleep(DefaultFollowDelay * GetDelayModifier());
+		sleep(UnitPawn.FollowDelay * GetDelayModifier());
 	}
 	else
 	{
@@ -331,6 +330,5 @@ event HandleNewUnitSelection()
 
 DefaultProperties
 {
-	DefaultFollowDelay = 0.2f
 	DefaultGroupFollowDelay = 0.75f
 }

@@ -102,6 +102,7 @@ var private bool bPlayedMetaHitEffect;                   //A latch for making su
 var private name OrdnanceType;
 var bool bFirstShotInVolley;							//Indicate this is the first shot in the volley
 var private bool bProjectileFired;						//Indicate that at least a shot has been fired;
+var array<AnimNodeSequence> PlayingSequences;			//Used to remove anim sequences we started
 
 cpptext
 {
@@ -795,13 +796,13 @@ function FireProjectileInstance(int Index)
 	}
 
 	// handy debugging helper, just uncomment this and the declarations at the top
-// 	AxisSystem = ParticleSystem( DynamicLoadObject( "FX_Dev_Steve_Utilities.P_Axis_Display", class'ParticleSystem' ) );
-// 	PSComponent = new(Projectiles[Index].TargetAttachActor) class'ParticleSystemComponent';
-// 	PSComponent.SetTemplate(AxisSystem);
-// 	PSComponent.SetAbsolute( false, false, false );
-// 	PSComponent.SetTickGroup( TG_EffectsUpdateWork );
-// 	PSComponent.SetActive( true );
-// 	Projectiles[Index].TargetAttachActor.AttachComponent( PSComponent );
+//	AxisSystem = ParticleSystem( DynamicLoadObject( "FX_Dev_Steve_Utilities.P_Axis_Display", class'ParticleSystem' ) );
+//	PSComponent = new(Projectiles[Index].TargetAttachActor) class'ParticleSystemComponent';
+//	PSComponent.SetTemplate(AxisSystem);
+//	PSComponent.SetAbsolute( false, false, false );
+//	PSComponent.SetTickGroup( TG_EffectsUpdateWork );
+//	PSComponent.SetActive( true );
+//	Projectiles[Index].TargetAttachActor.AttachComponent( PSComponent );
 
 	if( Projectiles[Index].GrenadePath != none )
 	{
@@ -981,7 +982,7 @@ function FireProjectileInstance(int Index)
 		}
 	}
 
-	`log("********************* PROJECTILE Element #"@Index@"FIRED *********************************", , 'DevDestruction');
+	`log("********************* PROJECTILE Element #"@self.Name@Index@"FIRED *********************************", , 'DevDestruction');
 	`log("StartTime:"@Projectiles[Index].StartTime, , 'DevDestruction');
 	`log("EndTime:"@Projectiles[Index].EndTime, , 'DevDestruction');
 	`log("InitialSourceLocation:"@Projectiles[Index].InitialSourceLocation, , 'DevDestruction');
@@ -995,19 +996,19 @@ function FireProjectileInstance(int Index)
 	{
 		AnimParams.AnimName = 'FF_FireA';
 		AnimParams.Looping = false;
+		AnimParams.Additive = true;
 
 		FoundAnimSeq = SkeletalMeshComponent(SourceWeapon.Mesh).FindAnimSequence(AnimParams.AnimName);
 		if( FoundAnimSeq != None )
 		{
-			if( SourceWeapon.AdditiveNode.Child2WeightTarget != 1.0f )
+			//Tell our weapon to play its fire animation
+			if( SourceWeapon.AdditiveDynamicNode != None )
 			{
-				SourceWeapon.AdditiveNode.SetBlendTarget(1.0f, AnimParams.BlendTime);
-				AnimParams.BlendTime = 0;
+				PlayingSequence = SourceWeapon.AdditiveDynamicNode.PlayDynamicAnim(AnimParams);
+				PlayingSequences.AddItem(PlayingSequence);
+				SetTimer(PlayingSequence.AnimSeq.SequenceLength, false, nameof(BlendOutAdditives), self);
 			}
 
-			//Tell our weapon to play its fire animation
-			PlayingSequence = SourceWeapon.AdditiveDynamicNode.PlayDynamicAnim(AnimParams);
-			SetTimer(PlayingSequence.AnimSeq.SequenceLength, false, nameof(BlendOutAdditiveNode), self);
 		}
 	}
 
@@ -1018,10 +1019,20 @@ function FireProjectileInstance(int Index)
 	}
 }
 
-function BlendOutAdditiveNode()
+function BlendOutAdditives()
 {
 	local CustomAnimParams AnimParams;
-	SourceWeapon.AdditiveNode.SetBlendTarget(0.0f, AnimParams.BlendTime);
+	local AnimNodeSequence RemoveSequence;
+	local int scan;
+
+	// Jwats: remove all the additives we started!
+	for( scan = 0; scan < PlayingSequences.Length; ++scan )
+	{
+		RemoveSequence = PlayingSequences[scan];
+		SourceWeapon.AdditiveDynamicNode.BlendOutDynamicAnim(RemoveSequence, AnimParams.BlendTime);
+	}
+	
+	PlayingSequences.Length = 0;
 }
 
 function MaybeUpdateContinuousRange(int Index)
@@ -1086,6 +1097,11 @@ function MaybeUpdateContinuousRange(int Index)
 		Projectiles[ Index ].ParticleEffectComponent.SetVectorParameter( 'Traveled_Distance', ParticleParameterDistance );
 
 		Projectiles[ Index ].ParticleEffectComponent.SetFloatParameter( 'Traveled_Distance', TravelDistance );
+
+		//`log("********************* PROJECTILE Element #"@self.Name@Index@ " *********************************", , 'DevDestruction');
+		//`log("MaybeUpdateContinuousRange", , 'DevDestruction' );
+		//`log("Updating Traveled_Distance to "@TravelDistance, , 'DevDestruction');
+		//`log("************************************************************************************************", , 'DevDestruction');
 	}
 }
 
@@ -1246,10 +1262,10 @@ function UpdateProjectileDistances(int Index, float fDeltaT)
 	{
 		// no attachment
 		case 0:
-			TravelledDistance = Projectiles[ Index ].AliveTime * Projectiles[ Index ].AdjustedTravelSpeed;
-
 			if (Projectiles[Index].GrenadePath != none)
 			{
+				TravelledDistance = Projectiles[ Index ].AliveTime * Projectiles[ Index ].AdjustedTravelSpeed;
+
 				//Grenade_Path_Fix Chang You 5-11-2015
 				GrenadeTimeAtMiddlePoint = Projectiles[Index].GrenadePath.GetEndTime() * 0.5f;
 				//to match the velocity of the hand throw, we start off the grenade at 2x it's speed, and linearly slows it down until 1/2 into it's path
@@ -1259,6 +1275,11 @@ function UpdateProjectileDistances(int Index, float fDeltaT)
 					Projectiles[Index].AliveTime += Lerp(0.0f, fDeltaT, (GrenadeTimeAtMiddlePoint - Projectiles[Index].AliveTime) / GrenadeTimeAtMiddlePoint);
 				}
 				Projectiles[Index].GrenadePath.MoveAlongPath( Projectiles[ Index ].AliveTime, Projectiles[ Index ].TargetAttachActor );
+			}
+			else
+			{
+				// update projectile travel distances based on actual actor travel, and not math (because the impact probably won't be on an even frame boundry)
+				TravelledDistance = VSize( Projectiles[ Index ].TargetAttachActor.Location - Projectiles[ Index ].SourceAttachActor.Location );
 			}
 			break;			
 
@@ -1284,6 +1305,11 @@ function UpdateProjectileDistances(int Index, float fDeltaT)
 		ParticleParameterTravelledDistance.Z = TravelledDistance;
 		Projectiles[ Index ].ParticleEffectComponent.SetVectorParameter( 'Traveled_Distance', ParticleParameterTravelledDistance );
 		Projectiles[ Index ].ParticleEffectComponent.SetFloatParameter( 'Traveled_Distance', TravelledDistance );
+
+		//`log("********************* PROJECTILE Element #"@self.Name@Index@ " *********************************", , 'DevDestruction');
+		//`log("UpdateProjectileDistances", , 'DevDestruction' );
+		//`log("Updating Traveled_Distance to "@TravelledDistance, , 'DevDestruction');
+		//`log("************************************************************************************************", , 'DevDestruction');
 
 		MaybeUpdateTargetDistance( Index );
 
@@ -1370,11 +1396,14 @@ function bool StruckTarget(int Index, float fDeltaT)
 		TargetVisualizer = XGUnit(`XCOMHISTORY.GetVisualizer(AbilityContextPrimaryTargetID));
 		if(TargetVisualizer != none || (bCosmetic && !bCosmeticShouldHitTarget))
  		{
-			DistanceTraveled = Projectiles[Index].AdjustedTravelSpeed * Projectiles[Index].AliveTime;
-			bTraveledToTarget = DistanceTraveled > Projectiles[Index].InitialTargetDistance;
+			// determine travel distance based on actual actor positions
+			DistanceTraveled = VSize(Projectiles[ Index ].TargetAttachActor.Location - Projectiles[ Index ].SourceAttachActor.Location);
 
 			ProjectileTrace(HitLocation, HitNormal, Projectiles[Index].InitialSourceLocation, Projectiles[Index].InitialTravelDirection, true, HitInfo); //This is the main place that we should check for a collision with the pawn
 			bHit = HitInfo.HitComponent != None;
+
+			// check against actual strike distance and not the cached initial strike distance
+			bTraveledToTarget = DistanceTraveled >= VSize(HitLocation - Projectiles[ Index ].SourceAttachActor.Location);
 
 			//Fudge the results if this is projectile can trigger a hit reaction
 			if(Projectiles[Index].ProjectileElement.bTriggerHitReact)
@@ -1780,6 +1809,7 @@ function EndProjectileInstance(int Index, float fDeltaT)
 		{
 			Projectiles[Index].TargetAttachActor.SetLocation(Projectiles[Index].InitialTargetLocation);
 			Projectiles[Index].TargetAttachActor.Velocity = vect(0,0,0);
+			Projectiles[Index].TargetAttachActor.ForceUpdateComponents(FALSE);
 		}
 
 		Projectiles[Index].TargetAttachActor.SetHidden( true );
@@ -1899,13 +1929,14 @@ private function DebugParamsOut( int Index )
 		ParticleSystem.GetFloatParameter( 'Target_Distance', TargetDistance );
 		ParticleSystem.GetFloatParameter( 'Traveled_Distance', TravelDistance );
 
-		`log("********************* PROJECTILE Element #"@Index@" Frame "@WorldInfo.TimeSeconds@" *********************************", , 'DevDestruction');
+		`log("********************* PROJECTILE Element #"@self.Name@Index@" Frame "@WorldInfo.TimeSeconds@" *********************************", , 'DevDestruction');
 		`log("Source actor location is "@Projectile.SourceAttachActor.Location, , 'DevDestruction');
 		`log("Target actor location is "@Projectile.TargetAttachActor.Location, , 'DevDestruction');
 		`log("Target actor velocity is "@Projectile.TargetAttachActor.Velocity, , 'DevDestruction');
-		`log("Initial Target Distance: "@InitalTargetDistance, , 'DevDestruction');
-		`log("Current Target Distance: "@TargetDistance, , 'DevDestruction');
-		`log("Travel Distance: "@TravelDistance, , 'DevDestruction');
+		`log("Param Initial Target Distance: "@InitalTargetDistance, , 'DevDestruction');
+		`log("Param Current Target Distance: "@TargetDistance, , 'DevDestruction');
+		`log("Param Travel Distance: "@TravelDistance, , 'DevDestruction');
+		`log("Compute Travel Distance: "@VSize(Projectile.TargetAttachActor.Location - Projectile.SourceAttachActor.Location), , 'DevDestruction');
 		`log("Start Time: "@Projectile.StartTime, , 'DevDestruction');
 		`log("End Time: "@Projectile.EndTime, , 'DevDestruction');
 		`log("Trail Time: "@Projectile.TrailAdjustmentTime, , 'DevDestruction' );
@@ -2013,7 +2044,7 @@ state Executing
 
 				ProcessReturn( Index );
 
-				if (!bShouldEnd || bShouldUpdate)
+				if (!bShouldEnd || bShouldUpdate || bStruckTarget)
 				{
 					//The projectile is in flight or a mode that wants continued position updates after ending
 					UpdateProjectileDistances( Index, fDeltaT );

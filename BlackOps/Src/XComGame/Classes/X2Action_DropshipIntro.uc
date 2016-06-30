@@ -1,7 +1,14 @@
 //---------------------------------------------------------------------------------------
 //  FILE:    X2Action_DropshipIntro.uc
-//  AUTHOR:  David Burchanowski  --  4/9/2015
-//  PURPOSE: Starts and controls the drop ship intro sequence when starting a tactical mission
+//  AUTHOR:  David Burchanowski  --  6/8/2016
+//  PURPOSE: Starts and controls the drop ship intro sequence when starting a tactical mission.
+//           For modding: if you want to add new character types to an intro, do this:
+//           1) Create a new matinee package with the matinees to want to add.
+//           2) Add an line to AdditionalMissionIntroPackages in your xcommission.ini so that the game knows to load the package.
+//           3) Set the BaseMatineeComment field in the new matinees to match the comment tag of the matinee you are adding to.   
+//           4) If not already set, set the strIntroMatineeSlotPrefix value in the character template of the character types that
+//              should populate your matinee.
+//           5) That's it! You've now modded in more intro slots!
 //           
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
@@ -9,6 +16,7 @@
 class X2Action_DropshipIntro extends X2Action_PlayMatinee config(GameData);
 
 var config float ShowMissionIntroUITime;
+var const config int DropshipSlotCount;
 
 var private AkEvent TextScrollSound_Start;
 var private AkEvent TextScrollSound_Stop;
@@ -40,6 +48,23 @@ function Init(const out VisualizationTrack InTrack)
 	MatineeSequenceIndex = `SYNC_RAND(MissionManager.GetActiveMissionIntroDefinition().MatineeSequences.Length);
 }
 
+private function GetAllIntroSlotPrefixes(out array<string> IntroPrefixes)
+{
+	local X2DataTemplate DataTemplate;
+	local X2CharacterTemplate CharacterTemplate;
+
+	foreach class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager().IterateTemplates(DataTemplate, none)
+	{
+		CharacterTemplate = X2CharacterTemplate(DataTemplate);
+		if(CharacterTemplate != none 
+			&& CharacterTemplate.strIntroMatineeSlotPrefix != ""
+			&& IntroPrefixes.Find(CharacterTemplate.strIntroMatineeSlotPrefix) == INDEX_NONE)
+		{
+			IntroPrefixes.AddItem(CharacterTemplate.strIntroMatineeSlotPrefix);
+		}
+	}
+}
+
 private function AddUnitsToMatinee()
 {
 	local XComGameStateHistory History;
@@ -47,6 +72,9 @@ private function AddUnitsToMatinee()
 	local XComGameState_HeadquartersXCom XComHQ;
 	local StateObjectReference UnitRef;
 	local XComGameState_Unit GameStateUnit;
+	local array<name> UsedSlots;
+	local array<string> IntroPrefixes;
+	local string IntroPrefix;
 	local int UnitIndex;
 
 	History = `XCOMHISTORY;
@@ -63,7 +91,8 @@ private function AddUnitsToMatinee()
 				GameStateUnit = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
 				if (GameStateUnit != none)
 				{
-					AddUnitToMatinee(name("Char" $ UnitIndex), GameStateUnit);
+					UsedSlots.AddItem(name(GameStateUnit.GetMyTemplate().strIntroMatineeSlotPrefix $ UnitIndex));
+					AddUnitToMatinee(UsedSlots[UsedSlots.Length - 1], GameStateUnit);
 					UnitIndex++;
 				}
 				else
@@ -77,13 +106,13 @@ private function AddUnitsToMatinee()
 	}
 	else
 	{
-		// fallback, just add all xcom units. Sould happen in PIE
+		// fallback, just add all xcom units. Should happen in PIE
 		UnitIndex = 1;
 		foreach History.IterateByClassType(class'XComGameState_Unit', GameStateUnit)
 		{
 			if( GameStateUnit.GetTeam() == eTeam_XCom )
 			{	
-				AddUnitToMatinee(name("Char" $ UnitIndex), GameStateUnit);
+				AddUnitToMatinee(name(GameStateUnit.GetMyTemplate().strIntroMatineeSlotPrefix $ UnitIndex), GameStateUnit);
 				UnitIndex++;
 			}
 		}
@@ -104,6 +133,19 @@ private function AddUnitsToMatinee()
 			}
 		}
 	}
+
+	// now set all unused intro slots to none, so that any preview characters in them aren't playing sounds invisibly
+	GetAllIntroSlotPrefixes(IntroPrefixes);
+	foreach IntroPrefixes(IntroPrefix)
+	{
+		for(UnitIndex = 1; UnitIndex <= DropshipSlotCount; UnitIndex++)
+		{
+			if(UsedSlots.Find(name(IntroPrefix $ UnitIndex)) == INDEX_NONE)
+			{
+				AddUnitToMatinee(name(IntroPrefix $ UnitIndex), none);
+			}
+		}
+	}
 }
 
 //We never time out
@@ -115,29 +157,12 @@ function bool IsTimedOut()
 private function FindDropshipMatinee()
 {
 	local XComTacticalMissionManager MissionManager;
-	local array<SequenceObject> FoundMatinees;
 	local string MatineePrefix;
-	local Sequence GameSeq;
-	local int Index;
 
 	MissionManager = `TACTICALMISSIONMGR;
 
-	GameSeq = class'WorldInfo'.static.GetWorldInfo().GetGameSequence();
-	GameSeq.FindSeqObjectsByClass(class'SeqAct_Interp', true, FoundMatinees);
-	FoundMatinees.RandomizeOrder();
-
 	MatineePrefix = MissionManager.GetActiveMissionIntroDefinition().MatineeSequences[MatineeSequenceIndex].MatineeCommentPrefixes[MatineeIndex];
-	for (Index = 0; Index < FoundMatinees.length; Index++)
-	{
-		Matinee = SeqAct_Interp(FoundMatinees[Index]);
-		if(Instr(Matinee.ObjComment, MatineePrefix,, true) != INDEX_NONE)
-		{
-			return;
-		}
-	}
-
-	Matinee = none;
-	`Redscreen("Could not find the dropship intro! Prefix: " $ MissionManager.GetActiveMissionIntroDefinition().MatineeSequences[MatineeSequenceIndex].MatineeCommentPrefixes[MatineeIndex]);
+	SelectMatineeByTag(MatineePrefix);
 }
 
 simulated state Executing
@@ -186,16 +211,12 @@ simulated state Executing
 		local XComTacticalMissionManager MissionManager;
 		local XComParcelManager ParcelManager;
 
+		// move the matinee to play right on top of the soldier spawn
 		MissionManager = `TACTICALMISSIONMGR;
-		SetMatineeBase(MissionManager.GetActiveMissionIntroDefinition().MatineeBaseTag);
+		ParcelManager = `PARCELMGR;
 
-		// line the matinee base up with the soldier spawn exactly
-		if(MatineeBase != none)
-		{
-			ParcelManager = `PARCELMGR;
-			MatineeBase.SetLocation(ParcelManager.SoldierSpawn.Location);
-			MatineeBase.SetRotation(ParcelManager.SoldierSpawn.Rotation);
-		}
+		SetMatineeLocation(ParcelManager.SoldierSpawn.Location, ParcelManager.SoldierSpawn.Rotation);
+		SetMatineeBase(MissionManager.GetActiveMissionIntroDefinition().MatineeBaseTag);
 	}
 
 Begin:
@@ -218,7 +239,7 @@ Begin:
 		{
 			Sleep(0.0f);
 		}
-		until(Matinee == none || MatineeSkipped); // the matinee will be set to none when it is finished
+		until(Matinees.Length == 0 || MatineeSkipped); // the matinee list will be cleared when they are finished
 
 		EndMatinee();
 

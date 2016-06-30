@@ -439,7 +439,7 @@ simulated function SetFOW(bool bNewFOW)
 			FOWEffect = XComFOWEffect(PPChain.Effects[j]);
 			if(FOWEffect != none)
 			{
-				FOWEffect.bShowFOW = `XWORLD.bEnableFOW;
+				FOWEffect.bShowFOW = `XWORLD.bEnableFOW && `XWORLD.bDebugEnableFOW;
 			}
 		}
 	}

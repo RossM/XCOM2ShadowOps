@@ -191,18 +191,26 @@ function OnCreation(X2ItemTemplate ItemTemplate)
 
 function OnBeginTacticalPlay()
 {
+	super.OnBeginTacticalPlay();
+
+	AttachedUnitRef = OwnerStateObject; //We default to being attached to our owner
+	RegisterForCosmeticUnitEvents();
+}
+
+protected function RegisterForCosmeticUnitEvents()
+{
 	local X2EventManager EventManager;
 	local Object ThisObj;
 
 	super.OnBeginTacticalPlay();
 
+	if( CosmeticUnitRef.ObjectID > 0 )
+	{	
 	//Only items with cosmetic units need to listen for these. If you expand this conditional, make sure you need to as
 	//having too many items respond to these events would be costly.
 	EventManager = `XEVENTMGR;
 	ThisObj = self;	
-	if( CosmeticUnitRef.ObjectID > 0 )
-	{	
-		AttachedUnitRef = OwnerStateObject; //We default to being attached to our owner
+
 		EventManager.RegisterForEvent( ThisObj, 'AbilityActivated', OnAbilityActivated, ELD_OnStateSubmitted,,); //Move if we're ordered to
 		EventManager.RegisterForEvent( ThisObj, 'UnitDied', OnUnitDied, ELD_OnStateSubmitted,,); //Return to owner if target unit dies or play death anim if owner dies
 		EventManager.RegisterForEvent( ThisObj, 'UnitEvacuated', OnUnitEvacuated, ELD_OnStateSubmitted,,); //For gremlin, to evacuate with its owner
@@ -237,6 +245,53 @@ function OnEndTacticalPlay()
 	bMergedOut = false;
 	CosmeticUnitRef = EmptyReference;
 	LoadedAmmo = EmptyReference;
+}
+
+function CreateCosmeticItemUnit(XComGameState NewGameState)
+{
+	local X2EquipmentTemplate EquipmentTemplate;
+	local XComGameState_Unit OwningUnitState;
+	local XComGameState_Unit CosmeticUnit;
+	local TTile CosmeticUnitTile;
+	local vector SpawnLocation;
+
+	EquipmentTemplate = X2EquipmentTemplate(GetMyTemplate());
+	if(EquipmentTemplate != none 
+		&& EquipmentTemplate.CosmeticUnitTemplate != "" 
+		&& CosmeticUnit.ObjectID <= 0) // only if we didn't already create one
+	{
+		OwningUnitState = XComGameState_Unit(NewGameState.GetGameStateForObjectID(OwnerStateObject.ObjectID));
+		if(OwningUnitState == none)
+		{
+			OwningUnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(OwnerStateObject.ObjectID));
+			if(OwningUnitState == none)
+			{
+				return;
+			}
+		}
+
+		AttachedUnitRef = OwningUnitState.GetReference();
+
+		CosmeticUnitTile = OwningUnitState.GetDesiredTileForAttachedCosmeticUnit();
+
+		SpawnLocation = `XWORLD.GetPositionFromTileCoordinates(CosmeticUnitTile);
+		CosmeticUnitRef = `SPAWNMGR.CreateUnit(SpawnLocation, name(EquipmentTemplate.CosmeticUnitTemplate), OwningUnitState.GetTeam(), false,, NewGameState);
+					
+		//Force the appearance to use the soldier's settings
+		CosmeticUnit = XComGameState_Unit(NewGameState.GetGameStateForObjectID(CosmeticUnitRef.ObjectID));
+		CosmeticUnit.kAppearance.nmPatterns = OwningUnitState.kAppearance.nmWeaponPattern;
+		CosmeticUnit.kAppearance.iArmorTint = OwningUnitState.kAppearance.iWeaponTint;
+		CosmeticUnit.kAppearance.iArmorTintSecondary = OwningUnitState.kAppearance.iArmorTintSecondary;
+		XGUnit(CosmeticUnit.GetVisualizer()).GetPawn().SetAppearance(CosmeticUnit.kAppearance);
+
+		if (OwningUnitState.GetMyTemplate().OnCosmeticUnitCreatedFn != None)
+		{
+			OwningUnitState.GetMyTemplate().OnCosmeticUnitCreatedFn(CosmeticUnit, OwningUnitState, self, NewGameState);
+		}
+
+		// now that we have a unit, register for events
+		RegisterForCosmeticUnitEvents();
+	}
 }
 
 function EventListenerReturn OnAbilityActivated(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
@@ -353,12 +408,14 @@ private function RecallItem(const XComGameState_Item RecalledItem, XComGameState
 	local XComGameStateHistory History;
 	local XComGameState_Unit CosmeticUnitState;
 	local bool MoveFromTarget;
+	local TTile OwnerStateDesiredAttachTile;
 
 	History = `XCOMHISTORY;
 	AbilityContext = XComGameStateContext_Ability( GameState.GetContext( ) );
 
 	OwnerState = XComGameState_Unit(History.GetGameStateForObjectID(OwnerStateObject.ObjectID));
-	if (OwnerState.TileLocation != RecalledItem.GetTileLocation())
+	OwnerStateDesiredAttachTile = OwnerState.GetDesiredTileForAttachedCosmeticUnit();
+	if ( OwnerStateDesiredAttachTile != RecalledItem.GetTileLocation())
 	{
 		if (AttachedUnitRef != OwnerStateObject)
 		{
@@ -366,14 +423,14 @@ private function RecallItem(const XComGameState_Item RecalledItem, XComGameState
 			//Update the attached unit for this item
 			NewRecalledItem = XComGameState_Item(NewGameState.CreateStateObject(self.Class, ObjectID));
 			NewRecalledItem.AttachedUnitRef = OwnerStateObject;
-			NewGameState.AddStateObject(NewRecalledItem);					
+			NewGameState.AddStateObject(NewRecalledItem);
 
 			`GAMERULES.SubmitGameState(NewGameState);
 		}
 
 		CosmeticUnitState = XComGameState_Unit( History.GetGameStateForObjectID( RecalledItem.CosmeticUnitRef.ObjectID ) );
 
-		MoveFromTarget = (OwnerState.TileLocation == RecalledItem.GetTileLocation()) && (AbilityContext != none) && (AbilityContext.InputContext.SourceObject.ObjectID == OwnerState.ObjectID);
+		MoveFromTarget = (OwnerStateDesiredAttachTile == RecalledItem.GetTileLocation()) && (AbilityContext != none) && (AbilityContext.InputContext.SourceObject.ObjectID == OwnerState.ObjectID);
 
 		if (MoveFromTarget && AbilityContext.InputContext.TargetLocations.Length > 0)
 		{
@@ -383,7 +440,7 @@ private function RecallItem(const XComGameState_Item RecalledItem, XComGameState
 
 		//  Now move it move it
 		Visualizer = XGUnit(History.GetVisualizer(CosmeticUnitRef.ObjectID));
-		MoveToLoc = `XWORLD.GetPositionFromTileCoordinates(OwnerState.TileLocation);
+		MoveToLoc = `XWORLD.GetPositionFromTileCoordinates(OwnerStateDesiredAttachTile);
 		Visualizer.MoveToLocation(MoveToLoc, CosmeticUnitState);
 	}
 }
@@ -464,7 +521,6 @@ function EventListenerReturn OnUnitEvacuated(Object EventData, Object EventSourc
 	local XComGameState_Unit UnitState, CosmeticUnit;
 	local XComGameState NewGameState;
 	local XComGameStateContext_ChangeContainer ChangeContext;
-
 
 	UnitState = XComGameState_Unit(EventData);
 

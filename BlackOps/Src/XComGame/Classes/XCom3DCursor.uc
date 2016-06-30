@@ -10,10 +10,10 @@ class XCom3DCursor extends XComPawn
 	config(GameCore);
 
 var const config float CursorFloorHeight; // how high is each floor, in unreal units?
-var const config float CursorFloorOffset; // In the case that the floor volumes do not start at Z == 0, what is the Z Offset at which they start.
 var const config float MinDrawCylinderHeightThreshold; // how high above the ground, in units, must a flying unit be before drawing the height cylinder
 
 var protected int CachedMaxFloor; // cached from the plot definition of the current map. Don't use directly, instead call GetMaxFloor()
+var protected float CachedCursorFloorOffset; // // cached from the plot definition of the current map.
 
 struct native CursorSearchResult
 {
@@ -59,6 +59,11 @@ cpptext
 	virtual void physFlying(FLOAT deltaTime, INT Iterations);
 	virtual void physicsRotation(FLOAT deltaTime, FVector OldVelocity);
 	virtual void CalcVelocity(FVector &AccelDir, FLOAT DeltaTime, FLOAT MaxSpeed, FLOAT Friction, INT bFluid, INT bBrake, INT bBuoyant);
+
+private:
+	// Certain values for the number of floors and the base floor offset need to be specified per plot, but looking up the plot every
+	// access is expensive. This helper function exists to cache those values if they haven't already been.
+	void CachePlotDefinitionValues();
 }
 
 var InstancedStaticMeshComponent m_LevelBorderWall;

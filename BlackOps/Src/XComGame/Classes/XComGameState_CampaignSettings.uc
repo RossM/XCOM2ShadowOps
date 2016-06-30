@@ -27,6 +27,7 @@ var privatewrite array<name> EnabledOptionalNarrativeDLC; // A list of DLC where
 var bool bCheatStart;		// Calls 'DebugStuff' in XGStrategy when starting a new game. Skips the first battle entirely and grants facilities / items
 var bool bSkipFirstTactical;// Starts the campaign by simulating combat in the first mission
 
+var string BizAnalyticsCampaignID;
 
 function SetStartTime(string InStartTime)
 {
@@ -180,6 +181,8 @@ static function CreateCampaignSettings(XComGameState StartState, bool InTutorial
 			Settings.AddOptionalNarrativeDLC(OptionalNarrativeDLC[i]);
 		}
 	}
+
+	Settings.BizAnalyticsCampaignID = `FXSLIVE.GetGUID( );
 }
 
 static event int GetDifficultyFromSettings()

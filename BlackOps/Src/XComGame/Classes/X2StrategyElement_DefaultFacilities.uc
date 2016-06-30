@@ -5,7 +5,9 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
-class X2StrategyElement_DefaultFacilities extends X2StrategyElement;
+class X2StrategyElement_DefaultFacilities extends X2StrategyElement config(GameData);
+
+var config array<name> BridgeCinematicObjectives;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -129,8 +131,9 @@ static function SelectFacilityBridge(StateObjectReference FacilityRef, optional 
 	local XComHQPresentationLayer HQPres;
 	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;
-	local XComGameState_Objective BroadcastObjectiveState;
+	local XComGameState_Objective CinematicObjectiveState;
 	local bool bDontEnterStrategyMap;
+	local name ObjectiveName;
 
 	SelectFacility(FacilityRef);
 	
@@ -139,9 +142,15 @@ static function SelectFacilityBridge(StateObjectReference FacilityRef, optional 
 
 	// When the broadcast objective is active,we don't want to jump into the Geoscape because a cinematic and popup need to trigger
 	// PendingNarrativeTriggers will have length > 0 if the Broadcast event was just triggered when SelectFacility was called.
-	BroadcastObjectiveState = XComHQ.GetObjective('T5_M2_CompleteBroadcastTheTruthMission');
-	bDontEnterStrategyMap = (BroadcastObjectiveState.GetStateOfObjective() == eObjectiveState_InProgress && BroadcastObjectiveState.PendingNarrativeTriggers.Length > 0);
-
+	foreach default.BridgeCinematicObjectives(ObjectiveName)
+	{		
+		CinematicObjectiveState = XComHQ.GetObjective(ObjectiveName);
+		if (CinematicObjectiveState.GetStateOfObjective() == eObjectiveState_InProgress && CinematicObjectiveState.PendingNarrativeTriggers.Length > 0)
+		{
+			bDontEnterStrategyMap = true;
+			break;
+		}		
+	}
 	HQPres = `HQPRES;
 
 	if( XComHQ.GetObjectiveStatus('T0_M3_WelcomeToHQ') == eObjectiveState_InProgress )
@@ -178,9 +187,6 @@ static function X2DataTemplate CreatePowerCoreTemplate()
 	Template.strImage = "img:///UILibrary_StrategyImages.GeneMods.GeneMods_MimeticSkin";
 	Template.ForcedMapIndex = 1;
 	Template.NeedsAttentionNarrative = "X2NarrativeMoments.Strategy.Avenger_Commander_ResearchLabs";
-	Template.StaffSlots.AddItem('ResearchStaffSlot');
-	Template.StaffSlotsLocked = 1;
-	Template.bHideStaffSlots = true;
 	Template.SelectFacilityFn = SelectFacility;
 	Template.OnLeaveFacilityInterruptFn = InterruptCheckpowerCore;
 	Template.IsFacilityProjectActiveFn = IsResearchProjectActive;
@@ -521,9 +527,6 @@ static function X2DataTemplate CreateStorageTemplate()
 	Template.strImage = "img:///UILibrary_StrategyImages.GeneMods.GeneMods_MimeticSkin";
 	Template.ForcedMapIndex = 17;
 	Template.NeedsAttentionNarrative = "X2NarrativeMoments.Strategy.Avenger_Commander_Engineering";
-	Template.StaffSlots.AddItem('EngineeringStaffSlot');
-	Template.StaffSlotsLocked = 1;
-	Template.bHideStaffSlots = true;
 	Template.UIFacilityGridID = 'EngineeringHighlight';
 	Template.SelectFacilityFn = SelectFacility;
 	//Template.OnLeaveFacilityInterruptFn = InterruptCheckStorage;	

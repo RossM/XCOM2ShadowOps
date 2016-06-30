@@ -307,7 +307,7 @@ function SetUpForSaleItems(XComGameState NewGameState)
 		{
 			if (!Photo.HasPendingHeadshot(RewardState.RewardObjectReference, OnUnitHeadCaptureFinished))
 			{
-				Photo.AddHeadshotRequest(RewardState.RewardObjectReference, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, OnUnitHeadCaptureFinished, class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook());
+				Photo.AddHeadshotRequest(RewardState.RewardObjectReference, 'UIPawnLocation_ArmoryPhoto', 'SoldierPicture_Head_Armory', 512, 512, OnUnitHeadCaptureFinished);
 			}
 		}
 
@@ -595,7 +595,28 @@ function CleanUpForSaleItems(XComGameState NewGameState)
 //----------------   UPDATE   -----------------------------------------------------------------
 //#############################################################################################
 
+// THIS FUNCTION SHOULD RETURN TRUE IN ALL THE SAME CASES AS Update
+function bool ShouldUpdate( )
+{
+	local UIStrategyMap StrategyMap;
+
+	StrategyMap = `HQPRES.StrategyMap2D;
+
+	// Do not trigger anything while the Avenger or Skyranger are flying, or if another popup is already being presented
+	if (StrategyMap != none && StrategyMap.m_eUIState != eSMS_Flight && !`HQPRES.ScreenStack.IsCurrentClass( class'UIAlert' ))
+	{
+		// Check if making contact is complete
+		if (bNeedsScan && IsScanComplete( ))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 //---------------------------------------------------------------------------------------
+// IF ADDING NEW CASES WHERE bModified = true, UPDATE FUNCTION ShouldUpdate ABOVE
 function bool Update(XComGameState NewGameState)
 {
 	local UIStrategyMap StrategyMap;
@@ -955,26 +976,19 @@ function UpdateGameBoard()
 {
 	local XComGameState NewGameState;
 	local XComGameState_BlackMarket BlackMarketState;
-	local XComGameStateHistory History;
+	local bool bSuccess;
 
-	History = `XCOMHISTORY;
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Update Black Market");
-
-	BlackMarketState = XComGameState_BlackMarket(NewGameState.CreateStateObject(class'XComGameState_BlackMarket', ObjectID));
-	NewGameState.AddStateObject(BlackMarketState);
-
-	if (!BlackMarketState.Update(NewGameState))
+	if (ShouldUpdate())
 	{
-		NewGameState.PurgeGameStateForObjectID(BlackMarketState.ObjectID);
-	}
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState( "Update Black Market" );
 
-	if (NewGameState.GetNumGameStateObjects() > 0)
-	{
-		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-	}
-	else
-	{
-		History.CleanupPendingGameState(NewGameState);
+		BlackMarketState = XComGameState_BlackMarket( NewGameState.CreateStateObject( class'XComGameState_BlackMarket', ObjectID ) );
+		NewGameState.AddStateObject( BlackMarketState );
+
+		bSuccess = BlackMarketState.Update(NewGameState);
+		`assert( bSuccess );
+
+		`XCOMGAME.GameRuleset.SubmitGameState( NewGameState );
 	}
 	
 	if (bNeedsAppearedPopup)

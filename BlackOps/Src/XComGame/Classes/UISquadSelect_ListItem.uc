@@ -32,6 +32,7 @@ var localized string m_strPromote;
 var localized string m_strEdit;
 var localized string m_strDismiss;
 var localized string m_strNeedsMediumArmor;
+var localized string m_strNoUtilitySlots;
 var localized string m_strIncreaseSquadSize;
 
 simulated function UIPanel InitPanel(optional name InitName, optional name InitLibID)
@@ -50,7 +51,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 {
 	local bool bCanPromote;
 	local string ClassStr, NameStr;
-	local int i, NumUtilitySlots, UtilityItemIndex;
+	local int i, NumUtilitySlots, UtilityItemIndex, NumUnitUtilityItems;
 	local float UtilityItemWidth, UtilityItemHeight;
 	local UISquadSelect_UtilityItem UtilityItem;
 	local array<XComGameState_Item> EquippedItems;
@@ -89,6 +90,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 	if(GetUnitRef().ObjectID <= 0)
 	{
 		AS_SetEmpty(m_strSelectUnit);
+		AS_SetUnitHealth(-1, -1);
 
 		AbilityIcons.Remove();
 		AbilityIcons = none;
@@ -125,14 +127,20 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 			}
 		}
 
+		NumUnitUtilityItems = Unit.GetCurrentStat(eStat_UtilityItems); // Check how many utility items this unit can use
+		
 		UtilityItemIndex = 0;
-
 		UtilityItem = UISquadSelect_UtilityItem(UtilitySlots.GetItem(UtilityItemIndex++));
-		EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_Utility);
-		if (bDisableLoadout)
-			UtilityItem.SetDisabled(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
+		if (NumUnitUtilityItems > 0)
+		{
+			EquippedItems = class'UIUtilities_Strategy'.static.GetEquippedItemsInSlot(Unit, eInvSlot_Utility);
+			if (bDisableLoadout)
+				UtilityItem.SetDisabled(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
+			else
+				UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
+		}
 		else
-			UtilityItem.SetAvailable(EquippedItems.Length > 0 ? EquippedItems[0] : none, eInvSlot_Utility, 0, NumUtilitySlots);
+			UtilityItem.SetLocked(m_strNoUtilitySlots); // If the unit has no utility slots allowed, lock the slot
 
 		if(class'XComGameState_HeadquartersXCom'.static.GetObjectiveStatus('T0_M5_EquipMedikit') == eObjectiveState_InProgress)
 		{
@@ -153,7 +161,7 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 				UtilityItem.SetAvailable(EquippedItems.Length > 1 ? EquippedItems[1] : none, eInvSlot_Utility, 1, NumUtilitySlots);
 		}
 		else
-			UtilityItem.SetLocked(m_strNeedsMediumArmor);
+			UtilityItem.SetLocked(NumUnitUtilityItems > 0 ? m_strNeedsMediumArmor : m_strNoUtilitySlots);
 
 		if(Unit.HasGrenadePocket())
 		{
@@ -210,7 +218,9 @@ simulated function UpdateData(optional int Index = -1, optional bool bDisableEdi
 					  class'UIUtilities_Text'.static.GetColoredText(GetHeavyWeaponName(), bDisableLoadout ? eUIState_Disabled : eUIState_Normal),
 					  class'UIUtilities_Text'.static.GetColoredText(GetHeavyWeaponDesc(), bDisableLoadout ? eUIState_Disabled : eUIState_Normal),
 					  (bCanPromote ? m_strPromote : ""), Unit.IsPsiOperative() || (Unit.HasPsiGift() && Unit.GetRank() < 2), ClassStr);
-
+		
+		AS_SetUnitHealth(class'UIUtilities_Strategy'.static.GetUnitCurrentHealth(Unit), class'UIUtilities_Strategy'.static.GetUnitMaxHealth(Unit));
+		
 		PsiMarkup.SetVisible(Unit.HasPsiGift());
 
 		HeavyWeapon = Unit.GetItemInSlot(eInvSlot_HeavyWeapon);
@@ -481,6 +491,14 @@ simulated function AS_SetBlank( string label )
 simulated function AS_SetDisabled( string label )
 {
 	mc.FunctionString("setDisabledSlot", label);
+}
+
+simulated function AS_SetUnitHealth(int CurrentHP, int MaxHP)
+{
+	mc.BeginFunctionOp("setUnitHealth");
+	mc.QueueNumber(CurrentHP);
+	mc.QueueNumber(MaxHP);
+	mc.EndOp();
 }
 
 // Don't propagate focus changes to children

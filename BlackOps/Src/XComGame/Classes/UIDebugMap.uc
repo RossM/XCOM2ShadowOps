@@ -244,7 +244,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 		InitializeChallengeModeDataDisplay( );
 	}
 
-	bStoredFOWState =  `XWORLD.bEnableFOW;
+	bStoredFOWState =  `XWORLD.bDebugEnableFOW;
 	if( bStoredFOWState )
 	{
 		XComCheatManager(TacticalController.CheatManager).ToggleFOW();

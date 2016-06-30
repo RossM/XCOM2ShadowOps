@@ -36,6 +36,7 @@ simulated function AS_RefreshData()
 {
 	local XComGameStateHistory History;
 	local XComGameState_StaffSlot SlotState;
+	local XComGameState_HeadquartersProject Project;
 	local XComGameState TempState;
 	local string StaffLocation, StatusString, TimeStr, BonusStr;
 	local EStaffStatus Status;
@@ -46,7 +47,7 @@ simulated function AS_RefreshData()
 
 	Status = class'X2StrategyGameRulesetDataStructures'.static.GetStafferStatus(UnitInfo, StaffLocation, TimeValue, StatusState);
 	StatusString = class'UIUtilities_Text'.static.GetColoredText(class'UIUtilities_Strategy'.default.m_strStaffStatus[Status], StatusState);
-	TimeStr = class'UIUtilities_Text'.static.GetTimeRemainingString(TimeValue);	
+	TimeStr = class'UIUtilities_Text'.static.GetTimeRemainingString(TimeValue);
 	SlotState = XComGameState_StaffSlot(History.GetGameStateForObjectID(SlotRef.ObjectID));
 	bPreview = SlotState.IsSlotEmpty(); // only show the preview stats if the slot is currently empty
 
@@ -55,7 +56,26 @@ simulated function AS_RefreshData()
 	SlotState = XComGameState_StaffSlot(TempState.GetGameStateForObjectID(SlotRef.ObjectID));
 	BonusStr = Caps(SlotState.GetBonusDisplayString(bPreview));
 	History.CleanupPendingGameState(TempState);
-		
+	
+	// If the unit is available and the staff slot has an associated project, check to see if one exists for this unit
+	if (Status == eStaffStatus_Available && SlotState.GetMyTemplate().AssociatedProjectClass != none)
+	{		
+		foreach History.IterateByClassType(class'XComGameState_HeadquartersProject', Project)
+		{
+			if (Project.Class == SlotState.GetMyTemplate().AssociatedProjectClass)
+			{
+				// An associated project was found, so display the estimated time to complete
+				if (Project.ProjectFocus == UnitInfo.UnitRef ||
+					(Project.AuxilaryReference.ObjectID != 0 && Project.AuxilaryReference == SlotState.Room))
+				{
+					TimeValue = Project.GetProjectedNumHoursRemaining();
+					TimeStr = class'UIUtilities_Text'.static.GetTimeRemainingString(TimeValue);
+					break;
+				}
+			}
+		}
+	}
+
 	MC.BeginFunctionOp("update");
 	MC.QueueString( StatusString );
 	MC.QueueString( TimeValue > 0 ? TimeStr : "" );

@@ -190,8 +190,8 @@ protected function IMouseInteractionInterface GetMousePickActor()
 	
 	bDebugTrace = false;
 	if(PlayerOwner.CheatManager != none 
-		&& XComTacticalCheatManager(PlayerOwner.CheatManager) != none 
-		&& XComTacticalCheatManager(PlayerOwner.CheatManager).bDebugMouseTrace)
+		&& XComCheatManager(PlayerOwner.CheatManager) != none 
+		&& XComCheatManager(PlayerOwner.CheatManager).bDebugMouseTrace)
 	{
 		bDebugTrace = true;
 	}

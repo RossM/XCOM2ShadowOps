@@ -182,6 +182,7 @@ static function bool IsBuildSlotBusy(XComGameState_StaffSlot SlotState)
 
 //#############################################################################################
 //----------------   ENGINEERING   ------------------------------------------------------------
+//                    (Unused)
 //#############################################################################################
 
 static function X2DataTemplate CreateEngineeringStaffSlotTemplate()
@@ -209,6 +210,7 @@ static function X2DataTemplate CreateEngineeringStaffSlotTemplate()
 
 //#############################################################################################
 //----------------   RESEARCH   ---------------------------------------------------------------
+//                   (Unused)
 //#############################################################################################
 
 static function X2DataTemplate CreateResearchStaffSlotTemplate()
@@ -768,6 +770,7 @@ static function X2DataTemplate CreatePsiChamberSoldierStaffSlotTemplate()
 	`CREATE_X2TEMPLATE(class'X2StaffSlotTemplate', Template, 'PsiChamberSoldierStaffSlot');
 	Template.bSoldierSlot = true;
 	Template.bRequireConfirmToEmpty = true;
+	Template.AssociatedProjectClass = class'XComGameState_HeadquartersProjectPsiTraining';
 	Template.FillFn = FillPsiChamberSoldierSlot;
 	Template.EmptyFn = EmptyPsiChamberSoldierSlot;
 	Template.EmptyStopProjectFn = EmptyStopProjectPsiChamberSoldierSlot;
@@ -808,13 +811,13 @@ static function FillPsiChamberSoldierSlot(XComGameState NewGameState, StateObjec
 
 		NewXComHQ.Projects.AddItem(ProjectState.GetReference());
 
+		// Remove their gear
+		NewUnitState.MakeItemsAvailable(NewGameState, false);
+
 		// If the unit undergoing training is in the squad, remove them
 		SquadIndex = NewXComHQ.Squad.Find('ObjectID', UnitInfo.UnitRef.ObjectID);
 		if (SquadIndex != INDEX_NONE)
 		{
-			// Remove their gear
-			NewUnitState.MakeItemsAvailable(NewGameState, false);
-
 			// Remove them from the squad
 			NewXComHQ.Squad[SquadIndex] = EmptyRef;
 		}
@@ -910,11 +913,13 @@ static function bool IsUnitValidForPsiChamberSoldierSlot(XComGameState_StaffSlot
 	
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitInfo.UnitRef.ObjectID));
 
-	if (Unit.IsASoldier()
+	if (Unit.CanBeStaffed()
+		&& Unit.IsASoldier()
 		&& !Unit.IsInjured()
 		&& !Unit.IsTraining()
 		&& !Unit.IsPsiTraining()
-		&& !Unit.IsPsiAbilityTraining())
+		&& !Unit.IsPsiAbilityTraining()
+		&& SlotState.GetMyTemplate().ExcludeClasses.Find(Unit.GetSoldierClassTemplateName()) == INDEX_NONE)
 	{
 		if (Unit.GetRank() == 0 && !Unit.CanRankUpSoldier()) // All rookies who have not yet ranked up can be trained as Psi Ops
 		{
@@ -1087,14 +1092,14 @@ static function FillOTSSlot(XComGameState NewGameState, StateObjectReference Slo
 
 	NewUnitState.SetStatus(eStatus_Training);
 	NewXComHQ.Projects.AddItem(ProjectState.GetReference());
+
+	// Remove their gear
+	NewUnitState.MakeItemsAvailable(NewGameState, false);
 	
 	// If the unit undergoing training is in the squad, remove them
 	SquadIndex = NewXComHQ.Squad.Find('ObjectID', UnitInfo.UnitRef.ObjectID);
 	if (SquadIndex != INDEX_NONE)
 	{
-		// Remove their gear
-		NewUnitState.MakeItemsAvailable(NewGameState, false);
-
 		// Remove them from the squad
 		NewXComHQ.Squad[SquadIndex] = EmptyRef;
 	}
@@ -1131,12 +1136,14 @@ static function bool IsUnitValidForOTSSoldierSlot(XComGameState_StaffSlot SlotSt
 
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitInfo.UnitRef.ObjectID));
 	
-	if (Unit.IsASoldier()
+	if (Unit.CanBeStaffed()
+		&& Unit.IsASoldier()
 		&& !Unit.IsInjured()
 		&& !Unit.IsTraining()
 		&& !Unit.IsPsiTraining()
 		&& Unit.GetRank() == 0
-		&& !Unit.CanRankUpSoldier())
+		&& !Unit.CanRankUpSoldier()
+		&& SlotState.GetMyTemplate().ExcludeClasses.Find(Unit.GetSoldierClassTemplateName()) == INDEX_NONE)
 	{
 		return true;
 	}
@@ -1287,6 +1294,7 @@ static function X2DataTemplate CreateAWCSoldierStaffSlotTemplate()
 	Template.IsUnitValidForSlotFn = IsUnitValidForAWCSoldierSlot;
 	Template.IsStaffSlotBusyFn = IsStaffSlotBusyDefault;
 	Template.MatineeSlotName = "Soldier";
+	Template.ExcludeClasses.AddItem('PsiOperative');
 
 	return Template;
 }
@@ -1350,12 +1358,13 @@ static function bool IsUnitValidForAWCSoldierSlot(XComGameState_StaffSlot SlotSt
 
 	Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitInfo.UnitRef.ObjectID));
 
-	if (Unit.IsASoldier()
+	if (Unit.CanBeStaffed()
+		&& Unit.IsASoldier()
 		&& !Unit.IsInjured()
 		&& !Unit.IsTraining()
 		&& !Unit.IsPsiTraining()
 		&& Unit.GetRank() >= 2 //only include soldiers who have reached Corporal, and therefore know at least one ability
-		&& Unit.GetSoldierClassTemplateName() != 'PsiOperative') // Psi Operatives are not eligible, since their abilities are picked as they rank up
+		&& SlotState.GetMyTemplate().ExcludeClasses.Find(Unit.GetSoldierClassTemplateName()) == INDEX_NONE) // Certain classes can't retrain their abilities (Psi Ops)
 	{
 		return true;
 	}
@@ -1534,14 +1543,16 @@ static function bool IsUnitValidForSlotDefault(XComGameState_StaffSlot SlotState
 	// 2) Not the unit already staffed in the slot
 	// 3) Of the correct type for this slot
 	// 4) Can the staffer be moved out of their current slot, if they are in one
+	// 5) The unit's soldier class is not in an exclusion list for this slot
 	if (UnitState.CanBeStaffed() &&
 		UnitState.GetReference().ObjectID != SlotState.GetAssignedStaffRef().ObjectID)
 	{
 		SlotTemplate = SlotState.GetMyTemplate();
 
-		if ((SlotTemplate.bSoldierSlot && UnitState.IsASoldier()) ||
+		if ((SlotTemplate.ExcludeClasses.Find(UnitState.GetSoldierClassTemplateName()) == INDEX_NONE) &&
+			((SlotTemplate.bSoldierSlot && UnitState.IsSoldier()) ||
 			(SlotTemplate.bEngineerSlot && UnitState.IsAnEngineer()) ||
-			(SlotTemplate.bScientistSlot && UnitState.IsAScientist()))
+			(SlotTemplate.bScientistSlot && UnitState.IsAScientist())))
 		{
 			// If the player is attempting to move a ghost, make sure to get their current slot instead of the ghost-creators slot
 			if (UnitInfo.bGhostUnit && UnitInfo.GhostLocation.ObjectID != 0)

@@ -20,7 +20,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	return Templates;
 }
 
-static function X2AbilityTemplate RocketLauncherAbility()
+static function X2AbilityTemplate RocketLauncherAbility(optional Name TemplateName = 'RocketLauncher')
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
@@ -31,7 +31,7 @@ static function X2AbilityTemplate RocketLauncherAbility()
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'RocketLauncher');
+	`CREATE_X2ABILITY_TEMPLATE(Template, TemplateName);
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 1;
@@ -65,7 +65,8 @@ static function X2AbilityTemplate RocketLauncherAbility()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WrongSoldierClass');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_firerocket";
 	Template.bUseAmmoAsChargesForHUD = true;
 	Template.TargetingMethod = class'X2TargetingMethod_RocketLauncher';
@@ -79,7 +80,7 @@ static function X2AbilityTemplate RocketLauncherAbility()
 	return Template;	
 }
 
-static function X2AbilityTemplate ShredderGunAbility()
+static function X2AbilityTemplate ShredderGunAbility(optional Name TemplateName = 'ShredderGun')
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
@@ -91,7 +92,7 @@ static function X2AbilityTemplate ShredderGunAbility()
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShredderGun');
+	`CREATE_X2ABILITY_TEMPLATE(Template, TemplateName);
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 1;
@@ -129,7 +130,8 @@ static function X2AbilityTemplate ShredderGunAbility()
 	Template.AbilityTriggers.AddItem(InputTrigger);
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WrongSoldierClass');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_shreddergun";
 	Template.bUseAmmoAsChargesForHUD = true;
 	Template.TargetingMethod = class'X2TargetingMethod_Cone';
@@ -143,7 +145,7 @@ static function X2AbilityTemplate ShredderGunAbility()
 	return Template;	
 }
 
-static function X2AbilityTemplate ShredstormCannonAbility()
+static function X2AbilityTemplate ShredstormCannonAbility(optional Name TemplateName = 'ShredstormCannon')
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
@@ -155,7 +157,7 @@ static function X2AbilityTemplate ShredstormCannonAbility()
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShredstormCannon');
+	`CREATE_X2ABILITY_TEMPLATE(Template, TemplateName);
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 1;
@@ -193,7 +195,8 @@ static function X2AbilityTemplate ShredstormCannonAbility()
 	Template.AbilityTriggers.AddItem(InputTrigger);
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WrongSoldierClass');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_shredstormcannon";
 	Template.bUseAmmoAsChargesForHUD = true;
 	Template.TargetingMethod = class'X2TargetingMethod_Cone';
@@ -267,7 +270,8 @@ static function X2AbilityTemplate Flamethrower(name TemplateName)
 	Template.AbilityTriggers.AddItem(InputTrigger);
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WrongSoldierClass');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_flamethrower";
 	Template.bUseAmmoAsChargesForHUD = true;
 
@@ -288,7 +292,7 @@ static function X2AbilityTemplate Flamethrower(name TemplateName)
 	return Template;	
 }
 
-static function X2AbilityTemplate BlasterLauncherAbility()
+static function X2AbilityTemplate BlasterLauncherAbility(optional Name TemplateName = 'BlasterLauncher')
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
@@ -300,7 +304,7 @@ static function X2AbilityTemplate BlasterLauncherAbility()
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'BlasterLauncher');
+	`CREATE_X2ABILITY_TEMPLATE(Template, TemplateName);
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 1;
@@ -335,7 +339,8 @@ static function X2AbilityTemplate BlasterLauncherAbility()
 	Template.AbilityTriggers.AddItem(InputTrigger);
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WrongSoldierClass');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_blasterlauncher";
 	Template.bUseAmmoAsChargesForHUD = true;
 	Template.TargetingMethod = class'X2TargetingMethod_BlasterLauncher';
@@ -349,7 +354,7 @@ static function X2AbilityTemplate BlasterLauncherAbility()
 	return Template;	
 }
 
-static function X2AbilityTemplate PlasmaBlaster()
+static function X2AbilityTemplate PlasmaBlaster(optional Name TemplateName = 'PlasmaBlaster')
 {
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCost_Ammo                AmmoCost;
@@ -361,7 +366,7 @@ static function X2AbilityTemplate PlasmaBlaster()
 	local X2AbilityTrigger_PlayerInput      InputTrigger;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'PlasmaBlaster');
+	`CREATE_X2ABILITY_TEMPLATE(Template, TemplateName);
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 1;
@@ -398,7 +403,8 @@ static function X2AbilityTemplate PlasmaBlaster()
 	Template.AbilityTriggers.AddItem(InputTrigger);
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WrongSoldierClass');
 	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_plasmablaster";
 	Template.bUseAmmoAsChargesForHUD = true;
 	Template.TargetingMethod = class'X2TargetingMethod_Line';

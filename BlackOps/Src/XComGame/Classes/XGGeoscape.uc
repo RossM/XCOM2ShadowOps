@@ -269,7 +269,7 @@ function GameTick( float fGameTime )
 		`EARTH.SetTime(m_kDateTime);
 		UpdateAlienAI();
 		UpdateResistance();
-		UpdateHiddenMapElements();
+		//UpdateHiddenMapElements(); Nothing is actually hidden and this is a terrible function vis-a-vis framerate
 		UpdateMissionCalendar();
 
 		CheatMgr = XComHeadquartersCheatManager(class'WorldInfo'.static.GetWorldInfo().GetALocalPlayerController().CheatManager);

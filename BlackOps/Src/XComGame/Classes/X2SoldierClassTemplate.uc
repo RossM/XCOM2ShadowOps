@@ -29,6 +29,8 @@ var config bool					bBlockRankingUp; // Do not let soldiers of this class rank u
 var config array<EInventorySlot> CannotEditSlots; // Slots which cannot be edited in the armory loadout
 var config protectedwrite bool  bMultiplayerOnly;
 var config protectedwrite bool	bHideInCharacterPool;
+var config name					RequiredCharacterClass; // Used in the character pool if this class has a required character template
+var config bool					bHasClassMovie; // Does this class show a class movie upon first time getting a unit of this class
 
 var localized string			DisplayName;
 var localized string			ClassSummary;

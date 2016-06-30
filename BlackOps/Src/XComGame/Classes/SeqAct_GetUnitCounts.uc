@@ -10,8 +10,9 @@ var int Dead;
 var int OnMap;
 var int Incapacitated;
 var int Confused;
-var() string CharacterTemplateFilter;
+var() string CharacterTemplateFilter; // Only characters of this type are counted.  Takes precedence over IgnoreCharactersExcludedFromEvacZoneCounts.
 var() bool bSkipTurrets; // Turrets are not counted by default.
+var() bool IgnoreCharactersExcludedFromEvacZoneCounts; // Specified in XComMissions.ini, array 'CharactersExcludedFromEvacZoneCounts' 
 var() string VolumeTag;
 
 event Activated()
@@ -70,16 +71,28 @@ function protected int GetFilteredUnitCount(out array<XComGameState_Unit> Units)
 	local XComGameState_Effect TestEffect;
 	local XComGameState_Unit Carrier;
 	local TTile UnitLocation;
+	local array<Name> FilteredCharacters;
+	local bool bFilteredOut;
 
+	if( CharacterTemplateFilter != "" )
+	{
+		TemplateName = name(CharacterTemplateFilter);
+		FilteredCharacters.AddItem(TemplateName);
+		bFilteredOut = false;
+	}
+	else if ( IgnoreCharactersExcludedFromEvacZoneCounts )
+	{
+		FilteredCharacters = class'XComTacticalMissionManager'.default.CharactersExcludedFromEvacZoneCounts;
+		bFilteredOut = true;
+	}
 	TestVolume = FindVolume();
-	if(CharacterTemplateFilter == "" && TestVolume == none)
+	if(FilteredCharacters.Length == 0 && TestVolume == none)
 	{
 		return Units.Length;
 	}
 	else
 	{
 		WorldData = `XWORLD;
-		TemplateName = name(CharacterTemplateFilter);
 		FilteredCount = 0;
 
 		foreach Units(UnitState)
@@ -97,7 +110,9 @@ function protected int GetFilteredUnitCount(out array<XComGameState_Unit> Units)
 			}
 
 			// check if the template filter passes
-			if(TemplateName == '' || UnitState.GetMyTemplateName() == TemplateName)
+			if( FilteredCharacters.Length == 0 // No filters at all
+			   || (!bFilteredOut && FilteredCharacters.Find(UnitState.GetMyTemplateName()) != INDEX_NONE) // Filtered-in characters
+			   || (bFilteredOut && FilteredCharacters.Find(UnitState.GetMyTemplateName()) == INDEX_NONE) ) // Filtered-out characters
 			{
 				// check if the volume filter passes
 				if(TestVolume == None || TestVolume.EncompassesPoint(WorldData.GetPositionFromTileCoordinates(UnitLocation)))

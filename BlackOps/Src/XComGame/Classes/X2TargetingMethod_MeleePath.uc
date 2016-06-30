@@ -147,7 +147,7 @@ function DirectSetTarget(int TargetIndex)
 
 	LookAtCamera = new class'X2Camera_LookAtActorTimed';
 	LookAtCamera.LookAtDuration = 0.0f;
-	LookAtCamera.ActorToFollow = TargetUnit.GetPawn();
+	LookAtCamera.ActorToFollow = TargetUnit != none ? TargetUnit.GetPawn() : Target.GetVisualizer();
 	`CAMERASTACK.AddCamera(LookAtCamera);
 }
 

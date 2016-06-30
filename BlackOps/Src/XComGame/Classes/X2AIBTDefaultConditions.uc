@@ -417,6 +417,12 @@ static event bool FindBTConditionDelegate(name strName, optional out delegate<BT
 		return true;
 	}
 
+	if( ParseNameForNameAbilitySplit(strName, "TargetValidForAbility-", NameParam) )
+	{
+		dOutFn = TargetValidForAbility;
+		return true;
+	}
+
 	switch( strName )
 	{
 	case 'HasAmmo':
@@ -745,6 +751,62 @@ static event bool FindBTConditionDelegate(name strName, optional out delegate<BT
 		break;
 	}
 	return false;
+}
+
+// Basically check the target conditions like the Ability Template does, fail if any of the conditions fail that aren't in our exceptions (Param) list.
+function bt_status TargetValidForAbility()
+{
+	local XComGameState_Unit TargetState;
+	local XComGameState_Ability AbilityState;
+	local X2AbilityTemplate AbilityTemplate;
+	local X2Condition Condition;
+	local Name AvailableCode;
+	if( m_kBehavior.BT_GetTarget(TargetState) )
+	{
+		m_kBehavior.FindAbilityByName(SplitNameParam, AbilityState);
+		if( AbilityState != None )
+		{
+			AbilityTemplate = AbilityState.GetMyTemplate();
+			foreach AbilityTemplate.AbilityTargetConditions(Condition)
+			{
+				AvailableCode = Condition.MeetsCondition(TargetState);
+				if( AvailableCode != 'AA_Success' )
+				{
+					// Check exception list from BT node.  (ParamList)
+					if( m_ParamList.Find(AvailableCode) == INDEX_NONE )
+					{
+						`LogAIBT("Target failed due to error code:"@AvailableCode);
+						return BTS_FAILURE;
+					}
+				}
+				AvailableCode = Condition.MeetsConditionWithSource(TargetState, m_kUnitState);
+				if( AvailableCode != 'AA_Success' )
+				{
+					// Check exception list from BT node.  (ParamList)
+					if( m_ParamList.Find(AvailableCode) == INDEX_NONE )
+					{
+						`LogAIBT("Target failed due to error code:"@AvailableCode);
+						return BTS_FAILURE;
+					}
+				}
+
+				AvailableCode = Condition.AbilityMeetsCondition(AbilityState, TargetState);
+				if( AvailableCode != 'AA_Success' )
+				{
+					// Check exception list from BT node.  (ParamList)
+					if( m_ParamList.Find(AvailableCode) == INDEX_NONE )
+					{
+						`LogAIBT("Target failed due to error code:"@AvailableCode);
+						return BTS_FAILURE;
+					}
+				}
+			}
+			return BTS_SUCCESS;
+		}
+		`LogAIBT("Target failed due to no ability state found.");
+	}
+	`LogAIBT("Target failed due to no target state found.");
+	return BTS_FAILURE;
 }
 
 function bt_status HasBindableNeighborTile()

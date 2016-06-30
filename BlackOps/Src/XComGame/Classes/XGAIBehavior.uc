@@ -3235,7 +3235,7 @@ function bool BT_SelectAoETarget(Name ProfileName)
 	local int iAbilityID;
 	local AvailableTarget AvailTargets;
 	local AoETargetingInfo Profile;
-	local TTile TileDest;
+	local TTile TileDest, kClosestTile;
 
 	if( HasAoEAbility(iAbilityID, GetAbilityFromTargetingProfile(ProfileName, Profile)) )
 	{
@@ -3248,7 +3248,14 @@ function bool BT_SelectAoETarget(Name ProfileName)
 			if( Profile.bPathToTarget )
 			{
 				TileDest = `XWORLD.GetTileCoordinatesFromPosition(TopAoETarget.Location);
-				m_kUnit.m_kReachableTilesCache.BuildPathToTile(TileDest, AbilityPathTiles);
+				if( !m_kUnit.m_kReachableTilesCache.BuildPathToTile(TileDest, AbilityPathTiles) )
+				{
+					if( !class'Helpers'.static.GetFurthestReachableTileOnPathToDestination(kClosestTile, TileDest, UnitState) )
+					{
+						kClosestTile = m_kUnit.m_kReachableTilesCache.GetClosestReachableDestination(TileDest);
+					}
+					m_kUnit.m_kReachableTilesCache.BuildPathToTile(kClosestTile, AbilityPathTiles);
+				}
 			}
 			return true;
 		}

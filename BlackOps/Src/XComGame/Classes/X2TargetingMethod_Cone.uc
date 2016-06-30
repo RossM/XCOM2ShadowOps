@@ -44,7 +44,7 @@ function Init(AvailableAction InAction)
 	ConeMultiTarget = X2AbilityMultiTarget_Cone(AbilityTemplate.AbilityMultiTargetStyle);
 	`assert(ConeMultiTarget != none);
 	ConeLength = ConeMultiTarget.GetConeLength(Ability);
-	ConeWidth = ConeMultiTarget.ConeEndDiameter;
+	ConeWidth = ConeMultiTarget.GetConeEndDiameter(Ability);
 
 	CursorTarget = X2AbilityTarget_Cursor(AbilityTemplate.AbilityTargetStyle);
 	if (CursorTarget != none)

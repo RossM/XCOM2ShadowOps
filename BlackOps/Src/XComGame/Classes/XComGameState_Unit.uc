@@ -265,10 +265,13 @@ var bool					    m_bPsiTested;
 var bool					    bForcePsiGift;
 var transient XComUnitPawn      m_kPawn;
 
-var transient Array<XComGameState_Unit_AsyncLoadRequest> m_asynchronousLoadRequests;
+var duplicatetransient Array<XComGameState_Unit_AsyncLoadRequest> m_asynchronousLoadRequests;
 
 var transient bool bIsInCreate;
 var transient bool bHandlingAsyncRequests;
+
+var private transient int CachedUnitDataStateObjectId;
+
 
 delegate OnUnitPawnCreated( XComGameState_Unit Unit);
 
@@ -904,11 +907,6 @@ function PostCreateInit(XComGameState NewGameState, X2CharacterTemplate kTemplat
 		}
 	}
 
-	if (kTemplate.DefaultSoldierClass != '')
-	{
-		SetSoldierClassTemplate(kTemplate.DefaultSoldierClass);
-	}
-
 	if( CharGen != none )
 	{
 		CharGen.Destroy();
@@ -1373,6 +1371,11 @@ function SyncVisualizer(optional XComGameState GameState = none)
 		UpdateTurretState(true);
 	}
 
+	if( bGeneratesCover )
+	{
+		class'X2Effect_GenerateCover'.static.UpdateWorldCoverData( self, GameState );
+	}
+
 	// Don't Ragdoll cocoons
 	if (m_SpawnedCocoonRef.ObjectID != 0)
 	{
@@ -1380,6 +1383,11 @@ function SyncVisualizer(optional XComGameState GameState = none)
 	}
 
 	UnitVisualizer.VisualizedAlertLevel = UnitVisualizer.GetAlertLevel(self);
+
+	if( GetMyTemplate().bLockdownPodIdleUntilReveal && UnitVisualizer.VisualizedAlertLevel != eAL_Green )
+	{
+		UnitVisualizer.GetPawn().GetAnimTreeController().SetAllowNewAnimations(true);
+	}
 }
 
 function AppendAdditionalSyncActions( out VisualizationTrack BuildTrack )
@@ -1756,28 +1764,17 @@ function BuildVisualizationForFirstSightingOfEnemyGroup(XComGameState VisualizeG
 	}
 }
 
-/// <summary>
-/// "Transient" variables that should be cleared when this object is added to a start state
-/// </summary>
-function OnBeginTacticalPlay()
+function RegisterForEvents()
 {
 	local X2EventManager EventManager;
 	local Object ThisObj;
 	local XComGameState_Player PlayerState;
 	local XComGameStateHistory History;
 
-	super.OnBeginTacticalPlay();
-
 	History = `XCOMHISTORY;
 	EventManager = `XEVENTMGR;
 	ThisObj = self;
 	PlayerState = XComGameState_Player(History.GetGameStateForObjectID(ControllingPlayer.ObjectID));
-
-	EventManager.TriggerEvent( 'OnUnitBeginPlay', self, self );
-
-	LowestHP = GetCurrentStat(eStat_HP);
-	HighestHP = GetCurrentStat(eStat_HP);
-
 
 	if (!GetMyTemplate().bIsCosmetic)
 	{
@@ -1794,6 +1791,30 @@ function OnBeginTacticalPlay()
 	EventManager.RegisterForEvent(ThisObj, 'UnitRemovedFromPlay', OnUnitRemovedFromPlay, ELD_OnVisualizationBlockCompleted, , ThisObj);
 	EventManager.RegisterForEvent(ThisObj, 'UnitRemovedFromPlay', OnUnitRemovedFromPlay_GameState, ELD_OnStateSubmitted, , ThisObj);
 	EventManager.RegisterForEvent(ThisObj, 'UnitDied', OnThisUnitDied, ELD_OnStateSubmitted, , ThisObj);
+}
+
+function RefreshEventManagerRegistrationOnLoad()
+{
+	RegisterForEvents();
+}
+
+/// <summary>
+/// "Transient" variables that should be cleared when this object is added to a start state
+/// </summary>
+function OnBeginTacticalPlay()
+{
+	local X2EventManager EventManager;
+
+	super.OnBeginTacticalPlay();
+
+	EventManager = `XEVENTMGR;
+
+	EventManager.TriggerEvent( 'OnUnitBeginPlay', self, self );
+
+	LowestHP = GetCurrentStat(eStat_HP);
+	HighestHP = GetCurrentStat(eStat_HP);
+
+	RegisterForEvents();
 
 	CleanupUnitValues(eCleanup_BeginTactical);
 
@@ -1878,6 +1899,11 @@ function OnEndTacticalPlay()
 	if (!GetMyTemplate().bIgnoreEndTacticalRestoreArmor)
 	{
 		Shredded = 0;
+	}
+
+	if (GetMyTemplate().OnEndTacticalPlayFn != none)
+	{
+		GetMyTemplate().OnEndTacticalPlayFn(self);
 	}
 }
 
@@ -2110,6 +2136,22 @@ simulated function X2SoldierPersonalityTemplate GetPersonalityTemplate()
 	return PersonalityTemplate;
 }
 
+simulated function X2SoldierPersonalityTemplate GetPhotoboothPersonalityTemplate()
+{
+	local X2SoldierPersonalityTemplate PhotoboothPersonalityTemplate;
+
+	if (GetMyTemplate().PhotoboothPersonality != '')
+	{
+		PhotoboothPersonalityTemplate = X2SoldierPersonalityTemplate(class'X2StrategyElementTemplateManager'.static.GetStrategyElementTemplateManager().FindStrategyElementTemplate(GetMyTemplate().PhotoboothPersonality));
+		if (PhotoboothPersonalityTemplate != none)
+		{
+			return PhotoboothPersonalityTemplate;
+		}
+	}
+
+	return class'X2StrategyElement_DefaultSoldierPersonalities'.static.Personality_ByTheBook();
+}
+
 function GiveRandomPersonality()
 {
 	local array<X2StrategyElementTemplate> PersonalityTemplates;
@@ -2172,7 +2214,18 @@ function OnCreation(X2CharacterTemplate CharTemplate)
 	//AlertStatus = eAL_Green;
 	if (IsSoldier())
 	{
-		SetSoldierClassTemplate(class'X2SoldierClassTemplateManager'.default.DefaultSoldierClass);
+		// if we specify a non-default soldier class, start the unit off at squaddie rank so they get the base
+		// class abilities (this will also set them to the default class)
+		if(CharTemplate.DefaultSoldierClass != '' && CharTemplate.DefaultSoldierClass != class'X2SoldierClassTemplateManager'.default.DefaultSoldierClass)
+		{
+			SetXPForRank(1);
+			StartingRank = 1;
+			RankUpSoldier(GetParentGameState(), CharTemplate.DefaultSoldierClass);
+		}
+		else
+		{
+			SetSoldierClassTemplate(class'X2SoldierClassTemplateManager'.default.DefaultSoldierClass);
+		}
 	}
 
 	for (i = 0; i < eStat_MAX; ++i)
@@ -2205,10 +2258,20 @@ function OnCreation(X2CharacterTemplate CharTemplate)
 		if(CharTemplate.bForceAppearance)
 		{
 			kAppearance = CharTemplate.ForceAppearance;
+
+			if(CharTemplate.ForceAppearance.nmFlag != '')
+			{
+				SetCountry(CharTemplate.ForceAppearance.nmFlag);
+			}
 		}
 		else if(CharTemplate.bHasFullDefaultAppearance)
 		{
 			kAppearance = CharTemplate.DefaultAppearance;
+
+			if(CharTemplate.DefaultAppearance.nmFlag != '')
+			{
+				SetCountry(CharTemplate.ForceAppearance.nmFlag);
+			}
 		}
 	}
 
@@ -2216,6 +2279,12 @@ function OnCreation(X2CharacterTemplate CharTemplate)
 	if(CharTemplate.bSetGenderAlways && kAppearance.iGender == 0)
 	{
 		kAppearance.iGender = (Rand(2) == 0) ? eGender_Female : eGender_Male;
+	}
+
+	// If the character has a forced name, set it here
+	if(CharTemplate.strForcedFirstName != "" || CharTemplate.strForcedLastName != "" || CharTemplate.strForcedNickName != "")
+	{
+		SetCharacterName(CharTemplate.strForcedFirstName, CharTemplate.strForcedLastName, CharTemplate.strForcedNickName);
 	}
 
 	ResetTraversals();
@@ -2873,10 +2942,6 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 	local XComGameState_Item ItemIter, ItemInnerIter;
 	local X2WeaponTemplate MergeTemplate;
 	local int Idx, InnerIdx, BonusAmmo;
-	local bool bFieldMedic, bHeavyOrdnance;
-
-	bFieldMedic = HasSoldierAbility('FieldMedic');
-	bHeavyOrdnance = HasSoldierAbility('HeavyOrdnance');
 
 	for (Idx = 0; Idx < InventoryItems.Length; ++Idx)
 	{
@@ -2886,23 +2951,14 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 			MergeTemplate = X2WeaponTemplate(ItemIter.GetMyTemplate());
 			if (MergeTemplate != none && MergeTemplate.bMergeAmmo)
 			{
-				BonusAmmo = 0;
-
-				if (bFieldMedic && ItemIter.GetWeaponCategory() == class'X2Item_DefaultUtilityItems'.default.MedikitCat)
-					BonusAmmo += class'X2Ability_SpecialistAbilitySet'.default.FIELD_MEDIC_BONUS;
-				if (bHeavyOrdnance && ItemIter.InventorySlot == eInvSlot_GrenadePocket)
-					BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
-
+				BonusAmmo = GetBonusWeaponAmmoFromAbilities(ItemIter, StartState);
 				ItemIter.MergedItemCount = 1;
 				for (InnerIdx = Idx + 1; InnerIdx < InventoryItems.Length; ++InnerIdx)
 				{
 					ItemInnerIter = XComGameState_Item(StartState.GetGameStateForObjectID(InventoryItems[InnerIdx].ObjectID));
 					if (ItemInnerIter != none && ItemInnerIter.GetMyTemplate() == MergeTemplate)
 					{
-						if (bFieldMedic && ItemInnerIter.GetWeaponCategory() == class'X2Item_DefaultUtilityItems'.default.MedikitCat)
-							BonusAmmo += class'X2Ability_SpecialistAbilitySet'.default.FIELD_MEDIC_BONUS;
-						if (bHeavyOrdnance && ItemInnerIter.InventorySlot == eInvSlot_GrenadePocket)
-							BonusAmmo += class'X2Ability_GrenadierAbilitySet'.default.ORDNANCE_BONUS;
+						BonusAmmo += GetBonusWeaponAmmoFromAbilities(ItemInnerIter, StartState);
 						ItemInnerIter.bMergedOut = true;
 						ItemInnerIter.Ammo = 0;
 						ItemIter.MergedItemCount++;
@@ -2912,6 +2968,41 @@ function protected MergeAmmoAsNeeded(XComGameState StartState)
 			}
 		}
 	}
+}
+
+function protected int GetBonusWeaponAmmoFromAbilities(XComGameState_Item ItemState, XComGameState StartState)
+{
+	local array<SoldierClassAbilityType> SoldierAbilities;
+	local X2AbilityTemplateManager AbilityTemplateManager;
+	local X2AbilityTemplate AbilityTemplate;
+	local X2CharacterTemplate CharacterTemplate;
+	local int Bonus, Idx;
+
+	//  Note: This function is called prior to abilities being generated for the unit, so we only inspect
+	//          1) the earned soldier abilities
+	//          2) the abilities on the character template
+
+	Bonus = 0;
+	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	SoldierAbilities = GetEarnedSoldierAbilities();
+
+	for (Idx = 0; Idx < SoldierAbilities.Length; ++Idx)
+	{
+		AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate(SoldierAbilities[Idx].AbilityName);
+		if (AbilityTemplate != none && AbilityTemplate.GetBonusWeaponAmmoFn != none)
+			Bonus += AbilityTemplate.GetBonusWeaponAmmoFn(self, ItemState);
+	}
+
+	CharacterTemplate = GetMyTemplate();
+	
+	for (Idx = 0; Idx < CharacterTemplate.Abilities.Length; ++Idx)
+	{
+		AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate(CharacterTemplate.Abilities[Idx]);
+		if (AbilityTemplate != none && AbilityTemplate.GetBonusWeaponAmmoFn != none)
+			Bonus += AbilityTemplate.GetBonusWeaponAmmoFn(self, ItemState);
+	}
+
+	return Bonus;
 }
 
 function array<AbilitySetupData> GatherUnitAbilitiesForInit(optional XComGameState StartState, optional XComGameState_Player PlayerState, optional bool bMultiplayerDisplay)
@@ -2932,6 +3023,8 @@ function array<AbilitySetupData> GatherUnitAbilitiesForInit(optional XComGameSta
 	local X2WeaponUpgradeTemplate WeaponUpgradeTemplate;
 	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;
+	local array<X2DownloadableContentInfo> DLCInfos;
+	local X2DownloadableContentInfo DLCInfo;
 
 	History = `XCOMHISTORY;
 	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom', true));
@@ -3229,6 +3322,12 @@ function array<AbilitySetupData> GatherUnitAbilitiesForInit(optional XComGameSta
 		`log("No XComHeadquarters data available to filter unit abilities");
 	}
 
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	foreach DLCInfos(DLCInfo)
+	{
+		DLCInfo.FinalizeUnitAbilitiesForInit(self, arrData, StartState, PlayerState, bMultiplayerDisplay);
+	}
+
 	return arrData;
 }
 
@@ -3276,11 +3375,14 @@ function string GetFullName()
 
 function string GetName( ENameType eType )
 {
+	local bool bFirstNameBlank;
+
 	if(IsMPCharacter())
 		return GetMPName(eType);
 
 	if (IsSoldier() || IsCivilian())
 	{
+		bFirstNameBlank = (strFirstName == "");
 		switch( eType )
 		{
 		case eNameType_First:
@@ -3305,6 +3407,8 @@ function string GetName( ENameType eType )
 				return " ";
 			break;
 		case eNameType_Full:
+			if(bFirstNameBlank)
+				return strLastName;
 			return strFirstName @ strLastName;
 			break;
 		case eNameType_Rank:
@@ -3314,13 +3418,24 @@ function string GetName( ENameType eType )
 			return `GET_RANK_ABBRV(m_SoldierRank, m_SoldierClassTemplateName) @ strLastName;
 			break;
 		case eNameType_RankFull:
+			if(bFirstNameBlank)
+				return `GET_RANK_ABBRV( m_SoldierRank, m_SoldierClassTemplateName ) @ strLastName;
 			return `GET_RANK_ABBRV( m_SoldierRank, m_SoldierClassTemplateName ) @ strFirstName @ strLastName;
 			break;
 		case eNameType_FullNick:
-			if( strNickName != "" )
+			if(strNickName != "")
+			{
+				if(bFirstNameBlank)
+					return `GET_RANK_ABBRV( m_SoldierRank, m_SoldierClassTemplateName ) @ "'"$strNickName$"'" @ strLastName;
 				return `GET_RANK_ABBRV( m_SoldierRank, m_SoldierClassTemplateName ) @ strFirstName @ "'"$strNickName$"'" @ strLastName;
+			}
 			else
+			{
+				if(bFirstNameBlank)
+					return `GET_RANK_ABBRV( m_SoldierRank, m_SoldierClassTemplateName ) @ strLastName;
 				return `GET_RANK_ABBRV( m_SoldierRank, m_SoldierClassTemplateName ) @ strFirstName @ strLastName;
+			}
+				
 			break;
 		}
 
@@ -3592,9 +3707,16 @@ function bool IsAScientist()
 	return(GetMyTemplate().bIsScientist);
 }
 
+// Staffing gameplay
 function bool CanBeStaffed()
 {
 	return(IsAlive() && GetMyTemplate().bStaffingAllowed);
+}
+
+// Staffing visually
+function bool CanAppearInBase()
+{
+	return(IsAlive() && GetMyTemplate().bAppearInBase);
 }
 
 function RandomizeStats()
@@ -4095,11 +4217,19 @@ function int GetAIUnitDataID()
 {
 	local XComGameState_AIUnitData AIData;
 	local XComGameStateHistory History;
+
+
+	if (CachedUnitDataStateObjectId != INDEX_NONE)
+		return CachedUnitDataStateObjectID;
+
 	History = `XCOMHISTORY;
-	foreach History.IterateByClassType(class'XComGameState_AIUnitData', AIData)
+		foreach History.IterateByClassType(class'XComGameState_AIUnitData', AIData)
 	{
 		if (AIData.m_iUnitObjectID == ObjectID)
+		{
+			CachedUnitDataStateObjectId = AIData.ObjectID;
 			return AIData.ObjectID;
+		}
 	}
 	return -1;
 }
@@ -4402,7 +4532,7 @@ protected function OnUnitDied(XComGameState NewGameState, Object CauseOfDeath, c
 				XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom', true));
 				if (XComHQ != none && XComHQ.SoldierUnlockTemplates.Find('WetWorkUnlock') != INDEX_NONE)
 				{
-					WetWorkKills++;
+					Killer.WetWorkKills++;
 				}
 
 				if (Killer.bIsShaken)
@@ -5030,7 +5160,7 @@ simulated function GetAttachedUnits(out array<XComGameState_Unit> AttachedUnits,
 
 	foreach History.IterateByClassType(class'XComGameState_Item', ItemIterator)
 	{
-		if (ObjectID == ItemIterator.AttachedUnitRef.ObjectID)
+		if (ObjectID == ItemIterator.AttachedUnitRef.ObjectID && ItemIterator.CosmeticUnitRef.ObjectID > 0)
 		{
 			AttachedUnit = XComGameState_Unit(History.GetGameStateForObjectID(ItemIterator.CosmeticUnitRef.ObjectID, , (GameState != none) ? GameState.HistoryIndex : - 1 ));
 			AttachedUnits.AddItem(AttachedUnit);
@@ -5103,8 +5233,8 @@ function bool AddItemToInventory(XComGameState_Item Item, EInventorySlot Slot, X
 		{
 			if(!IsMPCharacter() && X2ArmorTemplate(Item.GetMyTemplate()).bAddsUtilitySlot)
 			{
-				SetBaseMaxStat(eStat_UtilityItems, 2.0f);
-				SetCurrentStat(eStat_UtilityItems, 2.0f);
+				SetBaseMaxStat(eStat_UtilityItems, GetMyTemplate().CharacterBaseStats[eStat_UtilityItems] + 1.0f);
+				SetCurrentStat(eStat_UtilityItems, GetMyTemplate().CharacterBaseStats[eStat_UtilityItems] + 1.0f);
 			}
 
 			//  must ensure appearance matches 
@@ -5421,7 +5551,7 @@ simulated function UnapplyCombatSimStats(XComGameState_Item CombatSim, optional 
 			if (X2EquipmentTemplate(CombatSim.GetMyTemplate()).bUseBoostIncrement)
 				Boost += class'X2SoldierIntegratedWarfareUnlockTemplate'.default.StatBoostIncrement;
 			else
-				Boost += Boost * class'X2SoldierIntegratedWarfareUnlockTemplate'.default.StatBoostValue;
+				Boost += Round(Boost * class'X2SoldierIntegratedWarfareUnlockTemplate'.default.StatBoostValue);
 		}
 
 		MaxStat = GetMaxStat(CombatSim.StatBoosts[i].StatType);
@@ -5477,8 +5607,8 @@ simulated function bool RemoveItemFromInventory(XComGameState_Item Item, optiona
 		case eInvSlot_Armor:
 			if(!IsMPCharacter() && X2ArmorTemplate(Item.GetMyTemplate()).bAddsUtilitySlot)
 			{
-				SetBaseMaxStat(eStat_UtilityItems, 1.0f);
-				SetCurrentStat(eStat_UtilityItems, 1.0f);
+				SetBaseMaxStat(eStat_UtilityItems, GetMyTemplate().CharacterBaseStats[eStat_UtilityItems]);
+				SetCurrentStat(eStat_UtilityItems, GetMyTemplate().CharacterBaseStats[eStat_UtilityItems]);
 			}
 			break;
 		case eInvSlot_Backpack:
@@ -5822,6 +5952,8 @@ simulated function bool IsHunkeredDown()
 }
 
 native function bool ShouldAvoidPathingNearCover() const;
+native function bool ShouldAvoidWallSmashPathing() const;
+native function bool ShouldAvoidDestructionPathing() const;
 native function bool ShouldExtraAvoidDestructionPathing() const;
 
 simulated native function bool IsBeingCarried();
@@ -7084,6 +7216,11 @@ function int TileDistanceBetween(XComGameState_Unit OtherUnit)
 	return Tiles;
 }
 
+simulated function bool UseLargeArmoryScale() // Add your template name here if the model is too large to fit in normal position
+{
+	return GetMyTemplate().bIsTooBigForArmory;
+}
+
 simulated native function ETeam GetTeam() const;
 simulated native function ETeam GetEnemyTeam(optional ETeam MyTeam = eTeam_None) const;     //  pass in MyTeam to get the enemy for that team; none will mean to get the enemy team for the unit's current team
 simulated native function bool IsEnemyUnit(XComGameState_Unit IsEnemy);
@@ -7515,7 +7652,7 @@ function ApplySquaddieLoadout(XComGameState GameState, optional XComGameState_He
 
 				//Transfer settings that were configured in the character pool with respect to the weapon. Should only be applied here
 				//where we are handing out generic weapons.
-				if(ItemState.InventorySlot == eInvSlot_PrimaryWeapon || ItemState.InventorySlot == eInvSlot_SecondaryWeapon)
+				if(ItemTemplate.InventorySlot == eInvSlot_PrimaryWeapon || ItemTemplate.InventorySlot == eInvSlot_SecondaryWeapon)
 				{
 					ItemState.WeaponAppearance.iWeaponTint = kAppearance.iWeaponTint;
 					ItemState.WeaponAppearance.nmWeaponPattern = kAppearance.nmWeaponPattern;
@@ -7792,12 +7929,12 @@ function ValidateLoadout(XComGameState NewGameState)
 
 	// Heavy Weapon Slot
 	EquippedHeavyWeapon = GetItemInSlot(eInvSlot_HeavyWeapon, NewGameState);
-	if(EquippedHeavyWeapon == none && EquippedArmor.AllowsHeavyWeapon())
+	if(EquippedHeavyWeapon == none && HasHeavyWeapon(NewGameState))
 	{
 		EquippedHeavyWeapon = GetBestHeavyWeapon(NewGameState);
 		AddItemToInventory(EquippedHeavyWeapon, eInvSlot_HeavyWeapon, NewGameState);
 	}
-	else if(EquippedHeavyWeapon != none && !EquippedArmor.AllowsHeavyWeapon())
+	else if(EquippedHeavyWeapon != none && !HasHeavyWeapon(NewGameState))
 	{
 		EquippedHeavyWeapon = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', EquippedHeavyWeapon.ObjectID));
 		NewGameState.AddStateObject(EquippedHeavyWeapon);
@@ -7827,13 +7964,13 @@ function ValidateLoadout(XComGameState NewGameState)
 	{
 		if(X2ArmorTemplate(EquippedArmor.GetMyTemplate()).bAddsUtilitySlot)
 		{
-			SetBaseMaxStat(eStat_UtilityItems, 2.0f);
-			SetCurrentStat(eStat_UtilityItems, 2.0f);
+			SetBaseMaxStat(eStat_UtilityItems, GetMyTemplate().CharacterBaseStats[eStat_UtilityItems] + 1.0f);
+			SetCurrentStat(eStat_UtilityItems, GetMyTemplate().CharacterBaseStats[eStat_UtilityItems] + 1.0f);
 		}
 		else
 		{
-			SetBaseMaxStat(eStat_UtilityItems, 1.0f);
-			SetCurrentStat(eStat_UtilityItems, 1.0f);
+			SetBaseMaxStat(eStat_UtilityItems, GetMyTemplate().CharacterBaseStats[eStat_UtilityItems]);
+			SetCurrentStat(eStat_UtilityItems, GetMyTemplate().CharacterBaseStats[eStat_UtilityItems]);
 		}
 	}
 
@@ -7855,7 +7992,7 @@ function ValidateLoadout(XComGameState NewGameState)
 	}
 
 	// Equip Default Utility Item in first slot if needed
-	while(EquippedUtilityItems.Length < 1)
+	while(EquippedUtilityItems.Length < 1 && GetCurrentStat(eStat_UtilityItems) > 0)
 	{
 		UtilityItem = GetBestUtilityItem(NewGameState);
 		AddItemToInventory(UtilityItem, eInvSlot_Utility, NewGameState);
@@ -8004,19 +8141,22 @@ function array<X2ArmorTemplate> GetBestArmorTemplates()
 		}
 	}
 
-	// Try to find a better armor as an infinite item in the inventory
-	for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
+	if( XComHQ != none )
 	{
-		ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
-		ArmorTemplate = X2ArmorTemplate(ItemState.GetMyTemplate());
-
-		if (ArmorTemplate != none && ArmorTemplate.bInfiniteItem && (BestArmorTemplate == none || 
-			(BestArmorTemplates.Find(ArmorTemplate) == INDEX_NONE && ArmorTemplate.Tier >= BestArmorTemplate.Tier))
-			&& GetSoldierClassTemplate().IsArmorAllowedByClass(ArmorTemplate))
+		// Try to find a better armor as an infinite item in the inventory
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
-			BestArmorTemplate = ArmorTemplate;
-			BestArmorTemplates.AddItem(ArmorTemplate);
-			HighestTier = BestArmorTemplate.Tier;
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			ArmorTemplate = X2ArmorTemplate(ItemState.GetMyTemplate());
+
+			if (ArmorTemplate != none && ArmorTemplate.bInfiniteItem && (BestArmorTemplate == none || 
+				(BestArmorTemplates.Find(ArmorTemplate) == INDEX_NONE && ArmorTemplate.Tier >= BestArmorTemplate.Tier))
+				&& GetSoldierClassTemplate().IsArmorAllowedByClass(ArmorTemplate))
+			{
+				BestArmorTemplate = ArmorTemplate;
+				BestArmorTemplates.AddItem(ArmorTemplate);
+				HighestTier = BestArmorTemplate.Tier;
+			}
 		}
 	}
 
@@ -8059,18 +8199,21 @@ function array<X2WeaponTemplate> GetBestPrimaryWeaponTemplates()
 		}
 	}
 
-	// Try to find a better primary weapon as an infinite item in the inventory
-	for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
+	if( XComHQ != none )
 	{
-		ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
-		WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
-
-		if (WeaponTemplate != none && WeaponTemplate.bInfiniteItem && (BestWeaponTemplate == none || (BestWeaponTemplates.Find(WeaponTemplate) == INDEX_NONE && WeaponTemplate.Tier >= BestWeaponTemplate.Tier)) && 
-			WeaponTemplate.InventorySlot == eInvSlot_PrimaryWeapon && GetSoldierClassTemplate().IsWeaponAllowedByClass(WeaponTemplate))
+		// Try to find a better primary weapon as an infinite item in the inventory
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
-			BestWeaponTemplate = WeaponTemplate;
-			BestWeaponTemplates.AddItem(BestWeaponTemplate);
-			HighestTier = BestWeaponTemplate.Tier;
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+
+			if (WeaponTemplate != none && WeaponTemplate.bInfiniteItem && (BestWeaponTemplate == none || (BestWeaponTemplates.Find(WeaponTemplate) == INDEX_NONE && WeaponTemplate.Tier >= BestWeaponTemplate.Tier)) && 
+				WeaponTemplate.InventorySlot == eInvSlot_PrimaryWeapon && GetSoldierClassTemplate().IsWeaponAllowedByClass(WeaponTemplate))
+			{
+				BestWeaponTemplate = WeaponTemplate;
+				BestWeaponTemplates.AddItem(BestWeaponTemplate);
+				HighestTier = BestWeaponTemplate.Tier;
+			}
 		}
 	}
 
@@ -8113,18 +8256,21 @@ function array<X2WeaponTemplate> GetBestSecondaryWeaponTemplates()
 		}
 	}
 
-	// Try to find a better secondary weapon as an infinite item in the inventory
-	for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
+	if( XComHQ != none )
 	{
-		ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
-		WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
-
-		if(WeaponTemplate != none && WeaponTemplate.bInfiniteItem && (BestWeaponTemplate == none || (BestWeaponTemplates.Find(WeaponTemplate) == INDEX_NONE && WeaponTemplate.Tier >= BestWeaponTemplate.Tier)) &&
-			WeaponTemplate.InventorySlot == eInvSlot_SecondaryWeapon && GetSoldierClassTemplate().IsWeaponAllowedByClass(WeaponTemplate))
+		// Try to find a better secondary weapon as an infinite item in the inventory
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
-			BestWeaponTemplate = WeaponTemplate;
-			BestWeaponTemplates.AddItem(BestWeaponTemplate);
-			HighestTier = BestWeaponTemplate.Tier;
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+
+			if(WeaponTemplate != none && WeaponTemplate.bInfiniteItem && (BestWeaponTemplate == none || (BestWeaponTemplates.Find(WeaponTemplate) == INDEX_NONE && WeaponTemplate.Tier >= BestWeaponTemplate.Tier)) &&
+				WeaponTemplate.InventorySlot == eInvSlot_SecondaryWeapon && GetSoldierClassTemplate().IsWeaponAllowedByClass(WeaponTemplate))
+			{
+				BestWeaponTemplate = WeaponTemplate;
+				BestWeaponTemplates.AddItem(BestWeaponTemplate);
+				HighestTier = BestWeaponTemplate.Tier;
+			}
 		}
 	}
 
@@ -8158,19 +8304,22 @@ function array<X2WeaponTemplate> GetBestHeavyWeaponTemplates()
 	BestHeavyWeaponTemplates.AddItem(BestHeavyWeaponTemplate);
 	HighestTier = BestHeavyWeaponTemplate.Tier;
 
-	// Try to find a better grenade as an infinite item in the inventory
-	for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
+	if( XComHQ != none )
 	{
-		ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
-		HeavyWeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
-
-		if(HeavyWeaponTemplate != none && HeavyWeaponTemplate.bInfiniteItem && (BestHeavyWeaponTemplate == none || 
-			(BestHeavyWeaponTemplates.Find(HeavyWeaponTemplate) == INDEX_NONE && HeavyWeaponTemplate.Tier >= BestHeavyWeaponTemplate.Tier)) &&
-			HeavyWeaponTemplate.InventorySlot == eInvSlot_HeavyWeapon && GetSoldierClassTemplate().IsWeaponAllowedByClass(HeavyWeaponTemplate))
+		// Try to find a better grenade as an infinite item in the inventory
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
-			BestHeavyWeaponTemplate = HeavyWeaponTemplate;
-			BestHeavyWeaponTemplates.AddItem(BestHeavyWeaponTemplate);
-			HighestTier = BestHeavyWeaponTemplate.Tier;
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			HeavyWeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+
+			if(HeavyWeaponTemplate != none && HeavyWeaponTemplate.bInfiniteItem && (BestHeavyWeaponTemplate == none || 
+				(BestHeavyWeaponTemplates.Find(HeavyWeaponTemplate) == INDEX_NONE && HeavyWeaponTemplate.Tier >= BestHeavyWeaponTemplate.Tier)) &&
+				HeavyWeaponTemplate.InventorySlot == eInvSlot_HeavyWeapon && GetSoldierClassTemplate().IsWeaponAllowedByClass(HeavyWeaponTemplate))
+			{
+				BestHeavyWeaponTemplate = HeavyWeaponTemplate;
+				BestHeavyWeaponTemplates.AddItem(BestHeavyWeaponTemplate);
+				HighestTier = BestHeavyWeaponTemplate.Tier;
+			}
 		}
 	}
 
@@ -8204,17 +8353,20 @@ function array<X2GrenadeTemplate> GetBestGrenadeTemplates()
 	BestGrenadeTemplates.AddItem(BestGrenadeTemplate);
 	HighestTier = BestGrenadeTemplate.Tier;
 
-	// Try to find a better grenade as an infinite item in the inventory
-	for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
+	if( XComHQ != none )
 	{
-		ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
-		GrenadeTemplate = X2GrenadeTemplate(ItemState.GetMyTemplate());
-
-		if(GrenadeTemplate != none && GrenadeTemplate.bInfiniteItem && (BestGrenadeTemplate == none || (BestGrenadeTemplates.Find(GrenadeTemplate) == INDEX_NONE && GrenadeTemplate.Tier >= BestGrenadeTemplate.Tier)))
+		// Try to find a better grenade as an infinite item in the inventory
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
-			BestGrenadeTemplate = GrenadeTemplate;
-			BestGrenadeTemplates.AddItem(BestGrenadeTemplate);
-			HighestTier = BestGrenadeTemplate.Tier;
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			GrenadeTemplate = X2GrenadeTemplate(ItemState.GetMyTemplate());
+
+			if(GrenadeTemplate != none && GrenadeTemplate.bInfiniteItem && (BestGrenadeTemplate == none || (BestGrenadeTemplates.Find(GrenadeTemplate) == INDEX_NONE && GrenadeTemplate.Tier >= BestGrenadeTemplate.Tier)))
+			{
+				BestGrenadeTemplate = GrenadeTemplate;
+				BestGrenadeTemplates.AddItem(BestGrenadeTemplate);
+				HighestTier = BestGrenadeTemplate.Tier;
+			}
 		}
 	}
 
@@ -8257,18 +8409,21 @@ function array<X2EquipmentTemplate> GetBestUtilityItemTemplates()
 		}
 	}
 
-	// Try to find a better utility item as an infinite item in the inventory
-	for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
+	if( XComHQ != none )
 	{
-		ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
-		UtilityTemplate = X2EquipmentTemplate(ItemState.GetMyTemplate());
-
-		if(UtilityTemplate != none && UtilityTemplate.bInfiniteItem && (BestUtilityTemplate == none || (BestUtilityTemplates.Find(UtilityTemplate) == INDEX_NONE && UtilityTemplate.Tier >= BestUtilityTemplate.Tier))
-		   && UtilityTemplate.InventorySlot == eInvSlot_Utility)
+		// Try to find a better utility item as an infinite item in the inventory
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
 		{
-			BestUtilityTemplate = UtilityTemplate;
-			BestUtilityTemplates.AddItem(BestUtilityTemplate);
-			HighestTier = BestUtilityTemplate.Tier;
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			UtilityTemplate = X2EquipmentTemplate(ItemState.GetMyTemplate());
+
+			if(UtilityTemplate != none && UtilityTemplate.bInfiniteItem && (BestUtilityTemplate == none || (BestUtilityTemplates.Find(UtilityTemplate) == INDEX_NONE && UtilityTemplate.Tier >= BestUtilityTemplate.Tier))
+			   && UtilityTemplate.InventorySlot == eInvSlot_Utility)
+			{
+				BestUtilityTemplate = UtilityTemplate;
+				BestUtilityTemplates.AddItem(BestUtilityTemplate);
+				HighestTier = BestUtilityTemplate.Tier;
+			}
 		}
 	}
 
@@ -8819,6 +8974,11 @@ function SetXPForRank(int SoldierRank)
 	m_iXp = class'X2ExperienceConfig'.static.GetRequiredXp(SoldierRank);
 }
 
+function int GetXPValue()
+{
+	return m_iXp;
+}
+
 function bool CanRankUpSoldier()
 {
 	local int NumKills;
@@ -8959,6 +9119,8 @@ function RankUpSoldier(XComGameState NewGameState, optional name SoldierClass, o
 				}
 			}
 		}
+
+		`XEVENTMGR.TriggerEvent('UnitRankUp', self, , NewGameState);
 	}
 
 	if (m_SoldierRank == class'X2SoldierClassTemplateManager'.default.NickNameRank)
@@ -9273,6 +9435,26 @@ function SimGetKill(StateObjectReference EnemyRef)
 function ClearKills()
 {
 	KilledUnits.Length = 0;
+}
+
+function CopyKills(XComGameState_Unit CopiedUnitState)
+{
+	KilledUnits = CopiedUnitState.GetKills();
+}
+
+function CopyKillAssists(XComGameState_Unit CopiedUnitState)
+{
+	KillAssists = CopiedUnitState.GetKillAssists();
+}
+
+function array<StateObjectReference> GetKills()
+{
+	return KilledUnits;
+}
+
+function array <StateObjectReference> GetKillAssists()
+{
+	return KillAssists;
 }
 
 // Is unit provided a critical function in the strategy layer
@@ -9835,30 +10017,14 @@ function bool CanEarnSoldierRelationshipPoints(XComGameState_Unit OtherUnit)
 ///////////////////////////////////////
 // Damageable interface
 
+//  NOTE - Armor parameter no longer used - now returns all armor on the unit, less Shred
 simulated event float GetArmorMitigation(const out ArmorMitigationResults Armor)
 {
 	local float Total;
-	local XComGameStateHistory History;
-	local XComGameState_Effect EffectState;
-	local StateObjectReference EffectRef;
-	local X2Effect_BonusArmor BonusArmor;
+	local ArmorMitigationResults ArmorResults;
 
-	Total = 0;
-	
-	if (Armor.bNaturalArmor)
-	{
-		Total += GetCurrentStat(eStat_ArmorMitigation);
-	}
-	if (Armor.BonusArmorEffects.Length > 0)
-	{
-		History = `XCOMHISTORY;
-		foreach Armor.BonusArmorEffects(EffectRef)
-		{
-			EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
-			BonusArmor = X2Effect_BonusArmor(EffectState.GetX2Effect());
-			Total += BonusArmor.GetArmorMitigation(EffectState, self);
-		}
-	}
+	class'X2AbilityArmorHitRolls'.static.RollArmorMitigation(Armor, ArmorResults, self);
+	Total = ArmorResults.TotalMitigation;
 	Total -= Shredded;
 	Total = max(0, Total);
 
@@ -9868,7 +10034,6 @@ simulated event float GetArmorMitigation(const out ArmorMitigationResults Armor)
 simulated function float GetArmorMitigationForUnitFlag()
 {
 	local float Total;
-	local int Chance;
 	local XComGameStateHistory History;
 	local XComGameState_Effect EffectState;
 	local StateObjectReference EffectRef;
@@ -9887,11 +10052,7 @@ simulated function float GetArmorMitigationForUnitFlag()
 			ArmorEffect = X2Effect_BonusArmor(EffectState.GetX2Effect());
 			if (ArmorEffect != none)
 			{
-				Chance = ArmorEffect.GetArmorChance(EffectState, self);
-				if (Chance >= 100)
-				{
-					Total += ArmorEffect.GetArmorMitigation(EffectState, self);
-				}
+				Total += ArmorEffect.GetArmorMitigation(EffectState, self);
 			}
 		}
 	}
@@ -10293,6 +10454,25 @@ function bool AreAllCodexInLineageDead(XComGameState NewGameState/*, XComGameSta
 	return true;
 }
 
+function TTile GetDesiredTileForAttachedCosmeticUnit()
+{
+	local TTile TargetTile;
+
+	TargetTile = TileLocation;
+	TargetTile.Z += GetDesiredZTileOffsetForAttachedCosmeticUnit();
+
+	return TargetTile;
+}
+
+// if this unit is an attached unit (cosmetic flying gremlin and such), we need to 
+// put them high enough off the ground that they don't collide with the owning unit. To that end,
+// this function determines if any extra bump is needed. Basically, any unit taller than two units
+// will lack clearence for the gremlin, and need to have it bumped up
+function int GetDesiredZTileOffsetForAttachedCosmeticUnit()
+{
+	return max(UnitHeight - 2, 0);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // Hackable interface
 
@@ -10349,6 +10529,38 @@ function array<Name> GetHackRewards(Name HackAbilityName)
 	return ApprovedHackRewards;
 }
 
+function bool HasOverrideDeathAnimOnLoad(out Name DeathAnim)
+{
+	local StateObjectReference EffectRef;
+	local XComGameState_Effect HighestRankEffectState, EffectState;
+	local X2Effect_Persistent HighestRankEffectTemplate, EffectTemplate;
+	local XComGameStateHistory History;
+
+	History = `XCOMHISTORY;
+
+	foreach AffectedByEffects(EffectRef)
+	{
+		EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
+		if (EffectState != None)
+		{
+			EffectTemplate = EffectState.GetX2Effect();
+
+			if ((EffectTemplate != none ) &&
+				(HighestRankEffectState == none) || (EffectTemplate.IsThisEffectBetterThanExistingEffect(HighestRankEffectState)))
+			{
+				HighestRankEffectState = EffectState;
+				HighestRankEffectTemplate = EffectTemplate;
+			}
+		}
+	}
+
+	if (HighestRankEffectState != none)
+	{
+		return HighestRankEffectTemplate.HasOverrideDeathAnimOnLoad(DeathAnim);
+	}
+
+	return false;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // cpptext
@@ -10382,4 +10594,5 @@ DefaultProperties
 	UnitHeight = 2;
 	CoverForceFlag = CoverForce_Default;
 	MPSquadLoadoutIndex = INDEX_NONE;
+	CachedUnitDataStateObjectId = INDEX_NONE;
 }

@@ -153,6 +153,8 @@ static function EventListenerReturn OnTacticalGameStart(Object EventData, Object
 		AnalyticsObject.AddTacticalGameStart( );
 	}
 
+	SendMissionStartTelemetry( History );
+
 	return ELR_NoInterrupt;
 }
 
@@ -174,6 +176,8 @@ static function EventListenerReturn OnTacticalGameEnd(Object EventData, Object E
 	{
 		AnalyticsObject.AddTacticalGameEnd();
 	}
+
+	SendMissionEndTelemetry( History );
 
 	return ELR_NoInterrupt;
 }
@@ -755,12 +759,15 @@ static function EventListenerReturn OnVictory( Object EventData, Object EventSou
 		LiveClient.GetStats( eKVPSCOPE_GLOBAL );
 	}
 
+	SendGameEndTelemetry( History, true );
+
 	return ELR_NoInterrupt;
 }
 
 static function EventListenerReturn OnLoss( Object EventData, Object EventSource, XComGameState GameState, Name EventID )
 {
 	local X2FiraxisLiveClient LiveClient;
+	local XComGameStateHistory History;
 
 	if (SkipAddAnalyticObject( GameState ))
 	{
@@ -768,12 +775,15 @@ static function EventListenerReturn OnLoss( Object EventData, Object EventSource
 	}
 
 	LiveClient = `FXSLIVE;
+	History = `XCOMHISTORY;
 
 	`XANALYTICS.bAvaibleWorldStats = false;
 	`XANALYTICS.bWaitingOnWorldStats = true;
 	LiveClient.AddReceivedStatsKVPDelegate( `XANALYTICS.StatsRecieved );
 
 	LiveClient.GetStats( eKVPSCOPE_GLOBAL );
+
+	SendGameEndTelemetry( History, false );
 
 	return ELR_NoInterrupt;
 }
@@ -817,6 +827,337 @@ static function EventListenerReturn OnUnitPromotion( Object EventData, Object Ev
 	}
 
 	return ELR_NoInterrupt;
+}
+
+static function SendGameStartTelemetry( XComGameStateHistory History, bool IronmanEnabled )
+{
+	local int Difficulty;
+	local string GameMode;
+
+	local XComGameState_CampaignSettings CampaignState;
+
+	GameMode = "CAMPAIGN";
+
+	CampaignState = XComGameState_CampaignSettings( History.GetSingleGameStateObjectForClass( class'XComGameState_CampaignSettings' ) );
+	Difficulty = CampaignState.DifficultySetting;
+
+	`FXSLIVE.BizAnalyticsGameStart( CampaignState.BizAnalyticsCampaignID, GameMode, Difficulty, IronmanEnabled );
+}
+
+static function SendGameEndTelemetry( XComGameStateHistory History, bool CampaignSuccess )
+{
+	local XComGameState_CampaignSettings CampaignState;
+
+	CampaignState = XComGameState_CampaignSettings( History.GetSingleGameStateObjectForClass( class'XComGameState_CampaignSettings' ) );
+
+	`FXSLIVE.BizAnalyticsGameEnd( CampaignState.BizAnalyticsCampaignID, CampaignSuccess );
+}
+
+static function SendMissionStartTelemetry( XComGameStateHistory History )
+{
+	local string MissionType;
+	local string MissionName;
+	local int MissionDifficulty;
+	local int TeamSize;
+
+	local int NumSpecialists, NumRangers, NumSharpshooters, NumGrenadiers, NumPsiOps, NumSparkMECS;
+	local int NumRookies, NumStoryCharacters, NumVIPS, NumUnknown;
+
+	local XComGameState_CampaignSettings CampaignState;
+	local XComGameState_BattleData BattleData;
+	local XComGameState_HeadquartersXCom XComHQ;
+	local StateObjectReference UnitRef;
+	local XComGameState_Unit UnitState;
+	local X2CharacterTemplate SourceTemplate;
+	local X2SoldierClassTemplate SoldierClass;
+
+	CampaignState = XComGameState_CampaignSettings( History.GetSingleGameStateObjectForClass( class'XComGameState_CampaignSettings' ) );
+	BattleData = XComGameState_BattleData( History.GetSingleGameStateObjectForClass( class'XComGameState_BattleData' ) );
+	XComHQ = XComGameState_HeadquartersXCom( History.GetSingleGameStateObjectForClass( class'XComGameState_HeadquartersXCom' ) );
+
+	MissionType = BattleData.MapData.ActiveMission.sType;
+	MissionName = BattleData.m_strOpName;
+	MissionDifficulty = BattleData.MapData.ActiveMission.Difficulty;
+
+	TeamSize = XComHQ.Squad.Length;
+	foreach XComHQ.Squad( UnitRef )
+	{
+		UnitState = XComGameState_Unit( History.GetGameStateForObjectID( UnitRef.ObjectID ) );
+
+		SourceTemplate = UnitState.GetMyTemplateManager( ).FindCharacterTemplate( UnitState.GetMyTemplateName( ) );
+		SoldierClass = UnitState.GetSoldierClassTemplate( );
+
+		if (SoldierClass != None)
+		{
+			switch (SoldierClass.DataName)
+			{
+				case 'Specialist': ++NumSpecialists;
+					break;
+
+				case 'Grenadier': ++NumGrenadiers;
+					break;
+
+				case 'Ranger': ++NumRangers;
+					break;
+
+				case 'Sharpshooter': ++NumSharpshooters;
+					break;
+
+				case 'PsiOperative': ++NumPsiOps;
+					break;
+
+				case 'Rookie': ++NumRookies;
+					break;
+
+				case 'CentralOfficer': ++NumStoryCharacters;
+					break;
+
+				case 'ChiefEngineer': ++NumStoryCharacters;
+					break;
+
+				case 'Spark': ++NumSparkMECS;
+					break;
+
+				default: ++NumUnknown;
+					break;
+			}
+		}
+		else
+		{
+			switch (SourceTemplate.DataName)
+			{
+				case 'AdvPsiWitchM2':
+					++NumStoryCharacters;
+					break;
+
+				case 'FriendlyVIPCivilian':
+				case 'Soldier_VIP':
+				case 'Scientist_VIP':
+				case 'Engineer_VIP':
+					++NumVIPS;
+					break;
+
+				default: ++NumUnknown;
+					break;
+			}
+		}
+	}
+
+	`FXSLIVE.BizAnalyticsMissionStart( CampaignState.BizAnalyticsCampaignID, BattleData.BizAnalyticsMissionID, MissionType, MissionName, MissionDifficulty, TeamSize,
+											NumSpecialists, NumRangers, NumSharpshooters, NumGrenadiers, NumPsiOps, NumSparkMECS,
+											NumRookies, NumStoryCharacters, NumVIPS, NumUnknown );
+}
+
+static function SendMissionEndTelemetry( XComGameStateHistory History )
+{
+	local int EnemiesKilled;
+	local int CiviliansRescued, CiviliansKilled, CiviliansTotal;
+	local int NumUninjuredSoldiers;
+	local string Grade;
+	local string Status;
+	local string StatusReason;
+	local int TurnCount;
+
+	local XGBattle_SP Battle;
+	local int i;
+	local array<XComGameState_Unit> arrUnits;
+	local int KilledSoldiers, InjuredSoldiers;
+
+	local XComGameState_CampaignSettings CampaignState;
+	local XComGameState_BattleData BattleData;
+	local XComGameState_Player PlayerState;
+	local XComGameState_ObjectivesList ObjectivesList;
+
+	Battle = XGBattle_SP(`BATTLE);
+	CampaignState = XComGameState_CampaignSettings( History.GetSingleGameStateObjectForClass( class'XComGameState_CampaignSettings' ) );
+	BattleData = XComGameState_BattleData( History.GetSingleGameStateObjectForClass( class'XComGameState_BattleData' ) );
+
+	if (BattleData.MapData.ActiveMission.sType == "Terror")
+	{
+		CiviliansKilled = class'Helpers'.static.GetNumCiviliansKilled(CiviliansTotal, BattleData.bLocalPlayerWon);
+		CiviliansRescued = CiviliansTotal - CiviliansKilled;
+	}
+	else
+	{
+		CiviliansRescued = -1;
+	}
+
+	Battle.GetAIPlayer( ).GetOriginalUnits( arrUnits, true );
+	for (i = 0; i < arrUnits.Length; ++i)
+	{
+		if (arrUnits[ i ].IsDead( ))
+		{
+			++EnemiesKilled;
+		}
+	}
+
+	arrUnits.Length = 0;
+	Battle.GetHumanPlayer().GetOriginalUnits( arrUnits, true );
+	for (i = 0; i < arrUnits.Length; ++i)
+	{
+		if (!arrUnits[i].isSoldier())
+		{
+			continue;
+		}
+
+		if (arrUnits[i].IsDead() || arrUnits[i].IsBleedingOut())
+		{
+			++KilledSoldiers;
+		}
+		else if (arrUnits[i].WasInjuredOnMission())
+		{
+			++InjuredSoldiers;
+		}
+		else
+		{
+			++NumUninjuredSoldiers;
+		}
+	}
+
+	foreach History.IterateByClassType( class'XComGameState_Player', PlayerState )
+	{
+		if (PlayerState.GetTeam( ) == eTeam_XCom)
+		{
+			break;
+		}
+	}
+	TurnCount = PlayerState.PlayerTurnCount;
+
+	if (KilledSoldiers == 0 && InjuredSoldiers == 0)
+	{
+		Grade = "FLAWLESS";
+	}
+	else if (KilledSoldiers == 0)
+	{
+		Grade = "EXCELLENT";
+	}
+	else if ((KilledSoldiers * 100 / arrUnits.Length) <= 34) // multiply to transform to percentage
+	{
+		Grade = "GOOD";
+	}
+	else if ((KilledSoldiers * 100 / arrUnits.Length) <= 50) // multiply to transform to percentage
+	{
+		Grade = "FAIR";
+	}
+	else
+	{
+		Grade = "POOR";
+	}
+
+	if (BattleData.bLocalPlayerWon)
+	{
+		Status = "COMPLETED";
+	}
+	else
+	{
+		Status = "FAILED";
+		Grade = "POOR";
+
+		ObjectivesList = XComGameState_ObjectivesList( History.GetSingleGameStateObjectForClass( class'XComGameState_ObjectivesList' ) );
+		for (i = 0; i < ObjectivesList.ObjectiveDisplayInfos.Length; ++i)
+		{
+			if (ObjectivesList.ObjectiveDisplayInfos[i].ShowFailed)
+			{
+				StatusReason = StatusReason@"OBJECTIVE FAILED="@ObjectivesList.ObjectiveDisplayInfos[i].DisplayLabel;
+			}
+		}
+	}
+
+	`FXSLIVE.BizAnalyticsMissionEnd( CampaignState.BizAnalyticsCampaignID, BattleData.BizAnalyticsMissionID, EnemiesKilled, CiviliansRescued, NumUninjuredSoldiers, TurnCount, Grade, Status, StatusReason );
+}
+
+static function SendGameProgressTelemetry( XComGameStateHistory History, string MilestoneName )
+{
+	local int TimeToDays;
+
+	local TDateTime GameStartDate;
+	local float TimeDiffHours;
+
+	local XComGameState_CampaignSettings CampaignState;
+	local XComGameState_GameTime GameTime;
+
+	CampaignState = XComGameState_CampaignSettings( History.GetSingleGameStateObjectForClass( class'XComGameState_CampaignSettings' ) );
+
+	class'X2StrategyGameRulesetDataStructures'.static.SetTime( GameStartDate, 0, 0, 0,
+																	class'X2StrategyGameRulesetDataStructures'.default.START_MONTH,
+																	class'X2StrategyGameRulesetDataStructures'.default.START_DAY,
+																	class'X2StrategyGameRulesetDataStructures'.default.START_YEAR );
+
+	GameTime = XComGameState_GameTime( History.GetSingleGameStateObjectForClass( class'XComGameState_GameTime' ) );
+
+	TimeDiffHours = class'X2StrategyGameRulesetDataStructures'.static.DifferenceInHours( GameTime.CurrentTime, GameStartDate );
+
+	TimeToDays = Round( TimeDiffHours / 24.0f );
+
+	`FXSLIVE.BizAnalyticsGameProgressv2( CampaignState.BizAnalyticsCampaignID, MilestoneName, TimeToDays );
+}
+
+static function SendMPStartTelemetry( XComGameStateHistory History )
+{
+	local string Map;
+	local string TeamMakeup;
+	local string GameMode;
+
+	local int i;
+	local array<XComGameState_Unit> arrUnits;
+	local X2SoldierClassTemplate SoldierClass;
+	local X2CharacterTemplate SourceTemplate;
+	local XComTacticalController LocalController;
+	local XComGameState_BattleDataMP BattleData;
+
+	LocalController = XComTacticalController( class'WorldInfo'.static.GetWorldInfo( ).GetALocalPlayerController( ) );
+	BattleData = XComGameState_BattleDataMP( History.GetSingleGameStateObjectForClass( class'XComGameState_BattleDataMP' ) );
+
+	GameMode = "DEATHMATCH";
+
+	LocalController.ControllingPlayerVisualizer.GetOriginalUnits( arrUnits );
+	for (i = 0; i < arrUnits.Length; ++i)
+	{
+		SourceTemplate = arrUnits[i].GetMyTemplateManager( ).FindCharacterTemplate( arrUnits[i].GetMyTemplateName( ) );
+		SoldierClass = arrUnits[i].GetSoldierClassTemplate( );
+
+		if (SoldierClass != None)
+		{
+			TeamMakeup = TeamMakeup@SoldierClass.DataName;
+		}
+		else
+		{
+			TeamMakeup = TeamMakeup@SourceTemplate.DataName;
+		}
+
+		if (i != arrUnits.Length - 1)
+		{
+			TeamMakeup = TeamMakeup@", ";
+		}
+	}
+
+	Map = "PLOT="@BattleData.MapData.PlotMapName@"PARCELS=";
+	for (i = 0; i < BattleData.MapData.ParcelData.Length; ++i)
+	{
+		Map = Map@BattleData.MapData.ParcelData[i].MapName;
+
+		if (i != BattleData.MapData.ParcelData.Length - 1)
+		{
+			Map = Map@",";
+		}
+	}
+
+	`FXSLIVE.BizAnalyticsMPStart( BattleData.BizAnalyticsSessionID, GameMode, Map, TeamMakeup );
+}
+
+static function SendMPEndTelemetry( XComGameStateHistory History, bool IsCompleted )
+{
+	local XComTacticalController LocalController;
+	local XComGameState_BattleDataMP BattleData;
+	local XComGameState_Player LocalPlayer;
+	local StateObjectReference LocalPlayerRef;
+
+	LocalController = XComTacticalController( class'WorldInfo'.static.GetWorldInfo( ).GetALocalPlayerController( ) );
+	LocalPlayerRef = LocalController.ControllingPlayer;
+	LocalPlayer = XComGameState_Player( History.GetGameStateForObjectID( LocalPlayerRef.ObjectID ) );
+	BattleData = XComGameState_BattleDataMP( History.GetSingleGameStateObjectForClass( class'XComGameState_BattleDataMP' ) );
+
+	`FXSLIVE.BizAnalyticsMPEnd( BattleData.BizAnalyticsSessionID, LocalPlayer.PlayerTurnCount, BattleData.bLocalPlayerWon, IsCompleted );
 }
 
 defaultproperties

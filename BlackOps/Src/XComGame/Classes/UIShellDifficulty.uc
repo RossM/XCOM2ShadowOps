@@ -461,6 +461,7 @@ simulated public function OnDifficultyConfirm(UIButton ButtonControl)
 	local XComGameState_CampaignSettings CampaignSettingsStateObject;
 	local XComGameState_Objective ObjectiveState;
 	local XComOnlineEventMgr EventManager;
+	local array<X2DownloadableContentInfo> DLCInfos;
 	local bool EnableTutorial;
 	local int idx;
 
@@ -472,8 +473,9 @@ simulated public function OnDifficultyConfirm(UIButton ButtonControl)
 	}
 
 	History = `XCOMHISTORY;
+	EventManager = `ONLINEEVENTMGR;
 
-		//This popup should only be triggered when you are in the shell == not playing the game, and difficulty set to less than classic. 
+	//This popup should only be triggered when you are in the shell == not playing the game, and difficulty set to less than classic. 
 	if(!m_bIsPlayingGame && !m_bShowedFirstTimeTutorialNotice && !m_TutorialMechaItem.Checkbox.bChecked && !m_bIronmanFromShell  && m_iSelectedDifficulty < eDifficulty_Classic)
 	{
 		if(DevStrategyShell == none || !DevStrategyShell.m_bCheatStart)
@@ -523,6 +525,13 @@ simulated public function OnDifficultyConfirm(UIButton ButtonControl)
 		NewGameState.AddStateObject(CampaignSettingsStateObject);
 
 		`GAMERULES.SubmitGameState(NewGameState);
+		
+		// Perform any DLC-specific difficulty updates
+		DLCInfos = EventManager.GetDLCInfos(false);
+		for (idx = 0; idx < DLCInfos.Length; ++idx)
+		{
+			DLCInfos[idx].OnDifficultyChanged();
+		}
 
 		Movie.Stack.Pop(self);
 	}
@@ -535,7 +544,7 @@ simulated public function OnDifficultyConfirm(UIButton ButtonControl)
 		if(!EnableTutorial || (DevStrategyShell != none && DevStrategyShell.m_bSkipFirstTactical))
 		{
 			//We're starting a new campaign, set it up
-			StrategyStartState = class'XComGameStateContext_StrategyGameRule'.static.CreateStrategyGameStart(, , EnableTutorial, m_iSelectedDifficulty, m_bFirstTimeNarrative, EnabledOptionalNarrativeDLC);
+			StrategyStartState = class'XComGameStateContext_StrategyGameRule'.static.CreateStrategyGameStart(, , EnableTutorial, m_iSelectedDifficulty, m_bFirstTimeNarrative, EnabledOptionalNarrativeDLC, , m_bIronmanFromShell);
 
 			// The CampaignSettings are initialized in CreateStrategyGameStart, so we can pull it from the history here
 			CampaignSettingsStateObject = XComGameState_CampaignSettings(History.GetSingleGameStateObjectForClass(class'XComGameState_CampaignSettings'));
@@ -578,8 +587,7 @@ simulated public function OnDifficultyConfirm(UIButton ButtonControl)
 		{
 			//Controlled Start / Demo Direct
 			`XCOMHISTORY.ResetHistory();
-			EventManager = `ONLINEEVENTMGR;
-				EventManager.bTutorial = true;
+			EventManager.bTutorial = true;
 			EventManager.bInitiateReplayAfterLoad = true;
 
 			// Save campaign settings			

@@ -84,10 +84,12 @@ var(Pathing)bool bCanUse_eTraversal_Land;
 var(Pathing)int  MaxFlightPitchDegrees; // when flying up/down, how far is the unit allowed to pitch into the flight path?
 var(Pathing)float SoloMoveSpeedModifier;	// Play rate of the run animations when the character moves alone.
 
+var(Flags)bool bIsTooBigForArmory;
 var(Flags)bool bCanBeCriticallyWounded;
 var(Flags)bool bCanBeCarried;                   // true if this unit can be carried when incapacitated
 var(Flags)bool bCanBeRevived;					// true if this unit can be revived by Revival Protocol ability
 var(Flags)bool bCanBeTerrorist;                 // Is it applicable to use this unit on a terror mission? (eu/ew carryover)
+var(Flags)bool bDiesWhenCaptured;				// true if unit dies instead of going MIA
 var(Flags)bool bAppearanceDefinesPawn;          // If true, the appearance information assembles a unit pawn. True for soldiers & civilians, false for Aliens & Advent (they're are all one piece)
 var(Flags)bool bIsAfraidOfFire;                 // will panic when set on fire - only applies to flamethrower
 var(Flags)bool bIsAlien;                        // used by targeting 
@@ -112,6 +114,7 @@ var(Flags)bool bAllowSpawnInFire;				// If true, this unit can spawn in fire-occ
 var(Flags)bool bAllowSpawnInPoison;				// If true, this unit can spawn in poison-occupied tiles
 var(Flags)bool bAllowSpawnFromATT;				// If true, this unit can be spawned from an Advent Troop Transport
 var(Flags)bool bFacesAwayFromPod;				// If true, this unit will face away from the pod instead of towards it
+var(Flags)bool bLockdownPodIdleUntilReveal;		// If true, this unit will not be able to do anything between the pod idle and the reveal (won't turn to face)
 var(Flags)bool bWeakAgainstTechLikeRobot;		// If true, this unit can be hit by tech (i.e. bluescreen rounds, emp, etc) like a robotic unit
 
 var(Flags)bool bIsMeleeOnly;					//true if this unit has no ranged attacks. Used primarily for flank checks
@@ -122,7 +125,10 @@ var(Flags)bool bUsePoolDarkVIPs;                //"
 
 var(Flags)bool bIsScientist;					// used for staffing
 var(Flags)bool bIsEngineer;						// used for staffing
-var(Flags)bool bStaffingAllowed;				// used for staffing
+var(Flags)bool bStaffingAllowed;				// used for staffing gameplay
+var(Flags)bool bAppearInBase;					// used for the unit visually appearing as a filler unit in the base
+var(Flags)bool bWearArmorInBase;				// if this unit should wear their full armor around the base instead of an underlay
+var array<name> AppearInStaffSlots;				// if bAppearInBase is true, the character will still be allowed to appear in staff slots in this list
 
 var(Flags)bool bBlocksPathingWhenDead;          // If true, units cannot path into or through the tile(s) this unit is on when dead.
 var(Flags)bool bCanTickEffectsEveryAction;      // If true, persistent effects will be allowed to honor the bCanTickEveryAction flag
@@ -136,8 +142,15 @@ var(X2CharacterTemplate) localized string strCharacterName;
 var(X2CharacterTemplate) localized array<string> strCharacterBackgroundMale;
 var(X2CharacterTemplate) localized array<string> strCharacterBackgroundFemale;
 var(X2CharacterTemplate) localized string strCharacterHealingPaused; // Unique string to display if the character's healing project is paused
+var(X2CharacterTemplate) localized string strForcedFirstName; // Certain characters have set names
+var(X2CharacterTemplate) localized string strForcedLastName; // Certain characters have set names
+var(X2CharacterTemplate) localized string strForcedNickName; // Certain characters have set names
+var(X2CharacterTemplate) localized string strCustomizeDesc; // Certain characters need unique strings to describe their customization options
+var(X2CharacterTemplate) localized string strAcquiredText; // Certain characters need to display additional information in their unit acquired pop-up
 var(X2CharacterTemplate) config array<string> strMatineePackages;    // names of the packages that contains this character's cinematic matinees
 var(X2CharacterTemplate) string strTargetingMatineePrefix;  // prefix of the character specific targeting matinees for this character
+var(X2CharacterTemplate) string strIntroMatineeSlotPrefix;  // prefix of the matinee groups this character can fill in mission intros
+var(X2CharacterTemplate) string strLoadingMatineeSlotPrefix;  // prefix of the matinee groups this character can fill in the loading interior
 var(X2CharacterTemplate) string strHackIconImage;               // The path to the icon for the hacking UI
 var(X2CharacterTemplate) string strTargetIconImage;             // The path to the icon for the targeting UI
 
@@ -157,6 +170,7 @@ var(X2CharacterTemplate) class<UICustomize> UICustomizationPropsClass; // UI pro
 var(X2CharacterTemplate) class<XComCharacterCustomization> CustomizationManagerClass; // Customization manager for this soldier class
 var(X2CharacterTemplate) class<XGCharacterGenerator> CharacterGeneratorClass;   // customize the class used for character generation stuff (random appearances, names, et cetera)
 var(X2CharacterTemplate) name                        DefaultSoldierClass;   // specific soldier class to set on creation
+var(X2CharacterTemplate) name						 PhotoboothPersonality; // if this character uses a different personality than the default in the photobooth
 
 
 var(X2CharacterTemplate) string strBehaviorTree;   	// By default all AI behavior trees use "GenericAIRoot".
@@ -184,9 +198,11 @@ var(X2CharacterTemplate) Vector HQOnscreenOffset;
 var(X2CharacterTemplate) name ReactionFireDeathAnim;	//The animation to play when killed by reaction fire.
 
 var(X2CharacterTemplate) delegate<OnStatAssignmentComplete> OnStatAssignmentCompleteFn;
+var(X2CharacterTemplate) delegate<OnEndTacticalPlay> OnEndTacticalPlayFn;
 var(X2CharacterTemplate) bool bIgnoreEndTacticalHealthMod; // Do not adjust health at the end of tactical missions
 var(X2CharacterTemplate) bool bIgnoreEndTacticalRestoreArmor; // Do not restore armor at the end of tactical missions
 var(X2CharacterTemplate) delegate<OnCosmeticUnitCreated> OnCosmeticUnitCreatedFn;
+var(X2CharacterTemplate) delegate<GetPhotographerPawnName> GetPhotographerPawnNameFn;
 
 var array<name> ImmuneTypes;
 var bool CanFlankUnits;
@@ -208,6 +224,12 @@ delegate OnStatAssignmentComplete(XComGameState_Unit UnitState);
 
 // to handle any special stuff after a cosmetic unit has been created in tactical - this should be placed on the "owning" unit template, not the cosmetic unit template
 delegate OnCosmeticUnitCreated(XComGameState_Unit CosmeticUnit, XComGameState_Unit OwnerUnit, XComGameState_Item SourceItem, XComGameState StartGameState);
+
+// some characters do not use the standard M/F soldier pawn when in the strategy layer
+delegate name GetPhotographerPawnName();
+
+// modify stats and game states when tactical play ends, such as health mods
+delegate OnEndTacticalPlay(XComGameState_Unit UnitState);
 
 function XComGameState_Unit CreateInstanceFromTemplate(XComGameState NewGameState)
 {

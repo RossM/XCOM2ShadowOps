@@ -1231,6 +1231,8 @@ private function DetonateProximityMine(XComGameState_Unit SourceUnit, XComGameSt
 	local XComGameStateContext_EffectRemoved EffectRemovedState;
 	local XComGameState NewGameState;
 	local XComGameStateHistory History;
+	local TTile                 AffectedTile;
+	local XComGameState_Unit    UnitState;
 
 	History = `XCOMHISTORY;
 	Action.AbilityObjectRef = SourceUnit.FindAbility(class'X2Ability_Grenades'.default.ProximityMineDetonationAbilityName);
@@ -1239,11 +1241,26 @@ private function DetonateProximityMine(XComGameState_Unit SourceUnit, XComGameSt
 		AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(Action.AbilityObjectRef.ObjectID));
 		if (AbilityState != none)
 		{
+			//  manually check the unit states being modified by the event as they may not be properly updated in the world data until the event is complete
+			foreach RespondingToGameState.IterateByClassType(class'XComGameState_Unit', UnitState)
+			{
+				foreach ApplyEffectParameters.AbilityResultContext.RelevantEffectTiles(AffectedTile)
+				{
+					if (UnitState.TileLocation == AffectedTile)
+					{
+						if (Target.AdditionalTargets.Find('ObjectID', UnitState.ObjectID) == INDEX_NONE)
+							Target.AdditionalTargets.AddItem(UnitState.GetReference());
+
+						break;      //  no need to keep checking tiles for this unit
+					}
+				}
+			}
+
 			Action.AvailableCode = 'AA_Success';
 			AbilityState.GatherAdditionalAbilityTargetsForLocation(ApplyEffectParameters.AbilityInputContext.TargetLocations[0], Target);
 
 			//Ensure that the triggering unit is caught in the blast.
-			if (TriggeringUnit != None)
+			if (TriggeringUnit != None && Target.AdditionalTargets.Find('ObjectID', TriggeringUnit.ObjectID) == INDEX_NONE)
 				Target.AdditionalTargets.AddItem(TriggeringUnit.GetReference());
 
 			Action.AvailableTargets.AddItem(Target);
@@ -1401,6 +1418,22 @@ function EventListenerReturn GenerateCover_ObjectMoved(Object EventData, Object 
 	RemoveEffect(NewGameState, GameState);
 	SubmitNewGameState(NewGameState);
 
+	return ELR_NoInterrupt;
+}
+
+function EventListenerReturn GenerateCover_ObjectMoved_UpdateVisualization(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+{
+	local XComGameState_Unit UnitState, OldUnitState;
+
+	UnitState = XComGameState_Unit(EventSource);
+	if (UnitState != none)
+	{
+		OldUnitState = XComGameState_Unit(`XCOMHISTORY.GetPreviousGameStateForObject(UnitState));
+		if (OldUnitState != none)
+		{
+			X2Effect_GenerateCover(GetX2Effect()).UpdateWorldCoverData(UnitState, GameState);
+		}
+	}
 	return ELR_NoInterrupt;
 }
 

@@ -91,6 +91,7 @@ static function X2AbilityTemplate Soulfire()
 	WeaponDamageEffect.bIgnoreBaseDamage = true;
 	WeaponDamageEffect.DamageTag = 'Soulfire';
 	WeaponDamageEffect.bBypassShields = true;
+	WeaponDamageEffect.bIgnoreArmor = true;
 	Template.AddTargetEffect(WeaponDamageEffect);
 
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
@@ -539,6 +540,7 @@ static function X2AbilityTemplate Insanity()
 	RuptureEffect.EffectDamageValue = default.SCHISM_DMG;
 	RuptureEffect.MinStatContestResult = 1;
 	RuptureEffect.MaxStatContestResult = 0;
+	RuptureEffect.bIgnoreArmor = true;
 	SchismCondition = new class'X2Condition_AbilityProperty';
 	SchismCondition.OwnerHasSoldierAbilities.AddItem('Schism');
 	RuptureEffect.TargetConditions.AddItem(SchismCondition);
@@ -913,6 +915,7 @@ static function X2AbilityTemplate NullLance()
 	DamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	DamageEffect.bIgnoreBaseDamage = true;
 	DamageEffect.DamageTag = 'NullLance';
+	DamageEffect.bIgnoreArmor = true;
 	Template.AddMultiTargetEffect(DamageEffect);
 
 	Template.TargetingMethod = class'X2TargetingMethod_Line';
@@ -972,6 +975,7 @@ static function X2AbilityTemplate VoidRift()
 	DamageEffect = new class'X2Effect_ApplyWeaponDamage';
 	DamageEffect.bIgnoreBaseDamage = true;
 	DamageEffect.DamageTag = 'VoidRift';
+	DamageEffect.bIgnoreArmor = true;
 	Template.AddMultiTargetEffect(DamageEffect);
 
 	InsanityEvent = new class'X2Effect_TriggerEvent';
@@ -1078,6 +1082,7 @@ static function X2AbilityTemplate VoidRiftInsanity()
 	RuptureEffect.EffectDamageValue = default.SCHISM_DMG;
 	RuptureEffect.MinStatContestResult = 1;
 	RuptureEffect.MaxStatContestResult = 0;
+	RuptureEffect.bIgnoreArmor = true;
 	SchismCondition = new class'X2Condition_AbilityProperty';
 	SchismCondition.OwnerHasSoldierAbilities.AddItem('Schism');
 	RuptureEffect.TargetConditions.AddItem(SchismCondition);

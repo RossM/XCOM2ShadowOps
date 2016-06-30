@@ -85,6 +85,9 @@ simulated state Executing
 		local StateObjectReference DmgObjectRef;
 		foreach StateChangeContext.AssociatedState.IterateByClassType(class'XComGameState_EnvironmentDamage', EnvironmentDamage)
 		{
+			if (EnvironmentDamage.DamageCause.ObjectID != Unit.ObjectID)
+				continue;
+
 			DmgObjectRef = EnvironmentDamage.GetReference();
 			VisualizationMgr.SendInterTrackMessage( DmgObjectRef );			
 		}

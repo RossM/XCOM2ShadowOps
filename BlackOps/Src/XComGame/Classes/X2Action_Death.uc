@@ -106,6 +106,16 @@ function bool ShouldRunDeathHandler()
 	return !XComGameState_Unit(Track.StateObject_NewState).IsAlive();
 }
 
+function bool ShouldPlayDamageContainerDeathEffect()
+{
+	return true;
+}
+
+function bool DamageContainerDeathSound()
+{
+	return true;
+}
+
 simulated function Name ComputeAnimationToPlay()
 {
 	local float fDot;
@@ -219,6 +229,11 @@ simulated function Name ComputeAnimationToPlay()
 	return AnimName;
 }
 
+protected function bool DoWaitUntilNotified()
+{
+	return bWaitUntilNotified;
+}
+
 simulated state Executing
 {	
 
@@ -253,7 +268,7 @@ Begin:
 		UnitPawn.GetAnimTreeController().SetAllowNewAnimations(false);
 	}
 
-	while( bWaitUntilNotified && !IsTimedOut() )
+	while( DoWaitUntilNotified() && !IsTimedOut() )
 	{
 		Sleep(0.0f);
 	}

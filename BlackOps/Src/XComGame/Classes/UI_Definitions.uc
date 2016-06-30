@@ -482,6 +482,18 @@ enum EAchievementType
 	AT_UseRulerArmorAbilityOnRuler,		// Use an alien ruler armor ability against an alien ruler
 	AT_KillRulerFirstEncounter,	// Kill an alien ruler the first time you encounter it
 	AT_KillRulerDuringEscape,		// Kill an alien ruler during its reaction move as it tries to escape
+
+	// DLC 3 - Shen's Last Gift Achievements
+	AT_CompleteLostTowers,				// Complete the Lost Towers mission
+	AT_PromoteSparkVanguard,			// Promote a SPARK to the Vanguard rank
+	AT_BeatMissionThreeSparks,			// Beat a mission with three or more SPARKs
+	AT_KillAvatarWithSpark,				// Kill an Avatar with a SPARK
+	AT_BeatMissionHalfHealthSpark,		// A SPARK unit survives a mission it started with less than half health
+	AT_BuyAllSparkGear,					// Outfit a SPARK with highest tier weapons and armor
+	AT_HitThreeOverdriveShots,			// Hit three shots in a single turn with SPARK after using Overdrive
+	AT_KillRobotWithSpark,				// Kill a robotic unit with a Spark
+	AT_BuildSpark,						// Build a SPARK unit
+	AT_KillPrimedDerelictMEC,			// Detonate a primed Derelict MEC
 };
 
 // STYLING 

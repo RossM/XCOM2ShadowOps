@@ -78,7 +78,7 @@ function Init(const out VisualizationTrack InTrack)
 		TargetLocation = AbilityContext.InputContext.TargetLocations[0];
 	}
 
-	if( AbilityContext.InputContext.ItemObject.ObjectID > 0 )
+	if( AbilityContext.InputContext.ItemObject.ObjectID > 0 && UseWeapon == None )
 	{
 		WeaponState = XComGameState_Item(`XCOMHISTORY.GetGameStateForObjectID(AbilityContext.InputContext.ItemObject.ObjectID));
 		UseWeapon = XGWeapon(WeaponState.GetVisualizer());
@@ -269,7 +269,7 @@ function LineOfFireFriendlyUnitCrouch()
 	WorldData = `XWORLD;
 
 	MyUnitState = XComGameState_Unit(History.GetGameStateForObjectID(Unit.ObjectID));
-	
+
 	TilesToTest = GetTilesInLineOfFire();
 	for( scan = 0; scan < TilesToTest.Length; ++scan )
 	{

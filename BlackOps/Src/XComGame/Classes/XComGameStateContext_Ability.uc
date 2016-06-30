@@ -1204,6 +1204,8 @@ static function bool ActivateAbility(AvailableAction PerformAction,
 			CosmeticUnitVisualizer = XGUnit(AttachedUnits[Index].GetVisualizer());
 			CosmeticUnitVisualizer.bNextMoveIsFollow = true;
 
+			Destination.Z += AttachedUnits[Index].GetDesiredZTileOffsetForAttachedCosmeticUnit();
+
 			CosmeticUnitVisualizer.m_kReachableTilesCache.BuildPathToTile(Destination, PathTiles);
 
 			if (PathTiles.Length == 0)

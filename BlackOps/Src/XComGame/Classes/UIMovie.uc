@@ -256,18 +256,8 @@ simulated function SetResolutionAndSafeArea()
 
 	// Safe area - 
 	// * This is the important part, for flash to calculate the actual anchoring placements. 
-	if( ConsoleType == CONSOLE_PS3 )
-	{
-		myValue.n = 0.15;    // 15 %		
-	} 
-	else if( ConsoleType == CONSOLE_Xbox360 )
-	{
-		myValue.n = 0.10;    // 10%
-	}
-	else
-	{		
-		myValue.n = 0.0;  // PC, no safe area		
-	}
+	// 4/12/2016 bsteiner - removing old console safe frame values that no longer apply to ps4 / xboxone 
+	myValue.n = 0.0;  // no safe area
 	myArray.AddItem( myValue );
 
 	if( RenderedAspectRatio == GfxAspectRatio || bool(AlreadyAdjustedVerticalSafeZone) ) 

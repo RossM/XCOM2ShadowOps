@@ -723,6 +723,13 @@ simulated function UpdateCoreFacility()
 	Facility = GetFacility();
 	kData.eBorderColor = eUIState_Normal;
 
+	if (Facility.DisplayStaffingInfo())
+	{
+		Facility.GetScientistSlots(kData.iNumStaff_Scientist, kData.iNumEmptyStaffSlots_Scientist);
+		Facility.GetEngineerSlots(kData.iNumStaff_Engineer, kData.iNumEmptyStaffSlots_Engineer);
+		Facility.GetSoldierSlots(kData.iNumStaff_Soldier, kData.iNumEmptyStaffSlots_Soldier);
+	}
+
 	if( IsBuildMode() )
 	{
 		kData.bShowUpgrade = Facility.CanUpgrade();

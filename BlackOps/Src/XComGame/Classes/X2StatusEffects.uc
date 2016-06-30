@@ -688,6 +688,7 @@ static function X2Effect_RemoveEffects CreateMindControlRemoveEffects()
 	RemoveEffects.EffectNamesToRemove.AddItem(class'X2AbilityTemplateManager'.default.ConfusedName);
 	RemoveEffects.EffectNamesToRemove.AddItem(class'X2AbilityTemplateManager'.default.PanickedName);
 	RemoveEffects.EffectNamesToRemove.AddItem(class'X2AbilityTemplateManager'.default.StunnedName);
+	RemoveEffects.DamageTypes.AddItem('mental');
 
 	return RemoveEffects;
 }
@@ -824,6 +825,8 @@ static function X2Effect_PersistentStatChange CreatePoisonedStatusEffect()
 	DamageEffect.EffectDamageValue.DamageType = 'Poison';
 	DamageEffect.bIgnoreBaseDamage = true;
 	DamageEffect.DamageTypes.AddItem('Poison');
+	DamageEffect.bAllowFreeKill = false;
+	DamageEffect.bIgnoreArmor = true;
 	PersistentStatChangeEffect.ApplyOnTick.AddItem(DamageEffect);
 
 	PersistentStatChangeEffect.EffectTickedFn = PoisonTicked;
@@ -1712,8 +1715,11 @@ static function AddEffectMessageToTrack(out VisualizationTrack BuildTrack, strin
 	kTag = XGParamTag(`XEXPANDCONTEXT.FindTag("XGParam"));
 	kTag.StrValue0 = UnitState.GetFullName();
 
-	MessageAction = X2Action_PlayWorldMessage(class'X2Action_PlayWorldMessage'.static.AddToVisualizationTrack(BuildTrack, Context));
-	MessageAction.AddWorldMessage(`XEXPAND.ExpandString(UnexpandedLocString));
+	if(kTag.StrValue0 != "")
+	{
+		MessageAction = X2Action_PlayWorldMessage(class'X2Action_PlayWorldMessage'.static.AddToVisualizationTrack(BuildTrack, Context));
+		MessageAction.AddWorldMessage(`XEXPAND.ExpandString(UnexpandedLocString));
+	}
 }
 
 static function UpdateUnitFlag(out VisualizationTrack BuildTrack, XComGameStateContext Context)

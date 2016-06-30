@@ -82,8 +82,18 @@ function MaybeNotifyEnvironmentDamage( )
 
 function CompleteAction()
 {
+	local XComGameState_EnvironmentDamage EnvironmentDamage;
+	local StateObjectReference DmgObjectRef;
+
 	super.CompleteAction();
 	//`CAMERASTACK.RemoveCamera(FallingCamera);//RAM - disable until more testing
+
+	// do a last-ditch trigger of any remaining damage states.  this is similar to X2Action_MoveEnd.FinalNotifyEnvironmentDamage
+	foreach FallingContext.AssociatedState.IterateByClassType( class'XComGameState_EnvironmentDamage', EnvironmentDamage )
+	{
+		DmgObjectRef = EnvironmentDamage.GetReference( );
+		VisualizationMgr.SendInterTrackMessage( DmgObjectRef );
+	}
 }
 
 //------------------------------------------------------------------------------------------------

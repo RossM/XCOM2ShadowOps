@@ -92,7 +92,20 @@ function HideObjectiveDisplay(string MissionType, string DisplayLabel)
 	}
 }
 
-function string ToString()
+function ClearTacticalObjectives()
+{
+	local int Index;
+
+	for( Index = ObjectiveDisplayInfos.Length - 1; Index >= 0; --Index )
+	{
+		if( !ObjectiveDisplayInfos[Index].GPObjective )
+		{
+			ObjectiveDisplayInfos.Remove(Index, 1);
+		}
+	}
+}
+
+function string ToString(optional bool bAllFields)
 {
 	return "Objectives List Game State";
 }

@@ -90,7 +90,15 @@ Begin:
 
 		if ((EndingPerk.m_ActiveTargetCount == 0) && EndingPerk.CasterDurationEndedAnim.PlayAnimation && AnimParams.AnimName != '')
 		{
-			FinishAnim( CasterPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams) );
+			if( EndingPerk.CasterDurationEndedAnim.AdditiveAnim )
+			{
+				FinishAnim(CasterPawn.GetAnimTreeController().PlayAdditiveDynamicAnim(AnimParams));
+				CasterPawn.GetAnimTreeController().RemoveAdditiveDynamicAnim(AnimParams);
+			}
+			else
+			{
+				FinishAnim(CasterPawn.GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams));
+			}
 		}
 
 		if (EndingPerk.TargetDurationEndedAnim.PlayAnimation)
@@ -98,7 +106,15 @@ Begin:
 			AnimParams.AnimName = class'XComPerkContent'.static.ChooseAnimationForCover( TargetUnit, EndingPerk.TargetDurationEndedAnim );
 			if (AnimParams.AnimName != '')
 			{
-				FinishAnim( TargetUnit.GetPawn().GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams) );
+				if( EndingPerk.CasterDurationEndedAnim.AdditiveAnim )
+				{
+					FinishAnim(TargetUnit.GetPawn().GetAnimTreeController().PlayAdditiveDynamicAnim(AnimParams));
+					TargetUnit.GetPawn().GetAnimTreeController().RemoveAdditiveDynamicAnim(AnimParams);
+				}
+				else
+				{
+					FinishAnim(TargetUnit.GetPawn().GetAnimTreeController().PlayFullBodyDynamicAnim(AnimParams));
+				}
 			}
 		}
 	}

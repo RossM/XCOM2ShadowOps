@@ -126,7 +126,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 	m_kCurrentFrameInfoTitle.SetText("LMB to select SOURCE. SHIFT+LMB to select TARGET.");
 
 	//Turn off FOW and make every actor that implements the visibility interface visible
-	bStoredFOWState =  `XWORLD.bEnableFOW;
+	bStoredFOWState =  `XWORLD.bDebugEnableFOW;
 	if( bStoredFOWState )
 	{
 		XComCheatManager(TacticalController.CheatManager).ToggleFOW();

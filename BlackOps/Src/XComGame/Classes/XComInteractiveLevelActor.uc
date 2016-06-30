@@ -237,12 +237,22 @@ var private bool bLootSparklesShouldBeEnabled;
 event Vector GetTargetingFocusLocation()
 {
 	local Vector Result;
+	local Vector SocketLocation;
+	local Rotator SocketRotation;
 	local int MeshCount;
 
-	// if no door meshes attached, just do whatever the base class wants to do
 	if((AttachedMesh1 == none || AttachedMesh1.StaticMesh == none) && (AttachedMesh2 == none || AttachedMesh2.StaticMesh == none))
 	{
+		// if no door meshes attached, try to face the interaction socket if there is one
+		if(GetSocketTransform('XGBUTTON_Icon', SocketLocation, SocketRotation))
+		{
+			Result = SocketLocation;
+		}
+		else
+		{
+			// just do whatever the base class wants to do
 		Result = super.GetTargetingFocusLocation();
+	}
 	}
 	else
 	{

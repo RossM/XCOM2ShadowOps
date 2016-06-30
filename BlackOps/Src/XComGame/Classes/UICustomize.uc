@@ -320,9 +320,36 @@ simulated static function CycleToSoldier(StateObjectReference NewRef)
 
 simulated function OnReceiveFocus()
 {
+	local UIScreenStack ScreenStack;
+	local UICustomize CustomizeScreen;
+	local int idx;
+
 	super.OnReceiveFocus();
 
 	Unit = GetUnit();
+	
+	// If the unit was modified and requires an update to the customization manager 
+	if (Unit.GetMyTemplate().CustomizationManagerClass != CustomizeManager.Class)
+	{
+		// Clear all of the old customization menus
+		ScreenStack = `SCREENSTACK;
+		for (idx = ScreenStack.Screens.Length - 1; idx >= 0; --idx)
+		{
+			CustomizeScreen = UICustomize(ScreenStack.Screens[idx]);
+			// Skip this logic for UICustomize_Trait screen because we always want to pop it off the stack
+			if (CustomizeScreen != none && UICustomize_Trait(CustomizeScreen) == none)
+			{
+				ScreenStack.PopUntil(CustomizeScreen);
+				ScreenStack.PopFirstInstanceOfClass(class'UICustomize'); // Should always be a Customization Menu class. Will deactivate the old customization manager.
+
+				// Add the customization menu for the new class back to the stack. Will also refresh and update the customization manager.
+				Movie.Pres.UICustomize_Menu(Unit, none); // The update code below will be called on the new menu
+				break;
+			}
+		}
+	}
+	else // Update normally
+	{
 	UpdateNavHelp();
 	UpdateData();
 
@@ -341,6 +368,7 @@ simulated function OnReceiveFocus()
 
 	// Make sure the list processes events from the BG (this gets overridden by the color selector).
 	ListBG.ProcessMouseEvents(List.OnChildMouseEvent);
+}
 }
 
 simulated function Show()

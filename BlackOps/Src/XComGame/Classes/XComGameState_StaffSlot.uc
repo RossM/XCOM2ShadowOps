@@ -357,6 +357,12 @@ function string GetLocationDisplayString()
 //#############################################################################################
 
 //---------------------------------------------------------------------------------------
+function bool IsHidden()
+{
+	return GetMyTemplate().bHideStaffSlot;
+}
+
+//---------------------------------------------------------------------------------------
 function bool IsEngineerSlot()
 {
 	return GetMyTemplate().bEngineerSlot;
