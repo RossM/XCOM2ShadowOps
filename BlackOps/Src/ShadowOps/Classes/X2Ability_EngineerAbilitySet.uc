@@ -74,7 +74,7 @@ static function X2AbilityTemplate Breach()
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityTarget_Cursor            CursorTarget;
-	local XMBAbilityMultiTarget_SoldierBonusRadius       RadiusMultiTarget;
+	local XMBAbilityMultiTarget_Radius      RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
@@ -123,9 +123,8 @@ static function X2AbilityTemplate Breach()
 
 	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
 	// but zero out BonusRadius so it isn't affected by Volatile Mix.
-	RadiusMultiTarget = new class'XMBAbilityMultiTarget_SoldierBonusRadius';
+	RadiusMultiTarget = new class'XMBAbilityMultiTarget_Radius';
 	RadiusMultiTarget.fTargetRadius = default.BreachRadius;
-	RadiusMultiTarget.BonusRadius = 0;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
@@ -150,7 +149,7 @@ static function X2AbilityTemplate ShotgunBreach()
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
 	local X2AbilityTarget_Cursor            CursorTarget;
-	local XMBAbilityMultiTarget_SoldierBonusRadius       RadiusMultiTarget;
+	local XMBAbilityMultiTarget_Radius      RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
@@ -201,9 +200,8 @@ static function X2AbilityTemplate ShotgunBreach()
 
 	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
 	// but zero out BonusRadius so it isn't affected by Volatile Mix.
-	RadiusMultiTarget = new class'XMBAbilityMultiTarget_SoldierBonusRadius';
+	RadiusMultiTarget = new class'XMBAbilityMultiTarget_Radius';
 	RadiusMultiTarget.fTargetRadius = default.BreachShotgunRadius;
-	RadiusMultiTarget.BonusRadius = 0;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';

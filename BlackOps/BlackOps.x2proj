@@ -2413,7 +2413,7 @@
     <Content Include="Src\XComGame\Classes\XGWeapon.uc" />
     <Content Include="Src\XComGame\Classes\XLocalizedData.uc" />
     <Content Include="Src\XComGame\Classes\XpEventData.uc" />
-    <Content Include="Src\XModBase_Core_1_2_0\Classes\XMBAbilityMultiTarget_SoldierBonusRadius.uc">
+    <Content Include="Src\XModBase_Core_1_2_0\Classes\XMBAbilityMultiTarget_Radius.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Core_1_2_0\Classes\XMBAbilityTag.uc">
