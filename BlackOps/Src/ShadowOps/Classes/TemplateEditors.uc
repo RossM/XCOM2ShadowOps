@@ -35,8 +35,6 @@ static function EditTemplates()
 		AddSuppressionAimModifier();
 	}
 
-	CreateCompatAbilities();
-
 	// Items
 	if (class'ModConfig'.default.bEnableNewItems)
 	{
@@ -385,42 +383,6 @@ static function UpgradeAbilityVisualization(name AbilityName)
 	foreach TemplateAllDifficulties(Template)
 	{
 		Template.BuildVisualizationFn = class'X2Ability_BO'.static.TypicalAbility_BuildVisualization;
-	}
-}
-
-// This function creates extra versions of all the ShadowOps_* abilities without the ShadowOps_ prefix,
-// unless an ability without the prefix already exists. The extra versions are needed for games saved
-// during tactical play with a previous mod version to continue working.
-static function CreateCompatAbilities()
-{
-	local X2AbilityTemplateManager				AbilityManager;
-	local Array<name>							TemplateNames;
-	local name									OldTemplateName, NewTemplateName;
-	local X2AbilityTemplate						OldTemplate, NewTemplate;
-	local string								Prefix;
-	local int									PrefixLength;
-
-	Prefix = "ShadowOps_";
-	PrefixLength = Len(Prefix);
-
-	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
-	AbilityManager.GetTemplateNames(TemplateNames);
-
-	foreach TemplateNames(OldTemplateName)
-	{
-		if (Left(OldTemplateName, PrefixLength) == Prefix)
-		{
-			NewTemplateName = name(Mid(OldTemplateName, PrefixLength));
-
-			if (AbilityManager.FindAbilityTemplate(NewTemplateName) == none)
-			{
-				OldTemplate = AbilityManager.FindAbilityTemplate(OldTemplateName);
-				NewTemplate = new class'X2AbilityTemplate'(OldTemplate);
-
-				NewTemplate.SetTemplateName(NewTemplateName);
-				AbilityManager.AddAbilityTemplate(NewTemplate);
-			}
-		}
 	}
 }
 
