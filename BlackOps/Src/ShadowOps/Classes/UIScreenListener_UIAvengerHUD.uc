@@ -38,10 +38,6 @@ function PerformUpgrades()
 	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(NewGameState.CreateStateObject(class'XComGameState_ShadowOpsUpgradeInfo', UpgradeInfo != none ? UpgradeInfo.ObjectId : -1));
 	NewGameState.AddStateObject(UpgradeInfo);
 
-	if (UpgradeInfo.PerformUpgrade('RenameSoldierClasses', NewGameState))
-		bChanged = true;
-	if (UpgradeInfo.PerformUpgrade('RenameAWCAbilities', NewGameState))
-		bChanged = true;
 	if (UpgradeInfo.PerformUpgrade('GrantFreeRespecs1', NewGameState))
 		bChanged = true;
 	if (UpgradeInfo.ShowUpgradePopupIfNeeded())

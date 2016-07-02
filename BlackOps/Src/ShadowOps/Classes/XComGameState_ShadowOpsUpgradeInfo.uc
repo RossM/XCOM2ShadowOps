@@ -27,7 +27,7 @@ function InitializeForNewGame()
 {
 	UpgradesPerformed.AddItem('RenameSoldierClasses');
 	UpgradesPerformed.AddItem('RenameAWCAbilities');
-	UpgradesPerformed.AddItem('RenameAWCAbilities');
+	UpgradesPerformed.AddItem('GrantFreeRespecs1');
 }
 
 function bool PerformUpgrade(name UpgradeName, XComGameState NewGameState)
@@ -39,14 +39,6 @@ function bool PerformUpgrade(name UpgradeName, XComGameState NewGameState)
 
 	switch (UpgradeName)
 	{
-	case 'RenameSoldierClasses':
-		RenameSoldierClasses(NewGameState);
-		UpgradesPerformed.AddItem(UpgradeName);
-		return true;
-	case 'RenameAWCAbilities':
-		RenameAWCAbilities(NewGameState);
-		UpgradesPerformed.AddItem(UpgradeName);
-		return true;
 	case 'GrantFreeRespecs1':
 		GrantFreeRespecs(NewGameState);
 		UpgradesPerformed.AddItem(UpgradeName);
@@ -54,79 +46,6 @@ function bool PerformUpgrade(name UpgradeName, XComGameState NewGameState)
 	}
 
 	return false;
-}
-
-function RenameSoldierClasses(XComGameState NewGameState)
-{
-	local XComGameStateHistory History;
-	local XComGameState_Unit UnitState;
-	local name NewTemplateName;
-
-	History = `XCOMHISTORY;
-
-	foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
-	{
-		NewTemplateName = '';
-
-		switch (UnitState.GetSoldierClassTemplateName())
-		{
-		case 'Engineer':
-			NewTemplateName = 'ShadowOps_CombatEngineer';
-			break;
-		case 'Dragoon':
-			NewTemplateName = 'ShadowOps_Dragoon';
-			break;
-		case 'Hunter':
-			NewTemplateName = 'ShadowOps_Hunter';
-			break;
-		case 'Infantry':
-			NewTemplateName = 'ShadowOps_Infantry';
-			break;
-		}
-		
-		if (NewTemplateName != '')
-		{
-			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
-			UnitState.SetSoldierClassTemplate(NewTemplateName);
-			NewGameState.AddStateObject(UnitState);
-			`Log("Updating unit id" @ UnitState.ObjectId @ "to" @ NewTemplateName); 
-		}
-	}
-}
-
-function RenameAWCAbilities(XComGameState NewGameState)
-{
-	local XComGameStateHistory History;
-	local XComGameState_Unit UnitState;
-	local ClassAgnosticAbility AWCAbility;
-	local X2AbilityTemplateManager AbilityTemplateManager;
-	local int i;
-	local name NewTemplateName;
-
-	History = `XCOMHISTORY;
-
-	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
-
-	foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
-	{
-		for (i = 0; i < UnitState.AWCAbilities.Length; i++)
-		{
-			AWCAbility = UnitState.AWCAbilities[i];
-
-			if (AbilityTemplateManager.FindAbilityTemplate(AWCAbility.AbilityType.AbilityName) == none)
-			{
-				NewTemplateName = name('ShadowOps_' $ AWCAbility.AbilityType.AbilityName);
-
-				if (AbilityTemplateManager.FindAbilityTemplate(NewTemplateName) != none)
-				{
-					UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
-					NewGameState.AddStateObject(UnitState);
-
-					UnitState.AWCAbilities[i].AbilityType.AbilityName = NewTemplateName;
-				}
-			}
-		}
-	}
 }
 
 function GrantFreeRespecs(XComGameState NewGameState)
