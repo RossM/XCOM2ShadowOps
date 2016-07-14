@@ -1,38 +1,13 @@
 class UnitUtilities_BO extends Object config(ShadowOpsOptions);
 
-var config bool bDisplaySubclassNames;
-
 // This class contains functions that augment or replace functions on XComGameState_Unit, since
 // those can't be overridden in a mod.
 
 static function string GetSoldierClassDisplayName(XComGameState_Unit Unit)
 {
 	local X2SoldierClassTemplate SoldierClassTemplate;
-	local int iLeftCount, iRightCount, i;
 
 	SoldierClassTemplate = Unit.GetSoldierClassTemplate();
-
-	if (!default.bDisplaySubclassNames)
-		return SoldierClassTemplate.DisplayName;
-
-	for (i = 0; i < Unit.m_SoldierProgressionAbilties.Length; i++)
-	{
-		if (Unit.m_SoldierProgressionAbilties[i].iRank <= 0)
-			continue;
-
-		if (Unit.m_SoldierProgressionAbilties[i].iBranch == 0)
-		{
-			iLeftCount++;
-			if (iLeftCount >= 2)
-				return SoldierClassTemplate.LeftAbilityTreeTitle;
-		}
-		else
-		{
-			iRightCount++;
-			if (iRightCount >= 2)
-				return SoldierClassTemplate.RightAbilityTreeTitle;
-		}
-	}
 
 	return SoldierClassTemplate.DisplayName;
 }
