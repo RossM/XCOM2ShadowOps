@@ -43,6 +43,7 @@ event ExpandHandler(string InString, out string OutString)
 	local XComGameStateHistory History;
 	local array<string> Split;
 	local int idx;
+	local bool plusFlag;
 
 	History = `XCOMHISTORY;
 
@@ -50,7 +51,15 @@ event ExpandHandler(string InString, out string OutString)
 
 	Split = SplitString(InString, ":");
 
-	Type = name(Split[0]);
+	if (left(Split[0], 1) == "+")
+	{
+		plusFlag = true;
+		Type = name(mid(Split[0], 1));
+	}
+	else
+	{
+		Type = name(Split[0]);
+	}
 
 	// Depending on where this tag is being expanded, ParseObj may be an XComGameState_Effect, an
 	// XComGameState_Ability, or an X2AbilityTemplate.
@@ -85,38 +94,55 @@ event ExpandHandler(string InString, out string OutString)
 	// Check for handling by XMBEffectInterface::GetTagValue.
 	if (AbilityTemplate != none)
 	{
-		foreach AbilityTemplate.AbilityTargetEffects(EffectTemplate)
+		if (OutString == "")
 		{
-			EffectInterface = XMBEffectInterface(EffectTemplate);
-			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+			foreach AbilityTemplate.AbilityTargetEffects(EffectTemplate)
 			{
-				return;
+				EffectInterface = XMBEffectInterface(EffectTemplate);
+				if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+					break;
+				OutString = "";
 			}
 		}
-		foreach AbilityTemplate.AbilityMultiTargetEffects(EffectTemplate)
+		if (OutString == "")
 		{
-			EffectInterface = XMBEffectInterface(EffectTemplate);
-			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+			foreach AbilityTemplate.AbilityMultiTargetEffects(EffectTemplate)
 			{
-				return;
+				EffectInterface = XMBEffectInterface(EffectTemplate);
+				if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+					break;
+				OutString = "";
 			}
 		}
-		foreach AbilityTemplate.AbilityShooterEffects(EffectTemplate)
+		if (OutString == "")
 		{
-			EffectInterface = XMBEffectInterface(EffectTemplate);
-			if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+			foreach AbilityTemplate.AbilityShooterEffects(EffectTemplate)
 			{
-				return;
+				EffectInterface = XMBEffectInterface(EffectTemplate);
+				if (EffectInterface != none && EffectInterface.GetTagValue(Type, AbilityState, OutString))
+					break;
+				OutString = "";
 			}
 		}
 
-		// If this tag is a stat name, look for an X2Effect_PersistentStatChange that modifies that
-		// stat.
-		idx = class'XMBConfig'.default.m_aCharStatTags.Find(Type);
-		if (idx != INDEX_NONE && FindStatBonus(AbilityTemplate, ECharStatType(idx), OutString))
+		if (OutString == "")
 		{
-			return;
+			// If this tag is a stat name, look for an X2Effect_PersistentStatChange that modifies that
+			// stat.
+			idx = class'XMBConfig'.default.m_aCharStatTags.Find(Type);
+			if (idx != INDEX_NONE)
+			{
+				if (!FindStatBonus(AbilityTemplate, ECharStatType(idx), OutString))
+					OutString = "";
+			}
 		}
+	}
+
+	if (OutString != "")
+	{
+		if (plusFlag && left(OutString, 1) != "-")
+			OutString = "+" $ OutString;
+		return;
 	}
 
 	switch (Type)
@@ -177,12 +203,18 @@ event ExpandHandler(string InString, out string OutString)
 			return;
 	}
 
-	// no tag found
-	if (OutString == "")
+	if (OutString != "")
 	{
-		`RedScreenOnce(`location $ ": Unhandled localization tag: '"$Tag$":"$InString$"'");
-		OutString = "<Ability:"$InString$"/>";
+		if (plusFlag && left(OutString, 1) != "-")
+			OutString = "+" $ OutString;
+		return;
 	}
+
+	// no tag found
+	`RedScreenOnce("XMBAbilityTag v" $ MajorVersion $ "." $ MinorVersion $ "." $ PatchVersion);
+	`RedScreenOnce(`location $ ": Unhandled localization tag: '"$Tag$":"$InString$"'");
+	`RedScreenOnce("AbilityState =" @ AbilityState $ ", AbilityTemplate =" @ AbilityTemplate.DataName $ ", Type =" @ Type);
+	OutString = "<Ability:"$InString$"/>";
 }
 
 // Looks for a stat bonus in an X2EFfect_PersistentStatChange or subclass.
