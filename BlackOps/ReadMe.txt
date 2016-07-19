@@ -2,6 +2,11 @@
 
 By default, this mod adds the new classes in addition to the basic classes. To replace the basic classes entirely, edit XComClassData.ini to set NumInDeck and NumInForcedDeck to 0 for the basic classes.
 
+Beta version v0.7.3
+General changes
+  * Compatibility with XModBase 1.2.0
+  * Removed the UI change that displayed subclass names instead of class names for some soldiers
+
 Beta version v0.7.1
 General changes
   * Compatibility with XModBase 1.0.0
