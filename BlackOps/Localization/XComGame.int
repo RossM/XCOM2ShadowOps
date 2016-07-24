@@ -740,7 +740,15 @@ TacticalText="<Bullet/> Depleted Elerium rounds combine high density with explos
 FriendlyName="Reinforced Vest"
 FriendlyNamePlural="Reinforced Vests"
 BriefSummary="This vest has been reinforced with heavy armor plating that provides a substantial increase to soldier Armor."
-TacticalText="<Bullet/> Increases Armor. <br/>"
+TacticalText="<Bullet/> Provides armor. <br/>"
+
+[PlatedVest X2EquipmentTemplate]
+FriendlyName="Plated Vest"
+FriendlyNamePlural="Plated Vests"
+!BriefSummary
+BriefSummary="Shen has outfitted the traditional Nanoscale Vest with armored plating, providing additional armor protection from enemy attacks."
+!TacticalText
+TacticalText="<Bullet/> Provides armor."
 
 ; === GTS ability templates ===
 [PackmasterUnlock X2SoldierAbilityUnlockTemplate]
