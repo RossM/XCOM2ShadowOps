@@ -181,7 +181,7 @@ static function X2AbilityTemplate Magnum()
 	local XMBEffect_ConditionalBonus              MagnumEffect;
 
 	MagnumEffect = new class'XMBEffect_ConditionalBonus';
-	MagnumEffect.OtherConditions.AddItem(default.MatchingWeaponCondition);
+	MagnumEffect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 	MagnumEffect.AddDamageModifier(default.MagnumDamageBonus);
 	MagnumEffect.AddToHitModifier(default.MagnumOffenseBonus);
 

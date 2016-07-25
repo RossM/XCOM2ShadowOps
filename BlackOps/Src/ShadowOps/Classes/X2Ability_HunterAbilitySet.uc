@@ -293,7 +293,7 @@ static function X2AbilityTemplate VitalPoint()
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.Modifiers = default.VitalPointModifiers;
-	Effect.OtherConditions.AddItem(default.MatchingWeaponCondition);
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
 	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_BlackOps.UIPerk_vitalpoint", false, Effect);
 }
@@ -303,7 +303,7 @@ static function X2AbilityTemplate Precision()
 	local XMBEffect_ConditionalBonus             PrecisionEffect;
 
 	PrecisionEffect = new class'XMBEffect_ConditionalBonus';
-	PrecisionEffect.OtherConditions.AddItem(default.FullCoverCondition);
+	PrecisionEffect.AbilityTargetConditions.AddItem(default.FullCoverCondition);
 	PrecisionEffect.AddToHitModifier(default.PrecisionOffenseBonus);
 
 	return Passive('ShadowOps_Precision', "img:///UILibrary_BlackOps.UIPerk_precision", true, PrecisionEffect);
@@ -314,7 +314,7 @@ static function X2AbilityTemplate LowProfile()
 	local XMBEffect_ConditionalBonus             LowProfileEffect;
 
 	LowProfileEffect = new class'XMBEffect_ConditionalBonus';
-	LowProfileEffect.SelfConditions.AddItem(default.HalfCoverCondition);
+	LowProfileEffect.AbilityTargetConditionsAsTarget.AddItem(default.HalfCoverCondition);
 	LowProfileEffect.AddToHitAsTargetModifier(-default.LowProfileDefenseBonus);
 
 	return Passive('ShadowOps_LowProfile', "img:///UILibrary_BlackOps.UIPerk_lowprofile", true, LowProfileEffect);
@@ -843,10 +843,10 @@ static function X2AbilityTemplate FirstStrike()
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.FirstStrikeDamageBonus);
 	Effect.bIgnoreSquadSightPenalty = true;
-	Effect.OtherConditions.AddItem(default.MatchingWeaponCondition);
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
 	Condition = new class'X2Condition_FirstStrike';
-	Effect.OtherConditions.AddItem(Condition);
+	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	return Passive('ShadowOps_FirstStrike', "img:///UILibrary_BlackOps.UIPerk_firststrike", true, Effect);
 }
@@ -861,10 +861,10 @@ static function X2AbilityTemplate DamnGoodGround()
 	Effect.AddToHitAsTargetModifier(-default.DamnGoodGroundDefenseBonus);
 
 	// This condition applies when the unit is the target
-	Effect.SelfConditions.AddItem(default.HeightAdvantageCondition);
+	Effect.AbilityTargetConditionsAsTarget.AddItem(default.HeightAdvantageCondition);
 
 	// This condition applies when the unit is the attacker
-	Effect.OtherConditions.AddItem(default.HeightDisadvantageCondition);
+	Effect.AbilityTargetConditions.AddItem(default.HeightDisadvantageCondition);
 
 	return Passive('ShadowOps_DamnGoodGround', "img:///UILibrary_BlackOps.UIPerk_damngoodground", true, Effect);
 }

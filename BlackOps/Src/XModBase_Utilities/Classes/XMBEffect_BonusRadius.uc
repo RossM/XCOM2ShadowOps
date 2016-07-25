@@ -2,9 +2,9 @@
 //  FILE:    XMBEffect_BonusRadius.uc
 //  AUTHOR:  xylthixlm
 //
-//  A persistent effect which increases the radius of grenades used by the unit, as well
-//  as the radius of any other ability the unit uses with its multitarget type set to
-//  X2AbilityMultiTarget_SoldierBonusRadius.
+//  A persistent effect which increases the radius of grenades used by the unit. It can
+//  also change the radius of any other ability with multitarget type
+//  X2AbilityMultiTarget_Radius.
 //
 //  EXAMPLES
 //
@@ -37,6 +37,7 @@ var float fBonusRadius;					// Amount to increase the radius, in meters. One til
 
 var array<name> IncludeItemNames;		// Ammo types (grenades) which the bonus will apply to. If empty, it applies to everything.
 var array<name> IncludeAbilityNames;
+
 
 ////////////////////////////
 // Overrideable functions //

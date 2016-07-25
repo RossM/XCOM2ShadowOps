@@ -131,7 +131,7 @@ static function X2AbilityTemplate Weaponmaster()
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.WeaponmasterBonusDamage);
-	Effect.OtherConditions.AddItem(default.MatchingWeaponCondition);
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
 	return Passive('ShadowOps_Weaponmaster', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
@@ -141,7 +141,7 @@ static function X2AbilityTemplate AbsolutelyCritical()
 	local XMBEffect_ConditionalBonus             Effect;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.OtherConditions.AddItem(default.NoCoverCondition);
+	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
 	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
 
 	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);

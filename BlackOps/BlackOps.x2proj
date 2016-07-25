@@ -2434,13 +2434,22 @@
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_AbilityName.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_AbilityProperty.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_Dead.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_MatchingWeapon.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffectUtilities.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddAbilityCharges.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_ChangeHitResultForAttacker.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_DoNotConsumeAllPoints.uc">
@@ -2495,6 +2504,15 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBGameState_EventTarget.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBValue.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBValue_UnitValue.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBValue_Visibility.uc">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>

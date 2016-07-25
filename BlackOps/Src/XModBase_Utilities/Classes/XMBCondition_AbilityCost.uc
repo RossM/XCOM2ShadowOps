@@ -23,10 +23,17 @@
 //---------------------------------------------------------------------------------------
 class XMBCondition_AbilityCost extends X2Condition;
 
-var bool bRequireMinimumPointsSpent, bRequireMaximumPointsSpent;
-var int MinimumPointsSpent, MaximumPointsSpent;
-var bool bRequireMinimumCost, bRequireMaximumCost;
-var int MinimumCost, MaximumCost;
+var bool bRequireMinimumPointsSpent;	// If true, require at least MinimumPointsSpent action points are spent
+var int MinimumPointsSpent;				// Minimum number of action points that must have been actually spent
+
+var bool bRequireMaximumPointsSpent;	// If true, require at most MaximumPointsSpent action points are spent
+var int MaximumPointsSpent;				// Maximum number of action points that must have been actually spent
+
+var bool bRequireMinimumCost;			// If true, require that the ability normally cost at least MinimumCost action points
+var int MinimumCost;					// Minimum number of action points the ability normally costs
+
+var bool bRequireMaximumCost;			// If true, require that the ability normally cost at most MaximumCost action points
+var int MaximumCost;					// Maximum number of action points the ability normally costs
 
 event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameState_BaseObject kTarget)
 {
@@ -46,7 +53,7 @@ event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameSta
 
 	AbilityContext = XComGameStateContext_Ability(GameState.GetContext());
 	if (AbilityContext == none)
-		return 'AA_ValueCheckFailed';
+		return 'AA_MissingRequiredContext';  // NOTE: Nonstandard AA code
 
 	SourceUnit = XComGameState_Unit(GameState.GetGameStateForObjectID(AbilityContext.InputContext.SourceObject.ObjectID));
 	if (SourceUnit != none)
@@ -55,7 +62,7 @@ event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameSta
 
 		// Don't trigger if only reserve points were available
 		if (PrevSourceUnit.ActionPoints.Length == 0)
-			return 'AA_ValueCheckFailed';
+			return 'AA_InvalidActionPoints';  // NOTE: Nonstandard AA code
 
 		PrevTotalPoints = PrevSourceUnit.ActionPoints.Length + PrevSourceUnit.ReserveActionPoints.Length;
 		TotalPoints = SourceUnit.ActionPoints.Length + SourceUnit.ReserveActionPoints.Length;
@@ -112,13 +119,13 @@ event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameSta
 	`Log(kAbility.GetMyTemplateName() @ "Cost:" @ Cost @ "Spent:" @ PointsSpent);
 
 	if (bRequireMinimumPointsSpent && PointsSpent < MinimumPointsSpent)
-		return 'AA_ValueCheckFailed';
+		return 'AA_InvalidActionPoints';  // NOTE: Nonstandard AA code
 	if (bRequireMaximumPointsSpent && PointsSpent > MaximumPointsSpent)
-		return 'AA_ValueCheckFailed';
+		return 'AA_InvalidActionPoints';  // NOTE: Nonstandard AA code
 	if (bRequireMinimumCost && Cost < MinimumCost)
-		return 'AA_ValueCheckFailed';
+		return 'AA_InvalidActionPoints';  // NOTE: Nonstandard AA code
 	if (bRequireMaximumCost && Cost > MaximumCost)
-		return 'AA_ValueCheckFailed';
+		return 'AA_InvalidActionPoints';  // NOTE: Nonstandard AA code
 
 	return 'AA_Success';
 }

@@ -87,7 +87,8 @@ var const int AUTO_PRIORITY;
 // takes an X2Effect_Persistent.
 static function X2AbilityTemplate Passive(name DataName, string IconImage, optional bool bCrossClassEligible = false, optional X2Effect_Persistent Effect = none)
 {
-	local X2AbilityTemplate						Template;
+	local X2AbilityTemplate Template;
+	local XMBEffect_ConditionalBonus ConditionalEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, DataName);
 	Template.IconImage = IconImage;
@@ -102,6 +103,21 @@ static function X2AbilityTemplate Passive(name DataName, string IconImage, optio
 
 	if (Effect == none)
 		Effect = new class'X2Effect_Persistent';
+
+	ConditionalEffect = XMBEffect_ConditionalBonus(Effect);
+
+	if (ConditionalEffect != none && (ConditionalEffect.AbilityTargetConditions.Length > 0 ||
+									  ConditionalEffect.AbilityShooterConditions.Length > 0 ||
+									  ConditionalEffect.ScaleValue != none))
+	{
+		ConditionalEffect.BuildPersistentEffect(1, true, false, false);
+		ConditionalEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, true,,Template.AbilitySourceName);
+		ConditionalEffect.bHideWhenNotRelevant = true;
+		Template.AddTargetEffect(ConditionalEffect);
+
+		Effect = new class'X2Effect_Persistent';
+		Effect.EffectName = name(DataName $ "_Passive");
+	}
 
 	Effect.BuildPersistentEffect(1, true, false, false);
 	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true,,Template.AbilitySourceName);
@@ -461,6 +477,16 @@ static function X2AbilityTemplate TargetedBuff(name DataName, string IconImage, 
 	return Template;
 }
 
+static function AddSecondaryEffect(X2AbilityTemplate Template, X2Effect Effect)
+{
+	if (X2Effect_Persistent(Effect) != none)
+		X2Effect_Persistent(Effect).SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, true, , Template.AbilitySourceName);
+	if (XMBEffect_ConditionalBonus(Effect) != none)
+		XMBEffect_ConditionalBonus(Effect).bHideWhenNotRelevant = true;
+
+	Template.AddTargetEffect(Effect);
+}
+
 // Hides the icon of an ability. For use with secondary abilities added in AdditionaAbilities that
 // shouldn't get their own icon.
 static function HidePerkIcon(X2AbilityTemplate Template)
@@ -650,17 +676,49 @@ static function AddIconPassive(X2AbilityTemplate Template)
 	local X2AbilityTemplate IconTemplate;
 
 	IconTemplate = PurePassive(name(Template.DataName $ "_Icon"), Template.IconImage);
-	IconTemplate.LocFriendlyName = Template.LocFriendlyName;
-	IconTemplate.LocHelpText = Template.LocHelpText;
-	IconTemplate.LocLongDescription = Template.LocLongDescription;
-	IconTemplate.LocFlyOverText = Template.LocFlyOverText;
 
-	X2Effect_Persistent(IconTemplate.AbilityTargetEffects[0]).FriendlyName = Template.LocFriendlyName;
+	AddSecondaryAbility(Template, IconTemplate);
+	
+	// Use the long description, rather than the help text
 	X2Effect_Persistent(IconTemplate.AbilityTargetEffects[0]).FriendlyDescription = Template.LocLongDescription;
+}
 
-	Template.AdditionalAbilities.AddItem(IconTemplate.DataName);
+// Adds an arbitrary secondary ability to an ability template. This handles copying over the
+// ability's localized name and description to the secondary, so you only have to write one entry
+// for the ability in XComGame.int.
+static function AddSecondaryAbility(X2AbilityTemplate Template, X2AbilityTemplate SecondaryTemplate)
+{
+	local X2Effect Effect;
+	local X2Effect_Persistent PersistentEffect;
 
-	class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().AddAbilityTemplate(IconTemplate);
+	Template.AdditionalAbilities.AddItem(SecondaryTemplate.DataName);
+
+	SecondaryTemplate.LocFriendlyName = Template.LocFriendlyName;
+	SecondaryTemplate.LocHelpText = Template.LocHelpText;
+	SecondaryTemplate.LocLongDescription = Template.LocLongDescription;
+	SecondaryTemplate.LocFlyOverText = Template.LocFlyOverText;
+
+	foreach SecondaryTemplate.AbilityTargetEffects(Effect)
+	{
+		PersistentEffect = X2EFfect_Persistent(Effect);
+		if (PersistentEffect == none)
+			continue;
+
+		PersistentEffect.FriendlyName = Template.LocFriendlyName;
+		PersistentEffect.FriendlyDescription = Template.LocHelpText;
+	}
+
+	foreach SecondaryTemplate.AbilityShooterEffects(Effect)
+	{
+		PersistentEffect = X2EFfect_Persistent(Effect);
+		if (PersistentEffect == none)
+			continue;
+
+		PersistentEffect.FriendlyName = Template.LocFriendlyName;
+		PersistentEffect.FriendlyDescription = Template.LocHelpText;
+	}
+
+	class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().AddAbilityTemplate(SecondaryTemplate);
 }
 
 // Helper function for creating an X2Condition that requires a maximum distance between shooter and target.

@@ -19,7 +19,7 @@
 //
 //  DEPENDENCIES
 //
-//  None.
+//  XMBEffectUtilities.uc
 //---------------------------------------------------------------------------------------
 class XMBEffect_AddUtilityItem extends X2Effect_Persistent;
 
@@ -60,6 +60,9 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 
 	History = `XCOMHISTORY;
 
+	if (class'XMBEffectUtilities'.static.SkipForDirectMissionTransfer(ApplyEffectParameters))
+		return;
+
 	ItemTemplateMgr = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 	AbilityTemplateMan = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
@@ -94,6 +97,9 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 			}
 		}
 	}
+
+	if (BaseCharges <= 0)
+		return;
 
 	// No items to merge with, so create the item
 	ItemState = EquipmentTemplate.CreateInstanceFromTemplate(NewGameState);

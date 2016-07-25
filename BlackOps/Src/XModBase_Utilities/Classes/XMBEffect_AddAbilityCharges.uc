@@ -17,7 +17,7 @@
 //
 //  DEPENDENCIES
 //
-//  None.
+//  XMBEffectUtilities.uc
 //---------------------------------------------------------------------------------------
 class XMBEffect_AddAbilityCharges extends X2Effect;
 
@@ -29,6 +29,7 @@ var bool bAllowUseAmmoAsCharges;			// Some abilities display the amount of ammo 
 											// the ability charges, for example LaunchGrenade. If this is
 											// true, this effect will give those abilities extra ammo
 											// instead of extra charges.
+
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
@@ -43,6 +44,10 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 		return;
 
 	History = `XCOMHISTORY;
+
+	if (class'XMBEffectUtilities'.static.SkipForDirectMissionTransfer(ApplyEffectParameters))
+		return;
+
 	foreach NewUnit.Abilities(ObjRef)
 	{
 		AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(ObjRef.ObjectID));

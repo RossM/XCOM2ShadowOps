@@ -19,7 +19,10 @@
 //  Magnum
 //  MovingTarget
 //  PowerShot
+//  SurvivalInstinct
+//  TacticalSense
 //  Weaponmaster
+//  ZeroIn
 //
 //  INSTALLATION
 //
@@ -30,6 +33,7 @@
 //
 //  Core
 //  XMBEffect_Extended.uc
+//  XMBEffectUtilities.uc
 //---------------------------------------------------------------------------------------
 
 class XMBEffect_ConditionalBonus extends XMBEffect_Extended;
@@ -55,13 +59,23 @@ var array<ExtShotModifierInfo> Modifiers;			// Modifiers to attacks made by (or 
 
 var bool bIgnoreSquadsightPenalty;					// Negates squadsight penalties. Requires XMBEffect_Extended.
 
+var XMBValue ScaleValue;
+var float ScaleBase;
+var float ScaleMultiplier;
+var float ScaleMax;
+
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
 
-var array<X2Condition> SelfConditions;				// Conditions applied to the unit with the effect (usually the shooter)
-var array<X2Condition> OtherConditions;				// Conditions applied to the other unit involved (usually the target)
+var array<X2Condition> AbilityTargetConditions;				// Conditions on the target of the ability being modified.
+var array<X2Condition> AbilityShooterConditions;			// Conditions on the shooter of the ability being modified.
+var array<X2Condition> AbilityTargetConditionsAsTarget;		// Conditions on the target of the ability being modified, for ToHitAsTarget.
+var array<X2Condition> AbilityShooterConditionsAsTarget;	// Conditions on the shooter of the ability being modified, for ToHitAsTarget.
+
+var bool bHideWhenNotRelevant;								// If true, the ability doesn't appear in the UI when its
+															// conditions are not met.
 
 
 /////////////
@@ -138,79 +152,45 @@ function AddArmorPiercingModifier(int Value, optional EAbilityHitResult ModType 
 // Implementation //
 ////////////////////
 
-// Checks that an attack meets all the conditions of this effect.
+function private float GetScaleByValue(XComGameState_Effect EffectState, XComGameState_Unit UnitState, XComGameState_Unit TargetState, XComGameState_Ability AbilityState)
+{
+	local float Scale, Value;
+
+	if (ScaleValue == none)
+		return 1.0;
+
+	Value = ScaleValue.GetValue(EffectState, UnitState, TargetState, AbilityState);
+	Scale = FClamp(ScaleBase + ScaleMultiplier * Value, 0, ScaleMax);
+
+	return Scale;
+}
+
 function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
-	local X2Condition kCondition;
-	local XComGameState_Item SourceWeapon;
-	local StateObjectReference ItemRef;
 	local name AvailableCode;
-		
+
 	if (!bAsTarget)
 	{
-		// Attack by the unit with the effect - check target conditions
-		foreach OtherConditions(kCondition)
-		{
-			// Check that the attack is using the correct weapon if required
-			if (kCondition.IsA('XMBCondition_MatchingWeapon'))
-			{
-				SourceWeapon = AbilityState.GetSourceWeapon();
-				if (SourceWeapon == none)
-					return 'AA_UnknownError';
-
-				ItemRef = EffectState.ApplyEffectParameters.ItemStateObjectRef;
-				if (SourceWeapon.ObjectID != ItemRef.ObjectID && SourceWeapon.LoadedAmmo.ObjectID != ItemRef.ObjectID)
-					return 'AA_UnknownError';
-			}
-
-			AvailableCode = kCondition.AbilityMeetsCondition(AbilityState, Target);
-			if (AvailableCode != 'AA_Success')
-				return AvailableCode;
-
-			AvailableCode = kCondition.MeetsCondition(Target);
-			if (AvailableCode != 'AA_Success')
-				return AvailableCode;
+		AvailableCode = class'XMBEffectUtilities'.static.CheckTargetConditions(AbilityTargetConditions, EffectState, Attacker, Target, AbilityState);
+		if (AvailableCode != 'AA_Success')
+			return AvailableCode;
 		
-			AvailableCode = kCondition.MeetsConditionWithSource(Target, Attacker);
-			if (AvailableCode != 'AA_Success')
-				return AvailableCode;
-		}
-
-		// Attack by the unit with the effect - check shooter conditions
-		foreach SelfConditions(kCondition)
-		{
-			AvailableCode = kCondition.MeetsCondition(Attacker);
-			if (AvailableCode != 'AA_Success')
-				return AvailableCode;
-		}
+		AvailableCode = class'XMBEffectUtilities'.static.CheckShooterConditions(AbilityShooterConditions, EffectState, Attacker, Target, AbilityState);
+		if (AvailableCode != 'AA_Success')
+			return AvailableCode;
 	}
 	else
 	{
-		// Attack against the unit with the effect - check target conditions
-		foreach SelfConditions(kCondition)
-		{
-			AvailableCode = kCondition.AbilityMeetsCondition(AbilityState, Target);
-			if (AvailableCode != 'AA_Success')
-				return AvailableCode;
-
-			AvailableCode = kCondition.MeetsCondition(Target);
-			if (AvailableCode != 'AA_Success')
-				return AvailableCode;
+		AvailableCode = class'XMBEffectUtilities'.static.CheckTargetConditions(AbilityTargetConditionsAsTarget, EffectState, Attacker, Target, AbilityState);
+		if (AvailableCode != 'AA_Success')
+			return AvailableCode;
 		
-			AvailableCode = kCondition.MeetsConditionWithSource(Target, Attacker);
-			if (AvailableCode != 'AA_Success')
-				return AvailableCode;
-		}
-
-		// Attack against the unit with the effect - check shooter conditions
-		foreach TargetConditions(kCondition)
-		{
-			AvailableCode = kCondition.MeetsCondition(Attacker);
-			if (AvailableCode != 'AA_Success')
-				return AvailableCode;
-		}
+		AvailableCode = class'XMBEffectUtilities'.static.CheckShooterConditions(AbilityShooterConditionsAsTarget, EffectState, Attacker, Target, AbilityState);
+		if (AvailableCode != 'AA_Success')
+			return AvailableCode;
 	}
 
+		
 	return 'AA_Success';
 }
 
@@ -256,7 +236,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 		}
 	}
 
-	return BonusDamage;
+	return int(BonusDamage * GetScaleByValue(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState));
 }
 
 // From X2Effect_Persistent. Returns an armor shred modifier for an attack by the unit with the effect.
@@ -283,7 +263,7 @@ function int GetExtraShredValue(XComGameState_Effect EffectState, XComGameState_
 		}
 	}
 
-	return BonusShred;
+	return int(BonusShred * GetScaleByValue(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState));
 }
 
 // From X2Effect_Persistent. Returns an armor piercing modifier for an attack by the unit with the effect.
@@ -310,7 +290,7 @@ function int GetExtraArmorPiercing(XComGameState_Effect EffectState, XComGameSta
 		}
 	}
 
-	return BonusArmorPiercing;
+	return int(BonusArmorPiercing * GetScaleByValue(EffectState, Attacker, XComGameState_Unit(TargetDamageable), AbilityState));
 }
 
 // From X2Effect_Persistent. Returns to hit modifiers for an attack by the unit with the effect.
@@ -329,6 +309,7 @@ function GetToHitModifiers(XComGameState_Effect EffectState, XComGameState_Unit 
 				continue;
 
 			ExtModInfo.ModInfo.Reason = FriendlyName;
+			ExtModInfo.ModInfo.Value = int(ExtModInfo.ModInfo.Value * GetScaleByValue(EffectState, Attacker, Target, AbilityState));
 			ShotModifiers.AddItem(ExtModInfo.ModInfo);
 		}
 	}
@@ -352,6 +333,7 @@ function GetToHitAsTargetModifiers(XComGameState_Effect EffectState, XComGameSta
 				continue;
 
 			ExtModInfo.ModInfo.Reason = FriendlyName;
+			ExtModInfo.ModInfo.Value = int(ExtModInfo.ModInfo.Value * GetScaleByValue(EffectState, Target, none, AbilityState));
 			ShotModifiers.AddItem(ExtModInfo.ModInfo);
 		}	
 	}
@@ -371,6 +353,141 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 	return true;
 }
 
+function private bool AllConditionsAreUnitConditions(array<X2Condition> Conditions)
+{
+	local X2Condition Condition;
+
+	foreach Conditions(Condition)
+	{
+		if (class'XMBConfig'.default.UnitConditions.Find(Condition.class.name) == INDEX_NONE && 
+			class'XMBConfig'.default.ExtraUnitConditions.Find(Condition.class.name) == INDEX_NONE)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function private bool IsEffectRelevant(XComGameState_Effect EffectGameState, XComGameState_Unit TargetUnit, bool bCheckVisibleUnits = true)
+{
+	local name AvailableCode;
+	local float Scale;
+	local ExtShotModifierInfo ExtModInfo;
+	local bool bHasAsShooterEffects, bHasAsTargetEffects;
+	local array<StateObjectReference> VisibleUnits;
+	local StateObjectReference UnitRef;
+	local XComGameState_Unit OtherUnit;
+	local XComGameStateHistory History;
+
+	History = `XCOMHISTORY;
+
+	Scale = GetScaleByValue(EffectGameState, TargetUnit, none, none);
+	if (Scale == 0.0)
+		return false;
+
+	foreach Modifiers(ExtModInfo)
+	{
+		if (ExtModInfo.Type == 'ToHitAsTarget')
+			bHasAsTargetEffects = true;
+		else
+			bHasAsShooterEffects = true;
+	}
+
+	if (bCheckVisibleUnits)
+	{
+		class'X2TacticalVisibilityHelpers'.static.GetAllVisibleEnemyUnitsForUnit(TargetUnit.ObjectID, VisibleUnits);
+		foreach VisibleUnits(UnitRef)
+		{
+			OtherUnit = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
+			if (OtherUnit != none)
+			{
+				if (bHasAsShooterEffects)
+				{
+					AvailableCode = ValidateAttack(EffectGameState, TargetUnit, OtherUnit, none);
+					if (AvailableCode == 'AA_Success')
+						return true;
+				}
+
+				if (bHasAsTargetEffects)
+				{
+					AvailableCode = ValidateAttack(EffectGameState, OtherUnit, TargetUnit, none, true);
+					if (AvailableCode == 'AA_Success')
+						return true;
+				}
+			}
+		}
+	}
+
+	if (VisibleUnits.Length == 0)
+	{
+		if (bHasAsShooterEffects && AbilityTargetConditions.Length == 0)
+		{
+			AvailableCode = class'XMBEffectUtilities'.static.CheckShooterConditions(AbilityShooterConditions, EffectGameState, TargetUnit, none, none);
+			if (AvailableCode == 'AA_Success')
+				return true;
+		}
+
+		if (bHasAsTargetEffects && AbilityShooterConditionsAsTarget.Length == 0 && AllConditionsAreUnitConditions(AbilityTargetConditionsAsTarget))
+		{
+			AvailableCode = class'XMBEffectUtilities'.static.CheckTargetConditions(AbilityTargetConditionsAsTarget, EffectGameState, none, TargetUnit, none);
+			if (AvailableCode == 'AA_Success')
+				return true;
+		}
+	}
+
+	return false;
+}
+
+// From X2Effect_Persistent.
+function bool IsEffectCurrentlyRelevant(XComGameState_Effect EffectGameState, XComGameState_Unit TargetUnit)
+{
+	if (!bHideWhenNotRelevant)
+		return true;
+
+	return IsEffectRelevant(EffectGameState, TargetUnit);
+}
+
+// From X2Effect_Persistent
+function ModifyUISummaryUnitStats(XComGameState_Effect EffectState, XComGameState_Unit UnitState, const ECharStatType Stat, out int StatValue)
+{
+	local name Tag;
+	local EAbilityHitResult HitResult;
+	local ExtShotModifierInfo ExtModInfo;
+	local float ResultMultiplier;
+
+	ResultMultiplier = 1;
+
+	switch (stat)
+	{
+		case eStat_Offense:		Tag = 'ToHit';			HitResult = eHit_Success;							break;
+		case eStat_Defense:		Tag = 'ToHitAsTarget';	HitResult = eHit_Success;	ResultMultiplier *= -1;	break;
+		case eStat_Dodge:		Tag = 'ToHitAsTarget';	HitResult = eHit_Graze;								break;
+		case eStat_CritChance:	Tag = 'ToHit';			HitResult = eHit_Crit;								break;
+
+		default: return;
+	}
+
+	if (!IsEffectRelevant(EffectState, UnitState, false))
+		return;
+
+	ResultMultiplier *= GetScaleByValue(EffectState, UnitState, none, none);
+
+	foreach Modifiers(ExtModInfo)
+	{
+		if (ExtModInfo.Type != Tag)
+			continue;
+
+		if (ExtModInfo.ModInfo.ModType != HitResult)
+			continue;
+
+		if (ExtModInfo.WeaponTech != '')
+			continue;
+
+		StatValue += int(ExtModInfo.ModInfo.Value * ResultMultiplier);
+	}
+}
+
 // From XMBEffectInterface. Checks whether this effect handles a particular ability tag, such as
 // "<Ability:ToHit/>", and gets the value of the tag if it's handled. This function knows which
 // modifiers are actually applied by this effect, and will only handle those. A complete list of 
@@ -388,33 +505,52 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	local int ValidModifiers, ValidTechModifiers;
 	local EAbilityHitResult HitResult;
 	local float ResultMultiplier;
+	local XComGameState_Unit UnitState;
 	local int idx;
 
 	ResultMultiplier = 1;
 	TechResults.Length = class'X2ItemTemplateManager'.default.WeaponTechCategories.Length;
 
+	if (left(Tag, 3) ~= "Max")
+	{
+		Tag = name(mid(Tag, 3));
+		ResultMultiplier *= ScaleMax;
+	}
+	else if (left(Tag, 3) ~= "Cur")
+	{
+		Tag = name(mid(Tag, 3));
+		if (AbilityState != none)
+		{
+			UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(AbilityState.OwnerStateObject.ObjectID));
+			if (UnitState != none)
+			{
+				ResultMultiplier *= GetScaleByValue(none, UnitState, none, none);
+			}
+		}
+	}
+
 	// These are all the combinations of modifier type and hit result that make sense.
 	switch (Tag)
 	{
-	case 'ToHit':				Tag = 'ToHit';			HitResult = eHit_Success;							break;
-	case 'ToHitAsTarget':		Tag = 'ToHitAsTarget';	HitResult = eHit_Success;							break;
-	case 'Defense':				Tag = 'ToHitAsTarget';	HitResult = eHit_Success;	ResultMultiplier = -1;	break;
-	case 'Damage':				Tag = 'Damage';			HitResult = eHit_Success;							break;
-	case 'Shred':				Tag = 'Shred';			HitResult = eHit_Success;							break;
-	case 'ArmorPiercing':		Tag = 'ArmorPiercing';	HitResult = eHit_Success;							break;
-	case 'Crit':				Tag = 'ToHit';			HitResult = eHit_Crit;								break;
-	case 'CritDefense':			Tag = 'ToHitAsTarget';	HitResult = eHit_Crit;		ResultMultiplier = -1;	break;
-	case 'CritDamage':			Tag = 'Damage';			HitResult = eHit_Crit;								break;
-	case 'CritShred':			Tag = 'Shred';			HitResult = eHit_Crit;								break;
-	case 'CritArmorPiercing':	Tag = 'ArmorPiercing';	HitResult = eHit_Crit;								break;
-	case 'Graze':				Tag = 'ToHit';			HitResult = eHit_Graze;								break;
-	case 'Dodge':				Tag = 'ToHitAsTarget';	HitResult = eHit_Graze;								break;
-	case 'GrazeDamage':			Tag = 'Damage';			HitResult = eHit_Graze;								break;
-	case 'GrazeShred':			Tag = 'Shred';			HitResult = eHit_Graze;								break;
-	case 'GrezeArmorPiercing':	Tag = 'ArmorPiercing';	HitResult = eHit_Graze;								break;
-	case 'MissDamage':			Tag = 'Damage';			HitResult = eHit_Miss;								break;
-	case 'MissShred':			Tag = 'Shred';			HitResult = eHit_Miss;								break;
-	case 'MissArmorPiercing':	Tag = 'ArmorPiercing';	HitResult = eHit_Miss;								break;
+	case 'ToHit':					Tag = 'ToHit';			HitResult = eHit_Success;							break;
+	case 'ToHitAsTarget':			Tag = 'ToHitAsTarget';	HitResult = eHit_Success;							break;
+	case 'Defense':					Tag = 'ToHitAsTarget';	HitResult = eHit_Success;	ResultMultiplier *= -1;	break;
+	case 'Damage':					Tag = 'Damage';			HitResult = eHit_Success;							break;
+	case 'Shred':					Tag = 'Shred';			HitResult = eHit_Success;							break;
+	case 'ArmorPiercing':			Tag = 'ArmorPiercing';	HitResult = eHit_Success;							break;
+	case 'Crit':					Tag = 'ToHit';			HitResult = eHit_Crit;								break;
+	case 'CritDefense':				Tag = 'ToHitAsTarget';	HitResult = eHit_Crit;		ResultMultiplier *= -1;	break;
+	case 'CritDamage':				Tag = 'Damage';			HitResult = eHit_Crit;								break;
+	case 'CritShred':				Tag = 'Shred';			HitResult = eHit_Crit;								break;
+	case 'CritArmorPiercing':		Tag = 'ArmorPiercing';	HitResult = eHit_Crit;								break;
+	case 'Graze':					Tag = 'ToHit';			HitResult = eHit_Graze;								break;
+	case 'Dodge':					Tag = 'ToHitAsTarget';	HitResult = eHit_Graze;								break;
+	case 'GrazeDamage':				Tag = 'Damage';			HitResult = eHit_Graze;								break;
+	case 'GrazeShred':				Tag = 'Shred';			HitResult = eHit_Graze;								break;
+	case 'GrazeArmorPiercing':		Tag = 'ArmorPiercing';	HitResult = eHit_Graze;								break;
+	case 'MissDamage':				Tag = 'Damage';			HitResult = eHit_Miss;								break;
+	case 'MissShred':				Tag = 'Shred';			HitResult = eHit_Miss;								break;
+	case 'MissArmorPiercing':		Tag = 'ArmorPiercing';	HitResult = eHit_Miss;								break;
 
 	default:
 		return false;
@@ -476,4 +612,10 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	// as a negative modifier to eHit_Success.
 	TagValue = string(int(Result * ResultMultiplier));
 	return true;
+}
+
+defaultproperties
+{
+	ScaleMultiplier = 1.0
+	ScaleMax = 1000
 }

@@ -10,6 +10,8 @@
 //
 //  The following examples in Examples.uc use this class:
 //
+//  Rocketeer
+//
 //  INSTALLATION
 //
 //  Install the XModBase core as described in readme.txt. Copy this file, and any files 
@@ -17,7 +19,7 @@
 //
 //  DEPENDENCIES
 //
-//  None.
+//  XMBEffectUtilities.uc
 //---------------------------------------------------------------------------------------
 class XMBEffect_AddItemChargesBySlot extends X2Effect;
 
@@ -26,14 +28,14 @@ class XMBEffect_AddItemChargesBySlot extends X2Effect;
 // Bonus properties //
 //////////////////////
 
-var int PerItemBonus;									// The number of charges to add for each item in the right slot.
+var int PerItemBonus;						// The number of charges to add for each item in the right slot.
 
 
 //////////////////////////
 // Condition properties //
 //////////////////////////
 
-var array<EInventorySlot> ApplyToSlots;					// The slot, or slots, to add charges to items in.
+var array<EInventorySlot> ApplyToSlots;		// The slot, or slots, to add charges to items in.
 
 
 ////////////////////////////
@@ -71,6 +73,9 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 		return;
 
 	History = `XCOMHISTORY;
+
+	if (class'XMBEffectUtilities'.static.SkipForDirectMissionTransfer(ApplyEffectParameters))
+		return;
 
 	for (i = 0; i < NewUnit.InventoryItems.Length; ++i)
 	{
