@@ -4,103 +4,28 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 		
-	Templates.AddItem(PackmasterUnlock());
-	Templates.AddItem(DamnGoodGroundUnlock());
-	Templates.AddItem(AdrenalineSurgeUnlock());
-	Templates.AddItem(TacticalSenseUnlock());
+	Templates.AddItem(AddClassUnlock('PackmasterUnlock', 'ShadowOps_CombatEngineer', 'ShadowOps_Packmaster'));
+	Templates.AddItem(AddClassUnlock('DamnGoodGroundUnlock', 'ShadowOps_Hunter', 'ShadowOps_DamnGoodGround'));
+	Templates.AddItem(AddClassUnlock('AdrenalineSurgeUnlock', 'ShadowOps_Infantry', 'ShadowOps_AdrenalineSurge'));
+	Templates.AddItem(AddClassUnlock('TacticalSenseUnlock', 'ShadowOps_Dragoon', 'ShadowOps_TacticalSense'));
 
 	return Templates;
 }
 
-static function X2SoldierAbilityUnlockTemplate PackmasterUnlock()
+static function X2SoldierAbilityUnlockTemplate AddClassUnlock(name DataName, name ClassName, name AbilityName, string Image = "img:///UILibrary_StrategyImages.GTS.GTS_FNG")
 {
 	local X2SoldierAbilityUnlockTemplate Template;
 	local ArtifactCost Resources;
 
-	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'PackmasterUnlock');
+	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, DataName);
 
-	Template.AllowedClasses.AddItem('ShadowOps_CombatEngineer');
-	Template.AbilityName = 'ShadowOps_Packmaster';
-	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
-
-	// Requirements
-	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = 'ShadowOps_CombatEngineer';
-	Template.Requirements.RequiredSoldierRankClassCombo = true;
-	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
-
-	// Cost
-	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 75;
-	Template.Cost.ResourceCosts.AddItem(Resources);
-	
-	return Template;
-}
-
-static function X2SoldierAbilityUnlockTemplate DamnGoodGroundUnlock()
-{
-	local X2SoldierAbilityUnlockTemplate Template;
-	local ArtifactCost Resources;
-
-	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'DamnGoodGroundUnlock');
-
-	Template.AllowedClasses.AddItem('ShadowOps_Hunter');
-	Template.AbilityName = 'ShadowOps_DamnGoodGround';
-	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
+	Template.AllowedClasses.AddItem(ClassName);
+	Template.AbilityName = AbilityName;
+	Template.strImage = Image;
 
 	// Requirements
 	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = 'ShadowOps_Hunter';
-	Template.Requirements.RequiredSoldierRankClassCombo = true;
-	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
-
-	// Cost
-	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 75;
-	Template.Cost.ResourceCosts.AddItem(Resources);
-	
-	return Template;
-}
-
-static function X2SoldierAbilityUnlockTemplate AdrenalineSurgeUnlock()
-{
-	local X2SoldierAbilityUnlockTemplate Template;
-	local ArtifactCost Resources;
-
-	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'AdrenalineSurgeUnlock');
-
-	Template.AllowedClasses.AddItem('ShadowOps_Infantry');
-	Template.AbilityName = 'ShadowOps_AdrenalineSurge';
-	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
-
-	// Requirements
-	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = 'ShadowOps_Infantry';
-	Template.Requirements.RequiredSoldierRankClassCombo = true;
-	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
-
-	// Cost
-	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 75;
-	Template.Cost.ResourceCosts.AddItem(Resources);
-	
-	return Template;
-}
-
-static function X2SoldierAbilityUnlockTemplate TacticalSenseUnlock()
-{
-	local X2SoldierAbilityUnlockTemplate Template;
-	local ArtifactCost Resources;
-
-	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, 'TacticalSenseUnlock');
-
-	Template.AllowedClasses.AddItem('ShadowOps_Dragoon');
-	Template.AbilityName = 'ShadowOps_TacticalSense';
-	Template.strImage = "img:///UILibrary_StrategyImages.GTS.GTS_FNG";
-
-	// Requirements
-	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = 'ShadowOps_Dragoon';
+	Template.Requirements.RequiredSoldierClass = ClassName;
 	Template.Requirements.RequiredSoldierRankClassCombo = true;
 	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
 
