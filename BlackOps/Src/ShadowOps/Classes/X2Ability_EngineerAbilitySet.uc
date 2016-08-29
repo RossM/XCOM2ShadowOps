@@ -36,6 +36,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(HeatAmmo());
 	Templates.AddItem(MovingTarget());
 	Templates.AddItem(SlugShot());
+	Templates.AddItem(Pyromaniac());
+	Templates.AddItem(HitAndRun());
 
 	return Templates;
 }
@@ -737,3 +739,62 @@ static function X2AbilityTemplate SlugShotBonuses()
 
 	return Template;
 }
+
+static function X2AbilityTemplate Pyromaniac()
+{
+	local X2AbilityTemplate Template;
+	local XMBEffect_AddUtilityItem ItemEffect;
+
+	// TODO: icon
+	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_AWC", true);
+
+	ItemEffect = new class 'XMBEffect_AddUtilityItem';
+	ItemEffect.DataName = 'Firebomb';
+	Template.AddTargetEffect(ItemEffect);
+
+	return Template;
+}
+
+// Perk name:		Hit and Run
+// Perk effect:		Move after taking a single action that would normally end your turn.
+// Localized text:	"Move after taking a single action that would normally end your turn."
+// Config:			(AbilityName="XMBExample_HitAndRun")
+static function X2AbilityTemplate HitAndRun()
+{
+	local X2Effect_GrantActionPoints Effect;
+	local X2AbilityTemplate Template;
+	local XMBCondition_AbilityCost CostCondition;
+	local XMBCondition_AbilityName NameCondition;
+
+	// Add a single movement-only action point to the unit
+	Effect = new class'X2Effect_GrantActionPoints';
+	Effect.NumActionPoints = 1;
+	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
+
+	// Create a triggered ability that will activate whenever the unit uses an ability that meets the condition
+	// TODO: icon
+	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_PerkIcons.UIPerk_command", false, Effect, 'AbilityActivated');
+
+	// Trigger abilities don't appear as passives. Add a passive ability icon.
+	AddIconPassive(Template);
+
+	// Require that the activated ability costs 1 action point, but actually spent at least 2
+	CostCondition = new class'XMBCondition_AbilityCost';
+	CostCondition.bRequireMaximumCost = true;
+	CostCondition.MaximumCost = 1;
+	CostCondition.bRequireMinimumPointsSpent = true;
+	CostCondition.MinimumPointsSpent = 2;
+	AddTriggerTargetCondition(Template, CostCondition);
+
+	// Exclude Hunker Down
+	NameCondition = new class'XMBCondition_AbilityName';
+	NameCondition.ExcludeAbilityNames.AddItem('HunkerDown');
+	NameCondition.ExcludeAbilityNames.AddItem('ShadowOps_Entrench');
+	AddTriggerTargetCondition(Template, NameCondition);
+
+	// Show a flyover when Hit and Run is activated
+	Template.bShowActivation = true;
+
+	return Template;
+}
+

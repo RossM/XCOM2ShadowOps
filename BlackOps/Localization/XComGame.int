@@ -535,14 +535,8 @@ LocHelpText="You get an additional +<Ability:Crit> Crit chance against flanked o
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Hit and Run"
-LocLongDescription="You can take a move action after using a single-action ability as your first action that would normally end your turn. This doesn't apply to abilities that reserve actions for the enemy turn, such as Overwatch and Suppression."
-LocHelpText="You can take a move action after using a single-action ability as your first action that would normally end your turn."
-LocFlyOverText="Hit and Run"
-
-[ShadowOps_HitAndRunTrigger X2AbilityTemplate]
-LocFriendlyName="Hit and Run"
-LocLongDescription="You can take a move action after using a single-action ability as your first action that would normally end your turn. This doesn't apply to abilities that reserve actions for the enemy turn, such as Overwatch and Suppression."
-LocHelpText="You can take a move action after using a single-action ability as your first action that would normally end your turn."
+LocLongDescription="Move after taking a single action that would normally end your turn."
+LocHelpText="Move after taking a single action that would normally end your turn."
 LocFlyOverText="Hit and Run"
 
 [ShadowOps_DevilsLuck X2AbilityTemplate]
@@ -559,8 +553,8 @@ LocFlyOverText="Lightfoot"
 
 [ShadowOps_Pyromaniac X2AbilityTemplate]
 LocFriendlyName="Pyromaniac"
-LocLongDescription="Your fire attacks deal +1 damage, and your burn effects deal +1 damage per turn. You get a free incendiary grenade on each mission."
-LocHelpText="Your fire attacks deal +1 damage, and your burn effects deal +1 damage per turn. You get a free incendiary grenade on each mission."
+LocLongDescription="You get a free incendiary grenade on each mission."
+LocHelpText="You get a free incendiary grenade on each mission."
 LocFlyOverText="Pyromaniac"
 
 [ShadowOps_SnakeBlood X2AbilityTemplate]

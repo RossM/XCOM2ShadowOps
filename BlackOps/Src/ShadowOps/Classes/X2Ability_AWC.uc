@@ -25,11 +25,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(Weaponmaster());
 	Templates.AddItem(AbsolutelyCritical());
-	Templates.AddItem(HitAndRun());
-	Templates.AddItem(HitAndRunTrigger());
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Lightfoot());
-	Templates.AddItem(Pyromaniac());
 	Templates.AddItem(SnakeBlood());
 	Templates.AddItem(Rage());
 
@@ -147,45 +144,6 @@ static function X2AbilityTemplate AbsolutelyCritical()
 	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
-static function X2AbilityTemplate HitAndRun()
-{
-	local X2AbilityTemplate Template;
-	local XMBEffect_AbilityTriggered Effect;
-	local XMBCondition_AbilityCost CostCondition;
-	local XMBCondition_AbilityName NameCondition;
-
-	Effect = new class'XMBEffect_AbilityTriggered';
-	Effect.EffectName = 'HitAndRun';
-	Effect.TriggeredEvent = 'HitAndRun';
-
-	CostCondition = new class'XMBCondition_AbilityCost';
-	CostCondition.bRequireMaximumCost = true;
-	CostCondition.MaximumCost = 1;
-	CostCondition.bRequireMinimumPointsSpent = true;
-	CostCondition.MinimumPointsSpent = 2;
-	Effect.AbilityTargetConditions.AddItem(CostCondition);
-
-	NameCondition = new class'XMBCondition_AbilityName';
-	NameCondition.ExcludeAbilityNames = default.HitAndRunExcludedAbilities;
-	Effect.AbilityTargetConditions.AddItem(NameCondition);
-
-	Template = Passive('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-	Template.AdditionalAbilities.AddItem('ShadowOps_HitAndRunTrigger');
-
-	return Template;
-}
-
-static function X2AbilityTemplate HitAndRunTrigger()
-{
-	local X2Effect_GrantActionPoints Effect;
-
-	Effect = new class'X2Effect_GrantActionPoints';
-	Effect.NumActionPoints = 1;
-	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
-
-	return SelfTargetTrigger('ShadowOps_HitAndRunTrigger', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect, 'HitAndRun');
-}
-
 static function X2AbilityTemplate DevilsLuck()
 {
 	local X2Effect_DevilsLuck                   Effect;
@@ -208,26 +166,6 @@ static function X2AbilityTemplate Lightfoot()
 
 	Template = Passive('ShadowOps_Lightfoot', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.LightfootMobilityBonus);
-
-	return Template;
-}
-
-static function X2AbilityTemplate Pyromaniac()
-{
-	local XMBEffect_BonusDamageByDamageType Effect;
-	local X2AbilityTemplate Template;
-	local XMBEffect_AddUtilityItem ItemEffect;
-
-	Effect = new class'XMBEffect_BonusDamageByDamageType';
-	Effect.EffectName = 'Pyromaniac';
-	Effect.RequiredDamageTypes.AddItem('fire');
-	Effect.DamageBonus = default.PyromaniacDamageBonus;
-
-	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-
-	ItemEffect = new class 'XMBEffect_AddUtilityItem';
-	ItemEffect.DataName = 'Firebomb';
-	Template.AddTargetEffect(ItemEffect);
 
 	return Template;
 }
