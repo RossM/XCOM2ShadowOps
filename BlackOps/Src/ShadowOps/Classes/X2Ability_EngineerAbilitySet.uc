@@ -35,6 +35,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ChainReactionFuse());
 	Templates.AddItem(HeatAmmo());
 	Templates.AddItem(MovingTarget());
+	Templates.AddItem(SlugShot());
 
 	return Templates;
 }
@@ -691,5 +692,48 @@ static function X2AbilityTemplate Entrench()
 
 	Template.bCrossClassEligible = true;
 	
+	return Template;
+}
+
+static function X2AbilityTemplate SlugShot()
+{
+	local X2AbilityTemplate Template;
+
+	// Create the template using a helper function
+	// TODO: icon
+	Template = Attack('ShadowOps_SlugShot', "img:///UILibrary_PerkIcons.UIPerk_command", true, none, , eCost_WeaponConsumeAll, 1);
+
+	// Add a cooldown. The internal cooldown numbers include the turn the cooldown is applied, so
+	// this is actually a 2 turn cooldown.
+	AddCooldown(Template, 3);
+
+	// Add a secondary ability to provide bonuses on the shot
+	AddSecondaryAbility(Template, SlugShotBonuses());
+
+	return Template;
+}
+
+static function X2AbilityTemplate SlugShotBonuses()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_SlugShot Effect;
+	local XMBCondition_AbilityName Condition;
+
+	// Create a conditional bonus effect
+	Effect = new class'X2Effect_SlugShot';
+	Effect.EffectName = 'SlugShotBonuses';
+
+	// The bonus only applies to the Slug Shot ability
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.IncludeAbilityNames.AddItem('ShadowOps_SlugShot');
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	// Create the template using a helper function
+	// TODO: icon
+	Template = Passive('ShadowOps_SlugShotBonuses', "img:///UILibrary_PerkIcons.UIPerk_command", false, Effect);
+
+	// The Slug Shot ability will show up as an active ability, so hide the icon for the passive damage effect
+	HidePerkIcon(Template);
+
 	return Template;
 }

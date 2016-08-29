@@ -225,6 +225,9 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_GoodEye.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_SlugShot.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_SmokeGrenade_BO.uc">
       <SubType>Content</SubType>
     </Content>
