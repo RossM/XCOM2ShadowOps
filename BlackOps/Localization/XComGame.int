@@ -499,10 +499,10 @@ LocFlyOverText="Moving Target"
 LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Moving Target is a good choice. <br/>"
 
 [ShadowOps_SlugShot X2AbilityTemplate]
-LocFriendlyName="Slug Shot"
+LocFriendlyName="Wrecker"
 LocLongDescription="Fire a special shot with bonuses of up to +10 Aim and +20 Crit chance at medium and long range. It also deals automatic critical damage when targeting objects."
 LocHelpText="Fire a special shot with bonuses at medium and long range. It also deals automatic critical damage when targeting objects."
-LocPromotionPopupText="<Bullet/> Slug Shot makes the shotgun much more effective at medium and long range. <br/>"
+LocPromotionPopupText="<Bullet/> Wrecker makes the shotgun much more effective at medium and long range. <br/>"
 
 ; === AWC abilities ===
 
@@ -534,10 +534,10 @@ LocLongDescription="You get an additional +<Ability:Crit> Crit chance against fl
 LocHelpText="You get an additional +<Ability:Crit> Crit chance against flanked or uncovered targets."
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
-LocFriendlyName="Hit and Run"
+LocFriendlyName="Skirmisher"
 LocLongDescription="Move after taking a single action that would normally end your turn."
 LocHelpText="Move after taking a single action that would normally end your turn."
-LocFlyOverText="Hit and Run"
+LocFlyOverText="Skirmisher"
 
 [ShadowOps_DevilsLuck X2AbilityTemplate]
 LocFriendlyName="Devil's Luck"
