@@ -498,6 +498,12 @@ LocHelpText="You get an additional +<Ability:Defense/> Defense and +<Ability:Dod
 LocFlyOverText="Moving Target"
 LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Moving Target is a good choice. <br/>"
 
+[ShadowOps_SlugShot X2AbilityTemplate]
+LocFriendlyName="Slug Shot"
+LocLongDescription="Fire a special shot with bonuses of up to +10 Aim and +20 Crit chance at medium and long range. It also deals automatic critical damage when targeting objects."
+LocHelpText="Fire a special shot with bonuses at medium and long range. It also deals automatic critical damage when targeting objects."
+LocPromotionPopupText="<Bullet/> Slug Shot makes the shotgun much more effective at medium and long range. <br/>"
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]
