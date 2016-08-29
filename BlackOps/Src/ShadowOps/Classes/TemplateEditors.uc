@@ -32,7 +32,6 @@ static function EditTemplates()
 	if (class'ModConfig'.default.bEnableRulesTweaks)
 	{
 		AddAllSuppressionConditions();
-		AddSuppressionAimModifier();
 	}
 
 	// Items
@@ -425,23 +424,5 @@ static function FixHotloadAmmo()
 	foreach TemplateAllDifficulties(Template)
 	{
 		Template.BuildNewGameStateFn = class'X2AbilityOverrides_BO'.static.HotLoadAmmo_BuildGameState;
-	}
-}
-
-static function AddSuppressionAimModifier()
-{
-	local X2AbilityTemplateManager				AbilityManager;
-	local array<X2AbilityTemplate>				TemplateAllDifficulties;
-	local X2AbilityTemplate						Template;
-	local X2AbilityToHitCalc_StandardAim		ToHitCalc;
-
-	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
-	AbilityManager.FindAbilityTemplateAllDifficulties('SuppressionShot', TemplateAllDifficulties);
-	foreach TemplateAllDifficulties(Template)
-	{
-		ToHitCalc = new class'X2AbilityToHitCalc_StandardAim'(Template.AbilityToHitCalc);
-		ToHitCalc.BuiltInHitMod = class'X2AbilityOverrides_BO'.default.SuppressionHitModifier;
-		Template.AbilityToHitCalc = ToHitCalc;
-		Template.AbilityToHitOwnerOnMissCalc = ToHitCalc;
 	}
 }

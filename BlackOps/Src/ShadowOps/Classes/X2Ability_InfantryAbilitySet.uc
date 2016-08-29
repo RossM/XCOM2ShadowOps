@@ -8,6 +8,7 @@ var config int FullAutoHitModifier;
 var config int ZeroInOffenseBonus;
 var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, AdrenalineSurgeCooldown;
 var config int FortressDefenseModifier;
+var config int RifleSuppressionAimBonus;
 
 var config name FreeAmmoForPocket;
 
@@ -926,6 +927,8 @@ static function X2AbilityTemplate RifleSuppression()
 
 	Template.Hostility = eHostility_Offensive;
 
+	AddSecondaryAbility(Template, RifleSuppressionBonus());
+
 	return Template;	
 }
 
@@ -989,6 +992,30 @@ static simulated function SuppressionBuildVisualization(XComGameState VisualizeG
 	OutVisualizationTracks.AddItem(BuildTrack);
 }
 
+static function X2AbilityTemplate RifleSuppressionBonus()
+{
+	local X2AbilityTemplate Template;
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBCondition_AbilityName Condition;
+
+	// Create a conditional bonus effect
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.EffectName = 'RifleSuppressionBonus';
+
+	Effect.AddToHitModifier(default.RifleSuppressionAimBonus, eHit_Success);
+
+	// The bonus only applies to suppression shots
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.IncludeAbilityNames.AddItem('SuppressionShot');
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	// Create the template using a helper function
+	Template = Passive('ShadowOps_RifleSuppressionBonus', "img:///UILibrary_BlackOps.UIPerk_riflesupression", false, Effect);
+
+	HidePerkIcon(Template);
+
+	return Template;
+}
 
 static function X2AbilityTemplate Focus()
 {
