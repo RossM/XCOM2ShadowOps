@@ -33,6 +33,7 @@
 class XMBCondition_CoverType extends X2Condition;
 
 var array<ECoverType> AllowedCoverTypes;
+var array<ECoverType> ExcludedCoverTypes;
 var bool bRequireCanTakeCover;
 
 event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGameState_BaseObject kSource)
@@ -60,6 +61,16 @@ event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGa
 		if (!`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(kSource.ObjectID, kTarget.ObjectID, VisInfo, HistoryIndex))
 			return 'AA_NotInRange';
 		if (AllowedCoverTypes.Find(VisInfo.TargetCover) == INDEX_NONE)
+			return 'AA_InvalidTargetCoverType';
+	}
+
+	if (ExcludedCoverTypes.Length > 0)
+	{
+		if (kTarget == none)
+			return 'AA_NoTargets';
+		if (!`TACTICALRULES.VisibilityMgr.GetVisibilityInfo(kSource.ObjectID, kTarget.ObjectID, VisInfo, HistoryIndex))
+			return 'AA_NotInRange';
+		if (ExcludedCoverTypes.Find(VisInfo.TargetCover) != INDEX_NONE)
 			return 'AA_InvalidTargetCoverType';
 	}
 

@@ -152,6 +152,9 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_CanActivateAbility.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Condition_ClosestVisibleEnemy.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_HasGrenade.uc">
       <SubType>Content</SubType>
     </Content>

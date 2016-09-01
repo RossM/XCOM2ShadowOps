@@ -7,6 +7,7 @@ var config float BreachRange, BreachRadius, BreachShotgunRange, BreachShotgunRad
 var config float DangerZoneBonusRadius, DangerZoneBreachBonusRadius;
 var config int MovingTargetDefenseBonus, MovingTargetDodgeBonus;
 var config int EntrenchDefense, EntrenchDodge;
+var config int FocusedDefenseDefense, FocusedDefenseDodge;
 var config int FractureCritModifier;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
@@ -38,6 +39,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SlugShot());
 	Templates.AddItem(Pyromaniac());
 	Templates.AddItem(HitAndRun());
+	Templates.AddItem(FocusedDefense());
 
 	return Templates;
 }
@@ -796,5 +798,24 @@ static function X2AbilityTemplate HitAndRun()
 	Template.bShowActivation = true;
 
 	return Template;
+}
+
+static function X2AbilityTemplate FocusedDefense()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBCondition_CoverType NotFlankedCondition;
+
+	NotFlankedCondition = new class'XMBCondition_CoverType';
+	NotFlankedCondition.ExcludedCoverTypes.AddItem(CT_None);
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddToHitAsTargetModifier(default.FocusedDefenseDefense, eHit_Success);
+	Effect.AddToHitAsTargetModifier(default.FocusedDefenseDodge, eHit_Graze);
+
+	Effect.AbilityTargetConditionsAsTarget.AddItem(NotFlankedCondition);
+	Effect.AbilityTargetConditionsAsTarget.AddItem(new class'X2Condition_ClosestVisibleEnemy');
+
+	// TODO: icon
+	return Passive('ShadowOps_FocusedDefense', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
 }
 
