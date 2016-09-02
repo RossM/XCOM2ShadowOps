@@ -7,6 +7,7 @@ event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGa
 	local int TargetDistance;
 	local StateObjectReference UnitRef;
 	local XComGameStateHistory History;
+	local bool bSeen;
 
 	TargetUnit = XComGameState_Unit(kTarget);
 	if (TargetUnit == none)
@@ -28,7 +29,13 @@ event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGa
 
 		if (SourceUnit.TileDistanceBetween(VisibleUnit) < TargetDistance)
 			return 'AA_UnknownError';
+
+		if (UnitRef.ObjectID == kTarget.ObjectID)
+			bSeen = true;
 	}
+
+	if (!bSeen)
+		return 'AA_UnknownError';
 
 	return 'AA_Success';
 }

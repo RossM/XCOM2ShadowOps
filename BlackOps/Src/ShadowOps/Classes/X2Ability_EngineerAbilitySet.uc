@@ -9,6 +9,8 @@ var config int MovingTargetDefenseBonus, MovingTargetDodgeBonus;
 var config int EntrenchDefense, EntrenchDodge;
 var config int FocusedDefenseDefense, FocusedDefenseDodge;
 var config int FractureCritModifier;
+var config int LineEmUpOffense, LineEmUpCrit;
+var config float ControlledDetonationDamageReduction;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -40,6 +42,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Pyromaniac());
 	Templates.AddItem(HitAndRun());
 	Templates.AddItem(FocusedDefense());
+	Templates.AddItem(LineEmUp());
+	Templates.AddItem(ControlledDetonation());
 
 	return Templates;
 }
@@ -809,7 +813,7 @@ static function X2AbilityTemplate FocusedDefense()
 	NotFlankedCondition.ExcludedCoverTypes.AddItem(CT_None);
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddToHitAsTargetModifier(default.FocusedDefenseDefense, eHit_Success);
+	Effect.AddToHitAsTargetModifier(-default.FocusedDefenseDefense, eHit_Success);
 	Effect.AddToHitAsTargetModifier(default.FocusedDefenseDodge, eHit_Graze);
 
 	Effect.AbilityTargetConditionsAsTarget.AddItem(NotFlankedCondition);
@@ -819,3 +823,29 @@ static function X2AbilityTemplate FocusedDefense()
 	return Passive('ShadowOps_FocusedDefense', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
 }
 
+static function X2AbilityTemplate LineEmUp()
+{
+	local XMBEffect_ConditionalBonus Effect;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddToHitModifier(default.LineEmUpOffense, eHit_Success);
+	Effect.AddToHitModifier(default.LineEmUpCrit, eHit_Crit);
+
+	Effect.AbilityTargetConditions.AddItem(new class'X2Condition_ClosestVisibleEnemy');
+
+	// TODO: icon
+	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+}
+
+static function X2AbilityTemplate ControlledDetonation()
+{
+	local X2Effect_ControlledDetonation Effect;
+
+	Effect = new class'X2Effect_ControlledDetonation';
+	Effect.ReductionAmount = default.ControlledDetonationDamageReduction;
+
+	Effect.AbilityTargetConditions.AddItem(default.LivingFriendlyTargetProperty);
+
+	// TODO: icon
+	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+}

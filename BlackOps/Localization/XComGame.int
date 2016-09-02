@@ -511,6 +511,20 @@ LocHelpText="You get an additional +<Ability:Defense/> Defense and +<Ability:Dod
 LocFlyOverText="Focused Defense"
 LocPromotionPopupText=""
 
+[ShadowOps_LineEmUp X2AbilityTemplate]
+LocFriendlyName="Line 'Em Up"
+LocLongDescription="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance against the closest visible enemy."
+LocHelpText="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance against the closest visible enemy."
+LocFlyOverText="Line 'Em Up"
+LocPromotionPopupText=""
+
+[ShadowOps_ControlledDetonation X2AbilityTemplate]
+LocFriendlyName="Controlled Detonation"
+LocLongDescription="Your explosives deal <Ability:DamageReductionPercent/> less damage to allies."
+LocHelpText="Your explosives deal <Ability:DamageReductionPercent/> less damage to allies."
+LocFlyOverText="Controlled Detonation"
+LocPromotionPopupText=""
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]
