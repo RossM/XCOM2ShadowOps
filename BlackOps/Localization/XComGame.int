@@ -525,6 +525,24 @@ LocHelpText="Your explosives deal <Ability:DamageReductionPercent/> less damage 
 LocFlyOverText="Controlled Detonation"
 LocPromotionPopupText=""
 
+[ShadowOps_Pyromaniac X2AbilityTemplate]
+LocFriendlyName="Pyromaniac"
+LocLongDescription="You get a free incendiary grenade on each mission."
+LocHelpText="You get a free incendiary grenade on each mission."
+LocFlyOverText="Pyromaniac"
+
+[ShadowOps_HitAndRun X2AbilityTemplate]
+LocFriendlyName="Skirmisher"
+LocLongDescription="Move after taking a single action that would normally end your turn."
+LocHelpText="Move after taking a single action that would normally end your turn."
+LocFlyOverText="Skirmisher"
+
+[ShadowOps_SurvivalInstinct X2AbilityTemplate]
+LocFriendlyName="Survival Instinct"
+LocLongDescription="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
+LocHelpText="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
+LocFlyOverText="Survival Instinct"
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]
@@ -554,12 +572,6 @@ LocFriendlyName="Absolutely Critical"
 LocLongDescription="You get an additional <Ability:+Crit> Crit chance against flanked or uncovered targets."
 LocHelpText="You get an additional <Ability:+Crit> Crit chance against flanked or uncovered targets."
 
-[ShadowOps_HitAndRun X2AbilityTemplate]
-LocFriendlyName="Skirmisher"
-LocLongDescription="Move after taking a single action that would normally end your turn."
-LocHelpText="Move after taking a single action that would normally end your turn."
-LocFlyOverText="Skirmisher"
-
 [ShadowOps_DevilsLuck X2AbilityTemplate]
 LocFriendlyName="Devil's Luck"
 LocLongDescription="Your Hit chance is increased by 10% and Crit chance is increased by 20%. These bonuses are doubled when you are flanked or out of cover."
@@ -571,12 +583,6 @@ LocFriendlyName="Lightfoot"
 LocLongDescription="You have <Ability:+Mobility/> Mobility and are harder to detect while concealed."
 LocHelpText="You have <Ability:+Mobility/> Mobility and are harder to detect while concealed."
 LocFlyOverText="Lightfoot"
-
-[ShadowOps_Pyromaniac X2AbilityTemplate]
-LocFriendlyName="Pyromaniac"
-LocLongDescription="You get a free incendiary grenade on each mission."
-LocHelpText="You get a free incendiary grenade on each mission."
-LocFlyOverText="Pyromaniac"
 
 [ShadowOps_SnakeBlood X2AbilityTemplate]
 LocFriendlyName="Snake Blood"
