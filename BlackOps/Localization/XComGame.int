@@ -27,8 +27,8 @@ LocPromotionPopupText="<Bullet/> Infantry can equip two different ammo items at 
 
 [ShadowOps_Magnum X2AbilityTemplate]
 LocFriendlyName="Magnum"
-LocLongDescription="Your pistol attacks get +<Ability:ToHit/> Aim and deal +<Ability:Damage/> damage."
-LocHelpText="Your pistol attacks get +<Ability:ToHit/> Aim and deal +<Ability:Damage/> damage."
+LocLongDescription="Your pistol attacks get <Ability:+ToHit/> Aim and deal <Ability:+Damage/> damage."
+LocHelpText="Your pistol attacks get <Ability:+ToHit/> Aim and deal <Ability:+Damage/> damage."
 LocFlyOverText="Magnum"
 LocPromotionPopupText="<Bullet/> Even without Magnum, your pistol is more accurate than your rifle at close range.<br/><Bullet/> Combining Magnum with ammo that adds extra damage will give you guaranteed kills on ADVENT Troopers at point-blank range."
 
@@ -77,8 +77,8 @@ LocFriendlyName="Zone of Control Pistol Shot"
 
 [ShadowOps_ZeroIn X2AbilityTemplate]
 LocFriendlyName="Zero In"
-LocLongDescription="When you miss an attack, you get +<Ability:ToHit/> Aim on your next attack."
-LocHelpText="When you miss an attack, you get +<Ability:ToHit/> Aim on your next attack."
+LocLongDescription="When you miss an attack, you get <Ability:+ToHit/> Aim on your next attack."
+LocHelpText="When you miss an attack, you get <Ability:+ToHit/> Aim on your next attack."
 LocFlyOverText="Zero In"
 LocPromotionPopupText="<Bullet/> Zero In can help compensate for not being able to move to get a better shot while using Bullet Swarm. It makes it much more likely that at least one shot in a turn will hit.<br/><Bullet/> Zero In doesn't apply to reaction shots.<br/>"
 
@@ -94,7 +94,7 @@ LocFriendlyName="Rifle Suppression"
 LocLongDescription="Fire a barrage that pins down a target, granting reaction fire against it if it moves, and imposing a <Ability:SUPPRESSIONPENALTY/> penalty to the target's aim."
 LocHelpText="Penalize target's aim and shoot them if they move."
 LocFlyOverText="Rifle Suppression"
-LocPromotionPopupText="<Bullet/> Suppressed enemies take a -50 penalty to their Aim and can't use grenades.<br/><Bullet/> The reaction shot from Rifle Suppression has a +<Ability:ToHit:SuppressionShot/> aim modifier.<br/><Bullet/> Suppression doesn't benefit from Covering Fire.<br/><Bullet/> Rifle Suppression costs <Ability:SelfAmmoCost/> ammo points to use, but has no cooldown.<br/><Bullet/> Rifle Suppression will be canceled if the suppressing unit is damaged.<br/><Bullet/> If multiple units suppress a target, the aim penalty will stack.<br/>"
+LocPromotionPopupText="<Bullet/> Suppressed enemies take a -50 penalty to their Aim and can't use grenades.<br/><Bullet/> The reaction shot from Rifle Suppression has a <Ability:+ToHit:SuppressionShot/> aim modifier.<br/><Bullet/> Suppression doesn't benefit from Covering Fire.<br/><Bullet/> Rifle Suppression costs <Ability:SelfAmmoCost/> ammo points to use, but has no cooldown.<br/><Bullet/> Rifle Suppression will be canceled if the suppressing unit is damaged.<br/><Bullet/> If multiple units suppress a target, the aim penalty will stack.<br/>"
 
 [ShadowOps_Focus X2AbilityTemplate]
 LocFriendlyName="Focus"
@@ -112,27 +112,27 @@ LocPromotionPopupText="<Bullet/> Resilience is useful for controlling the amount
 
 [ShadowOps_AdrenalineSurge X2AbilityTemplate]
 LocFriendlyName="Adrenaline Surge"
-LocLongDescription="When you get a kill, you and nearby friendly units get +<Ability:Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and +<Ability:Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
-LocHelpText="+<Ability:Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and +<Ability:Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
+LocLongDescription="When you get a kill, you and nearby friendly units get <Ability:+Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and <Ability:+Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
+LocHelpText="<Ability:+Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and <Ability:+Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
 LocFlyOverText="Adrenaline Surge"
 
 [ShadowOps_AdrenalineSurgeTrigger X2AbilityTemplate]
 LocFriendlyName="Adrenaline Surge"
-LocLongDescription="When you get a kill, you and nearby friendly units get +<Ability:Crit/> Crit chance and +<Ability:Mobility/> Mobility until the end of your turn."
-LocHelpText="+<Ability:Crit/> Crit chance and +<Ability:Mobility/> Mobility until the end of your turn."
+LocLongDescription="When you get a kill, you and nearby friendly units get <Ability:+Crit/> Crit chance and <Ability:+Mobility/> Mobility until the end of your turn."
+LocHelpText="<Ability:+Crit/> Crit chance and <Ability:+Mobility/> Mobility until the end of your turn."
 LocFlyOverText="Adrenaline Surge"
 
 [ShadowOps_Fortify X2AbilityTemplate]
 LocFriendlyName="Fortify"
-LocLongDescription="Whenever you enter overwatch or use suppression, you gain +<Ability:Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
-LocHelpText="Whenever you enter overwatch or use suppression, you gain +<Ability:Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
+LocLongDescription="Whenever you enter overwatch or use suppression, you gain <Ability:+Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
+LocHelpText="Whenever you enter overwatch or use suppression, you gain <Ability:+Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
 LocFlyOverText="Fortify"
 LocPromotionPopupText="<Bullet/> Fortify will work with any activated ability that gives you reaction shots, including Zone of Control. <br/>"
 
 [ShadowOps_FortifyTrigger X2AbilityTemplate]
 LocFriendlyName="Fortify"
-LocLongDescription="+<Ability:Defense/> Defense until the start of your next turn."
-LocHelpText="+<Ability:Defense/> Defense until the start of your next turn."
+LocLongDescription="<Ability:+Defense/> Defense until the start of your next turn."
+LocHelpText="<Ability:+Defense/> Defense until the start of your next turn."
 LocFlyOverText="Fortify"
 
 [ShadowOps_FirstAid X2AbilityTemplate]
@@ -174,8 +174,8 @@ LocPromotionPopupText="<Bullet/> A Dragoon with Tank and an EXO or WAR suit can 
 
 [ShadowOps_Finesse X2AbilityTemplate]
 LocFriendlyName="Finesse"
-LocLongDescription="Gain +<Ability:ToHit/> Aim and +<Ability:Mobility/> Mobility while equipped with a rifle."
-LocHelpText="Gain +<Ability:ToHit/> Aim and +<Ability:Mobility/> Mobility while equipped with a rifle."
+LocLongDescription="Gain <Ability:+ToHit/> Aim and <Ability:+Mobility/> Mobility while equipped with a rifle."
+LocHelpText="Gain <Ability:+ToHit/> Aim and <Ability:+Mobility/> Mobility while equipped with a rifle."
 LocFlyOverText="Finesse"
 LocPromotionPopupText="<Bullet/> The extra mobility from Finesse can help you to get a flank or to reach the objective quickly, but be careful you don't get too far ahead of the rest of the squad.<br/><Bullet> The bonuses from Finesse are lost if you equip a cannon. Weapons that can be equipped by any unit that can equip a rifle, such as the Boltcaster, count as rifles for Finesse.<br/><Bullet/> Learning Finesse will automatically equip the highest-level rifle in your inventory.<br/>"
 
@@ -188,15 +188,15 @@ LocPromotionPopupText="<Bullet/> Stealth Protocol can be used on any soldier, so
 
 [ShadowOps_BurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage"
-LocLongDescription="Attack all targets in a straight line. The attack has +<Ability:ToHit/> Aim and may damage or destroy cover."
-LocHelpText="Attack all targets in a straight line. The attack has +<Ability:ToHit/> Aim and may damage or destroy cover."
+LocLongDescription="Attack all targets in a straight line. The attack has <Ability:+ToHit/> Aim and may damage or destroy cover."
+LocHelpText="Attack all targets in a straight line. The attack has <Ability:+ToHit/> Aim and may damage or destroy cover."
 LocFlyOverText="Barrage"
 LocPromotionPopupText="<Bullet/> Barrage can hit multiple enemies if you position yourself correctly, but it's okay to use it on just one.<br/><Bullet/> Be aware of what Barrage is going to destroy before you fire, including whatever is behind the target.<br/><Bullet/> Be careful when aiming Barrage from full cover. The soldier may \"step out\", causing Barrage to hit a different line than you expected.<br/><Bullet/> Barrage is less likely to destroy cover when used with an assault rifle. <br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_RifleBurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage (Rifle)"
-LocLongDescription="Attack all targets in a straight line. The attack has +<Ability:ToHit/> Aim and may damage or destroy cover."
-LocHelpText="Attack all targets in a straight line. The attack has +<Ability:ToHit/> Aim and may damage or destroy cover."
+LocLongDescription="Attack all targets in a straight line. The attack has <Ability:+ToHit/> Aim and may damage or destroy cover."
+LocHelpText="Attack all targets in a straight line. The attack has <Ability:+ToHit/> Aim and may damage or destroy cover."
 LocFlyOverText="Barrage"
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
@@ -268,8 +268,8 @@ LocPromotionPopupText="<Bullet/> Using Puppet Protocol will only break concealme
 
 [ShadowOps_TacticalSense X2AbilityTemplate]
 LocFriendlyName="Tactical Sense"
-LocLongDescription="You get +<Ability:Dodge/> Dodge for each enemy you can see, to a max of +<Ability:MaxDodge/>."
-LocHelpText="You get +<Ability:Dodge/> Dodge for each enemy you can see, to a max of +<Ability:MaxDodge/>."
+LocLongDescription="You get <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
+LocHelpText="You get <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
 LocFlyOverText="Tactical Sense"
 
 ; === Hunter abilities ===
@@ -297,29 +297,29 @@ LocFlyOverText="Overwatch: Snap Shot"
 
 [ShadowOps_HunterMark X2AbilityTemplate]
 LocFriendlyName="Mark"
-LocLongDescription="Mark a target, giving all friendly units +<Ability:ToHit/> Aim on shots against it. The bonus lasts until you mark another target. Using this ability will not break concealment."
-LocHelpText="Mark a target, giving all friendly units +<Ability:ToHit/> Aim on shots against it."
+LocLongDescription="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it. The bonus lasts until you mark another target. Using this ability will not break concealment."
+LocHelpText="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it."
 LocFlyOverText="Mark"
 LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns where you have to move or reload your sniper rifle.<br/><Bullet/> Use Mark on dangerous enemies before triggering an ambush.<br/><Bullet/> Mark followed by Snap Shot is more accurage than a standard sniper rifle shot, and also helps the rest of the squad.<br/><Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_VitalPoint X2AbilityTemplate]
 LocFriendlyName="Keen Edge"
-LocLongDescription="Your sword attacks shred <Ability:Shred/> armor and deal +<Ability:Damage/> damage."
-LocHelpText="Your sword attacks shred <Ability:Shred/> armor and deal +<Ability:Damage/> damage."
+LocLongDescription="Your sword attacks shred <Ability:Shred/> armor and deal <Ability:+Damage/> damage."
+LocHelpText="Your sword attacks shred <Ability:Shred/> armor and deal <Ability:+Damage/> damage."
 LocFlyOverText="Keen Edge"
 LocPromotionPopupText="<Bullet/> More advanced swords will shred more armor and deal extra bonus damage.<br/><Bullet/> Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet/> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
 
 [ShadowOps_Precision X2AbilityTemplate]
 LocFriendlyName="Precision"
-LocLongDescription="You get +<Ability:ToHit/> Aim against targets in full cover."
-LocHelpText="You get +<Ability:ToHit/> Aim against targets in full cover."
+LocLongDescription="You get <Ability:+ToHit/> Aim against targets in full cover."
+LocHelpText="You get <Ability:+ToHit/> Aim against targets in full cover."
 LocFlyOverText="Precision"
 LocPromotionPopupText=""
 
 [ShadowOps_LowProfile X2AbilityTemplate]
 LocFriendlyName="Low Profile"
-LocLongDescription="You get +<Ability:Defense/> Defense while in half cover."
-LocHelpText="You get +<Ability:Defense/> Defense while in half cover."
+LocLongDescription="You get <Ability:+Defense/> Defense while in half cover."
+LocHelpText="You get <Ability:+Defense/> Defense while in half cover."
 LocFlyOverText="Low Profile"
 LocPromotionPopupText="<Bullet/> The bonus is lost if the attacker is flanking you.<br/>"
 
@@ -371,15 +371,15 @@ LocPromotionPopupText="<Bullet/> Bullseye is good for weakening tough enemies wh
 
 [ShadowOps_FirstStrike X2AbilityTemplate]
 LocFriendlyName="First Strike"
-LocLongDescription="While concealed or flanking your target, you deal +<Ability:Damage/> damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
-LocHelpText="While concealed or flanking your target, you deal +<Ability:Damage/> damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocLongDescription="While concealed or flanking your target, you deal <Ability:+Damage/> damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocHelpText="While concealed or flanking your target, you deal <Ability:+Damage/> damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
 LocFlyOverText="First Strike"
 LocPromotionPopupText="<Bullet/> First Strike can provide a decisive advantage in an ambush by taking out a tough enemy in one shot.<br/><Bullet/> The soldier with First Strike must initiate the ambush to get the bonus. It doesn't affect concealed overwatch."
 
 [ShadowOps_DamnGoodGround X2AbilityTemplate]
 LocFriendlyName="Damn Good Ground"
-LocLongDescription="You get an additional +<Ability:ToHit/> Aim and +<Ability:Defense/> Defense against targets at lower elevation."
-LocHelpText="You get an additional +<Ability:ToHit/> Aim and +<Ability:Defense/> Defense against targets at lower elevation."
+LocLongDescription="You get an additional <Ability:+ToHit/> Aim and <Ability:+Defense/> Defense against targets at lower elevation."
+LocHelpText="You get an additional <Ability:+ToHit/> Aim and <Ability:+Defense/> Defense against targets at lower elevation."
 LocFlyOverText="Damn Good Ground"
 
 ; === Engineer abilities ===
@@ -421,15 +421,15 @@ LocPromotionPopupText="<Bullet/> Fastball effectively lets you use a grenade wit
 
 [ShadowOps_Fracture X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that has +<Ability:Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that has +<Ability:Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 LocPromotionPopupText="<Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_FractureDamage X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that has +<Ability:Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
-LocHelpText="Make an attack that has +<Ability:Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 
 [ShadowOps_Packmaster X2AbilityTemplate]
@@ -447,8 +447,8 @@ LocPromotionPopupText="<Bullet/> It's often better to stay in worse cover and En
 
 [ShadowOps_Aggression X2AbilityTemplate]
 LocFriendlyName="Aggression"
-LocLongDescription="All of your attacks get +<Ability:Crit/> Crit chance for each enemy you can see, to a max of +<Ability:MaxCrit/>."
-LocHelpText="All of your attacks get +<Ability:Crit/> Crit chance for each enemy you can see, to a max of +<Ability:MaxCrit/>."
+LocLongDescription="All of your attacks get <Ability:+Crit/> Crit chance for each enemy you can see, to a max of <Ability:+MaxCrit/>."
+LocHelpText="All of your attacks get <Ability:+Crit/> Crit chance for each enemy you can see, to a max of <Ability:+MaxCrit/>."
 LocFlyOverText="Aggression"
 LocPromotionPopupText="<Bullet/> Aggression even affects attacks that can't normally crit, such as grenades and Breach. <br/>"
 
@@ -493,8 +493,8 @@ LocPromotionPopupText="<Bullet/> HEAT Ammo provides a substantial damage increas
 
 [ShadowOps_MovingTarget X2AbilityTemplate]
 LocFriendlyName="Moving Target"
-LocLongDescription="You get an additional +<Ability:Defense/> Defense and +<Ability:Dodge/> Dodge against reaction fire."
-LocHelpText="You get an additional +<Ability:Defense/> Defense and +<Ability:Dodge/> Dodge against reaction fire."
+LocLongDescription="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against reaction fire."
+LocHelpText="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against reaction fire."
 LocFlyOverText="Moving Target"
 LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Moving Target is a good choice. <br/>"
 
@@ -506,8 +506,8 @@ LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Mo
 
 [ShadowOps_FocusedDefense X2AbilityTemplate]
 LocFriendlyName="Focused Defense"
-LocLongDescription="You get an additional +<Ability:Defense/> Defense and +<Ability:Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
-LocHelpText="You get an additional +<Ability:Defense/> Defense and +<Ability:Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
+LocLongDescription="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
+LocHelpText="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
 LocFlyOverText="Focused Defense"
 LocPromotionPopupText=""
 
@@ -546,13 +546,13 @@ LocHelpText="There is a chance of an extra loot drop whenever you are on a missi
 
 [ShadowOps_Weaponmaster X2AbilityTemplate]
 LocFriendlyName="Weaponmaster"
-LocLongDescription="Your <Ability:WeaponName/> attacks deal +<Ability:Damage/> damage."
-LocHelpText="Your <Ability:WeaponName/> attacks deal +<Ability:Damage/> damage."
+LocLongDescription="Your <Ability:WeaponName/> attacks deal <Ability:+Damage/> damage."
+LocHelpText="Your <Ability:WeaponName/> attacks deal <Ability:+Damage/> damage."
 
 [ShadowOps_AbsolutelyCritical X2AbilityTemplate]
 LocFriendlyName="Absolutely Critical"
-LocLongDescription="You get an additional +<Ability:Crit> Crit chance against flanked or uncovered targets."
-LocHelpText="You get an additional +<Ability:Crit> Crit chance against flanked or uncovered targets."
+LocLongDescription="You get an additional <Ability:+Crit> Crit chance against flanked or uncovered targets."
+LocHelpText="You get an additional <Ability:+Crit> Crit chance against flanked or uncovered targets."
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Skirmisher"
@@ -568,8 +568,8 @@ LocFlyOverText="Devil's Luck"
 
 [ShadowOps_Lightfoot X2AbilityTemplate]
 LocFriendlyName="Lightfoot"
-LocLongDescription="You have +<Ability:Mobility/> Mobility and are harder to detect while concealed."
-LocHelpText="You have +<Ability:Mobility/> Mobility and are harder to detect while concealed."
+LocLongDescription="You have <Ability:+Mobility/> Mobility and are harder to detect while concealed."
+LocHelpText="You have <Ability:+Mobility/> Mobility and are harder to detect while concealed."
 LocFlyOverText="Lightfoot"
 
 [ShadowOps_Pyromaniac X2AbilityTemplate]
