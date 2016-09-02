@@ -12,6 +12,7 @@ var config int FractureCritModifier;
 var config int LineEmUpOffense, LineEmUpCrit;
 var config float ControlledDetonationDamageReduction;
 var config int SurvivalInstinctDefenseBonus, SurvivalInstinctCritBonus;
+var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -35,17 +36,18 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('ShadowOps_CombatDrugs', "img:///UILibrary_BlackOps.UIPerk_combatdrugs", true));
 	Templates.AddItem(SlamFire());
 	Templates.AddItem(DangerZone());
-	Templates.AddItem(ChainReaction());
+	Templates.AddItem(ChainReaction());			// Unused
 	Templates.AddItem(ChainReactionFuse());
 	Templates.AddItem(HeatAmmo());
 	Templates.AddItem(MovingTarget());
-	Templates.AddItem(SlugShot()); // Unused
+	Templates.AddItem(SlugShot());				// Unused
 	Templates.AddItem(Pyromaniac());
 	Templates.AddItem(HitAndRun());
 	Templates.AddItem(FocusedDefense());
-	Templates.AddItem(LineEmUp());
-	Templates.AddItem(ControlledDetonation());
-	Templates.AddItem(SurvivalInstinct());
+	Templates.AddItem(LineEmUp());				// Unused
+	Templates.AddItem(ControlledDetonation());	// Unused
+	Templates.AddItem(SurvivalInstinct());		// Move to hunter
+	Templates.AddItem(Paragon());
 
 	return Templates;
 }
@@ -877,3 +879,24 @@ static function X2AbilityTemplate SurvivalInstinct()
 	// Create the template using a helper function
 	return Passive('ShadowOps_SurvivalInstinct', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
 }
+
+static function X2AbilityTemplate Paragon()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_PersistentStatChange Effect;
+
+	Effect = new class'X2Effect_PersistentStatChange';
+	Effect.AddPersistentStatChange(eStat_HP, default.ParagonHPBonus);
+	Effect.AddPersistentStatChange(eStat_Offense, default.ParagonOffenseBonus);
+	Effect.AddPersistentStatChange(eStat_Will, default.ParagonWillBonus);
+
+	// TODO: icon
+	Template = Passive('ShadowOps_Paragon', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.HealthLabel, eStat_HP, default.ParagonHPBonus);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.AimLabel, eStat_Offense, default.ParagonOffenseBonus);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.WillLabel, eStat_Will, default.ParagonWillBonus);
+
+	return Template;
+}
+

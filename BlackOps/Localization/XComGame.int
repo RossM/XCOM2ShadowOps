@@ -543,6 +543,12 @@ LocLongDescription="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit c
 LocHelpText="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
 LocFlyOverText="Survival Instinct"
 
+[ShadowOps_Paragon X2AbilityTemplate]
+LocFriendlyName="Paragon"
+LocLongDescription="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
+LocHelpText="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
+LocFlyOverText="Paragon"
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]
