@@ -13,6 +13,8 @@ var config int LineEmUpOffense, LineEmUpCrit;
 var config float ControlledDetonationDamageReduction;
 var config int SurvivalInstinctDefenseBonus, SurvivalInstinctCritBonus;
 var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
+var config int MayhemDamageBonus;
+var config array<name> MayhemExcludeAbilities;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -49,6 +51,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SurvivalInstinct());		// Move to hunter
 	Templates.AddItem(Paragon());
 	Templates.AddItem(DevilsLuck());
+	Templates.AddItem(Mayhem());
 
 	return Templates;
 }
@@ -905,6 +908,7 @@ static function X2AbilityTemplate DevilsLuck()
 {
 	local X2AbilityTemplate Template;
 
+	// TODO: icon
 	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_PerkIcons.UIPerk_command", true, new class'X2Effect_DevilsLuck');
 
 	// Add a secondary ability to provide bonuses on the shot
@@ -925,6 +929,7 @@ static function X2AbilityTemplate DevilsLuckTrigger()
 	Effect.NewValueToSet = 1;
 	Effect.CleanupType = eCleanup_BeginTactical;
 
+	// TODO: icon
 	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_PerkIcons.UIPerk_command", false, Effect, 'AbilityActivated', eFilter_None);
 	XMBAbilityTrigger_EventListener(Template.AbilityTriggers[0]).bAsTarget = true;
 
@@ -940,4 +945,20 @@ static function X2AbilityTemplate DevilsLuckTrigger()
 	Template.AddTargetEffect(new class'X2Effect_IncrementUntouchable');
 
 	return Template;
+}
+
+static function X2AbilityTemplate Mayhem()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBCondition_AbilityName Condition;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddDamageModifier(default.MayhemDamageBonus);
+
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.ExcludeAbilityNames = default.MayhemExcludeAbilities;
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	// TODO: icon
+	return Passive('ShadowOps_Mayhem', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
 }
