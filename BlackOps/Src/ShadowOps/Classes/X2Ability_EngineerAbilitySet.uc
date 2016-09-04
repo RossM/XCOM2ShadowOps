@@ -48,6 +48,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ControlledDetonation());	// Unused
 	Templates.AddItem(SurvivalInstinct());		// Move to hunter
 	Templates.AddItem(Paragon());
+	Templates.AddItem(DevilsLuck());
 
 	return Templates;
 }
@@ -900,3 +901,43 @@ static function X2AbilityTemplate Paragon()
 	return Template;
 }
 
+static function X2AbilityTemplate DevilsLuck()
+{
+	local X2AbilityTemplate Template;
+
+	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_PerkIcons.UIPerk_command", true, new class'X2Effect_DevilsLuck');
+
+	// Add a secondary ability to provide bonuses on the shot
+	AddSecondaryAbility(Template, DevilsLuckTrigger());
+
+	return Template;
+}
+
+static function X2AbilityTemplate DevilsLuckTrigger()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_SetUnitValue Effect;
+	local XMBCondition_AbilityHitResult HitResultCondition;
+	local X2Condition_Untouchable UntouchableCondition;
+
+	Effect = new class'X2Effect_SetUnitValue';
+	Effect.UnitName = 'DevilsLuckUsed';
+	Effect.NewValueToSet = 1;
+	Effect.CleanupType = eCleanup_BeginTactical;
+
+	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_PerkIcons.UIPerk_command", false, Effect, 'AbilityActivated', eFilter_None);
+	XMBAbilityTrigger_EventListener(Template.AbilityTriggers[0]).bAsTarget = true;
+
+	HitResultCondition = new class'XMBCondition_AbilityHitResult';
+	HitResultCondition.IncludeHitResults.AddItem(eHit_Untouchable);
+	AddTriggerTargetCondition(Template, HitResultCondition);
+
+	UntouchableCondition = new class'X2Condition_Untouchable';
+	UntouchableCondition.AddCheckValue(0, eCheck_LessThan);
+	AddTriggerTargetCondition(Template, UntouchableCondition);
+
+	// Increment Untouchable so it goes back to 0
+	Template.AddTargetEffect(new class'X2Effect_IncrementUntouchable');
+
+	return Template;
+}

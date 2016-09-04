@@ -176,6 +176,9 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_TookDamage.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Condition_Untouchable.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
     <Content Include="Src\ShadowOps\Classes\X2Effect_Aggression.uc">
       <SubType>Content</SubType>
@@ -205,6 +208,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_HeavyArmor.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps\Classes\X2Effect_IncrementUntouchable.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_MaybeApplyDirectionalWorldDamage.uc">

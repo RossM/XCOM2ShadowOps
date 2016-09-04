@@ -549,6 +549,12 @@ LocLongDescription="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:
 LocHelpText="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
 LocFlyOverText="Paragon"
 
+[ShadowOps_DevilsLuck X2AbilityTemplate]
+LocFriendlyName="Devil's Luck"
+LocLongDescription="You are immune to the first shot that hits you each mission."
+LocHelpText="You are immune to the first shot that hits you each mission."
+LocFlyOverText="Devil's Luck"
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]
@@ -577,12 +583,6 @@ LocHelpText="Your <Ability:WeaponName/> attacks deal <Ability:+Damage/> damage."
 LocFriendlyName="Absolutely Critical"
 LocLongDescription="You get an additional <Ability:+Crit> Crit chance against flanked or uncovered targets."
 LocHelpText="You get an additional <Ability:+Crit> Crit chance against flanked or uncovered targets."
-
-[ShadowOps_DevilsLuck X2AbilityTemplate]
-LocFriendlyName="Devil's Luck"
-LocLongDescription="Your Hit chance is increased by 10% and Crit chance is increased by 20%. These bonuses are doubled when you are flanked or out of cover."
-LocHelpText="Your Hit chance is increased by 10% and Crit chance is increased by 20%. These bonuses are doubled when you are flanked or out of cover."
-LocFlyOverText="Devil's Luck"
 
 [ShadowOps_Lightfoot X2AbilityTemplate]
 LocFriendlyName="Lightfoot"

@@ -30,9 +30,12 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 	local XComGameStateHistory History;
 	local StateObjectReference EffectRef;
 	local XComGameState_Effect EffectState;
+	local X2Effect_Persistent PersistentEffect;
+	local XMBEffectInterface XModBaseEffect;
 	local bool bRolledResultIsAMiss, bModHitRoll;
 	local bool HitsAreCrits;
 	local string LogMsg;
+	local LWTuple Tuple;
 
 	History = `XCOMHISTORY;
 
@@ -141,6 +144,37 @@ function InternalRollForAbilityHit(XComGameState_Ability kAbility, AvailableTarg
 		}
 	}
 	
+	// XModBase: Check for hit modification by target.
+	if (TargetState != none)
+	{
+		foreach TargetState.AffectedByEffects(EffectRef)
+		{
+			EffectState = XComGameState_Effect(History.GetGameStateForObjectID(EffectRef.ObjectID));
+			PersistentEffect = EffectState.GetX2Effect();
+			XModBaseEffect = XMBEffectInterface(PersistentEffect);
+			if (XModBaseEffect != none)
+			{
+				Tuple = new class'LWTuple';
+				Tuple.Id = 'ChangeHitResultForTarget';
+				Tuple.Data.Length = 4;
+				Tuple.Data[0].kind = LWTVObject;
+				Tuple.Data[0].o = UnitState;
+				Tuple.Data[1].kind = LWTVObject;
+				Tuple.Data[1].o = TargetState;
+				Tuple.Data[2].kind = LWTVObject;
+				Tuple.Data[2].o = kAbility;
+				Tuple.Data[3].kind = LWTVInt;
+				Tuple.Data[3].i = Result;
+				if (XModBaseEffect.GetExtValue(Tuple))
+				{
+					ChangeResult = EAbilityHitResult(Tuple.Data[3].i);
+					`log("Effect" @ EffectState.GetX2Effect().FriendlyName @ "changing hit result for target:" @ ChangeResult, true,'XCom_HitRolls');
+					Result = ChangeResult;
+				}
+			}
+		}
+	}
+
 	`log("***HIT" @ Result, !bRolledResultIsAMiss, 'XCom_HitRolls');
 	`log("***MISS" @ Result, bRolledResultIsAMiss, 'XCom_HitRolls');
 

@@ -25,7 +25,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(Weaponmaster());
 	Templates.AddItem(AbsolutelyCritical());
-	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Lightfoot());
 	Templates.AddItem(SnakeBlood());
 	Templates.AddItem(Rage());
@@ -142,17 +141,6 @@ static function X2AbilityTemplate AbsolutelyCritical()
 	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
 
 	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-}
-
-static function X2AbilityTemplate DevilsLuck()
-{
-	local X2Effect_DevilsLuck                   Effect;
-
-	Effect = new class'X2Effect_DevilsLuck';
-	Effect.HitChanceMultiplier = default.DevilsLuckHitChanceMultiplier;
-	Effect.CritChanceMultiplier = default.DevilsLuckCritChanceMultiplier;
-
-	return Passive('ShadowOps_DevilsLuck', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate Lightfoot()
