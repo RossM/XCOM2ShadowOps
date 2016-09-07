@@ -24,7 +24,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	local array<X2DataTemplate> Templates;
 	
 	Templates.AddItem(DeepPockets());
-	Templates.AddItem(DenseSmoke());
+	Templates.AddItem(DenseSmoke());			// Non-LW only
 	Templates.AddItem(SmokeAndMirrors());
 	Templates.AddItem(Breach());
 	Templates.AddItem(ShotgunBreach());
@@ -34,12 +34,12 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FractureDamage());
 	Templates.AddItem(Packmaster());
 	Templates.AddItem(Entrench());
-	Templates.AddItem(Aggression());
+	Templates.AddItem(Aggression());			// Non-LW only
 	Templates.AddItem(PurePassive('ShadowOps_CombatDrugs', "img:///UILibrary_BlackOps.UIPerk_combatdrugs", true));
 	Templates.AddItem(SlamFire());
 	Templates.AddItem(DangerZone());
 	Templates.AddItem(ChainReaction());			// Unused
-	Templates.AddItem(ChainReactionFuse());
+	Templates.AddItem(ChainReactionFuse());		// Unused
 	Templates.AddItem(HeatAmmo());
 	Templates.AddItem(MovingTarget());
 	Templates.AddItem(SlugShot());				// Unused
