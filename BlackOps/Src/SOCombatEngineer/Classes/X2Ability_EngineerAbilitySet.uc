@@ -699,7 +699,7 @@ static function X2AbilityTemplate Entrench()
 	PersistentStatChangeEffect.AddPersistentStatChange(eStat_Dodge, default.EntrenchDodge);
 	PersistentStatChangeEffect.AddPersistentStatChange(eStat_Defense, default.EntrenchDefense);
 	PersistentStatChangeEffect.DuplicateResponse = eDupe_Refresh;
-	PersistentStatChangeEffect.EffectAddedFn = class'X2Ability_HunterAbilitySet'.static.Fade_EffectAdded;
+	PersistentStatChangeEffect.EffectAddedFn = Entrench_EffectAdded;
 	Template.AddTargetEffect(PersistentStatChangeEffect);
 
 	Template.AddTargetEffect(class'X2Ability_SharpshooterAbilitySet'.static.SharpshooterAimEffect());
@@ -710,6 +710,24 @@ static function X2AbilityTemplate Entrench()
 	
 	return Template;
 }
+
+static function Entrench_EffectAdded(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState)
+{
+	local X2EventManager EventMgr;
+	local Object EffectObj;
+	local XComGameState_Unit UnitState;
+	local XComGameState_Effect EffectGameState;
+
+	UnitState = XComGameState_Unit( NewGameState.CreateStateObject( class'XComGameState_Unit', ApplyEffectParameters.TargetStateObjectRef.ObjectID ) );
+	EffectGameState = UnitState.GetUnitAffectedByEffectState(PersistentEffect.EffectName);
+
+	EventMgr = `XEVENTMGR;
+	EffectObj = EffectGameState;
+	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
+	EventMgr.RegisterForEvent(EffectObj, 'ObjectMoved', EffectGameState.GenerateCover_ObjectMoved, ELD_OnStateSubmitted, , UnitState);
+}
+
+
 
 static function X2AbilityTemplate SlugShot()
 {
