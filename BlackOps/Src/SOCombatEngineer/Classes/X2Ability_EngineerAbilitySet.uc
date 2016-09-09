@@ -735,7 +735,7 @@ static function X2AbilityTemplate SlugShot()
 
 	// Create the template using a helper function
 	// TODO: icon
-	Template = Attack('ShadowOps_SlugShot', "img:///UILibrary_PerkIcons.UIPerk_command", true, none, , eCost_WeaponConsumeAll, 1);
+	Template = Attack('ShadowOps_SlugShot', "img:///UILibrary_BlackOps.UIPerk_AWC", true, none, , eCost_WeaponConsumeAll, 1);
 
 	// Add a cooldown. The internal cooldown numbers include the turn the cooldown is applied, so
 	// this is actually a 2 turn cooldown.
@@ -764,7 +764,7 @@ static function X2AbilityTemplate SlugShotBonuses()
 
 	// Create the template using a helper function
 	// TODO: icon
-	Template = Passive('ShadowOps_SlugShotBonuses', "img:///UILibrary_PerkIcons.UIPerk_command", false, Effect);
+	Template = Passive('ShadowOps_SlugShotBonuses', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
 
 	// The Slug Shot ability will show up as an active ability, so hide the icon for the passive damage effect
 	HidePerkIcon(Template);
@@ -805,7 +805,7 @@ static function X2AbilityTemplate HitAndRun()
 
 	// Create a triggered ability that will activate whenever the unit uses an ability that meets the condition
 	// TODO: icon
-	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_PerkIcons.UIPerk_command", false, Effect, 'AbilityActivated');
+	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect, 'AbilityActivated');
 
 	// Trigger abilities don't appear as passives. Add a passive ability icon.
 	AddIconPassive(Template);
@@ -846,7 +846,7 @@ static function X2AbilityTemplate FocusedDefense()
 	Effect.AbilityTargetConditionsAsTarget.AddItem(new class'X2Condition_ClosestVisibleEnemy');
 
 	// TODO: icon
-	return Passive('ShadowOps_FocusedDefense', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+	return Passive('ShadowOps_FocusedDefense', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate LineEmUp()
@@ -860,7 +860,7 @@ static function X2AbilityTemplate LineEmUp()
 	Effect.AbilityTargetConditions.AddItem(new class'X2Condition_ClosestVisibleEnemy');
 
 	// TODO: icon
-	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate ControlledDetonation()
@@ -873,7 +873,7 @@ static function X2AbilityTemplate ControlledDetonation()
 	Effect.AbilityTargetConditions.AddItem(default.LivingFriendlyTargetProperty);
 
 	// TODO: icon
-	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate SurvivalInstinct()
@@ -899,7 +899,7 @@ static function X2AbilityTemplate SurvivalInstinct()
 	Effect.AbilityTargetConditionsAsTarget.AddItem(Condition);
 	
 	// Create the template using a helper function
-	return Passive('ShadowOps_SurvivalInstinct', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+	return Passive('ShadowOps_SurvivalInstinct', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate Paragon()
@@ -913,7 +913,7 @@ static function X2AbilityTemplate Paragon()
 	Effect.AddPersistentStatChange(eStat_Will, default.ParagonWillBonus);
 
 	// TODO: icon
-	Template = Passive('ShadowOps_Paragon', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+	Template = Passive('ShadowOps_Paragon', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.HealthLabel, eStat_HP, default.ParagonHPBonus);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.AimLabel, eStat_Offense, default.ParagonOffenseBonus);
@@ -927,7 +927,7 @@ static function X2AbilityTemplate DevilsLuck()
 	local X2AbilityTemplate Template;
 
 	// TODO: icon
-	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_PerkIcons.UIPerk_command", true, new class'X2Effect_DevilsLuck');
+	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_BlackOps.UIPerk_AWC", true, new class'X2Effect_DevilsLuck');
 
 	// Add a secondary ability to provide bonuses on the shot
 	AddSecondaryAbility(Template, DevilsLuckTrigger());
@@ -948,7 +948,7 @@ static function X2AbilityTemplate DevilsLuckTrigger()
 	Effect.CleanupType = eCleanup_BeginTactical;
 
 	// TODO: icon
-	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_PerkIcons.UIPerk_command", false, Effect, 'AbilityActivated', eFilter_None);
+	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect, 'AbilityActivated', eFilter_None);
 	XMBAbilityTrigger_EventListener(Template.AbilityTriggers[0]).bAsTarget = true;
 
 	HitResultCondition = new class'XMBCondition_AbilityHitResult';
@@ -978,5 +978,5 @@ static function X2AbilityTemplate Mayhem()
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	// TODO: icon
-	return Passive('ShadowOps_Mayhem', "img:///UILibrary_PerkIcons.UIPerk_command", true, Effect);
+	return Passive('ShadowOps_Mayhem', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
