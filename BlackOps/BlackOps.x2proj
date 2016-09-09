@@ -16,8 +16,10 @@
     <Folder Include="Src\" />
     <Folder Include="Src\LW_Tuple" />
     <Folder Include="Src\LW_Tuple\Classes" />
+    <Folder Include="Src\SODragoon" />
     <Folder Include="Src\SOCombatEngineer" />
     <Folder Include="Src\SOCombatEngineer\Classes" />
+    <Folder Include="Src\SODragoon\Classes" />
     <Folder Include="Src\XModBase_Core_1_2_0" />
     <Folder Include="Src\XModBase_Core_1_2_0\Classes" />
     <Folder Include="Src\XModBase_Interfaces" />
@@ -94,22 +96,10 @@
     <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIAvengerHUD.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\UISoldierHeader_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\UIUtilities_Strategy_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\UnitUtilities_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityTemplate_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_FastHacking.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_UseSavedHitResult.uc">
@@ -119,9 +109,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Ability_DragoonAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityOverrides_BO.uc">
@@ -154,12 +141,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Condition_FirstStrike.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Condition_NotVisibleToEnemies.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Condition_RestorationProtocol.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_SwapAmmo.uc">
       <SubType>Content</SubType>
     </Content>
@@ -173,15 +154,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_DropLoot.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_HeatAmmo.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_HeavyArmor.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_MaybeApplyDirectionalWorldDamage.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_PreviewDamage.uc">
       <SubType>Content</SubType>
     </Content>
@@ -191,22 +163,13 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_Resilience.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_RestorationProtocol.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_SaveHitResult.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_ShieldProtocol.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_GoodEye.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Focus.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_TacticalSense.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Universal_BO.uc">
@@ -219,9 +182,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Item_Armor_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2TargetingMethod_Breach.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\XComGameState_ShadowOpsUnitInfo.uc">
@@ -276,6 +236,48 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOCombatEngineer\Classes\X2Effect_SmokeGrenade_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOCombatEngineer\Classes\X2TargetingMethod_Breach.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\UISoldierHeader_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\UIUtilities_Strategy_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\UnitUtilities_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2AbilityTemplate_Dragoon.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2AbilityToHitCalc_FastHacking.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2Ability_DragoonAbilitySet.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2Condition_NotVisibleToEnemies.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2Condition_RestorationProtocol.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2Effect_HeavyArmor.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2Effect_MaybeApplyDirectionalWorldDamage.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2Effect_RestorationProtocol.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2Effect_ShieldProtocol.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\X2Effect_TacticalSense.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XComGame\Classes\AnalyticsManager.uc">
