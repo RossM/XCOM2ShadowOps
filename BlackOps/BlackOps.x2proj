@@ -16,6 +16,7 @@
     <Folder Include="Src\" />
     <Folder Include="Src\LW_Tuple" />
     <Folder Include="Src\LW_Tuple\Classes" />
+    <Folder Include="Src\SOItems" />
     <Folder Include="Src\SOInfantry" />
     <Folder Include="Src\SOHunter" />
     <Folder Include="Src\SODragoon" />
@@ -24,6 +25,7 @@
     <Folder Include="Src\SODragoon\Classes" />
     <Folder Include="Src\SOHunter\Classes" />
     <Folder Include="Src\SOInfantry\Classes" />
+    <Folder Include="Src\SOItems\Classes" />
     <Folder Include="Src\XModBase_Core_1_2_0" />
     <Folder Include="Src\XModBase_Core_1_2_0\Classes" />
     <Folder Include="Src\XModBase_Interfaces" />
@@ -112,9 +114,6 @@
     <Content Include="Src\ShadowOps\Classes\X2AbilityOverrides_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Ability_ItemGranted_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_Universal_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -135,12 +134,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Universal_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Item_Ammo_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Item_Armor_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\XComGameState_ShadowOpsUnitInfo.uc">
@@ -282,6 +275,18 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOInfantry\Classes\X2Effect_ZeroIn.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOItems\Classes\ModConfig.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOItems\Classes\X2Ability_ItemGranted_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOItems\Classes\X2Item_Ammo_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOItems\Classes\X2Item_Armor_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XComGame\Classes\AnalyticsManager.uc">
