@@ -16,12 +16,14 @@
     <Folder Include="Src\" />
     <Folder Include="Src\LW_Tuple" />
     <Folder Include="Src\LW_Tuple\Classes" />
+    <Folder Include="Src\SOInfantry" />
     <Folder Include="Src\SOHunter" />
     <Folder Include="Src\SODragoon" />
     <Folder Include="Src\SOCombatEngineer" />
     <Folder Include="Src\SOCombatEngineer\Classes" />
     <Folder Include="Src\SODragoon\Classes" />
     <Folder Include="Src\SOHunter\Classes" />
+    <Folder Include="Src\SOInfantry\Classes" />
     <Folder Include="Src\XModBase_Core_1_2_0" />
     <Folder Include="Src\XModBase_Core_1_2_0\Classes" />
     <Folder Include="Src\XModBase_Interfaces" />
@@ -98,16 +100,7 @@
     <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIAvengerHUD.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\UIUtilities_Strategy_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2AbilityTemplate_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2AbilityToHitCalc_UseSavedHitResult.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_AWC.uc">
@@ -119,28 +112,13 @@
     <Content Include="Src\ShadowOps\Classes\X2AbilityOverrides_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Ability_InfantryAbilitySet.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_ItemGranted_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_Universal_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Action_Fire_Miss.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2AIBTShadowOps.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Condition_AlwaysReady.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Condition_CanActivateAbility.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Condition_SwapAmmo.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Condition_TookDamage.uc">
@@ -153,28 +131,10 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_DropLoot.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_PreviewDamage.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_RangerStealth_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_Resilience.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_SaveHitResult.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_GoodEye.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_Focus.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_Universal_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_ZeroIn.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Item_Ammo_BO.uc">
@@ -280,6 +240,48 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOHunter\Classes\X2Condition_FirstStrike.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\UIUtilities_Strategy_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2AbilityTemplate_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2AbilityToHitCalc_UseSavedHitResult.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Ability_InfantryAbilitySet.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Action_Fire_Miss.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Condition_AlwaysReady.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Condition_CanActivateAbility.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Condition_SwapAmmo.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Effect_Focus.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Effect_GoodEye.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Effect_PreviewDamage.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Effect_Resilience.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Effect_SaveHitResult.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Effect_ZeroIn.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XComGame\Classes\AnalyticsManager.uc">
