@@ -387,7 +387,7 @@ static function X2AbilityTemplate AssassinTrigger()
 	local X2AbilityTemplate Template;
 	local X2Effect_RangerStealth StealthEffect;
 
-	StealthEffect = new class'X2Effect_RangerStealth_BO';
+	StealthEffect = new class'X2Effect_RangerStealth';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 
@@ -405,9 +405,9 @@ static function X2AbilityTemplate AssassinTrigger()
 static function X2AbilityTemplate Fade()
 {
 	local X2AbilityTemplate						Template;
-	local X2Effect_RangerStealth_BO				StealthEffect;
+	local X2Effect_RangerStealth				StealthEffect;
 
-	StealthEffect = new class'X2Effect_RangerStealth_BO';
+	StealthEffect = new class'X2Effect_RangerStealth';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 	StealthEffect.EffectAddedFn = Fade_EffectAdded;
