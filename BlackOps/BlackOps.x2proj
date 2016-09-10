@@ -277,10 +277,16 @@
     <Content Include="Src\SOInfantry\Classes\X2Effect_ZeroIn.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\SOItems\Classes\ModConfig.uc">
+    <Content Include="Src\SOItems\Classes\ModConfig_Items.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOItems\Classes\TemplateEditors_Items.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOItems\Classes\X2Ability_ItemGranted_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOItems\Classes\X2DownloadableContentInfo_SOItems.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOItems\Classes\X2Item_Ammo_BO.uc">

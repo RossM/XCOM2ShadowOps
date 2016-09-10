@@ -34,7 +34,7 @@ static function X2AmmoTemplate CreateFlechetteRounds()
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
 	Template.StartingItem = false;
-	Template.CanBeBuilt = class'ModConfig'.default.bEnableNewItems;
+	Template.CanBeBuilt = class'ModConfig_Items'.default.bEnableNewItems;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.DamageBonusLabel, , default.FlechetteDamageModifier);
 
@@ -42,7 +42,7 @@ static function X2AmmoTemplate CreateFlechetteRounds()
 	Template.GameArchetype = "Ammo_Flechette.PJ_Flechette";
 	
 	// Requirements
-	if (class'ModConfig'.default.bEnableNewItems)
+	if (class'ModConfig_Items'.default.bEnableNewItems)
 		Template.Requirements.RequiredTechs.AddItem('ModularWeapons');
 
 	// Cost
@@ -66,7 +66,7 @@ static function X2DataTemplate CreateHollowPointRounds()
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.CriticalDamageLabel, , default.HollowPointCritDamageModifier);
 
-	Template.StartingItem = class'ModConfig'.default.bEnableNewItems;
+	Template.StartingItem = class'ModConfig_Items'.default.bEnableNewItems;
 	Template.CanBeBuilt = false;
 	Template.bInfiniteItem = true;
 		
@@ -92,7 +92,7 @@ static function X2DataTemplate CreateTigerRounds()
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
 	Template.StartingItem = false;
-	Template.CanBeBuilt = class'ModConfig'.default.bEnableNewItems;
+	Template.CanBeBuilt = class'ModConfig_Items'.default.bEnableNewItems;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ShredLabel, , default.TigerShred);
 
@@ -100,7 +100,7 @@ static function X2DataTemplate CreateTigerRounds()
 	Template.GameArchetype = "Ammo_Incendiary.PJ_Incendiary";
 
 	// Requirements
-	if (class'ModConfig'.default.bEnableNewItems)
+	if (class'ModConfig_Items'.default.bEnableNewItems)
 		Template.Requirements.RequiredTechs.AddItem('HybridMaterials');
 
 	// Cost
@@ -128,7 +128,7 @@ static function X2DataTemplate CreateDepletedEleriumRounds()
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
 	Template.StartingItem = false;
-	Template.CanBeBuilt = class'ModConfig'.default.bEnableNewItems;
+	Template.CanBeBuilt = class'ModConfig_Items'.default.bEnableNewItems;
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.DamageBonusLabel, , default.DepletedEleriumDamageModifier);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ShredLabel, , default.DepletedEleriumShred);
@@ -137,7 +137,7 @@ static function X2DataTemplate CreateDepletedEleriumRounds()
 	Template.GameArchetype = "Ammo_Talon.PJ_Talon";
 
 	// Requirements
-	if (class'ModConfig'.default.bEnableNewItems)
+	if (class'ModConfig_Items'.default.bEnableNewItems)
 		Template.Requirements.RequiredTechs.AddItem('Tech_Elerium');
 
 	// Cost
