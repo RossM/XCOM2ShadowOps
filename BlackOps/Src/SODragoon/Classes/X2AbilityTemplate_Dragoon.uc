@@ -1,4 +1,4 @@
-class X2AbilityTemplate_BO extends X2AbilityTemplate;
+class X2AbilityTemplate_Dragoon extends X2AbilityTemplate;
 
 struct UIAbilityBonusStatMarkup
 {

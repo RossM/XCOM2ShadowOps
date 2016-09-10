@@ -96,6 +96,9 @@
     <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIAvengerHUD.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\ShadowOps\Classes\UIUtilities_Strategy_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\ShadowOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
       <SubType>Content</SubType>
     </Content>
@@ -242,9 +245,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SODragoon\Classes\UISoldierHeader_BO.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\SODragoon\Classes\UIUtilities_Strategy_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SODragoon\Classes\UnitUtilities_BO.uc">

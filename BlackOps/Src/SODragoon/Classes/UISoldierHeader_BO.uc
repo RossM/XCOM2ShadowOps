@@ -49,7 +49,7 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 							  class'XGBuildUI'.default.m_strLabelCost, 
 							  string(Unit.GetUnitPointValue()),
 							  "", "",
-							  classIcon, Caps(SoldierClass != None ? class'UnitUtilities_BO'.static.GetSoldierClassDisplayName(Unit) : ""),
+							  classIcon, Caps(SoldierClass != None ? SoldierClass.DisplayName : ""),
 							  rankIcon, Caps(Unit.IsSoldier() ? `GET_RANK_STR(Unit.GetRank(), Unit.GetSoldierClassTemplateName()) : ""),
 							  flagIcon, (Unit.ShowPromoteIcon()), DaysValue);
 	}
@@ -59,7 +59,7 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 							  StatusLabel, StatusValue,
 							  m_strMissionsLabel, string(Unit.GetNumMissions()),
 							  m_strKillsLabel, string(Unit.GetNumKills()),
-							  classIcon, Caps(SoldierClass != None ? class'UnitUtilities_BO'.static.GetSoldierClassDisplayName(Unit) : ""),
+							  classIcon, Caps(SoldierClass != None ? SoldierClass.DisplayName : ""),
 							  rankIcon, Caps(`GET_RANK_STR(Unit.GetRank(), Unit.GetSoldierClassTemplateName())),
 							  flagIcon, (Unit.ShowPromoteIcon()), DaysValue);
 	}
