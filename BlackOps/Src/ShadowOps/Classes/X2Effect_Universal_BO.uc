@@ -22,7 +22,6 @@ function GetFinalToHitModifiers(XComGameState_Effect EffectState, XComGameState_
 	ShotModifiers.AddItem(ModInfo);
 }
 
-
 defaultproperties
 {
 	EffectName = "ShadowOps_UniversalEffect";
