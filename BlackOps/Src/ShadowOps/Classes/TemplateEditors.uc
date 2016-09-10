@@ -423,6 +423,63 @@ static function FixHotloadAmmo()
 	AbilityManager.FindAbilityTemplateAllDifficulties('HotLoadAmmo', TemplateAllDifficulties);
 	foreach TemplateAllDifficulties(Template)
 	{
-		Template.BuildNewGameStateFn = class'X2AbilityOverrides_BO'.static.HotLoadAmmo_BuildGameState;
+		Template.BuildNewGameStateFn = HotLoadAmmo_BuildGameState;
 	}
+}
+
+simulated static function XComGameState HotLoadAmmo_BuildGameState(XComGameStateContext Context)
+{
+	local XComGameState NewGameState;
+	local XComGameState_Unit UnitState;
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameState_Ability AbilityState;
+	local XComGameState_Item AmmoState, WeaponState, NewWeaponState;
+	local array<XComGameState_Item> UtilityItems;
+	local X2AmmoTemplate AmmoTemplate;
+	local X2WeaponTemplate WeaponTemplate;
+	local bool FoundAmmo;
+
+	NewGameState = `XCOMHISTORY.CreateNewGameState(true, Context);
+	AbilityContext = XComGameStateContext_Ability(Context);
+	AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(AbilityContext.InputContext.AbilityRef.ObjectID));
+
+	UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));
+	WeaponState = AbilityState.GetSourceWeapon();
+	NewWeaponState = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', WeaponState.ObjectID));
+	WeaponTemplate = X2WeaponTemplate(WeaponState.GetMyTemplate());
+
+	UtilityItems = UnitState.GetAllItemsInSlot(eInvSlot_AmmoPocket);
+	foreach UtilityItems(AmmoState)
+	{
+		AmmoTemplate = X2AmmoTemplate(AmmoState.GetMyTemplate());
+		if (AmmoTemplate != none && AmmoTemplate.IsWeaponValidForAmmo(WeaponTemplate))
+		{
+			FoundAmmo = true;
+			break;
+		}
+	}
+	if (!FoundAmmo)
+	{
+		UtilityItems = UnitState.GetAllItemsInSlot(eInvSlot_Utility);
+		foreach UtilityItems(AmmoState)
+		{
+			AmmoTemplate = X2AmmoTemplate(AmmoState.GetMyTemplate());
+			if (AmmoTemplate != none && AmmoTemplate.IsWeaponValidForAmmo(WeaponTemplate))
+			{
+				FoundAmmo = true;
+				break;
+			}
+		}
+	}
+
+	if (FoundAmmo)
+	{
+		NewWeaponState.LoadedAmmo = AmmoState.GetReference();
+		NewWeaponState.Ammo += AmmoState.GetClipSize();
+	}
+
+	NewGameState.AddStateObject(UnitState);
+	NewGameState.AddStateObject(NewWeaponState);
+
+	return NewGameState;
 }
