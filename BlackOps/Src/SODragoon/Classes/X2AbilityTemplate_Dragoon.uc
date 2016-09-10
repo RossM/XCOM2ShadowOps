@@ -8,34 +8,9 @@ struct UIAbilityBonusStatMarkup
 	var delegate<BonusStatDisplayDelegate> ShouldStatDisplayFn;	// A function to check if the stat should be displayed or not
 };
 
-var EInventorySlot ApplyToWeaponSlot;
 var array<UIAbilityBonusStatMarkup>	UIBonusStatMarkups;						//  Values to display in the UI to modify soldier stats
 
 delegate bool BonusStatDisplayDelegate(XComGameState_Item Item);
-
-function InitAbilityForUnit(XComGameState_Ability AbilityState, XComGameState_Unit UnitState, XComGameState NewGameState)
-{
-	local array<XComGameState_Item> CurrentInventory;
-	local XComGameState_Item InventoryItem;
-
-	super.InitAbilityForUnit(AbilityState, UnitState, NewGameState);
-
-	if (ApplyToWeaponSlot != eInvSlot_Unknown)
-	{
-		CurrentInventory = UnitState.GetAllInventoryItems(NewGameState);
-
-		foreach CurrentInventory(InventoryItem)
-		{
-			if (InventoryItem.bMergedOut)
-				continue;
-			if (InventoryItem.InventorySlot == ApplyToWeaponSlot)
-			{
-				AbilityState.SourceWeapon = InventoryItem.GetReference();
-				break;
-			}
-		}
-	}
-}
 
 function SetUIBonusStatMarkup(String InLabel,
 	optional ECharStatType InStatType = eStat_Invalid,
@@ -78,9 +53,4 @@ function int GetUIBonusStatMarkup(ECharStatType Stat, XComGameState_Item Item)
 static function SetAbilityTargetEffects(X2AbilityTemplate Template, out array<X2Effect> TargetEffects)
 {
 	Template.AbilityTargetEffects = TargetEffects;
-}
-
-defaultproperties
-{
-	ApplyToWeaponSlot = eInvSlot_Unknown;
 }
