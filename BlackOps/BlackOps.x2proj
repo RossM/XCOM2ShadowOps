@@ -105,9 +105,6 @@
     <Content Include="Src\LW_Tuple\Classes\LWTuple.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\AcademyUnlocks.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\ModConfig.uc">
       <SubType>Content</SubType>
     </Content>
@@ -160,6 +157,9 @@
     <Content Include="Src\SmokeAudioFix\Classes\X2DownloadableContentInfo_SmokeAudioFix.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SOCombatEngineer\Classes\AcademyUnlocks_CombatEngineer.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SOCombatEngineer\Classes\X2Ability_EngineerAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
@@ -208,6 +208,9 @@
     <Content Include="Src\SOCombatEngineer\Classes\X2TargetingMethod_Breach.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SODragoon\Classes\AcademyUnlocks_Dragoon.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SODragoon\Classes\UISoldierHeader_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -244,10 +247,16 @@
     <Content Include="Src\SODragoon\Classes\X2Effect_TacticalSense.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SOHunter\Classes\AcademyUnlocks_Hunter.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SOHunter\Classes\X2Ability_HunterAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOHunter\Classes\X2Condition_FirstStrike.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\AcademyUnlocks_Infantry.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOInfantry\Classes\UIUtilities_Strategy_BO.uc">
