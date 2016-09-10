@@ -2,8 +2,6 @@ class X2AbilityOverrides_BO extends X2Ability config(GameData_SoldierSkills);
 
 // This class replaces some abilities from the base game with modified versions.
 
-var config int SuppressionHitModifier;
-
 static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
@@ -155,11 +153,4 @@ static function X2AbilityTemplate AddPanicAbility_UnitPanicked()
 
 
 	return Template;
-}
-
-defaultproperties
-{
-	Begin Object Class=X2AbilityToHitCalc_StandardAim_XModBase Name=DefaultSimpleStandardAim
-	End Object
-	SimpleStandardAim = DefaultSimpleStandardAim;
 }
