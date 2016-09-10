@@ -15,9 +15,11 @@
     <Folder Include="Localization\" />
     <Folder Include="Src\" />
     <Folder Include="Src\CritChanceChange\Classes" />
+    <Folder Include="Src\GremlinStealthFix\Classes" />
     <Folder Include="Src\LW_Tuple" />
     <Folder Include="Src\LW_Tuple\Classes" />
     <Folder Include="Src\CritChanceChange" />
+    <Folder Include="Src\GremlinStealthFix" />
     <Folder Include="Src\SmokeAudioFix" />
     <Folder Include="Src\SmokeAudioFix\Classes" />
     <Folder Include="Src\SOItems" />
@@ -97,6 +99,9 @@
     <Content Include="Src\CritChanceChange\Classes\X2Effect_Universal_BO.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\GremlinStealthFix\Classes\XComGameState_Unit_GremlinStealthFix.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\LW_Tuple\Classes\LWTuple.uc">
       <SubType>Content</SubType>
     </Content>
@@ -135,9 +140,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_DropLoot.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\X2Effect_RangerStealth_BO.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\XComGameState_ShadowOpsUnitInfo.uc">
