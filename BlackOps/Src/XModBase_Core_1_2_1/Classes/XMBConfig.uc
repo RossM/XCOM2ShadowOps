@@ -29,6 +29,7 @@ var config array<name> UniversalAbilitySet;		// List of names of abilities that 
 var config array<name> ExtraUnitConditions;		// List of X2Condition classes that only care about the unit. This is used to
 												// distinguish ability target conditions which really are about the unit from
 												// conditions which are actually about the ability itself.
+var config array<name> GtsUnlocks;				// Extra GTS unlocks
 
 
 //////////

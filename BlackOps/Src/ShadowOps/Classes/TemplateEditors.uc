@@ -5,9 +5,6 @@ var config array<name> GrenadeAbilities, SuppressionBlockedAbilities, OverwatchA
 
 static function EditTemplates()
 {
-	// Strategy
-	AddGtsUnlocks();
-
 	// Tactical
 	AddAllDoNotConsumeAllAbilities();
 	AddAllPostActivationEvents();
@@ -23,28 +20,6 @@ static function EditTemplates()
 	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
 
 	UpgradeAbilityVisualization('LaunchGrenade');
-}
-
-// --- Strategy ---
-
-static function AddGtsUnlocks()
-{
-	local X2StrategyElementTemplateManager StrategyManager;
-	local array<X2DataTemplate>			DataTemplateAllDifficulties;
-	local X2DataTemplate				DataTemplate;
-	local X2FacilityTemplate Template;
-
-	StrategyManager = class'X2StrategyElementTemplateManager'.static.GetStrategyElementTemplateManager();
-	StrategyManager.FindDataTemplateAllDifficulties('OfficerTrainingSchool', DataTemplateAllDifficulties);
-	foreach DataTemplateAllDifficulties(DataTemplate)
-	{
-		Template = X2FacilityTemplate(DataTemplate);
-
-		Template.SoldierUnlockTemplates.AddItem('PackmasterUnlock');
-		Template.SoldierUnlockTemplates.AddItem('DamnGoodGroundUnlock');
-		Template.SoldierUnlockTemplates.AddItem('AdrenalineSurgeUnlock');
-		Template.SoldierUnlockTemplates.AddItem('TacticalSenseUnlock');
-	}
 }
 
 // --- Items ---

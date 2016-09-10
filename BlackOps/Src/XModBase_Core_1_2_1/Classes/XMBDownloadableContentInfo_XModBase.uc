@@ -117,6 +117,27 @@ static function AddUniversalAbilities()
 	}
 }
 
+static function AddGtsUnlocks()
+{
+	local X2StrategyElementTemplateManager StrategyManager;
+	local array<X2DataTemplate> DataTemplateAllDifficulties;
+	local X2DataTemplate DataTemplate;
+	local X2FacilityTemplate Template;
+	local name UnlockName;
+
+	StrategyManager = class'X2StrategyElementTemplateManager'.static.GetStrategyElementTemplateManager();
+	StrategyManager.FindDataTemplateAllDifficulties('OfficerTrainingSchool', DataTemplateAllDifficulties);
+	foreach DataTemplateAllDifficulties(DataTemplate)
+	{
+		Template = X2FacilityTemplate(DataTemplate);
+
+		foreach class'XMBConfig'.default.GtsUnlocks(UnlockName)
+		{
+			Template.SoldierUnlockTemplates.AddItem(UnlockName);
+		}
+	}
+}
+
 static function bool UpdateAbilityToHitCalc(out X2AbilityToHitCalc ToHitCalc)
 {
 	local XMBOverrideInterface Override;
