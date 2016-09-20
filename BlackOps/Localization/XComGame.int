@@ -165,6 +165,13 @@ LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Sh
 LocFlyOverText="Shield Protocol""
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
+[ShadowOps_AdvancedShieldProtocol X2AbilityTemplate]
+LocFriendlyName="Advanced Shield Protocol"
+LocLongDescription="Shield Protocol no longer costs an action to use."
+LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. This ability doesn't cost an action."
+LocFlyOverText="Advanced Shield Protocol""
+LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
+
 [ShadowOps_HeavyArmor X2AbilityTemplate]
 LocFriendlyName="Tank"
 LocLongDescription="You gain additional Armor points based on your equipped armor."

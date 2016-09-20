@@ -39,11 +39,12 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(StasisField());
 	Templates.AddItem(PuppetProtocol());
 	Templates.AddItem(TacticalSense());
+	Templates.AddItem(AdvancedShieldProtocol());
 
 	return Templates;
 }
 
-static function X2AbilityTemplate ShieldProtocol()
+static function X2AbilityTemplate ShieldProtocol(optional name TemplateName = 'ShadowOps_ShieldProtocol', optional string Icon = "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", optional EActionPointCost Cost = eCost_Single)
 {
 	local X2AbilityTemplate                     Template;
 	local X2Condition_UnitProperty              TargetProperty;
@@ -51,19 +52,19 @@ static function X2AbilityTemplate ShieldProtocol()
 	local X2AbilityCharges                      Charges;
 	local X2AbilityCost_Charges                 ChargeCost;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ShieldProtocol');
+	`CREATE_X2ABILITY_TEMPLATE(Template, TemplateName);
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield";
+	Template.IconImage = Icon;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Defensive;
 	Template.bLimitTargetIcons = true;
 	Template.DisplayTargetHitChance = false;
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SQUADDIE_PRIORITY;
+	Template.ShotHUDPriority = class'XMBAbility'.default.AUTO_PRIORITY;
 
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SingleTargetWithSelf;
 
-	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
+	Template.AbilityCosts.AddItem(ActionPointCost(Cost));
 
 	Charges = new class 'X2AbilityCharges';
 	Charges.InitialCharges = default.ShieldProtocolCharges;
@@ -104,6 +105,16 @@ static function X2AbilityTemplate ShieldProtocol()
 
 	return Template;
 }
+
+static function X2AbilityTemplate AdvancedShieldProtocol()
+{
+	local X2AbilityTemplate                     Template;
+
+	Template = ShieldProtocol('ShadowOps_AdvancedShieldProtocol', "img:///UILibrary_BlackOps.UIPerk_AWC", eCost_Free);
+	Template.OverrideAbilities.AddItem('ShadowOps_ShieldProtocol');
+
+	return Template;
+}	
 
 static function X2Effect ShieldProtocolEffect(string FriendlyName, string LongDescription)
 {
