@@ -83,6 +83,19 @@ var const X2Condition_UnitProperty LivingFriendlyTargetProperty;	// The target i
 var const int AUTO_PRIORITY;
 
 
+// Checks if a conditional effect shouldn't have a bonus marker when active because it will always be active.
+static function bool AlwaysRelevant(XMBEffect_ConditionalBonus Effect)
+{
+	if (Effect.AbilityTargetConditions.Length > 0 && class'XMBEffect_ConditionalBonus'.static.AllConditionsAreUnitConditions(Effect.AbilityTargetConditions))
+		return false;
+	if (Effect.AbilityShooterConditions.Length > 0)
+		return false;
+	if (Effect.ScaleValue != none)
+		return false;
+
+	return true;
+}
+
 // Helper method for quickly defining a non-pure passive. Works like PurePassive, except it also 
 // takes an X2Effect_Persistent.
 static function X2AbilityTemplate Passive(name DataName, string IconImage, optional bool bCrossClassEligible = false, optional X2Effect_Persistent Effect = none)
@@ -106,9 +119,7 @@ static function X2AbilityTemplate Passive(name DataName, string IconImage, optio
 
 	ConditionalEffect = XMBEffect_ConditionalBonus(Effect);
 
-	if (ConditionalEffect != none && (ConditionalEffect.AbilityTargetConditions.Length > 0 ||
-									  ConditionalEffect.AbilityShooterConditions.Length > 0 ||
-									  ConditionalEffect.ScaleValue != none))
+	if (ConditionalEffect != none && !AlwaysRelevant(ConditionalEffect))
 	{
 		ConditionalEffect.BuildPersistentEffect(1, true, false, false);
 		ConditionalEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, true,,Template.AbilitySourceName);

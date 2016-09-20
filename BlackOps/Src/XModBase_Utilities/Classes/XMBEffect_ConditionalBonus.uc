@@ -353,7 +353,7 @@ function bool IgnoreSquadsightPenalty(XComGameState_Effect EffectState, XComGame
 	return true;
 }
 
-function private bool AllConditionsAreUnitConditions(array<X2Condition> Conditions)
+function static bool AllConditionsAreUnitConditions(array<X2Condition> Conditions)
 {
 	local X2Condition Condition;
 
