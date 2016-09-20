@@ -16,6 +16,7 @@ var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
 var config int MayhemDamageBonus;
 var config array<name> MayhemExcludeAbilities;
 var config int SaboteurDamageBonus;
+var config int AnatomistDamageBonus, AnatomistMaxKills;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -54,6 +55,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Mayhem());
 	Templates.AddItem(Saboteur());
+	Templates.AddItem(Anatomist());
 
 	return Templates;
 }
@@ -999,4 +1001,17 @@ static function X2AbilityTemplate Saboteur()
 
 	// TODO: icon
 	return Passive('ShadowOps_Saboteur', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+}
+
+static function X2AbilityTemplate Anatomist()
+{
+	local XMBEffect_ConditionalBonus Effect;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddDamageModifier(default.AnatomistDamageBonus, eHit_Crit);
+
+	Effect.ScaleValue = new class'X2Value_Anatomist';
+	Effect.ScaleMax = default.AnatomistMaxKills;
+
+	return Passive('ShadowOps_Anatomist', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }

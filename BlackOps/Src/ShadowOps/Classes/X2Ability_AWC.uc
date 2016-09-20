@@ -20,7 +20,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	local array<X2DataTemplate> Templates;
 	
 	Templates.AddItem(HipFire());
-	Templates.AddItem(Anatomist());
 	Templates.AddItem(Scrounger());
 	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(Weaponmaster());
@@ -66,17 +65,6 @@ static function X2AbilityTemplate HipFire()
 	Template.bCrossClassEligible = true;
 
 	return Template;
-}
-
-static function X2AbilityTemplate Anatomist()
-{
-	local X2Effect_Anatomist                    Effect;
-
-	Effect = new class'X2Effect_Anatomist';
-	Effect.CritModifier = default.AnatomistCritModifier;
-	Effect.MaxCritModifier = default.AnatomistMaxCritModifier;
-
-	return Passive('ShadowOps_Anatomist', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate Scrounger()

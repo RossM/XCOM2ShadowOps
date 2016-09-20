@@ -129,9 +129,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\X2DownloadableContentInfo_BlackOps.uc" />
-    <Content Include="Src\ShadowOps\Classes\X2Effect_Anatomist.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Effect_DropLoot.uc">
       <SubType>Content</SubType>
     </Content>
@@ -211,6 +208,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOCombatEngineer\Classes\X2TargetingMethod_Breach.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOCombatEngineer\Classes\X2Value_Anatomist.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SODragoon\Classes\AcademyUnlocks_Dragoon.uc">
