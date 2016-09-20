@@ -561,6 +561,12 @@ LocLongDescription="Your grenades and special attacks deal <Ability:+Damage> dam
 LocHelpText="Your grenades and special attacks deal <Ability:+Damage> damage."
 LocFlyOverText="Mayhem"
 
+[ShadowOps_Saboteur X2AbilityTemplate]
+LocFriendlyName="Saboteur"
+LocLongDescription="Your attacks deal <Ability:+Damage> damage to inanimate objects."
+LocHelpText="Your attacks deal <Ability:+Damage> damage to inanimate objects."
+LocFlyOverText="Saboteur"
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]

@@ -15,6 +15,7 @@ var config int SurvivalInstinctDefenseBonus, SurvivalInstinctCritBonus;
 var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
 var config int MayhemDamageBonus;
 var config array<name> MayhemExcludeAbilities;
+var config int SaboteurDamageBonus;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -52,6 +53,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Paragon());
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Mayhem());
+	Templates.AddItem(Saboteur());
 
 	return Templates;
 }
@@ -979,4 +981,22 @@ static function X2AbilityTemplate Mayhem()
 
 	// TODO: icon
 	return Passive('ShadowOps_Mayhem', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+}
+
+static function X2AbilityTemplate Saboteur()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local X2Condition_UnitProperty Condition;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddDamageModifier(default.SaboteurDamageBonus);
+
+	Condition = new class'X2Condition_UnitProperty';
+	Condition.ExcludeAlive = true;
+	Condition.ExcludeDead = true;
+	Condition.FailOnNonUnits = false;
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	// TODO: icon
+	return Passive('ShadowOps_Saboteur', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
 }
