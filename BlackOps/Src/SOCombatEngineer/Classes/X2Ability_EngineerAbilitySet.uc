@@ -246,7 +246,6 @@ static function X2AbilityTemplate Fastball()
 	local X2AbilityTemplate                 Template;	
 	local X2AbilityCooldown                 Cooldown;
 	local X2Effect_Persistent				FastballEffect;
-	local X2Effect_GrantActionPoints		ActionPointEffect;
 	local X2AbilityTargetStyle              TargetStyle;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fastball');
@@ -275,13 +274,8 @@ static function X2AbilityTemplate Fastball()
 	FastballEffect = new class'X2Effect_Persistent';
 	FastballEffect.EffectName = 'Fastball';
 	FastballEffect.BuildPersistentEffect(1,,,,eGameRule_PlayerTurnEnd);
-	FastballEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, "img:///UILibrary_PerkIcons.UIPerk_bombard", true);
+	FastballEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, "img:///UILibrary_PerkIcons.UIPerk_bombard", true);
 	Template.AddTargetEffect(FastballEffect);
-
-	ActionPointEffect = new class'X2Effect_GrantActionPoints';
-	ActionPointEffect.NumActionPoints = 1;
-	ActionPointEffect.PointType = 'grenade';
-	Template.AddTargetEffect(ActionPointEffect);
 
 	Template.AddShooterEffectExclusions();
 

@@ -1,5 +1,13 @@
 class X2AbilityCost_GrenadeActionPoints extends X2AbilityCost_ActionPoints;
 
+simulated function int GetPointCost(XComGameState_Ability AbilityState, XComGameState_Unit AbilityOwner)
+{
+	if (AbilityOwner.IsUnitAffectedByEffectName('Fastball'))
+		return 0;
+
+	return super.GetPointCost(AbilityState, AbilityOwner);
+}
+
 simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XComGameState_Unit AbilityOwner)
 {
 	local XComGameState_Item ItemState;

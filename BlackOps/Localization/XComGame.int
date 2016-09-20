@@ -421,10 +421,10 @@ LocPromotionPopupText="<Bullet/> More advanced weapons will deal more damage and
 
 [ShadowOps_Fastball X2AbilityTemplate]
 LocFriendlyName="Fastball"
-LocLongDescription="Gain a bonus action that can only be used to throw or launch a grenade."
-LocHelpText="Gain a bonus action that can only be used to throw or launch a grenade."
+LocLongDescription="The next grenade you throw or launch this turn doesn't cost an action."
+LocHelpText="The next grenade you throw or launch this turn doesn't cost an action."
 LocFlyOverText="Fastball"
-LocPromotionPopupText="<Bullet/> Fastball effectively lets you use a grenade without spending an action. <br/><Bullet/> It's usually best to use Fastball whenever you get a chance. If you save it until you really need it, you'll run out of grenades before you find that perfect chance.<br/><Bullet/> Throwing or launching a grenade with the bonus action granted by Fastball does not end the turn. <br/><Bullet/> Fastball has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> It's usually best to use Fastball whenever you get a chance. If you save it until you really need it, you'll run out of grenades before you find that perfect chance.<br/><Bullet/> Throwing or launching a grenade with Fastball does not end the turn. <br/><Bullet/> Fastball has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Fracture X2AbilityTemplate]
 LocFriendlyName="Fracture"
