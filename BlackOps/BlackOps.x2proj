@@ -74,9 +74,6 @@
     <Content Include="Content\FX_ShadowOps_Dragoon.upk">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Content\Perk_ShadowOps_AdvancedShieldProtocol.upk">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Content\Perk_ShadowOps_HunterMark.upk">
       <SubType>Content</SubType>
     </Content>
