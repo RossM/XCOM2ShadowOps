@@ -474,11 +474,11 @@ LocFlyOverText="Slam Fire"
 LocPromotionPopupText="<Bullet/> With the proper setup, you can trigger Slam Fire many times in a turn. Try using Fastball to remove enemies' cover, or dropping a smoke grenade with Combat Drugs to boost your critical hit chance. <br/><Bullet/> If you activate Slam Fire at the beginning of the turn you can move or reload between shots (once). <br/><Bullet/> Equip your weapon with a Laser Sight and an Expanded Magazine or Autoloader to maximize Slam Fire's potential. <br/>"
 
 [ShadowOps_DangerZone X2AbilityTemplate]
-LocFriendlyName="Danger Zone"
+LocFriendlyName="Devastation"
 LocLongDescription="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
 LocHelpText="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
-LocFlyOverText="Danger Zone"
-LocPromotionPopupText="<Bullet/> Danger Zone provides a massive increase to grenade radius that makes it easy to hit multiple units and remove their cover, not to mention all other cover nearby. <br/>"
+LocFlyOverText="Devastation"
+LocPromotionPopupText="<Bullet/> Devastation provides a massive increase to grenade radius that makes it easy to hit multiple units and remove their cover, not to mention all other cover nearby. <br/>"
 
 [ShadowOps_ChainReaction X2AbilityTemplate]
 LocFriendlyName="Chain Reaction"
