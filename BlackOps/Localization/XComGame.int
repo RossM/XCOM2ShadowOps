@@ -195,10 +195,10 @@ LocPromotionPopupText="<Bullet/> Stealth Protocol can be used on any soldier, so
 
 [ShadowOps_BurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage"
-LocLongDescription="Attack all targets in a straight line. The attack has <Ability:+ToHit/> Aim and may damage or destroy cover."
-LocHelpText="Attack all targets in a straight line. The attack has <Ability:+ToHit/> Aim and may damage or destroy cover."
+LocLongDescription="Attack all targets in a straight line and damage or destroy cover. Cannon only."
+LocHelpText="Attack all targets in a straight line and damage or destroy cover."
 LocFlyOverText="Barrage"
-LocPromotionPopupText="<Bullet/> Barrage can hit multiple enemies if you position yourself correctly, but it's okay to use it on just one.<br/><Bullet/> Be aware of what Barrage is going to destroy before you fire, including whatever is behind the target.<br/><Bullet/> Be careful when aiming Barrage from full cover. The soldier may \"step out\", causing Barrage to hit a different line than you expected.<br/><Bullet/> Barrage is less likely to destroy cover when used with an assault rifle. <br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Barrage has a 70% chance to damage units and a 100% chance to damage or destroy cover. <br/><Bullet/> Barrage can hit multiple enemies if you position yourself correctly, but it's okay to use it on just one.<br/><Bullet/> Be aware of what Barrage is going to destroy before you fire, including whatever is behind the target.<br/><Bullet/> Be careful when aiming Barrage from full cover. The soldier may \"step out\", causing Barrage to hit a different line than you expected.<br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_RifleBurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage (Rifle)"

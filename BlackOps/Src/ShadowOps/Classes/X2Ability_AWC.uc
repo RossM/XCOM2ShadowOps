@@ -7,8 +7,6 @@ var config float AnatomistCritModifier, AnatomistMaxCritModifier;
 var config int WeaponmasterBonusDamage;
 var config int AbsolutelyCriticalCritBonus;
 var config float DevilsLuckHitChanceMultiplier, DevilsLuckCritChanceMultiplier;
-var config int LightfootMobilityBonus;
-var config float LightfootDetectionModifier;
 var config int PyromaniacDamageBonus;
 var config int SnakeBloodDodgeBonus;
 var config int RageDuration, RageCharges;
@@ -24,7 +22,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ScroungerTrigger());
 	Templates.AddItem(Weaponmaster());
 	Templates.AddItem(AbsolutelyCritical());
-	Templates.AddItem(Lightfoot());
 	Templates.AddItem(SnakeBlood());
 	Templates.AddItem(Rage());
 
@@ -129,21 +126,6 @@ static function X2AbilityTemplate AbsolutelyCritical()
 	Effect.AddToHitModifier(default.AbsolutelyCriticalCritBonus, eHit_Crit);
 
 	return Passive('ShadowOps_AbsolutelyCritical', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-}
-
-static function X2AbilityTemplate Lightfoot()
-{
-	local X2Effect_PersistentStatChange Effect;
-	local X2AbilityTemplate Template;
-
-	Effect = new class'X2Effect_PersistentStatChange';
-	Effect.AddPersistentStatChange(eStat_Mobility, default.LightfootMobilityBonus);
-	Effect.AddPersistentStatChange(eStat_DetectionModifier, default.LightfootDetectionModifier);
-
-	Template = Passive('ShadowOps_Lightfoot', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.LightfootMobilityBonus);
-
-	return Template;
 }
 
 static function X2AbilityTemplate SnakeBlood()
