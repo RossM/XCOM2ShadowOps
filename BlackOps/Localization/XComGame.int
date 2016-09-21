@@ -284,6 +284,13 @@ LocLongDescription="Shield Protocol also reduces all incoming damage by 33%."
 LocHelpText="Shield Protocol also reduces all incoming damage by 33%."
 LocFlyOverText="Aegis"
 
+[ShadowOps_IronWill X2AbilityTemplate]
+LocFriendlyName="Iron Will"
+LocLongDescription="Increases Will by <Ability:Will>."
+LocHelpText="Increases Will by <Ability:Will>."
+LocFlyOverText="Iron Will"
+LocPromotionPopupText="<Bullet/> Will reduces a soldier's chance of panicking, increases their resistance to psionic attacks, and increases their chance of bleeding out rather than dying. <br/>"
+
 ; === Hunter abilities ===
 
 [ShadowOps_SnapShot X2AbilityTemplate]

@@ -16,6 +16,7 @@ var config name RestorationIncreasedHealProject;
 var config int VanishCooldown;
 var config int LightfootMobilityBonus;
 var config float LightfootDetectionModifier;
+var config int IronWillBonus;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -44,6 +45,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(AdvancedShieldProtocol());
 	Templates.AddItem(Lightfoot());
 	Templates.AddItem(PurePassive('ShadowOps_Aegis', "img:///UILibrary_BlackOps.UIPerk_AWC", false));
+	Templates.AddItem(IronWill());
 
 	return Templates;
 }
@@ -953,3 +955,16 @@ static function X2AbilityTemplate Lightfoot()
 	return Template;
 }
 
+static function X2AbilityTemplate IronWill()
+{
+	local X2Effect_PersistentStatChange Effect;
+	local X2AbilityTemplate Template;
+
+	Effect = new class'X2Effect_PersistentStatChange';
+	Effect.AddPersistentStatChange(eStat_Will, default.IronWillBonus);
+
+	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.PsiOffenseLabel, eStat_Will, default.IronWillBonus);
+
+	return Template;
+}
