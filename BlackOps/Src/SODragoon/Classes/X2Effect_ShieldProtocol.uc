@@ -1,6 +1,7 @@
 class X2Effect_ShieldProtocol extends X2Effect_ModifyStats implements(XMBEffectInterface);
 
 var int ConventionalAmount, MagneticAmount, BeamAmount;
+var float AegisDamageReduction;
 var array<name> ImmuneTypes;
 
 function RegisterForEvents(XComGameState_Effect EffectGameState)
@@ -24,6 +25,24 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 function bool ProvidesDamageImmunity(XComGameState_Effect EffectState, name DamageType)
 {
 	return (ImmuneTypes.Find(DamageType) != INDEX_NONE);
+}
+
+function int GetDefendingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, X2Effect_ApplyWeaponDamage WeaponDamageEffect)
+{
+	local XComGameStateHistory History;
+	local XComGameState_Unit SourceUnit;
+	local int DamageMod;
+
+	History = `XCOMHISTORY;
+
+	SourceUnit = XComGameState_Unit(History.GetGameStateForObjectID(EffectState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
+
+	if (SourceUnit != none && SourceUnit.HasSoldierAbility('ShadowOps_Aegis'))
+	{
+		DamageMod = -int(float(CurrentDamage) * AegisDamageReduction);
+	}
+
+	return DamageMod;
 }
 
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)

@@ -4,6 +4,7 @@ class X2Ability_DragoonAbilitySet extends XMBAbility
 var config array<name> ShieldProtocolImmunities;
 var config int ConventionalShieldProtocol, MagneticShieldProtocol, BeamShieldProtocol;
 var config int ConventionalShieldsUp, MagneticShieldsUp, BeamShieldsUp;
+var config float AegisDamageReduction;
 var config int HeavyArmorBase, HeavyArmorBonus;
 var config int FinesseMobilityBonus, FinesseOffenseBonus;
 var config name FinesseWeaponCat, FinesseDefaultWeapon;
@@ -42,6 +43,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(TacticalSense());
 	Templates.AddItem(AdvancedShieldProtocol());
 	Templates.AddItem(Lightfoot());
+	Templates.AddItem(PurePassive('ShadowOps_Aegis', "img:///UILibrary_BlackOps.UIPerk_AWC", false));
 
 	return Templates;
 }
@@ -128,6 +130,7 @@ static function X2Effect ShieldProtocolEffect(string FriendlyName, string LongDe
 	ShieldedEffect.MagneticAmount = default.MagneticShieldProtocol;
 	ShieldedEffect.BeamAmount = default.BeamShieldProtocol;
 	ShieldedEffect.ImmuneTypes = default.ShieldProtocolImmunities;
+	ShieldedEffect.AegisDamageReduction = default.AegisDamageReduction;
 	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", true);
 
 	return ShieldedEffect;
