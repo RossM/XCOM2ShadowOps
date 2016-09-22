@@ -291,6 +291,12 @@ LocHelpText="Increases Will by <Ability:Will>."
 LocFlyOverText="Iron Will"
 LocPromotionPopupText="<Bullet/> Will reduces a soldier's chance of panicking, increases their resistance to psionic attacks, and increases their chance of bleeding out rather than dying. <br/>"
 
+[ShadowOps_SensorOverlays X2AbilityTemplate]
+LocFriendlyName="Sensor Overlays"
+LocLongDescription="All allies get <Ability:+Crit> Crit chance against enemies you can see."
+LocHelpText="All allies get <Ability:+Crit> Crit chance against enemies you can see."
+LocFlyOverText="Sensor Overlays"
+
 ; === Hunter abilities ===
 
 [ShadowOps_SnapShot X2AbilityTemplate]

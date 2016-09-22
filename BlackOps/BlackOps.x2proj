@@ -246,6 +246,9 @@
     <Content Include="Src\SODragoon\Classes\X2Effect_RestorationProtocol.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SODragoon\Classes\X2Effect_SensorOverlays.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SODragoon\Classes\X2Effect_ShieldProtocol.uc">
       <SubType>Content</SubType>
     </Content>

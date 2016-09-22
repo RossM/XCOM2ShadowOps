@@ -165,7 +165,7 @@ function private float GetScaleByValue(XComGameState_Effect EffectState, XComGam
 	return Scale;
 }
 
-function private name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
+function protected name ValidateAttack(XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, bool bAsTarget = false)
 {
 	local name AvailableCode;
 

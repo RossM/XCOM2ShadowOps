@@ -17,6 +17,7 @@ var config int VanishCooldown;
 var config int LightfootMobilityBonus;
 var config float LightfootDetectionModifier;
 var config int IronWillBonus;
+var config int SensorOverlaysCritBonus;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -46,6 +47,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Lightfoot());
 	Templates.AddItem(PurePassive('ShadowOps_Aegis', "img:///UILibrary_BlackOps.UIPerk_AWC", false));
 	Templates.AddItem(IronWill());
+	Templates.AddItem(SensorOverlays());
 
 	return Templates;
 }
@@ -965,6 +967,25 @@ static function X2AbilityTemplate IronWill()
 
 	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.PsiOffenseLabel, eStat_Will, default.IronWillBonus);
+
+	return Template;
+}
+
+static function X2AbilityTemplate SensorOverlays()
+{
+	local X2Effect_SensorOverlays Effect;
+	local X2AbilityTemplate Template;
+
+	Effect = new class'X2Effect_SensorOverlays';
+	Effect.AddToHitModifier(default.SensorOverlaysCritBonus, eHit_Crit);
+	Effect.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
+
+	Template = Passive('ShadowOps_SensorOverlays', "img:///UILibrary_BlackOps.UIPerk_AWC", false);
+
+	Template.AbilityMultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
+	Template.AddMultiTargetEffect(Effect);
+
+	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, false);
 
 	return Template;
 }
