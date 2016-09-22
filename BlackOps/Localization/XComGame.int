@@ -297,6 +297,12 @@ LocLongDescription="All allies get <Ability:+Crit> Crit chance against enemies y
 LocHelpText="All allies get <Ability:+Crit> Crit chance against enemies you can see."
 LocFlyOverText="Sensor Overlays"
 
+[ShadowOps_Supercharge X2AbilityTemplate]
+LocFriendlyName="Supercharge"
+LocLongDescription="All GREMLIN abilities gain an additional charge."
+LocHelpText="All GREMLIN abilities gain an additional charge."
+LocFlyOverText="Supercharge"
+
 ; === Hunter abilities ===
 
 [ShadowOps_SnapShot X2AbilityTemplate]

@@ -252,6 +252,9 @@
     <Content Include="Src\SODragoon\Classes\X2Effect_ShieldProtocol.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SODragoon\Classes\X2Effect_Supercharge.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SODragoon\Classes\X2Effect_TacticalSense.uc">
       <SubType>Content</SubType>
     </Content>

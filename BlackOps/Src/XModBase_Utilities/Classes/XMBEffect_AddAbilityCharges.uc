@@ -51,7 +51,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	foreach NewUnit.Abilities(ObjRef)
 	{
 		AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(ObjRef.ObjectID));
-		if (AbilityNames.Find(AbilityState.GetMyTemplateName()) != INDEX_NONE)
+		if (IsValidAbility(AbilityState))
 		{
 			Charges = bAllowUseAmmoAsCharges ? AbilityState.GetCharges() : AbilityState.iCharges;
 			if (MaxCharges < 0 || Charges < MaxCharges)
@@ -64,6 +64,11 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 			}
 		}
 	}
+}
+
+function bool IsValidAbility(XComGameState_Ability AbilityState)
+{
+	return AbilityNames.Find(AbilityState.GetMyTemplateName()) != INDEX_NONE;
 }
 
 simulated function SetCharges(XComGameState_Ability Ability, int Charges, XComGameState NewGameState)

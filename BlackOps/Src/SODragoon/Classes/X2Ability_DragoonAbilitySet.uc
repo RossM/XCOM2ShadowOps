@@ -18,6 +18,7 @@ var config int LightfootMobilityBonus;
 var config float LightfootDetectionModifier;
 var config int IronWillBonus;
 var config int SensorOverlaysCritBonus;
+var config int SuperchargeChargeBonus;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -48,6 +49,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('ShadowOps_Aegis', "img:///UILibrary_BlackOps.UIPerk_AWC", false));
 	Templates.AddItem(IronWill());
 	Templates.AddItem(SensorOverlays());
+	Templates.AddItem(Supercharge());
 
 	return Templates;
 }
@@ -986,6 +988,21 @@ static function X2AbilityTemplate SensorOverlays()
 	Template.AddMultiTargetEffect(Effect);
 
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, false);
+
+	return Template;
+}
+
+static function X2AbilityTemplate Supercharge()
+{
+	local X2Effect_Supercharge Effect;
+	local X2AbilityTemplate Template;
+
+	Effect = new class'X2Effect_Supercharge';
+	Effect.BonusCharges = default.SuperchargeChargeBonus;
+
+	Template = Passive('ShadowOps_Supercharge', "img:///UILibrary_BlackOps.UIPerk_AWC", false);
+
+	Template.AddTargetEffect(Effect);
 
 	return Template;
 }
