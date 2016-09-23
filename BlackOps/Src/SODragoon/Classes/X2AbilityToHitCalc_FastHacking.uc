@@ -32,7 +32,6 @@ function string GetDefendString() { return class'XLocalizedData'.default.TechSta
 
 defaultproperties
 {
-	basevalue = 20;
 	AttackerStat = eStat_Hacking;
 	DefenderStat = eStat_HackDefense;
 }
