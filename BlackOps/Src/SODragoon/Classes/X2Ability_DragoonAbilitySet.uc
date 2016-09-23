@@ -19,6 +19,7 @@ var config float LightfootDetectionModifier;
 var config int IronWillBonus;
 var config int SensorOverlaysCritBonus;
 var config int SuperchargeChargeBonus;
+var config array<int> ReverseEngineeringHackBonus;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -50,6 +51,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(IronWill());
 	Templates.AddItem(SensorOverlays());
 	Templates.AddItem(Supercharge());
+	Templates.AddItem(ReverseEngineering());
 
 	return Templates;
 }
@@ -1003,6 +1005,28 @@ static function X2AbilityTemplate Supercharge()
 	Template = Passive('ShadowOps_Supercharge', "img:///UILibrary_BlackOps.UIPerk_AWC", false);
 
 	Template.AddTargetEffect(Effect);
+
+	return Template;
+}
+
+static function X2AbilityTemplate ReverseEngineering()
+{
+	local X2Effect_ReverseEngineering Effect;
+	local XMBCondition_AbilityName Condition;
+	local X2AbilityTemplate Template;
+
+	Effect = new class'X2Effect_ReverseEngineering';
+	Effect.HackBonus = default.ReverseEngineeringHackBonus;
+
+	Template = SelfTargetTrigger('ShadowOps_ReverseEngineering', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect, 'AbilityActivated');
+
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.IncludeAbilityNames.AddItem('FinalizeHaywire');
+	Condition.IncludeAbilityNames.AddItem('FinalizeSKULLMINE');
+	Condition.IncludeAbilityNames.AddItem('FinalizeSKULLJACK');
+	Condition.IncludeAbilityNames.AddItem('ShadowOps_PuppetProtocol');
+
+	AddTriggerTargetCondition(Template, Condition);
 
 	return Template;
 }

@@ -303,6 +303,13 @@ LocLongDescription="All GREMLIN abilities gain an additional charge."
 LocHelpText="All GREMLIN abilities gain an additional charge."
 LocFlyOverText="Supercharge"
 
+[ShadowOps_ReverseEngineering X2AbilityTemplate]
+LocFriendlyName="Reverse Engineering"
+LocLongDescription="Hacking an enemy unit grants a permanent boost to Hacking score."
+LocHelpText="Hacking an enemy unit grants a permanent boost to Hacking score."
+LocFlyOverText="Reverse Engineering"
+LocPromotionPopupText="<Bullet/> Abilities that hack enemy units include Haywire Protocol, Puppet Protocol, Skulljack, and Skullmine. <br/><Bullet/> You get the boost to Hacking score even if the hack fails. <br/>"
+
 ; === Hunter abilities ===
 
 [ShadowOps_SnapShot X2AbilityTemplate]
