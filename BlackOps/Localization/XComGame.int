@@ -912,6 +912,10 @@ Summary="Nearby squadmates get +10 Crit and +3 Mobility when you get a kill."
 DisplayName="Dragoon: Grace"
 Summary="+10 Dodge for each visible enemy, to a max of +50."
 
+[DigitalWarfareUnlock X2SoldierStatUnlockTemplate]
+DisplayName="Dragoon: Digital Warfare"
+Summary="Gain a second PCS slot."
+
 ; === Gameplay tips ===
 
 ; Changing gameplay tips doesn't actually work for some reason

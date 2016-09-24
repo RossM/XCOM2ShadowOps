@@ -26,6 +26,7 @@ static event OnPostTemplatesCreated()
 	AddUniversalAbilities();
 	UpdateAbilities();
 	ChainAbilityTag();
+	AddGtsUnlocks();
 }
 
 static function bool IsNewer(XMBOverrideInterface Override)
@@ -133,7 +134,8 @@ static function AddGtsUnlocks()
 
 		foreach class'XMBConfig'.default.GtsUnlocks(UnlockName)
 		{
-			Template.SoldierUnlockTemplates.AddItem(UnlockName);
+			if (StrategyManager.FindStrategyElementTemplate(UnlockName) != none)
+				Template.SoldierUnlockTemplates.AddItem(UnlockName);
 		}
 	}
 }

@@ -214,3 +214,41 @@ static simulated function int GetUIStatFromItem(XComGameState_Unit Unit, ECharSt
 	return EquipmentTemplate.GetUIStatMarkup(Stat, InventoryItem) + class'UnitUtilities_BO'.static.GetUIStatBonusFromItem(Unit, Stat, InventoryItem);
 }
 
+public function RefreshCombatSim(XComGameState_Unit Unit)
+{
+	local string Label, IconPath, BorderColor;
+	local int i, AvailableSlots;
+	local XComGameState_Item ImplantItem;
+	local array<XComGameState_Item> EquippedImplants;
+	
+	EquippedImplants = Unit.GetAllItemsInSlot(eInvSlot_CombatSim);
+	AvailableSlots = Unit.GetCurrentStat(eStat_CombatSims);
+
+	MC.BeginFunctionOp("SetSoldierCombatSim");
+	for(i = 0; i < max(class'UIArmory_Implants'.default.MaxImplantSlots, AvailableSlots); ++i)
+	{
+		if(i < AvailableSlots && i < EquippedImplants.Length)
+		{
+			ImplantItem = EquippedImplants[i];
+			Label = class'UIUtilities_Text'.static.GetColoredText(ImplantItem.GetMyTemplate().GetItemFriendlyName(ImplantItem.ObjectID), eUIState_Normal);
+			IconPath = class'UIUtilities_Image'.static.GetPCSImage(ImplantItem);
+			BorderColor = class'UIUtilities_Colors'.const.NORMAL_HTML_COLOR;
+		}
+		else if(i < AvailableSlots)
+		{
+			Label = m_strPCSLabelOpen;
+			BorderColor = class'UIUtilities_Colors'.const.GOOD_HTML_COLOR;
+		}
+		else
+		{
+			Label = m_strPCSLabelLocked;
+			BorderColor = class'UIUtilities_Colors'.const.DISABLED_HTML_COLOR;
+		}
+
+		MC.QueueString(Label);
+		MC.QueueString(IconPath);
+		MC.QueueString(BorderColor);
+	}
+
+	MC.EndOp();
+}

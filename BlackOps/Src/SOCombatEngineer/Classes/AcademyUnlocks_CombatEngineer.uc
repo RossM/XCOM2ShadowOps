@@ -4,7 +4,10 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 		
-	Templates.AddItem(AddClassUnlock('PackmasterUnlock', 'ShadowOps_CombatEngineer', 'ShadowOps_Packmaster'));
+	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_CombatEngineer') != INDEX_NONE)
+		Templates.AddItem(AddClassUnlock('PackmasterUnlock', 'ShadowOps_CombatEngineer', 'ShadowOps_Packmaster'));
+	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_CombatEngineer_LW') != INDEX_NONE)
+		Templates.AddItem(AddClassUnlock('PackmasterUnlock', 'ShadowOps_CombatEngineer_LW', 'ShadowOps_Packmaster'));
 
 	return Templates;
 }
