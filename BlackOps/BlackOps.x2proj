@@ -113,9 +113,6 @@
     <Content Include="Src\ShadowOps\Classes\TemplateEditors.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIArmory_Implants.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIArmory_Promotion.uc">
       <SubType>Content</SubType>
     </Content>
@@ -220,6 +217,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SODragoon\Classes\UIInventory_Implants_BO.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SODragoon\Classes\UIScreenListener_UIArmory_Implants.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SODragoon\Classes\UIScreenListener_UIInventory_Implants.uc">
