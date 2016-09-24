@@ -310,6 +310,12 @@ LocHelpText="Hacking an enemy unit grants a permanent boost to Hacking score."
 LocFlyOverText="Reverse Engineering"
 LocPromotionPopupText="<Bullet/> Abilities that hack enemy units include Haywire Protocol, Puppet Protocol, Skulljack, and Skullmine. <br/><Bullet/> You get the boost to Hacking score even if the hack fails. <br/>"
 
+[ShadowOps_Scout X2AbilityTemplate]
+LocFriendlyName="Scout"
+LocLongDescription="Gain one battle scanner use each mission."
+LocHelpText="Gain one battle scanner use each mission."
+LocFlyOverText="Scout"
+
 ; === Hunter abilities ===
 
 [ShadowOps_SnapShot X2AbilityTemplate]

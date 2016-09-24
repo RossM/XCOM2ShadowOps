@@ -52,6 +52,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SensorOverlays());
 	Templates.AddItem(Supercharge());
 	Templates.AddItem(ReverseEngineering());
+	Templates.AddItem(Scout());
 
 	return Templates;
 }
@@ -1029,4 +1030,14 @@ static function X2AbilityTemplate ReverseEngineering()
 	AddTriggerTargetCondition(Template, Condition);
 
 	return Template;
+}
+
+static function X2AbilityTemplate Scout()
+{
+	local XMBEffect_AddUtilityItem Effect;
+
+	Effect = new class'XMBEffect_AddUtilityItem';
+	Effect.DataName = 'BattleScanner';
+
+	return Passive('ShadowOps_Scout', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
