@@ -17,21 +17,21 @@ simulated private function int CalculateBonus(int TotalBonus)
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
 	local XComGameState_Unit TargetState;
-	local UnitValue TotalBonusValue;
+	local UnitValue CountValue;
 	local int Bonus;
 
 	TargetState = XComGameState_Unit(kNewTargetState);
 	if (TargetState == none)
 		return;
 
-	TargetState.GetUnitValue('ReverseEngineeringTotalBonus', TotalBonusValue);
-	Bonus = CalculateBonus(int(TotalBonusValue.fValue));
+	TargetState.GetUnitValue('ReverseEngineeringCount', CountValue);
+	Bonus = CalculateBonus(int(CountValue.fValue));
 
 	TargetState = XComGameState_Unit(NewGameState.CreateStateObject(TargetState.class, TargetState.ObjectID));
 	NewGameState.AddStateObject(TargetState);
 
 	TargetState.SetBaseMaxStat(eStat_Hacking, TargetState.GetBaseStat(eStat_Hacking) + Bonus);
-	TargetState.SetUnitFloatValue('ReverseEngineeringTotalBonus', TotalBonusValue.fValue + Bonus, eCleanup_Never);
+	TargetState.SetUnitFloatValue('ReverseEngineeringCount', CountValue.fValue + 1, eCleanup_Never);
 }
 
 simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState, out VisualizationTrack BuildTrack, const name EffectApplyResult)
@@ -42,7 +42,7 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 	local AbilityInputContext           AbilityContext;
 	local string						FlyOverText;
 	local XComGameState_Unit			UnitState;
-	local UnitValue						TotalBonusValue;
+	local UnitValue						CountValue;
 	local int Bonus;
 
 	if (EffectApplyResult == 'AA_Success' && XGUnit(BuildTrack.TrackActor).IsAlive())
@@ -52,8 +52,8 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 		AbilityTemplate = class'XComGameState_Ability'.static.GetMyTemplateManager().FindAbilityTemplate(AbilityContext.AbilityTemplateName);
 	
 		UnitState = XGUnit(BuildTrack.TrackActor).GetVisualizedGameState();
-		UnitState.GetUnitValue('ReverseEngineeringTotalBonus', TotalBonusValue);
-		Bonus = CalculateBonus(int(TotalBonusValue.fValue));
+		UnitState.GetUnitValue('ReverseEngineeringCount', CountValue);
+		Bonus = CalculateBonus(int(CountValue.fValue));
 
 		FlyOverText = AbilityTemplate.LocFlyOverText $ ": +" $ Bonus @ class'XLocalizedData'.default.TechLabel;
 
