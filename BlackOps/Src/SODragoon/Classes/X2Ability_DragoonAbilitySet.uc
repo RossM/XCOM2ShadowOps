@@ -35,7 +35,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(StealthProtocol());
 	Templates.AddItem(BurstFire());
 	Templates.AddItem(ShieldsUp());
-	Templates.AddItem(ShieldsUpTrigger());
 	Templates.AddItem(ECM());
 	Templates.AddItem(ECMTrigger());
 	Templates.AddItem(Rocketeer());
@@ -487,49 +486,9 @@ static function X2AbilityTemplate BurstFire()
 
 static function X2AbilityTemplate ShieldsUp()
 {
-	local X2AbilityTemplate						Template;
-	Template = PurePassive('ShadowOps_ShieldsUp', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false);
-	Template.AdditionalAbilities.AddItem('ShadowOps_ShieldsUpTrigger');
-
-	return Template;
-}
-
-static function X2AbilityTemplate ShieldsUpTrigger()
-{
-	local X2AbilityTemplate                     Template;
-	local X2AbilityMultiTarget_AllUnits			MultiTargetStyle;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ShieldsUpTrigger');
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_absorption_fields";
-	Template.Hostility = eHostility_Neutral;
-	
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	Template.AddShooterEffectExclusions();
-
-	MultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
-	Template.AbilityMultiTargetStyle = MultiTargetStyle;
-
-	Template.AddMultiTargetEffect(ShieldsUpEffect(Template.LocFriendlyName, Template.LocLongDescription));
-
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bSkipFireAction = true;
-	//  NOTE: No visualization on purpose!
-
-	return Template;
-}
-
-static function X2Effect ShieldsUpEffect(string FriendlyName, string LongDescription)
-{
+	local X2AbilityTemplate	Template, TriggerTemplate;
 	local X2Effect_ShieldProtocol ShieldedEffect;
+	local XMBAbilityTrigger_EventListener EventListener;
 
 	ShieldedEffect = new class'X2Effect_ShieldProtocol';
 	ShieldedEffect.EffectName = 'ShieldsUpEffect';
@@ -537,9 +496,30 @@ static function X2Effect ShieldsUpEffect(string FriendlyName, string LongDescrip
 	ShieldedEffect.ConventionalAmount = default.ConventionalShieldsUp;
 	ShieldedEffect.MagneticAmount = default.MagneticShieldsUp;
 	ShieldedEffect.BeamAmount = default.BeamShieldsUp;
-	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", true);
 
-	return ShieldedEffect;
+	Template = Passive('ShadowOps_ShieldsUp', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false);
+
+	Template.AbilityMultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
+	Template.AddMultiTargetEffect(ShieldedEffect);
+
+	TriggerTemplate = TargetedBuff('ShadowOps_ShieldsUpTrigger', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false, ShieldedEffect);
+
+	TriggerTemplate.bSkipFireAction = true;
+
+	TriggerTemplate.AbilityTriggers.Length = 0;
+	TriggerTemplate.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+
+	// XMBAbilityTrigger_EventListener doesn't use ListenerData.EventFn
+	EventListener = new class'XMBAbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'OnUnitBeginPlay';
+	EventListener.ListenerData.Filter = eFilter_None;
+	EventListener.bSelfTarget = false;
+	TriggerTemplate.AbilityTriggers.AddItem(EventListener);
+
+	AddSecondaryAbility(Template, TriggerTemplate);
+
+	return Template;
 }
 
 static function X2AbilityTemplate ECM()
