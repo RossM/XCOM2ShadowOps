@@ -207,16 +207,10 @@ LocFlyOverText="Barrage"
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
 LocFriendlyName="Shields Up"
-LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:Shield:ShadowOps_ShieldsUpTrigger/> damage."
-LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:Shield:ShadowOps_ShieldsUpTrigger/> damage."
-LocFlyOverText="Shields Up"
-LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
-
-[ShadowOps_ShieldsUpTrigger X2AbilityTemplate]
-LocFriendlyName="Shields Up"
 LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
 LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
 LocFlyOverText="Shields Up"
+LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
 
 [ShadowOps_ECM X2AbilityTemplate]
 LocFriendlyName="ECM"
@@ -224,12 +218,6 @@ LocLongDescription="All squad members are more difficult for enemies to detect w
 LocHelpText="All squad members are more difficult for enemies to detect while concealed."
 LocFlyOverText="ECM"
 LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or evacs.<br/>"
-
-[ShadowOps_ECMTrigger X2AbilityTemplate]
-LocFriendlyName="ECM"
-LocLongDescription="All squad members are more difficult for enemies to detect while concealed."
-LocHelpText="All squad members are more difficult for enemies to detect while concealed."
-LocFlyOverText="ECM"
 
 [ShadowOps_Rocketeer X2AbilityTemplate]
 LocFriendlyName="Rocketeer"

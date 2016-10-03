@@ -488,6 +488,48 @@ static function X2AbilityTemplate TargetedBuff(name DataName, string IconImage, 
 	return Template;
 }
 
+// Helper function for creating an ability that affects all friendly units.
+static function X2AbilityTemplate SquadPassive(name DataName, string IconImage, bool bCrossClassEligible, X2Effect Effect)
+{
+	local X2AbilityTemplate	Template, TriggerTemplate;
+	local XMBAbilityTrigger_EventListener EventListener;
+
+	// Create a normal passive, which triggers when the unit enters play. This
+	// also provides the icon for the ability.
+	Template = Passive(DataName, IconImage, bCrossClassEligible, none);
+
+	// The passive applies the effect to all friendly units at the start of play.
+	Template.AbilityMultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
+	Template.AddMultiTargetEffect(Effect);
+
+	// Create a triggered ability which will apply the effect to friendly units
+	// that are created after play begins.
+	TriggerTemplate = TargetedBuff(name(DataName $ "_OnUnitBeginPlay"), IconImage, false, Effect,, eCost_None);
+
+	// The triggered ability shouldn't have a fire visualization added
+	TriggerTemplate.bSkipFireAction = true;
+
+	// Remove the default input trigger added by TargetedBuff()
+	TriggerTemplate.AbilityTriggers.Length = 0;
+
+	// Don't show the ability as activatable in the HUD
+	TriggerTemplate.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+
+	// Set up a trigger that will fire whenever another unit enters the battle
+	// XMBAbilityTrigger_EventListener doesn't use ListenerData.EventFn
+	EventListener = new class'XMBAbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'OnUnitBeginPlay';
+	EventListener.ListenerData.Filter = eFilter_None;
+	EventListener.bSelfTarget = false;
+	TriggerTemplate.AbilityTriggers.AddItem(EventListener);
+
+	// Add the triggered ability as a secondary ability
+	AddSecondaryAbility(Template, TriggerTemplate);
+
+	return Template;
+}
+
 static function AddSecondaryEffect(X2AbilityTemplate Template, X2Effect Effect)
 {
 	if (X2Effect_Persistent(Effect) != none)

@@ -36,7 +36,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(BurstFire());
 	Templates.AddItem(ShieldsUp());
 	Templates.AddItem(ECM());
-	Templates.AddItem(ECMTrigger());
 	Templates.AddItem(Rocketeer());
 	Templates.AddItem(Vanish());
 	Templates.AddItem(VanishTrigger());
@@ -486,9 +485,7 @@ static function X2AbilityTemplate BurstFire()
 
 static function X2AbilityTemplate ShieldsUp()
 {
-	local X2AbilityTemplate	Template, TriggerTemplate;
 	local X2Effect_ShieldProtocol ShieldedEffect;
-	local XMBAbilityTrigger_EventListener EventListener;
 
 	ShieldedEffect = new class'X2Effect_ShieldProtocol';
 	ShieldedEffect.EffectName = 'ShieldsUpEffect';
@@ -497,74 +494,10 @@ static function X2AbilityTemplate ShieldsUp()
 	ShieldedEffect.MagneticAmount = default.MagneticShieldsUp;
 	ShieldedEffect.BeamAmount = default.BeamShieldsUp;
 
-	Template = Passive('ShadowOps_ShieldsUp', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false);
-
-	Template.AbilityMultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
-	Template.AddMultiTargetEffect(ShieldedEffect);
-
-	TriggerTemplate = TargetedBuff('ShadowOps_ShieldsUpTrigger', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false, ShieldedEffect);
-
-	TriggerTemplate.bSkipFireAction = true;
-
-	TriggerTemplate.AbilityTriggers.Length = 0;
-	TriggerTemplate.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-
-	// XMBAbilityTrigger_EventListener doesn't use ListenerData.EventFn
-	EventListener = new class'XMBAbilityTrigger_EventListener';
-	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
-	EventListener.ListenerData.EventID = 'OnUnitBeginPlay';
-	EventListener.ListenerData.Filter = eFilter_None;
-	EventListener.bSelfTarget = false;
-	TriggerTemplate.AbilityTriggers.AddItem(EventListener);
-
-	AddSecondaryAbility(Template, TriggerTemplate);
-
-	return Template;
+	return SquadPassive('ShadowOps_ShieldsUp', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false, ShieldedEffect);
 }
 
 static function X2AbilityTemplate ECM()
-{
-	local X2AbilityTemplate						Template;
-	Template = PurePassive('ShadowOps_ECM', "img:///UILibrary_PerkIcons.UIPerk_jamthesignal", false);
-	Template.AdditionalAbilities.AddItem('ShadowOps_ECMTrigger');
-
-	return Template;
-}
-
-static function X2AbilityTemplate ECMTrigger()
-{
-	local X2AbilityTemplate                     Template;
-	local X2AbilityMultiTarget_AllUnits			MultiTargetStyle;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ECMTrigger');
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_jamthesignal";
-	Template.Hostility = eHostility_Neutral;
-	
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SelfTarget;
-
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-	Template.AddShooterEffectExclusions();
-
-	MultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
-	Template.AbilityMultiTargetStyle = MultiTargetStyle;
-
-	Template.AddMultiTargetEffect(ECMEffect(Template.LocFriendlyName, Template.LocLongDescription));
-
-	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bSkipFireAction = true;
-	//  NOTE: No visualization on purpose!
-
-	return Template;
-}
-
-static function X2Effect ECMEffect(string FriendlyName, string LongDescription)
 {
 	local X2Effect_PersistentStatChange Effect;
 
@@ -572,9 +505,8 @@ static function X2Effect ECMEffect(string FriendlyName, string LongDescription)
 	Effect.EffectName = 'ECMEffect';
 	Effect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
 	Effect.AddPersistentStatChange(eStat_DetectionModifier, default.ECMDetectionModifier);
-	Effect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_jamthesignal", true);
 
-	return Effect;
+	return SquadPassive('ShadowOps_ECM', "img:///UILibrary_PerkIcons.UIPerk_jamthesignal", false, Effect);
 }
 
 static function X2AbilityTemplate Vanish()
@@ -959,20 +891,14 @@ static function X2AbilityTemplate IronWill()
 static function X2AbilityTemplate SensorOverlays()
 {
 	local X2Effect_SensorOverlays Effect;
-	local X2AbilityTemplate Template;
 
 	Effect = new class'X2Effect_SensorOverlays';
+	Effect.EffectName = 'SensorOverlays';
+	Effect.DuplicateResponse = eDupe_Allow;
 	Effect.AddToHitModifier(default.SensorOverlaysCritBonus, eHit_Crit);
 	Effect.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
 
-	Template = Passive('ShadowOps_SensorOverlays', "img:///UILibrary_BlackOps.UIPerk_AWC", false);
-
-	Template.AbilityMultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
-	Template.AddMultiTargetEffect(Effect);
-
-	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, false);
-
-	return Template;
+	return SquadPassive('ShadowOps_SensorOverlays', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
 }
 
 static function X2AbilityTemplate Supercharge()
