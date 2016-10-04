@@ -101,7 +101,7 @@
     <Content Include="Src\CritChanceChange\Classes\X2Effect_Universal_BO.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\GremlinStealthFix\Classes\XComGameState_Unit_GremlinStealthFix.uc">
+    <Content Include="Src\GremlinStealthFix\Classes\UIScreenListener_TacticalHUD.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\LW_Tuple\Classes\LWTuple.uc">
