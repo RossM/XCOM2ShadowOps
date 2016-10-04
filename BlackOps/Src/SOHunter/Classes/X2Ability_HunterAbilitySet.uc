@@ -14,6 +14,7 @@ var config int DamnGoodGroundOffenseBonus, DamnGoodGroundDefenseBonus;
 var config float TrackingRadius;
 var config array<ExtShotModifierInfo> VitalPointModifiers;
 var config float PointBlankMultiplier;
+var config float ButcherDamageMultiplier;
 
 var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
 
@@ -41,6 +42,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FirstStrike());
 	Templates.AddItem(DamnGoodGround());
 	Templates.AddItem(PointBlank());
+	Templates.AddItem(Butcher());
 
 	return Templates;
 }
@@ -879,4 +881,14 @@ static function X2AbilityTemplate PointBlank()
 	Effect.RangePenaltyMultiplier = default.PointBlankMultiplier;
 
 	return Passive('ShadowOps_PointBlank', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+}
+
+static function X2AbilityTemplate Butcher()
+{
+	local X2Effect_Butcher Effect;
+
+	Effect = new class'X2Effect_Butcher';
+	Effect.DamageMultiplier = default.ButcherDamageMultiplier;
+
+	return Passive('ShadowOps_Butcher', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
 }

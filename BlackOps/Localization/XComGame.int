@@ -420,6 +420,12 @@ LocLongDescription="Reduces the Aim penalty for short-range sniper rifle shots b
 LocHelpText="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
 LocFlyOverText="Point Blank"
 
+[ShadowOps_Butcher X2AbilityTemplate]
+LocFriendlyName="Butcher"
+LocLongDescription="Increases damage against organic targets by 30%."
+LocHelpText="Increases damage against organic targets by 30%."
+LocFlyOverText="Butcher"
+
 ; === Engineer abilities ===
 
 [ShadowOps_DenseSmoke X2AbilityTemplate]

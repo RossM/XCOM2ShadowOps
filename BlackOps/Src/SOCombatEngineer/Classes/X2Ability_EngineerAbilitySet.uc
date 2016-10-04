@@ -17,6 +17,7 @@ var config int MayhemDamageBonus;
 var config array<name> MayhemExcludeAbilities;
 var config int SaboteurDamageBonus;
 var config int AnatomistDamageBonus, AnatomistMaxKills;
+var config float HeatAmmoDamageMultiplier;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -627,6 +628,7 @@ static function X2AbilityTemplate HeatAmmo()
 	local X2Effect_HeatAmmo Effect;
 
 	Effect = new class'X2Effect_HeatAmmo';
+	Effect.DamageMultiplier = default.HeatAmmoDamageMultiplier;
 
 	return Passive('ShadowOps_HeatAmmo', "img:///UILibrary_BlackOps.UIPerk_heatammo", true, Effect);
 }

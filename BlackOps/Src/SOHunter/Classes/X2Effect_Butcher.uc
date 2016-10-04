@@ -1,4 +1,4 @@
-class X2Effect_HeatAmmo extends X2Effect_Persistent config(GameData_SoldierSkills);
+class X2Effect_Butcher extends X2Effect_Persistent config(GameData_SoldierSkills);
 
 var float DamageMultiplier;
 
@@ -9,7 +9,7 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 
 	TargetUnit = XComGameState_Unit(TargetDamageable);
 
-	if (TargetUnit != none && TargetUnit.IsRobotic())
+	if (TargetUnit != none && !TargetUnit.IsRobotic())
 	{
 		ExtraDamage = CurrentDamage * DamageMultiplier;
 	}
@@ -18,5 +18,5 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 
 defaultproperties
 {
-	EffectName = "HeatAmmo";
+	EffectName = "Butcher";
 }
