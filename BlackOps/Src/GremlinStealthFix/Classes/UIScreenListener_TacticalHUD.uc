@@ -19,10 +19,7 @@ static function EventListenerReturn UpdateGremlinConcealment(Object EventData, O
 	local XComGameState_Unit SourceUnit, AttachedUnit, NewAttachedUnit;
 	local bool bConcealed;
 
-	`Log("UpdateGremlinConcealment:" @ EventID);
-
 	SourceUnit = XComGameState_Unit(EventData);
-	//foreach NewGameState.IterateByClassType(class'XComGameState_Unit', SourceUnit)
 	if (SourceUnit != none)
 	{
 		SourceUnit.GetAttachedUnits(AttachedUnits);
@@ -35,8 +32,6 @@ static function EventListenerReturn UpdateGremlinConcealment(Object EventData, O
 
 		foreach AttachedUnits(AttachedUnit)
 		{
-			`Log("UpdateGremlinConcealment:" @ AttachedUnit.IsConcealed() @ "->" @ bConcealed);
-
 			NewAttachedUnit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', AttachedUnit.ObjectID));
 			NewAttachedUnit.SetIndividualConcealment(bConcealed, NewGameState);
 			NewGameState.AddStateObject(NewAttachedUnit);
