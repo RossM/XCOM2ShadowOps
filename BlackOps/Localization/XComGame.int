@@ -414,6 +414,12 @@ LocLongDescription="You get an additional <Ability:+ToHit/> Aim and <Ability:+De
 LocHelpText="You get an additional <Ability:+ToHit/> Aim and <Ability:+Defense/> Defense against targets at lower elevation."
 LocFlyOverText="Damn Good Ground"
 
+[ShadowOps_PointBlank X2AbilityTemplate]
+LocFriendlyName="Point Blank"
+LocLongDescription="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
+LocHelpText="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
+LocFlyOverText="Point Blank"
+
 ; === Engineer abilities ===
 
 [ShadowOps_DenseSmoke X2AbilityTemplate]

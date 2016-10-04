@@ -13,6 +13,7 @@ var config int FirstStrikeDamageBonus;
 var config int DamnGoodGroundOffenseBonus, DamnGoodGroundDefenseBonus;
 var config float TrackingRadius;
 var config array<ExtShotModifierInfo> VitalPointModifiers;
+var config float PointBlankMultiplier;
 
 var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
 
@@ -39,6 +40,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Bullseye());
 	Templates.AddItem(FirstStrike());
 	Templates.AddItem(DamnGoodGround());
+	Templates.AddItem(PointBlank());
 
 	return Templates;
 }
@@ -869,3 +871,12 @@ static function X2AbilityTemplate DamnGoodGround()
 	return Passive('ShadowOps_DamnGoodGround', "img:///UILibrary_BlackOps.UIPerk_damngoodground", true, Effect);
 }
 
+static function X2AbilityTemplate PointBlank()
+{
+	local X2Effect_PointBlank Effect;
+
+	Effect = new class'X2Effect_PointBlank';
+	Effect.RangePenaltyMultiplier = default.PointBlankMultiplier;
+
+	return Passive('ShadowOps_PointBlank', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+}

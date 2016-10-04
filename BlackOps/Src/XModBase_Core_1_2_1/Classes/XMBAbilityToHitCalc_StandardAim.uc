@@ -620,6 +620,25 @@ protected function int GetHitChance(XComGameState_Ability kAbility, AvailableTar
 	return m_ShotBreakdown.FinalHitChance;
 }
 
+protected function AddModifier(const int ModValue, const string ModReason, optional EAbilityHitResult ModType=eHit_Success)
+{
+	local int i;
+
+	// XModBase: Consolidate modifiers with the same type and reason
+	for (i = 0; i < m_shotBreakdown.Modifiers.Length; i++)
+	{
+		if (ModType == m_shotBreakdown.Modifiers[i].ModType && ModReason == m_shotBreakdown.Modifiers[i].Reason)
+		{
+			m_shotBreakdown.Modifiers[i].Value += ModValue;
+			m_ShotBreakdown.ResultTable[ModType] += ModValue;
+			m_ShotBreakdown.FinalHitChance = m_ShotBreakdown.ResultTable[eHit_Success];
+			return;
+		}
+	}
+
+	super.AddModifier(ModValue, ModReason, ModType);
+}
+
 // XMBOverrideInterace
 
 function class GetOverrideBaseClass() 
