@@ -687,7 +687,7 @@ static function X2AbilityTemplate StasisField()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_StasisField');
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stasis";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_stasisfield";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Offensive;
 	Template.bLimitTargetIcons = true;
