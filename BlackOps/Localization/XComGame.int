@@ -426,6 +426,12 @@ LocLongDescription="Increases damage against organic targets by 30%."
 LocHelpText="Increases damage against organic targets by 30%."
 LocFlyOverText="Butcher"
 
+[ShadowOps_Reposition X2AbilityTemplate]
+LocFriendlyName="Reposition"
+LocLongDescription="Take a shot with your <Ability:WeaponName/>, then move."
+LocHelpText="Take a shot with your <Ability:WeaponName/>, then move."
+LocFlyOverText="Reposition"
+
 ; === Engineer abilities ===
 
 [ShadowOps_DenseSmoke X2AbilityTemplate]

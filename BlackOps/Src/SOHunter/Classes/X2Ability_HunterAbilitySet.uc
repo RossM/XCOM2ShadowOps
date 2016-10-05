@@ -16,7 +16,7 @@ var config array<ExtShotModifierInfo> VitalPointModifiers;
 var config float PointBlankMultiplier;
 var config float ButcherDamageMultiplier;
 
-var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
+var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, RepositionCooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -43,6 +43,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(DamnGoodGround());
 	Templates.AddItem(PointBlank());
 	Templates.AddItem(Butcher());
+	Templates.AddItem(Reposition());
 
 	return Templates;
 }
@@ -891,4 +892,24 @@ static function X2AbilityTemplate Butcher()
 	Effect.DamageMultiplier = default.ButcherDamageMultiplier;
 
 	return Passive('ShadowOps_Butcher', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+}
+
+static function X2AbilityTemplate Reposition()
+{
+	local X2AbilityTemplate Template, SecondaryTemplate;
+	local X2Effect_GrantActionPoints Effect;
+
+	Template = Attack('ShadowOps_Reposition', "img:///UILibrary_BlackOps.UIPerk_AWC", false,, class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY + 10, eCost_WeaponConsumeAll);
+	Template.PostActivationEvents.AddItem('RepositionActivated');
+	AddCooldown(Template, default.RepositionCooldown);
+
+	Effect = new class'X2Effect_GrantActionPoints';
+	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
+	Effect.NumActionPoints = 1;
+	SecondaryTemplate = SelfTargetTrigger('ShadowOps_RepositionTrigger', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect, 'RepositionActivated');
+	SecondaryTemplate.bShowActivation = true;
+
+	AddSecondaryAbility(Template, SecondaryTemplate);
+
+	return Template;
 }
