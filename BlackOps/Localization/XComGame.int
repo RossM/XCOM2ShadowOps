@@ -428,8 +428,8 @@ LocFlyOverText="Butcher"
 
 [ShadowOps_Reposition X2AbilityTemplate]
 LocFriendlyName="Reposition"
-LocLongDescription="Take a shot with your <Ability:WeaponName/>, then move."
-LocHelpText="Take a shot with your <Ability:WeaponName/>, then move."
+LocLongDescription="Fire your <Ability:WeaponName/> at a target, then move."
+LocHelpText="Fire your <Ability:WeaponName/> at a target, then move."
 LocFlyOverText="Reposition"
 
 ; === Engineer abilities ===
