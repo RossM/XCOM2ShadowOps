@@ -44,6 +44,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PointBlank());
 	Templates.AddItem(Butcher());
 	Templates.AddItem(Reposition());
+	Templates.AddItem(Evasive());
 
 	return Templates;
 }
@@ -912,4 +913,9 @@ static function X2AbilityTemplate Reposition()
 	AddSecondaryAbility(Template, SecondaryTemplate);
 
 	return Template;
+}
+
+static function X2AbilityTemplate Evasive()
+{
+	return Passive('ShadowOps_Evasive', "img:///UILibrary_BlackOps.UIPerk_AWC", false, new class'X2Effect_Evasive');
 }

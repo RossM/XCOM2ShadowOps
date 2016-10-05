@@ -432,6 +432,12 @@ LocLongDescription="Fire your <Ability:WeaponName/> at a target, then move."
 LocHelpText="Fire your <Ability:WeaponName/> at a target, then move."
 LocFlyOverText="Reposition"
 
+[ShadowOps_Evasive X2AbilityTemplate]
+LocFriendlyName="Evasive"
+LocLongDescription="You are immune to multi-target and area attacks."
+LocHelpText="You are immune to multi-target and area attacks."
+LocFlyOverText="Evasive"
+
 ; === Engineer abilities ===
 
 [ShadowOps_DenseSmoke X2AbilityTemplate]

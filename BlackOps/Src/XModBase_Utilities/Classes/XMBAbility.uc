@@ -250,6 +250,7 @@ static function X2AbilityTemplate Attack(name DataName, string IconImage, option
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.DisplayTargetHitChance = true;
 	Template.AbilitySourceName = 'eAbilitySource_Perk'; 
+	Template.Hostility = eHostility_Offensive;
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 

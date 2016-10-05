@@ -282,6 +282,9 @@
     <Content Include="Src\SOHunter\Classes\X2Effect_Butcher.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SOHunter\Classes\X2Effect_Evasive.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SOHunter\Classes\X2Effect_PointBlank.uc">
       <SubType>Content</SubType>
     </Content>
