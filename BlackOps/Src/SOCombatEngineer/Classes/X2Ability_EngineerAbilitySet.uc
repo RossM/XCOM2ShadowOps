@@ -846,7 +846,7 @@ static function X2AbilityTemplate FocusedDefense()
 	Effect.AbilityTargetConditionsAsTarget.AddItem(new class'X2Condition_ClosestVisibleEnemy');
 
 	// TODO: icon
-	return Passive('ShadowOps_FocusedDefense', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	return Passive('ShadowOps_FocusedDefense', "img:///UILibrary_BlackOps.UIPerk_focuseddefense", true, Effect);
 }
 
 static function X2AbilityTemplate LineEmUp()
@@ -948,7 +948,7 @@ static function X2AbilityTemplate DevilsLuckTrigger()
 	Effect.CleanupType = eCleanup_BeginTactical;
 
 	// TODO: icon
-	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect, 'AbilityActivated', eFilter_None);
+	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_BlackOps.UIPerk_devilsluck", false, Effect, 'AbilityActivated', eFilter_None);
 	XMBAbilityTrigger_EventListener(Template.AbilityTriggers[0]).bAsTarget = true;
 
 	HitResultCondition = new class'XMBCondition_AbilityHitResult';
@@ -978,7 +978,7 @@ static function X2AbilityTemplate Mayhem()
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	// TODO: icon
-	return Passive('ShadowOps_Mayhem', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	return Passive('ShadowOps_Mayhem', "img:///UILibrary_BlackOps.UIPerk_mayhem", true, Effect);
 }
 
 static function X2AbilityTemplate Saboteur()
@@ -996,7 +996,7 @@ static function X2AbilityTemplate Saboteur()
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	// TODO: icon
-	return Passive('ShadowOps_Saboteur', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+	return Passive('ShadowOps_Saboteur', "img:///UILibrary_BlackOps.UIPerk_saboteur", false, Effect);
 }
 
 static function X2AbilityTemplate Anatomist()

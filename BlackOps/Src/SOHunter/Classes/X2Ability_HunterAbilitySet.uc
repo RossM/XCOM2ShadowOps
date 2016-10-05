@@ -881,7 +881,7 @@ static function X2AbilityTemplate PointBlank()
 	Effect = new class'X2Effect_PointBlank';
 	Effect.RangePenaltyMultiplier = default.PointBlankMultiplier;
 
-	return Passive('ShadowOps_PointBlank', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+	return Passive('ShadowOps_PointBlank', "img:///UILibrary_BlackOps.UIPerk_pointblank", false, Effect);
 }
 
 static function X2AbilityTemplate Butcher()
