@@ -882,7 +882,7 @@ static function X2AbilityTemplate IronWill()
 	Effect = new class'X2Effect_PersistentStatChange';
 	Effect.AddPersistentStatChange(eStat_Will, default.IronWillBonus);
 
-	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_BlackOps.UIPerk_ironwill", true, Effect);
+	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_BlackOps.UIPerk_iron_will", true, Effect);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.PsiOffenseLabel, eStat_Will, default.IronWillBonus);
 
 	return Template;

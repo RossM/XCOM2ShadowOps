@@ -381,7 +381,7 @@ static function X2AbilityTemplate Assassin()
 	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
 	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
 
-	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_PerkIcons.UIPerk_executioner", true, Effect);
+	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_BlackOps.UIPerk_assassin", true, Effect);
 	Template.AdditionalAbilities.AddItem('ShadowOps_AssassinTrigger');
 
 	return Template;
@@ -397,7 +397,7 @@ static function X2AbilityTemplate AssassinTrigger()
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 
-	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_PerkIcons.UIPerk_executioner", false, StealthEffect, 'Assassin');
+	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_BlackOps.UIPerk_assassin", false, StealthEffect, 'Assassin');
 
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
@@ -607,7 +607,7 @@ static function X2AbilityTemplate SliceAndDice2()
 static function X2AbilityTemplate Tracking()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('ShadowOps_Tracking', "img:///UILibrary_PerkIcons.UIPerk_observer", true);
+	Template = PurePassive('ShadowOps_Tracking', "img:///UILibrary_BlackOps.UIPerk_tracking", true);
 	Template.AdditionalAbilities.AddItem('ShadowOps_TrackingTrigger');
 	Template.AdditionalAbilities.AddItem('ShadowOps_TrackingSpawnTrigger');
 
@@ -625,7 +625,7 @@ static function X2AbilityTemplate TrackingTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TrackingTrigger');
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_observer";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_tracking";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
@@ -696,7 +696,7 @@ static function X2AbilityTemplate TrackingSpawnTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TrackingSpawnTrigger');
 
-	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_observer";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_tracking";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
