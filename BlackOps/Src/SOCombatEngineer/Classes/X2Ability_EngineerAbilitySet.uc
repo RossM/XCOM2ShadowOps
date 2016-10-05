@@ -778,7 +778,7 @@ static function X2AbilityTemplate Pyromaniac()
 	local XMBEffect_AddUtilityItem ItemEffect;
 
 	// TODO: icon
-	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_AWC", true);
+	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_pyromaniac", true);
 
 	ItemEffect = new class 'XMBEffect_AddUtilityItem';
 	ItemEffect.DataName = 'Firebomb';
@@ -805,7 +805,7 @@ static function X2AbilityTemplate HitAndRun()
 
 	// Create a triggered ability that will activate whenever the unit uses an ability that meets the condition
 	// TODO: icon
-	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect, 'AbilityActivated');
+	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_skirmisher", false, Effect, 'AbilityActivated');
 
 	// Trigger abilities don't appear as passives. Add a passive ability icon.
 	AddIconPassive(Template);
@@ -927,7 +927,7 @@ static function X2AbilityTemplate DevilsLuck()
 	local X2AbilityTemplate Template;
 
 	// TODO: icon
-	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_BlackOps.UIPerk_AWC", true, new class'X2Effect_DevilsLuck');
+	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_BlackOps.UIPerk_devilsluck", true, new class'X2Effect_DevilsLuck');
 
 	// Add a secondary ability to provide bonuses on the shot
 	AddSecondaryAbility(Template, DevilsLuckTrigger());

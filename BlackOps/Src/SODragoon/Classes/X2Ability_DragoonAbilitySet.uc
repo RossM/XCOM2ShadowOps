@@ -121,7 +121,7 @@ static function X2AbilityTemplate AdvancedShieldProtocol()
 {
 	local X2AbilityTemplate                     Template;
 
-	Template = ShieldProtocol('ShadowOps_AdvancedShieldProtocol', "img:///UILibrary_BlackOps.UIPerk_AWC", eCost_Free);
+	Template = ShieldProtocol('ShadowOps_AdvancedShieldProtocol', "img:///UILibrary_BlackOps.UIPerk_advancedshieldprotocol", eCost_Free);
 	Template.OverrideAbilities.AddItem('ShadowOps_ShieldProtocol');
 
 	return Template;
@@ -856,7 +856,7 @@ static function X2AbilityTemplate TacticalSense()
 	Effect.DodgeModifier = default.TacticalSenseDodgeBonus;
 	Effect.MaxDodgeModifier = default.TacticalSenseMaxDodgeBonus;
 
-	return Passive('ShadowOps_TacticalSense', "img:///UILibrary_PerkIcons.UIPerk_tacticalsense", false, Effect);
+	return Passive('ShadowOps_TacticalSense', "img:///UILibrary_BlackOps.UIPerk_grace", false, Effect);
 }
 
 static function X2AbilityTemplate Lightfoot()
@@ -868,7 +868,7 @@ static function X2AbilityTemplate Lightfoot()
 	Effect.AddPersistentStatChange(eStat_Mobility, default.LightfootMobilityBonus);
 	Effect.AddPersistentStatChange(eStat_DetectionModifier, default.LightfootDetectionModifier);
 
-	Template = Passive('ShadowOps_Lightfoot', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	Template = Passive('ShadowOps_Lightfoot', "img:///UILibrary_PerkIcons.UIPerk_stickandmove", true, Effect);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.LightfootMobilityBonus);
 
 	return Template;
@@ -882,7 +882,7 @@ static function X2AbilityTemplate IronWill()
 	Effect = new class'X2Effect_PersistentStatChange';
 	Effect.AddPersistentStatChange(eStat_Will, default.IronWillBonus);
 
-	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_BlackOps.UIPerk_ironwill", true, Effect);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.PsiOffenseLabel, eStat_Will, default.IronWillBonus);
 
 	return Template;
@@ -898,7 +898,7 @@ static function X2AbilityTemplate SensorOverlays()
 	Effect.AddToHitModifier(default.SensorOverlaysCritBonus, eHit_Crit);
 	Effect.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
 
-	return SquadPassive('ShadowOps_SensorOverlays', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+	return SquadPassive('ShadowOps_SensorOverlays', "img:///UILibrary_BlackOps.UIPerk_sensoroverlays", false, Effect);
 }
 
 static function X2AbilityTemplate Supercharge()
@@ -909,7 +909,7 @@ static function X2AbilityTemplate Supercharge()
 	Effect = new class'X2Effect_Supercharge';
 	Effect.BonusCharges = default.SuperchargeChargeBonus;
 
-	Template = Passive('ShadowOps_Supercharge', "img:///UILibrary_BlackOps.UIPerk_AWC", false);
+	Template = Passive('ShadowOps_Supercharge', "img:///UILibrary_BlackOps.UIPerk_supercharge", false);
 
 	Template.AddTargetEffect(Effect);
 
@@ -925,7 +925,7 @@ static function X2AbilityTemplate ReverseEngineering()
 	Effect = new class'X2Effect_ReverseEngineering';
 	Effect.HackBonus = default.ReverseEngineeringHackBonus;
 
-	Template = SelfTargetTrigger('ShadowOps_ReverseEngineering', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect, 'AbilityActivated');
+	Template = SelfTargetTrigger('ShadowOps_ReverseEngineering', "img:///UILibrary_BlackOps.UIPerk_reverseengineering", false, Effect, 'AbilityActivated');
 
 	Condition = new class'XMBCondition_AbilityName';
 	Condition.IncludeAbilityNames.AddItem('FinalizeHaywire');
@@ -945,5 +945,5 @@ static function X2AbilityTemplate Scout()
 	Effect = new class'XMBEffect_AddUtilityItem';
 	Effect.DataName = 'BattleScanner';
 
-	return Passive('ShadowOps_Scout', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	return Passive('ShadowOps_Scout', "img:///UILibrary_BlackOps.UIPerk_scout", true, Effect);
 }
