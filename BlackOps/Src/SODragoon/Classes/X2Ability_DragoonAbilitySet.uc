@@ -45,7 +45,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(TacticalSense());
 	Templates.AddItem(AdvancedShieldProtocol());
 	Templates.AddItem(Lightfoot());
-	Templates.AddItem(PurePassive('ShadowOps_Aegis', "img:///UILibrary_BlackOps.UIPerk_AWC", false));
+	Templates.AddItem(PurePassive('ShadowOps_Aegis', "img:///UILibrary_BlackOps.UIPerk_aegis", false));
 	Templates.AddItem(IronWill());
 	Templates.AddItem(SensorOverlays());
 	Templates.AddItem(Supercharge());

@@ -1009,5 +1009,5 @@ static function X2AbilityTemplate Anatomist()
 	Effect.ScaleValue = new class'X2Value_Anatomist';
 	Effect.ScaleMax = default.AnatomistMaxKills;
 
-	return Passive('ShadowOps_Anatomist', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	return Passive('ShadowOps_Anatomist', "img:///UILibrary_BlackOps.UIPerk_anatomist", true, Effect);
 }

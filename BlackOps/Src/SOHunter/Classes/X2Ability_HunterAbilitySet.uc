@@ -886,7 +886,7 @@ static function X2AbilityTemplate PointBlank()
 	Effect = new class'X2Effect_PointBlank';
 	Effect.RangePenaltyMultiplier = default.PointBlankMultiplier;
 
-	return Passive('ShadowOps_PointBlank', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+	return Passive('ShadowOps_PointBlank', "img:///UILibrary_BlackOps.UIPerk_point_blank", false, Effect);
 }
 
 static function X2AbilityTemplate Butcher()
@@ -896,7 +896,7 @@ static function X2AbilityTemplate Butcher()
 	Effect = new class'X2Effect_Butcher';
 	Effect.DamageMultiplier = default.ButcherDamageMultiplier;
 
-	return Passive('ShadowOps_Butcher', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+	return Passive('ShadowOps_Butcher', "img:///UILibrary_BlackOps.UIPerk_butcher", false, Effect);
 }
 
 static function X2AbilityTemplate Reposition()
@@ -921,7 +921,7 @@ static function X2AbilityTemplate Reposition()
 
 static function X2AbilityTemplate Evasive()
 {
-	return Passive('ShadowOps_Evasive', "img:///UILibrary_BlackOps.UIPerk_AWC", false, new class'X2Effect_Evasive');
+	return Passive('ShadowOps_Evasive', "img:///UILibrary_BlackOps.UIPerk_evasive", false, new class'X2Effect_Evasive');
 }
 
 static function X2AbilityTemplate Stalker()
@@ -932,7 +932,7 @@ static function X2AbilityTemplate Stalker()
 	Effect.AddPersistentStatChange(eStat_Mobility, default.StalkerMobilityBonus);
 	Effect.Conditions.AddItem(new class'XMBCondition_Concealed');
 
-	return Passive('ShadowOps_Stalker', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+	return Passive('ShadowOps_Stalker', "img:///UILibrary_BlackOps.UIPerk_stalker", false, Effect);
 }
 
 static function X2AbilityTemplate LastStand()
@@ -943,7 +943,7 @@ static function X2AbilityTemplate LastStand()
 	Effect = new class'X2Effect_LastStand';
 	Effect.BuildPersistentEffect(default.LastStandDuration, false, true, false, eGameRule_PlayerTurnEnd);
 
-	Template = SelfTargetActivated('ShadowOps_LastStand', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect,, eCost_Free);
+	Template = SelfTargetActivated('ShadowOps_LastStand', "img:///UILibrary_BlackOps.UIPerk_laststand", true, Effect,, eCost_Free);
 	AddCharges(Template, default.LastStandCharges);
 
 	return Template;
