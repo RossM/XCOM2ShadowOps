@@ -16,6 +16,7 @@ var config array<ExtShotModifierInfo> VitalPointModifiers;
 var config float PointBlankMultiplier;
 var config float ButcherDamageMultiplier;
 var config int StalkerMobilityBonus;
+var config int LastStandDuration, LastStandCharges;
 
 var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, RepositionCooldown;
 
@@ -47,6 +48,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Reposition());
 	Templates.AddItem(Evasive());
 	Templates.AddItem(Stalker());
+	Templates.AddItem(LastStand());
 
 	return Templates;
 }
@@ -931,4 +933,18 @@ static function X2AbilityTemplate Stalker()
 	Effect.Conditions.AddItem(new class'XMBCondition_Concealed');
 
 	return Passive('ShadowOps_Stalker', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
+}
+
+static function X2AbilityTemplate LastStand()
+{
+	local X2Effect_LastStand Effect;
+	local X2AbilityTemplate Template;
+
+	Effect = new class'X2Effect_LastStand';
+	Effect.BuildPersistentEffect(default.LastStandDuration, false, true, false, eGameRule_PlayerTurnBegin);
+
+	Template = SelfTargetActivated('ShadowOps_LastStand', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect,, eCost_Free);
+	AddCharges(Template, default.LastStandCharges);
+
+	return Template;
 }

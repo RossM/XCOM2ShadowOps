@@ -444,6 +444,12 @@ LocLongDescription="Gain <Ability:+Mobility/> Mobility while concealed."
 LocHelpText="Gain <Ability:+Mobility/> Mobility while concealed."
 LocFlyOverText="Stalker"
 
+[ShadowOps_LastStand X2AbilityTemplate]
+LocFriendlyName="Last Stand"
+LocLongDescription="Once per mission, you can't be killed or incapacitated until your next turn."
+LocHelpText="You can't be killed or incapacitated until your next turn."
+LocFlyOverText="Last Stand"
+
 ; === Engineer abilities ===
 
 [ShadowOps_DenseSmoke X2AbilityTemplate]
