@@ -446,8 +446,8 @@ LocFlyOverText="Stalker"
 
 [ShadowOps_LastStand X2AbilityTemplate]
 LocFriendlyName="Last Stand"
-LocLongDescription="Once per mission, become immune to death and incapacitation until your next turn."
-LocHelpText="Become immune to death and incapacitation until your next turn."
+LocLongDescription="Once per mission, become immune to death and incapacitation until the end of your next turn."
+LocHelpText="Become immune to death and incapacitation until the end of your next turn."
 LocFlyOverText="Last Stand"
 
 ; === Engineer abilities ===

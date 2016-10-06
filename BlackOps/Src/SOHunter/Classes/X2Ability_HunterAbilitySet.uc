@@ -941,7 +941,7 @@ static function X2AbilityTemplate LastStand()
 	local X2AbilityTemplate Template;
 
 	Effect = new class'X2Effect_LastStand';
-	Effect.BuildPersistentEffect(default.LastStandDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	Effect.BuildPersistentEffect(default.LastStandDuration, false, true, false, eGameRule_PlayerTurnEnd);
 
 	Template = SelfTargetActivated('ShadowOps_LastStand', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect,, eCost_Free);
 	AddCharges(Template, default.LastStandCharges);
