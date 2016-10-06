@@ -6,7 +6,7 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 {
 	local XComGameState_Unit UnitState;
 	local X2EventManager EventMgr;
-	local XMBGameState_EffectProxy Proxy;
+	local XMBGameState_EventProxy Proxy;
 	local XComGameState NewGameState;
 	local Object ListenerObj;
 
@@ -15,31 +15,26 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 	NewGameState = EffectGameState.GetParentGameState();
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
 
-	Proxy = XMBGameState_EffectProxy(NewGameState.CreateStateObject(class'XMBGameState_EffectProxy'));
-	EffectGameState = XComGameState_Effect(NewGameState.CreateStateObject(EffectGameState.class, EffectGameState.ObjectID));
-
-	EffectGameState.AddComponentObject(Proxy);
-
-	NewGameState.AddStateObject(EffectGameState);
-	NewGameState.AddStateObject(Proxy);
+	Proxy = class'XMBGameState_EventProxy'.static.CreateProxy(EffectGameState, NewGameState);
 
 	ListenerObj = Proxy;
 
 	// Register to tick after EVERY action.
 	Proxy.OnEvent = EventHandler;
-	Proxy.EffectRef = EffectGameState.GetReference();
-	EventMgr.RegisterForEvent(ListenerObj, 'OnUnitBeginPlay', class'XMBGameState_EffectProxy'.static.EventHandler, ELD_OnStateSubmitted, 25, UnitState);	
-	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', class'XMBGameState_EffectProxy'.static.EventHandler, ELD_OnStateSubmitted, 25);	
+	EventMgr.RegisterForEvent(ListenerObj, 'OnUnitBeginPlay', class'XMBGameState_EventProxy'.static.EventHandler, ELD_OnStateSubmitted, 25, UnitState);	
+	EventMgr.RegisterForEvent(ListenerObj, 'AbilityActivated', class'XMBGameState_EventProxy'.static.EventHandler, ELD_OnStateSubmitted, 25);	
 }
 
-static function EventListenerReturn EventHandler(XComGameState_Effect EffectState, Object EventData, Object EventSource, XComGameState GameState, Name EventID)
+static function EventListenerReturn EventHandler(XComGameState_BaseObject SourceState, Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
 	local XComGameState_Unit UnitState, NewUnitState;
 	local XComGameState_Effect NewEffectState;
 	local XComGameState NewGameState;
 	local XMBEffect_ConditionalStatChange EffectTemplate;
+	local XComGameState_Effect EffectState;
 	local bool bOldApplicable, bNewApplicable;
 
+	EffectState = XComGameState_Effect(SourceState);
 	if (EffectState == none)
 		return ELR_NoInterrupt;
 

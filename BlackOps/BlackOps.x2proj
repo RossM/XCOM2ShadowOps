@@ -2602,7 +2602,7 @@
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddItemChargesBySlot.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Utilities\Classes\XMBGameState_EffectProxy.uc">
+    <Content Include="Src\XModBase_Utilities\Classes\XMBGameState_EventProxy.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBGameState_EventTarget.uc">
