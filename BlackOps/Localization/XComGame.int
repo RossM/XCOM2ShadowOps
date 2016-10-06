@@ -378,8 +378,8 @@ LocPromotionPopupText="<Bullet/> Fade will let you use your First Strike bonus m
 
 [ShadowOps_SliceAndDice X2AbilityTemplate]
 LocFriendlyName="Slice and Dice"
-LocLongDescription="Make a regular sword attack. If it succeeds, make a free second sword attack."
-LocHelpText="Make a regular sword attack. If it succeeds, make a free second sword attack."
+LocLongDescription="Attack any enemy within movement range with your sword. If you hit, make a free second sword attack."
+LocHelpText="Attack any enemy within movement range with your sword. If you hit, make a free second sword attack."
 LocFlyOverText="Slice and Dice"
 LocPromotionPopupText="<Bullet/> Slice and Dice has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
@@ -446,8 +446,8 @@ LocFlyOverText="Stalker"
 
 [ShadowOps_LastStand X2AbilityTemplate]
 LocFriendlyName="Last Stand"
-LocLongDescription="Once per mission, you can't be killed or incapacitated until your next turn."
-LocHelpText="You can't be killed or incapacitated until your next turn."
+LocLongDescription="Once per mission, become immune to death and incapacitation until your next turn."
+LocHelpText="Become immune to death and incapacitation until your next turn."
 LocFlyOverText="Last Stand"
 
 ; === Engineer abilities ===
