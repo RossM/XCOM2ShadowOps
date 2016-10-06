@@ -4,7 +4,10 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 		
-	Templates.AddItem(AddClassUnlock('DamnGoodGroundUnlock', 'ShadowOps_Hunter', 'ShadowOps_DamnGoodGround'));
+	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_Hunter') != INDEX_NONE)
+		Templates.AddItem(AddClassUnlock('DamnGoodGroundUnlock', 'ShadowOps_Hunter', 'ShadowOps_DamnGoodGround'));
+	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_Hunter_LW') != INDEX_NONE)
+		Templates.AddItem(AddClassUnlock('StalkerUnlock', 'ShadowOps_Hunter_LW', 'ShadowOps_Stalker'));
 
 	return Templates;
 }

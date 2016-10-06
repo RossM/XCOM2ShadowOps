@@ -2530,6 +2530,9 @@
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_AbilityProperty.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_Concealed.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBCondition_Dead.uc">
       <SubType>Content</SubType>
     </Content>
@@ -2543,6 +2546,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_ChangeHitResultForAttacker.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_ConditionalStatChange.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_DoNotConsumeAllPoints.uc">
@@ -2594,6 +2600,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBEffect_AddItemChargesBySlot.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBGameState_EffectProxy.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBGameState_EventTarget.uc">

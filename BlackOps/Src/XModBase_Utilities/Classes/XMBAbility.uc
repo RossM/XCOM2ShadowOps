@@ -101,7 +101,7 @@ static function bool AlwaysRelevant(XMBEffect_ConditionalBonus Effect)
 static function X2AbilityTemplate Passive(name DataName, string IconImage, optional bool bCrossClassEligible = false, optional X2Effect_Persistent Effect = none)
 {
 	local X2AbilityTemplate Template;
-	local XMBEffect_ConditionalBonus ConditionalEffect;
+	local XMBEffect_ConditionalBonus ConditionalBonusEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, DataName);
 	Template.IconImage = IconImage;
@@ -117,14 +117,16 @@ static function X2AbilityTemplate Passive(name DataName, string IconImage, optio
 	if (Effect == none)
 		Effect = new class'X2Effect_Persistent';
 
-	ConditionalEffect = XMBEffect_ConditionalBonus(Effect);
+	ConditionalBonusEffect = XMBEffect_ConditionalBonus(Effect);
 
-	if (ConditionalEffect != none && !AlwaysRelevant(ConditionalEffect))
+	if ((ConditionalBonusEffect != none && !AlwaysRelevant(ConditionalBonusEffect)) ||
+		XMBEffect_ConditionalStatChange(Effect) != none)
 	{
-		ConditionalEffect.BuildPersistentEffect(1, true, false, false);
-		ConditionalEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, true,,Template.AbilitySourceName);
-		ConditionalEffect.bHideWhenNotRelevant = true;
-		Template.AddTargetEffect(ConditionalEffect);
+		Effect.BuildPersistentEffect(1, true, false, false);
+		Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, true,,Template.AbilitySourceName);
+		if (ConditionalBonusEffect != none)
+			ConditionalBonusEffect.bHideWhenNotRelevant = true;
+		Template.AddTargetEffect(Effect);
 
 		Effect = new class'X2Effect_Persistent';
 		Effect.EffectName = name(DataName $ "_Passive");

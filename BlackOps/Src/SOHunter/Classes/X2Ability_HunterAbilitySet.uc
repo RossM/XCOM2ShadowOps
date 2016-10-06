@@ -15,6 +15,7 @@ var config float TrackingRadius;
 var config array<ExtShotModifierInfo> VitalPointModifiers;
 var config float PointBlankMultiplier;
 var config float ButcherDamageMultiplier;
+var config int StalkerMobilityBonus;
 
 var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, RepositionCooldown;
 
@@ -45,6 +46,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Butcher());
 	Templates.AddItem(Reposition());
 	Templates.AddItem(Evasive());
+	Templates.AddItem(Stalker());
 
 	return Templates;
 }
@@ -918,4 +920,15 @@ static function X2AbilityTemplate Reposition()
 static function X2AbilityTemplate Evasive()
 {
 	return Passive('ShadowOps_Evasive', "img:///UILibrary_BlackOps.UIPerk_AWC", false, new class'X2Effect_Evasive');
+}
+
+static function X2AbilityTemplate Stalker()
+{
+	local XMBEffect_ConditionalStatChange Effect;
+
+	Effect = new class'XMBEffect_ConditionalStatChange';
+	Effect.AddPersistentStatChange(eStat_Mobility, default.StalkerMobilityBonus);
+	Effect.Conditions.AddItem(new class'XMBCondition_Concealed');
+
+	return Passive('ShadowOps_Stalker', "img:///UILibrary_BlackOps.UIPerk_AWC", false, Effect);
 }
