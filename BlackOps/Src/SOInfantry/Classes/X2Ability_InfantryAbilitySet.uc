@@ -9,6 +9,7 @@ var config int ZeroInOffenseBonus;
 var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, AdrenalineSurgeCooldown;
 var config int FortressDefenseModifier;
 var config int RifleSuppressionAimBonus;
+var config int TacticianConventionalDamage, TacticianMagneticDamage, TacticianBeamDamage;
 
 var config name FreeAmmoForPocket;
 
@@ -44,6 +45,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FirstAid());
 	Templates.AddItem(SecondWind());
 	Templates.AddItem(SecondWindTrigger());
+	Templates.AddItem(Tactician());
 
 	return Templates;
 }
@@ -1307,6 +1309,29 @@ function SecondWind_BuildVisualization(XComGameState VisualizeGameState, out arr
 			}
 		}
 	}
+}
+
+static function X2AbilityTemplate Tactician()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local X2Condition_UnitInventory InventoryCondition;
+	local X2AbilityTemplate Template;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddDamageModifier(default.TacticianConventionalDamage, eHit_Miss, 'conventional');
+	Effect.AddDamageModifier(default.TacticianMagneticDamage, eHit_Miss, 'magnetic');
+	Effect.AddDamageModifier(default.TacticianBeamDamage, eHit_Miss, 'beam');
+
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+
+	Template = Passive('ShadowOps_Tactician', "img:///UILibrary_BlackOps.UIPerk_tactician", false, Effect);
+
+	InventoryCondition = new class'X2Condition_UnitInventory';
+	InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
+	InventoryCondition.RequireWeaponCategory = 'rifle';
+	Template.AbilityShooterConditions.AddItem(InventoryCondition);
+
+	return Template;
 }
 
 DefaultProperties

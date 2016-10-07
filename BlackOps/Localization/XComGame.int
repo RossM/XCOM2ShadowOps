@@ -156,6 +156,12 @@ LocHelpText="Using a medikit on an injured unit also grants that unit a bonus ac
 LocFlyOverText="Second Wind"
 LocHitMessage="Second Wind"
 
+[ShadowOps_Tactician X2AbilityTemplate]
+LocFriendlyName="Tactician"
+LocLongDescription="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage. Rifle only."
+LocHelpText="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage."
+LocFlyOverText="Tactician"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
@@ -919,6 +925,41 @@ RandomNickNames_Male[0]="Cougar"
 RandomNickNames_Male[1]="Green Man"
 RandomNickNames_Male[2]="Lion"
 RandomNickNames_Male[3]="Sandman"
+
+[ShadowOps_Infantry_LW X2SoldierClassTemplate]
+DisplayName="Infantry"
+ClassSummary="Our Infantry bring to bear sustained firepower at short and medium ranges. They're a key member of any squad."
+LeftAbilityTreeTitle="Rifleman"
+RightAbilityTreeTitle="Support"
+RandomNickNames[0]="Ace"
+RandomNickNames[1]="Barrel"
+RandomNickNames[2]="Brass"
+RandomNickNames[3]="Broadside"
+RandomNickNames[4]="Cyclops"
+RandomNickNames[5]="Eagle"
+RandomNickNames[6]="Falcon"
+RandomNickNames[7]="Gorgon"
+RandomNickNames[8]="Hailstorm"
+RandomNickNames[9]="Hawk"
+RandomNickNames[10]="Ice"
+RandomNickNames[11]="Joker"
+RandomNickNames[12]="Lead"
+RandomNickNames[13]="Not Again"
+RandomNickNames[14]="Royal Flush"
+RandomNickNames[15]="Santa"
+RandomNickNames[16]="Storm"
+RandomNickNames[17]="Tracer"
+RandomNickNames[18]="Trey"
+RandomNickNames[19]="Two Hands"
+RandomNickNames[20]="Vampire"
+RandomNickNames[21]="Warlord"
+RandomNickNames[22]="Zero"
+RandomNickNames_Female[0]="Baroness"
+RandomNickNames_Female[1]="Kitty"
+RandomNickNames_Female[2]="Queen"
+RandomNickNames_Male[0]="Baron"
+RandomNickNames_Male[1]="King"
+RandomNickNames_Male[2]="Snowman"
 
 ; === Item templates ===
 
