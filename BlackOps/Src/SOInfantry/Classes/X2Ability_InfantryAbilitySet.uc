@@ -48,6 +48,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ReadyForAnything());
 	Templates.AddItem(ReadyForAnythingOverwatch());
 	Templates.AddItem(ImprovedSuppression());
+	Templates.AddItem(CoupDeGrace());
 
 	return Templates;
 }
@@ -1327,6 +1328,18 @@ static function X2AbilityTemplate ImprovedSuppression()
 	EventListener.AbilityTargetConditions.AddItem(NameCondition);
 
 	return Template;
+}
+
+static function X2AbilityTemplate CoupDeGrace()
+{
+	local XMBEffect_AbilityCostRefund Effect;
+
+	Effect = new class'XMBEffect_AbilityCostRefund';
+	Effect.TriggeredEvent = 'CoupDeGrace';
+	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+
+	return Passive('ShadowOps_CoupDeGrace', "img:///UILibrary_BlackOps.UIPerk_coupdegrace", false, Effect);
 }
 
 DefaultProperties

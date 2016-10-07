@@ -163,6 +163,12 @@ LocLongDescription="Your Suppression ability also disorients the target."
 LocHelpText="Your Suppression ability also disorients the target."
 LocFlyOverText="Improved Suppression"
 
+[ShadowOps_CoupDeGrace X2AbilityTemplate]
+LocFriendlyName="Coup de Grace"
+LocLongDescription="Killing an enemy with your pistol doesn't cost an action."
+LocHelpText="Killing an enemy with your pistol doesn't cost an action."
+LocFlyOverText="Coup de Grace"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
