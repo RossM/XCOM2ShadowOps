@@ -46,6 +46,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SecondWind());
 	Templates.AddItem(SecondWindTrigger());
 	Templates.AddItem(Tactician());
+	Templates.AddItem(ReadyForAnything());
+	Templates.AddItem(ReadyForAnythingOverwatch());
 
 	return Templates;
 }
@@ -1333,6 +1335,107 @@ static function X2AbilityTemplate Tactician()
 
 	return Template;
 }
+
+static function X2AbilityTemplate ReadyForAnything()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_ImmediateAbilityActivation AbilityEffect;
+
+	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('ShadowOps_ReadyForAnything');
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_readyforanything";
+	Template.OverrideAbilities.AddItem('StandardShot');
+
+	AbilityEffect = new class'X2Effect_ImmediateAbilityActivation';
+	AbilityEffect.AbilityName = 'ShadowOps_ReadyForAnythingOverwatch';
+	Template.AddShooterEffect(AbilityEffect);
+
+	Template.AdditionalAbilities.AddItem('ShadowOps_ReadyForAnythingOverwatch');
+
+	return Template;
+}
+
+// Copied and pasted from DefaultAbilitySet's AddOverwatchAbility.
+// TODO: Find a better way to do this.
+static function X2AbilityTemplate ReadyForAnythingOverwatch()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2Effect_ReserveActionPoints      ReserveActionPointsEffect;
+	local array<name>                       SkipExclusions;
+	local X2Effect_CoveringFire             CoveringFireEffect;
+	local X2Condition_AbilityProperty       CoveringFireCondition;
+	local X2Condition_UnitProperty          ConcealedCondition;
+	local X2Effect_SetUnitValue             UnitValueEffect;
+	local X2Condition_UnitEffects           SuppressedCondition;
+	//local X2Condition_UnitEffects           ReadyForAnythingCondition;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ReadyForAnythingOverwatch');
+	
+	Template.bDontDisplayInAbilitySummary = true;
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = 1;
+	AmmoCost.bFreeCost = true;                  //  ammo is consumed by the shot, not by this, but this should verify ammo is available
+	Template.AbilityCosts.AddItem(AmmoCost);
+
+	// No action point cost. Instead, require an effect.
+	//ReadyForAnythingCondition = new class'X2Condition_UnitEffects';
+	//ReadyForAnythingCondition.AddRequireEffect('ReadyForAnything', 'AA_AbilityNotAvailable');
+	//Template.AbilityShooterConditions.AddItem(ReadyForAnythingCondition);
+	
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
+	SkipExclusions.AddItem(class'X2AbilityTemplateManager'.default.DisorientedName);
+	Template.AddShooterEffectExclusions(SkipExclusions);
+
+	SuppressedCondition = new class'X2Condition_UnitEffects';
+	SuppressedCondition.AddExcludeEffect(class'X2Effect_Suppression'.default.EffectName, 'AA_UnitIsSuppressed');
+	Template.AbilityShooterConditions.AddItem(SuppressedCondition);
+	
+	ReserveActionPointsEffect = new class'X2Effect_ReserveOverwatchPoints';
+	Template.AddTargetEffect(ReserveActionPointsEffect);
+
+	CoveringFireEffect = new class'X2Effect_CoveringFire';
+	CoveringFireEffect.AbilityToActivate = 'OverwatchShot';
+	CoveringFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
+	CoveringFireCondition = new class'X2Condition_AbilityProperty';
+	CoveringFireCondition.OwnerHasSoldierAbilities.AddItem('CoveringFire');
+	CoveringFireEffect.TargetConditions.AddItem(CoveringFireCondition);
+	Template.AddTargetEffect(CoveringFireEffect);
+
+	ConcealedCondition = new class'X2Condition_UnitProperty';
+	ConcealedCondition.ExcludeFriendlyToSource = false;
+	ConcealedCondition.IsConcealed = true;
+	UnitValueEffect = new class'X2Effect_SetUnitValue';
+	UnitValueEffect.UnitName = class'X2Ability_DefaultAbilitySet'.default.ConcealedOverwatchTurn;
+	UnitValueEffect.CleanupType = eCleanup_BeginTurn;
+	UnitValueEffect.NewValueToSet = 1;
+	UnitValueEffect.TargetConditions.AddItem(ConcealedCondition);
+	Template.AddTargetEffect(UnitValueEffect);
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	// Placeholder trigger
+	Template.AbilityTriggers.AddItem(new class'X2AbilityTrigger_Placeholder');
+	
+	Template.AbilitySourceName = 'eAbilitySource_Standard';
+	// Don't display in HUD
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_overwatch";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.OVERWATCH_PRIORITY;
+	Template.bNoConfirmationWithHotKey = true;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+	Template.AbilityConfirmSound = "Unreal2DSounds_OverWatch";
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = class'X2Ability_DefaultAbilitySet'.static.OverwatchAbility_BuildVisualization;
+	Template.CinescriptCameraType = "Overwatch";
+
+	Template.Hostility = eHostility_Defensive;
+
+	return Template;	
+}
+
 
 DefaultProperties
 {

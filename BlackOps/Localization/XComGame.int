@@ -162,6 +162,19 @@ LocLongDescription="Missed shots with your <Ability:WeaponName/> deal <Ability:M
 LocHelpText="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage."
 LocFlyOverText="Tactician"
 
+[ShadowOps_ReadyForAnything X2AbilityTemplate]
+LocFriendlyName="Ready for Anything"
+LocLongDescription="Attack an enemy wit your <Ability:WeaponName/>, then enter overwatch."
+LocHelpText="Attack an enemy wit your <Ability:WeaponName/>, then enter overwatch."
+LocFlyOverText="Ready for Anything"
+
+[ShadowOps_ReadyForAnythingOverwatch X2AbilityTemplate]
+LocFriendlyName="Overwatch"
+LocHelpText="Fire on the first enemy that moves within your line of sight, with a penalty to aim."
+LocLongDescriptionWhenConcealed="Fire on the first enemy that moves within your line of sight, but only if revealed."
+LocFlyOverText="Overwatch"
+LocFriendlyNameWhenConcealed="Overwatch (Concealed)"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
