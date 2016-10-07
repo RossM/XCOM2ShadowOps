@@ -153,8 +153,8 @@ LocFlyOverText="Tactician"
 
 [ShadowOps_ReadyForAnything X2AbilityTemplate]
 LocFriendlyName="Ready for Anything"
-LocLongDescription="Attack an enemy wit your <Ability:WeaponName/>, then enter overwatch."
-LocHelpText="Attack an enemy wit your <Ability:WeaponName/>, then enter overwatch."
+LocLongDescription="When you make a standard attack with your <Ability:WeaponName/> you automatically enter overwatch."
+LocHelpText="Fire a shot at a target, then enter overwatch."
 LocFlyOverText="Ready for Anything"
 
 ; === Dragoon abilities ===
