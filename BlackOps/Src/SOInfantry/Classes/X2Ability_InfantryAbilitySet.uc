@@ -1359,7 +1359,7 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 	local X2AbilityTemplate                 Template;
 	local X2AbilityCost                     Cost;
 
-	Template = new class'X2AbilityTemplate'(class'X2Ability_DefaultAbilitySet'.static.AddOverwatchAbility());
+	Template = new class'X2AbilityTemplate'(class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('Overwatch'));
 	Template.SetTemplateName('ShadowOps_ReadyForAnythingOverwatch');
 
 	// Remove action point cost
