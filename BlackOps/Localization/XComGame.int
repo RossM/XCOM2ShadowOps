@@ -168,13 +168,6 @@ LocLongDescription="Attack an enemy wit your <Ability:WeaponName/>, then enter o
 LocHelpText="Attack an enemy wit your <Ability:WeaponName/>, then enter overwatch."
 LocFlyOverText="Ready for Anything"
 
-[ShadowOps_ReadyForAnythingOverwatch X2AbilityTemplate]
-LocFriendlyName="Overwatch"
-LocHelpText="Fire on the first enemy that moves within your line of sight, with a penalty to aim."
-LocLongDescriptionWhenConcealed="Fire on the first enemy that moves within your line of sight, but only if revealed."
-LocFlyOverText="Overwatch"
-LocFriendlyNameWhenConcealed="Overwatch (Concealed)"
-
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
