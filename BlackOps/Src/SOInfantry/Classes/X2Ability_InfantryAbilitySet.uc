@@ -10,6 +10,7 @@ var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, Adrenalin
 var config int FortressDefenseModifier;
 var config int RifleSuppressionAimBonus;
 var config int TacticianConventionalDamage, TacticianMagneticDamage, TacticianBeamDamage;
+var config array<name> SuppressionAbilities;
 
 var config name FreeAmmoForPocket;
 
@@ -46,6 +47,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Tactician());
 	Templates.AddItem(ReadyForAnything());
 	Templates.AddItem(ReadyForAnythingOverwatch());
+	Templates.AddItem(ImprovedSuppression());
 
 	return Templates;
 }
@@ -1102,7 +1104,7 @@ static function X2AbilityTemplate FirstAid()
 	Effect.BaseCharges = 1;
 	Effect.BonusCharges = 1;
 
-	return Passive('ShadowOps_FirstAid', "img:///UILibrary_PerkIcons.UIPerk_supermedic", true, Effect);
+	return Passive('ShadowOps_FirstAid', "img:///UILibrary_BlackOps.UIPerk_firstaid", true, Effect);
 }
 
 static function X2AbilityTemplate SecondWind()
@@ -1289,6 +1291,42 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 
 	return Template;	
+}
+
+static function X2AbilityTemplate ImprovedSuppression()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_Persistent Effect;
+	local XMBAbilityTrigger_EventListener EventListener;
+	local XMBCondition_AbilityName NameCondition;
+
+	Effect = class'X2StatusEffects'.static.CreateDisorientedStatusEffect();
+	Effect.VisualizationFn = EffectFlyOver_Visualization;
+	Effect.TargetConditions.Length = 0;
+
+	Template = TargetedDebuff('ShadowOps_ImprovedSuppression', "img:///UILibrary_BlackOps.UIPerk_improvedsuppression", false, none,, eCost_None);
+	Template.AddTargetEffect(Effect);
+
+	Template.AbilityShooterConditions.Length = 0;
+	Template.AbilityTargetConditions.Length = 0;
+
+	HidePerkIcon(Template);
+	AddIconPassive(Template);
+
+	Template.AbilityTriggers.Length = 0;
+	
+	EventListener = new class'XMBAbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'AbilityActivated';
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	EventListener.bSelfTarget = false;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	NameCondition = new class'XMBCondition_AbilityName';
+	NameCondition.IncludeAbilityNames = default.SuppressionAbilities;
+	EventListener.AbilityTargetConditions.AddItem(NameCondition);
+
+	return Template;
 }
 
 DefaultProperties

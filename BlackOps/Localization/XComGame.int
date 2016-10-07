@@ -157,6 +157,12 @@ LocLongDescription="When you make a standard attack with your <Ability:WeaponNam
 LocHelpText="Fire a shot at a target, then enter overwatch."
 LocFlyOverText="Ready for Anything"
 
+[ShadowOps_ImprovedSuppression X2AbilityTemplate]
+LocFriendlyName="Improved Suppression"
+LocLongDescription="Your Suppression ability also disorients the target."
+LocHelpText="Your Suppression ability also disorients the target."
+LocFlyOverText="Improved Suppression"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
