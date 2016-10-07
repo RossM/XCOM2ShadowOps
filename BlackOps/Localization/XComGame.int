@@ -39,17 +39,6 @@ LocHelpText="Your shots can't be dodged."
 LocFlyOverText="Good Eye"
 LocPromotionPopupText="<Bullet/> This ability gets more useful in the late game, when many enemies have dodge chances.<br/>"
 
-[ShadowOps_AlwaysReady X2AbilityTemplate]
-LocFriendlyName="Ready for Anything"
-LocLongDescription="Automatically activate Pistol Overwatch at the end of every turn."
-LocHelpText="Automatically activate Pistol Overwatch at the end of every turn."
-LocFlyOverText="Pistol Overwatch: Ready for Anything"
-LocPromotionPopupText="<Bullet/> Ready for Anything won't trigger if you use an overwatch ability.<br/>"
-
-[ShadowOps_AlwaysReadyTrigger X2AbilityTemplate]
-LocFriendlyName="Ready for Anything"
-LocFlyOverText="Pistol Overwatch: Ready for Anything"
-
 [ShadowOps_FullAuto X2AbilityTemplate]
 LocFriendlyName="Full Auto"
 LocLongDescription="Take a shot with an aim penalty of <Ability:ToHit/>. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo."
