@@ -4,7 +4,10 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 		
-	Templates.AddItem(AddClassUnlock('AdrenalineSurgeUnlock', 'ShadowOps_Infantry', 'ShadowOps_AdrenalineSurge'));
+	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_Infantry') != INDEX_NONE)
+		Templates.AddItem(AddClassUnlock('AdrenalineSurgeUnlock', 'ShadowOps_Infantry', 'ShadowOps_AdrenalineSurge'));
+	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_Infantry_LW') != INDEX_NONE)
+		Templates.AddItem(AddClassUnlock('AdrenalineSurgeUnlock', 'ShadowOps_Infantry_LW', 'ShadowOps_AdrenalineSurge'));
 
 	return Templates;
 }
