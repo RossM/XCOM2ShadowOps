@@ -306,6 +306,9 @@
     <Content Include="Src\SOInfantry\Classes\X2Ability_InfantryAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SOInfantry\Classes\X2Action_Airstrike.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SOInfantry\Classes\X2Action_Fire_Miss.uc">
       <SubType>Content</SubType>
     </Content>
