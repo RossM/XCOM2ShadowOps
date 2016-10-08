@@ -11,6 +11,8 @@ var config int FortressDefenseModifier;
 var config int RifleSuppressionAimBonus;
 var config int TacticianConventionalDamage, TacticianMagneticDamage, TacticianBeamDamage;
 var config array<name> SuppressionAbilities;
+var config WeaponDamageValue AirstrikeDamage;
+var config int AirstrikeCharges;
 
 var config name FreeAmmoForPocket;
 
@@ -49,6 +51,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ReadyForAnythingOverwatch());
 	Templates.AddItem(ImprovedSuppression());
 	Templates.AddItem(CoupDeGrace());
+	Templates.AddItem(Airstrike());
 
 	return Templates;
 }
@@ -1340,6 +1343,82 @@ static function X2AbilityTemplate CoupDeGrace()
 	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
 	return Passive('ShadowOps_CoupDeGrace', "img:///UILibrary_BlackOps.UIPerk_coupdegrace", false, Effect);
+}
+
+static function X2AbilityTemplate Airstrike()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2Condition_Visibility            VisibilityCondition;
+	local X2Effect_ApplyWeaponDamage		Effect;
+	local X2AbilityToHitCalc_StandardAim	StandardAim;
+	local X2AbilityMultiTarget_Cylinder		MultiTarget;
+	local X2Condition_UnitProperty			UnitProperty;
+
+	// Macro to do localisation and stuffs
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Airstrike');
+
+	// Icon Properties
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_airstrike";
+	Template.ShotHUDPriority = default.AUTO_PRIORITY;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
+	Template.DisplayTargetHitChance = false;
+	Template.AbilitySourceName = 'eAbilitySource_Perk'; 
+	Template.Hostility = eHostility_Offensive;
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.AddShooterEffectExclusions();
+
+	VisibilityCondition = new class'X2Condition_Visibility';
+	VisibilityCondition.bVisibleToAnyAlly = true;
+	Template.AbilityTargetConditions.AddItem(VisibilityCondition);
+
+	Template.AbilityTargetStyle = new class'X2AbilityTarget_Cursor';
+	Template.TargetingMethod = class'X2TargetingMethod_ViperSpit';
+
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_DoubleConsumeAll));
+
+	MultiTarget = new class'X2AbilityMultiTarget_Cylinder';
+	MultiTarget.bUseOnlyGroundTiles = true;
+	MultiTarget.bIgnoreBlockingCover = true;
+	MultiTarget.fTargetRadius = 10;
+	MultiTarget.fTargetHeight = 10;
+	Template.AbilityMultiTargetStyle = MultiTarget;
+	
+	Effect = new class'X2Effect_ApplyWeaponDamage';
+	Effect.EffectDamageValue = default.AirstrikeDamage;
+	Effect.bExplosiveDamage = true;
+	Effect.bIgnoreBaseDamage = true;
+	Effect.EnvironmentalDamageAmount = 40;
+
+	Template.AddMultiTargetEffect(Effect);
+
+	// Template.AddMultiTargetEffect(new class'X2Effect_ApplyFireToWorld');
+
+	UnitProperty = new class'X2Condition_UnitProperty';
+	UnitProperty.ExcludeDead = true;
+	UnitProperty.IsOutdoors = true;
+	Template.AbilityShooterConditions.AddItem(UnitProperty);
+
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bGuaranteedHit = true;
+	StandardAim.bAllowCrit = false;
+	StandardAim.bIndirectFire = true;
+	Template.AbilityToHitCalc = StandardAim;
+	
+	Template.bUsesFiringCamera = true;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;	
+	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
+	// Template.bSkipFireAction = true;
+	Template.CustomFireAnim = 'HL_CallReinforcementsA';
+
+	Template.bCrossClassEligible = false;
+
+	AddCharges(Template, default.AirstrikeCharges);
+
+	return Template;	
 }
 
 DefaultProperties

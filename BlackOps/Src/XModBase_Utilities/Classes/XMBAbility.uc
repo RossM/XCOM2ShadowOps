@@ -246,7 +246,6 @@ static function X2AbilityTemplate Attack(name DataName, string IconImage, option
 	`CREATE_X2ABILITY_TEMPLATE(Template, DataName);
 
 	// Icon Properties
-	Template.bDontDisplayInAbilitySummary = true;
 	Template.IconImage = IconImage;
 	Template.ShotHUDPriority = ShotHUDPriority;
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;

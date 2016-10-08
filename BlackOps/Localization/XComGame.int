@@ -169,6 +169,12 @@ LocLongDescription="Killing an enemy with your pistol doesn't cost an action."
 LocHelpText="Killing an enemy with your pistol doesn't cost an action."
 LocFlyOverText="Coup de Grace"
 
+[ShadowOps_Airstrike X2AbilityTemplate]
+LocFriendlyName="Airstrike"
+LocLongDescription="Once per mission, call in an airstrike that does 8-12 damage in a large area. Requires two actions and only works outdoors."
+LocHelpText="Call in an airstrike that does 8-12 damage in a large area. Requires two actions and only works outdoors."
+LocFlyOverText="Airstrike"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
