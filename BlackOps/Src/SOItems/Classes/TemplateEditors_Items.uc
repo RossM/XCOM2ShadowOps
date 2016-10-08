@@ -10,7 +10,7 @@ struct TemplateEdit
 	var int Tier;
 };
 
-var config array<name> ExtraStartingItems, DisabledItems;
+var config array<name> ExtraStartingItems, DisabledItems, InfiniteItems;
 var config array<TemplateEdit> BuildableItems;
 
 static function EditTemplates()
@@ -24,6 +24,10 @@ static function EditTemplates()
 		foreach default.ExtraStartingItems(DataName)
 		{
 			ChangeToStartingItem(DataName);
+		}
+		foreach default.InfiniteItems(DataName)
+		{
+			ChangeToInfiniteItem(DataName);
 		}
 		foreach default.DisabledItems(DataName)
 		{
@@ -54,6 +58,26 @@ static function ChangeToStartingItem(name ItemName)
 		Template.bInfiniteItem = true;
 		Template.StartingItem = true;
 		Template.TradingPostValue = 0;
+	}
+}
+
+static function ChangeToInfiniteItem(name ItemName)
+{
+	local X2ItemTemplateManager			ItemManager;
+	local array<X2DataTemplate>			DataTemplateAllDifficulties;
+	local X2DataTemplate				DataTemplate;
+	local X2ItemTemplate				Template;
+	
+	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	ItemManager.FindDataTemplateAllDifficulties(ItemName, DataTemplateAllDifficulties);
+	foreach DataTemplateAllDifficulties(DataTemplate)
+	{
+		Template = X2ItemTemplate(DataTemplate);
+
+		Template.bInfiniteItem = true;
+		Template.TradingPostValue = 0;
+		Template.Cost.ResourceCosts.Length = 0;
+		Template.Cost.ArtifactCosts.Length = 0;
 	}
 }
 
