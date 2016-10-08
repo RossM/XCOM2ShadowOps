@@ -40,8 +40,8 @@ function PerformUpgrades()
 
 	if (UpgradeInfo.PerformUpgrade('GrantFreeRespecs1', NewGameState))
 		bChanged = true;
-	if (UpgradeInfo.ShowUpgradePopupIfNeeded())
-		bChanged = true;
+	//if (UpgradeInfo.ShowUpgradePopupIfNeeded())
+	//	bChanged = true;
 
 	if (bChanged)
 		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
