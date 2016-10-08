@@ -1442,8 +1442,6 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
         local int i, j;
         local XComGameState_EnvironmentDamage DamageEventStateObject;
         
-        local XComGameState_Unit ShooterState;
-        
 
         History = class'XComGameStateHistory'.static.GetGameStateHistory();
 
@@ -1461,8 +1459,6 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
         BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(InteractingUnitRef.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
         BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(InteractingUnitRef.ObjectID);
         BuildTrack.TrackActor = History.GetVisualizer(InteractingUnitRef.ObjectID);
-
-        ShooterState = XComGameState_Unit(BuildTrack.StateObject_NewState);
 
         // Exit Cover
         class'X2Action_ExitCover'.static.AddToVisualizationTrack(BuildTrack, Context);
