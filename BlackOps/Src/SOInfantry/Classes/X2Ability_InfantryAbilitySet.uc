@@ -1350,6 +1350,7 @@ static function X2AbilityTemplate Airstrike()
 	local X2AbilityTemplate                 Template;	
 	local X2Condition_Visibility            VisibilityCondition;
 	local X2Effect_ApplyWeaponDamage		Effect;
+	local X2Effect_ApplyFireToWorld			FireEffect;
 	local X2AbilityToHitCalc_StandardAim	StandardAim;
 	local X2AbilityMultiTarget_Cylinder		MultiTarget;
 	local X2Condition_UnitProperty			UnitProperty;
@@ -1393,7 +1394,9 @@ static function X2AbilityTemplate Airstrike()
 
 	Template.AddMultiTargetEffect(Effect);
 
-	// Template.AddMultiTargetEffect(new class'X2Effect_ApplyFireToWorld');
+	FireEffect = new class'X2Effect_ApplyFireToWorld';
+	FireEffect.bCheckForLOSFromTargetLocation = false;
+	Template.AddMultiTargetEffect(FireEffect);
 
 	UnitProperty = new class'X2Condition_UnitProperty';
 	UnitProperty.ExcludeDead = true;
@@ -1413,6 +1416,7 @@ static function X2AbilityTemplate Airstrike()
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 	// Template.bSkipFireAction = true;
 	Template.CustomFireAnim = 'HL_CallReinforcementsA';
+	Template.bSkipExitCoverWhenFiring = true;
 
 	Template.bCrossClassEligible = false;
 
