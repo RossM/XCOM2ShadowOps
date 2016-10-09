@@ -3,7 +3,7 @@ class X2Ability_EngineerAbilitySet extends XMBAbility
 
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
 var config int BreachEnvironmentalDamage;
-var config float BreachRange, BreachRadius, BreachShotgunRange, BreachShotgunRadius;
+var config float BreachRange, BreachRadius;
 var config float DangerZoneBonusRadius, DangerZoneBreachBonusRadius;
 var config int MovingTargetDefenseBonus, MovingTargetDodgeBonus;
 var config int EntrenchDefense, EntrenchDodge;
@@ -30,7 +30,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(DenseSmoke());			// Non-LW only
 	Templates.AddItem(SmokeAndMirrors());
 	Templates.AddItem(Breach());
-	Templates.AddItem(ShotgunBreach());
 	Templates.AddItem(Fastball());
 	Templates.AddItem(FastballRemovalTrigger());
 	Templates.AddItem(FractureAbility());
@@ -101,87 +100,12 @@ static function X2AbilityTemplate Breach()
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
 	local X2Condition_UnitInventory			InventoryCondition;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Breach');
-	Template.AdditionalAbilities.AddItem('ShadowOps_ShotgunBreach');
-	
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideIfOtherAvailable;
-	Template.HideIfAvailable.AddItem('ShadowOps_ShotgunBreach');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_breach";
-	Template.Hostility = eHostility_Offensive;
-	Template.DisplayTargetHitChance = false;
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CORPORAL_PRIORITY;
-
-	Template.TargetingMethod = class'X2TargetingMethod_Breach';
-
-	AmmoCost = new class'X2AbilityCost_Ammo';	
-	AmmoCost.iAmmo = default.BreachAmmo;
-	Template.AbilityCosts.AddItem(AmmoCost);
-	
-	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));
-	
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.BreachCooldown;
-	Template.AbilityCooldown = Cooldown;
-	
-	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
-	StandardAim.bGuaranteedHit = true;
-	StandardAim.bAllowCrit = false;
-	Template.AbilityToHitCalc = StandardAim;
-	
-	InventoryCondition = new class'X2Condition_UnitInventory';
-	InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
-	InventoryCondition.ExcludeWeaponCategory = 'shotgun';
-	Template.AbilityShooterConditions.AddItem(InventoryCondition);
-
-	WeaponDamageEffect = new class'X2Effect_Breach';
-	WeaponDamageEffect.EnvironmentalDamageAmount = default.BreachEnvironmentalDamage;
-	Template.AddMultiTargetEffect(WeaponDamageEffect);
-
-	CursorTarget = new class'X2AbilityTarget_Cursor';
-	CursorTarget.FixedAbilityRange = default.BreachRange;
-	Template.AbilityTargetStyle = CursorTarget;
-
-	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
-	// but zero out BonusRadius so it isn't affected by Volatile Mix.
-	RadiusMultiTarget = new class'XMBAbilityMultiTarget_Radius';
-	RadiusMultiTarget.fTargetRadius = default.BreachRadius;
-	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
-
-	UnitPropertyCondition = new class'X2Condition_UnitProperty';
-	UnitPropertyCondition.ExcludeDead = true;
-	Template.AbilityShooterConditions.AddItem(UnitPropertyCondition);
-
-	Template.AddShooterEffectExclusions();
-
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
-	
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-
-	Template.bCrossClassEligible = false;
-
-	return Template;	
-}
-
-static function X2AbilityTemplate ShotgunBreach()
-{
-	local X2AbilityTemplate                 Template;	
-	local X2AbilityCost_Ammo                AmmoCost;
-	local X2Effect_ApplyWeaponDamage        WeaponDamageEffect;
-	local X2AbilityTarget_Cursor            CursorTarget;
-	local XMBAbilityMultiTarget_Radius      RadiusMultiTarget;
-	local X2Condition_UnitProperty          UnitPropertyCondition;
-	local X2AbilityToHitCalc_StandardAim    StandardAim;
-	local X2AbilityCooldown                 Cooldown;
-	local X2Condition_UnitInventory			InventoryCondition;
 	local AdditionalCooldownInfo			AdditionalCooldown;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ShotgunBreach');
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Breach');
 	
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_ShowIfAvailable;
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_breach";
 	Template.Hostility = eHostility_Offensive;
 	Template.DisplayTargetHitChance = false;
@@ -217,13 +141,13 @@ static function X2AbilityTemplate ShotgunBreach()
 	Template.AddMultiTargetEffect(WeaponDamageEffect);
 
 	CursorTarget = new class'X2AbilityTarget_Cursor';
-	CursorTarget.FixedAbilityRange = default.BreachShotgunRange;
+	CursorTarget.FixedAbilityRange = default.BreachRange;
 	Template.AbilityTargetStyle = CursorTarget;
 
 	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
 	// but zero out BonusRadius so it isn't affected by Volatile Mix.
 	RadiusMultiTarget = new class'XMBAbilityMultiTarget_Radius';
-	RadiusMultiTarget.fTargetRadius = default.BreachShotgunRadius;
+	RadiusMultiTarget.fTargetRadius = default.BreachRadius;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
