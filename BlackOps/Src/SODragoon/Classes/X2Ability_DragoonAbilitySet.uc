@@ -55,7 +55,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	return Templates;
 }
 
-static function X2AbilityTemplate ShieldProtocol(optional name TemplateName = 'ShadowOps_ShieldProtocol', optional string Icon = "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", optional EActionPointCost Cost = eCost_Single)
+static function X2AbilityTemplate ShieldProtocol(optional name TemplateName = 'ShadowOps_ShieldProtocol', optional string Icon = "img:///UILibrary_BlackOps.UIPerk_shieldprotocol", optional EActionPointCost Cost = eCost_Single)
 {
 	local X2AbilityTemplate                     Template;
 	local X2Condition_UnitProperty              TargetProperty;
