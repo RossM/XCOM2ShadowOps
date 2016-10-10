@@ -1265,6 +1265,8 @@ static function X2AbilityTemplate ReadyForAnything()
 
 	AbilityEffect = new class'X2Effect_ImmediateAbilityActivation';
 	AbilityEffect.AbilityName = 'ShadowOps_ReadyForAnythingOverwatch';
+	AbilityEffect.bApplyOnHit = true;
+	AbilityEffect.bApplyOnMiss = true;
 	Template.AddShooterEffect(AbilityEffect);
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_ReadyForAnythingOverwatch');
