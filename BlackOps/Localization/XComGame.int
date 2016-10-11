@@ -218,12 +218,6 @@ LocHelpText="Attack all targets in a straight line and damage or destroy cover."
 LocFlyOverText="Barrage"
 LocPromotionPopupText="<Bullet/> Barrage has a 70% chance to damage units and a 100% chance to damage or destroy cover. <br/><Bullet/> Barrage can hit multiple enemies if you position yourself correctly, but it's okay to use it on just one.<br/><Bullet/> Be aware of what Barrage is going to destroy before you fire, including whatever is behind the target.<br/><Bullet/> Be careful when aiming Barrage from full cover. The soldier may \"step out\", causing Barrage to hit a different line than you expected.<br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
-[ShadowOps_RifleBurstFire X2AbilityTemplate]
-LocFriendlyName="Barrage (Rifle)"
-LocLongDescription="Attack all targets in a straight line. The attack has <Ability:+ToHit/> Aim and may damage or destroy cover."
-LocHelpText="Attack all targets in a straight line. The attack has <Ability:+ToHit/> Aim and may damage or destroy cover."
-LocFlyOverText="Barrage"
-
 [ShadowOps_ShieldsUp X2AbilityTemplate]
 LocFriendlyName="Shields Up"
 LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
@@ -233,8 +227,8 @@ LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powe
 
 [ShadowOps_ECM X2AbilityTemplate]
 LocFriendlyName="ECM"
-LocLongDescription="All squad members are more difficult for enemies to detect while concealed."
-LocHelpText="All squad members are more difficult for enemies to detect while concealed."
+LocLongDescription="All squad members are 20% more difficult for enemies to detect while concealed."
+LocHelpText="All squad members are 20% more difficult for enemies to detect while concealed."
 LocFlyOverText="ECM"
 LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or evacs.<br/>"
 
@@ -247,14 +241,14 @@ LocPromotionPopupText="<Bullet/> Heavy weapons are weapons such as the rocket la
 
 [ShadowOps_Vanish X2AbilityTemplate]
 LocFriendlyName="Vanish"
-LocLongDescription="If you begin your turn with no enemies able to see you, you gain concealment."
+LocLongDescription="If you begin your turn with no enemies able to see you, you gain concealment. This effect has a 2 turn cooldown."
 LocHelpText="If you begin your turn with no enemies able to see you, you gain concealment."
 LocFlyOverText="Vanish"
 LocPromotionPopupText="<Bullet/> Units with Vanish make excellent scouts. If they get spotted, just retreat and regain concealment.<br/><Bullet/> There's no limit to the number of times a unit can regain concealment using Vanish.<br/><Bullet/> Vanish has a 2 turn cooldown. <br/>"
 
 [ShadowOps_VanishTrigger X2AbilityTemplate]
 LocFriendlyName="Vanish"
-LocLongDescription="If you begin your turn with no enemies able to see you, you gain concealment."
+LocLongDescription="If you begin your turn with no enemies able to see you, you gain concealment. This effect has a 2 turn cooldown."
 LocHelpText="If you begin your turn with no enemies able to see you, you gain concealment."
 LocFlyOverText="Vanish"
 
@@ -322,6 +316,12 @@ LocFriendlyName="Scout"
 LocLongDescription="Gain one battle scanner use each mission."
 LocHelpText="Gain one battle scanner use each mission."
 LocFlyOverText="Scout"
+
+[ShadowOps_Lightfoot X2AbilityTemplate]
+LocFriendlyName="Lightfoot"
+LocLongDescription="You have <Ability:+Mobility/> Mobility and are 20% harder to detect while concealed."
+LocHelpText="You have <Ability:+Mobility/> Mobility and are 20% harder to detect while concealed."
+LocFlyOverText="Lightfoot"
 
 ; === Hunter abilities ===
 
@@ -491,13 +491,6 @@ LocLongDescription="Fire a shot that destroys cover and shreds <Ability:Shred/> 
 LocHelpText="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits."
 LocFlyOverText="Breach"
 LocPromotionPopupText="<Bullet/> More advanced weapons will deal more damage and shred more armor.<br/><Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
-
-[ShadowOps_ShotgunBreach X2AbilityTemplate]
-LocFriendlyName="Breach"
-LocLongDescription="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits."
-LocHelpText="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits."
-LocFlyOverText="Breach"
-LocPromotionPopupText="<Bullet/> More advanced weapons will deal more damage and shred more armor.<br/><Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> Breach deals more damage and has a larger radius when used with a shotgun rather than an assault rifle. <br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Fastball X2AbilityTemplate]
 LocFriendlyName="Fastball"
@@ -682,12 +675,6 @@ LocHelpText="Your <Ability:WeaponName/> attacks deal <Ability:+Damage/> damage."
 LocFriendlyName="Absolutely Critical"
 LocLongDescription="You get an additional <Ability:+Crit> Crit chance against flanked or uncovered targets."
 LocHelpText="You get an additional <Ability:+Crit> Crit chance against flanked or uncovered targets."
-
-[ShadowOps_Lightfoot X2AbilityTemplate]
-LocFriendlyName="Lightfoot"
-LocLongDescription="You have <Ability:+Mobility/> Mobility and are harder to detect while concealed."
-LocHelpText="You have <Ability:+Mobility/> Mobility and are harder to detect while concealed."
-LocFlyOverText="Lightfoot"
 
 [ShadowOps_SnakeBlood X2AbilityTemplate]
 LocFriendlyName="Snake Blood"
