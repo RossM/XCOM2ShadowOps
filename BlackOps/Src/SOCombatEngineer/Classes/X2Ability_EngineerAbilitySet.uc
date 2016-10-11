@@ -144,8 +144,6 @@ static function X2AbilityTemplate Breach()
 	CursorTarget.FixedAbilityRange = default.BreachRange;
 	Template.AbilityTargetStyle = CursorTarget;
 
-	// Use SoldierBonusRadius because it grants the Danger Zone modifier,
-	// but zero out BonusRadius so it isn't affected by Volatile Mix.
 	RadiusMultiTarget = new class'XMBAbilityMultiTarget_Radius';
 	RadiusMultiTarget.fTargetRadius = default.BreachRadius;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
