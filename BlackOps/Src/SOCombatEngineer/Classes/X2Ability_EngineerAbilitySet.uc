@@ -908,16 +908,21 @@ static function X2AbilityTemplate Mayhem()
 static function X2AbilityTemplate Saboteur()
 {
 	local XMBEffect_ConditionalBonus Effect;
-	local X2Condition_UnitProperty Condition;
+	local X2Condition_UnitProperty UnitPropertyCondition;
+	local XMBCondition_AbilityName AbilityNameCondition;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
 	Effect.AddDamageModifier(default.SaboteurDamageBonus);
 
-	Condition = new class'X2Condition_UnitProperty';
-	Condition.ExcludeAlive = true;
-	Condition.ExcludeDead = true;
-	Condition.FailOnNonUnits = false;
-	Effect.AbilityTargetConditions.AddItem(Condition);
+	UnitPropertyCondition = new class'X2Condition_UnitProperty';
+	UnitPropertyCondition.ExcludeAlive = true;
+	UnitPropertyCondition.ExcludeDead = true;
+	UnitPropertyCondition.FailOnNonUnits = false;
+	Effect.AbilityTargetConditions.AddItem(UnitPropertyCondition);
+
+	AbilityNameCondition = new class'XMBCondition_AbilityName';
+	AbilityNameCondition.IncludeAbilityNames.AddItem('StandardShot');
+	Effect.AbilityTargetConditions.AddItem(AbilityNameCondition);
 
 	// TODO: icon
 	return Passive('ShadowOps_Saboteur', "img:///UILibrary_BlackOps.UIPerk_saboteur", false, Effect);

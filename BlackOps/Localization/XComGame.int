@@ -650,8 +650,8 @@ LocFlyOverText="Mayhem"
 
 [ShadowOps_Saboteur X2AbilityTemplate]
 LocFriendlyName="Saboteur"
-LocLongDescription="Your attacks deal <Ability:+Damage> damage to inanimate objects."
-LocHelpText="Your attacks deal <Ability:+Damage> damage to inanimate objects."
+LocLongDescription="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects."
+LocHelpText="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects."
 LocFlyOverText="Saboteur"
 
 [ShadowOps_Anatomist X2AbilityTemplate]
