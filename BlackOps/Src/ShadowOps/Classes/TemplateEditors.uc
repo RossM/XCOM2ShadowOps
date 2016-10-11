@@ -2,6 +2,7 @@
 class TemplateEditors extends Object config(GameCore);
 
 var config array<name> GrenadeAbilities, SuppressionBlockedAbilities, OverwatchAbilities, MedikitAbilities;
+var config array<name> LWClasses;
 
 static function EditTemplates()
 {
@@ -18,6 +19,31 @@ static function EditTemplates()
 	}
 
 	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
+
+	KillLongWarDead();
+}
+
+static function KillLongWarDead()
+{
+	local name TemplateName;
+	local array<X2DataTemplate> AllTemplates;
+	local X2DataTemplate Template;
+	local X2SoldierClassTemplate SoldierClassTemplate;
+	local X2SoldierClassTemplateManager SoldierClassManager;
+
+	SoldierClassManager = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager();
+
+	foreach default.LWClasses(TemplateName)
+	{
+		SoldierClassManager.FindDataTemplateAllDifficulties(TemplateName, AllTemplates);
+		foreach AllTemplates(Template)
+		{
+			SoldierClassTemplate = X2SoldierClassTemplate(Template);
+
+			SoldierClassTemplate.NumInForcedDeck = 0;
+			SoldierClassTemplate.NumInDeck = 0;
+		}
+	}
 }
 
 // --- Items ---
