@@ -447,7 +447,7 @@ LocFlyOverText="Butcher"
 
 [ShadowOps_Reposition X2AbilityTemplate]
 LocFriendlyName="Reposition"
-LocLongDescription="Fire your <Ability:WeaponName/> at a target, then move."
+LocLongDescription="You can take a standard move action after firing your <Ability:WeaponName/>."
 LocHelpText="Fire your <Ability:WeaponName/> at a target, then move."
 LocFlyOverText="Reposition"
 

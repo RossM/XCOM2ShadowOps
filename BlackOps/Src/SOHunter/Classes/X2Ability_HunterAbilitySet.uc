@@ -18,7 +18,7 @@ var config float ButcherDamageMultiplier;
 var config int StalkerMobilityBonus;
 var config int LastStandDuration, LastStandCharges;
 
-var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, RepositionCooldown;
+var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -904,9 +904,9 @@ static function X2AbilityTemplate Reposition()
 	local X2AbilityTemplate Template, SecondaryTemplate;
 	local X2Effect_GrantActionPoints Effect;
 
-	Template = Attack('ShadowOps_Reposition', "img:///UILibrary_BlackOps.UIPerk_reposition", false,, class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY + 10, eCost_WeaponConsumeAll);
+	Template = Attack('ShadowOps_Reposition', "img:///UILibrary_BlackOps.UIPerk_reposition", false,, class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY, eCost_WeaponConsumeAll);
 	Template.PostActivationEvents.AddItem('RepositionActivated');
-	AddCooldown(Template, default.RepositionCooldown);
+	Template.OverrideAbilities.AddItem('SniperStandardFire');
 
 	Effect = new class'X2Effect_GrantActionPoints';
 	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
