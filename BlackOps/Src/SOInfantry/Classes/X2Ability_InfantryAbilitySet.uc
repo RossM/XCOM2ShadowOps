@@ -36,9 +36,9 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZeroIn());
 	Templates.AddItem(Flush());
 	Templates.AddItem(FlushShot());
-	Templates.AddItem(RifleSuppression());
+	Templates.AddItem(RifleSuppression());			// Non-LW only
 	Templates.AddItem(Focus());
-	Templates.AddItem(Resilience());
+	Templates.AddItem(Resilience());				// Non-LW only
 	Templates.AddItem(AdrenalineSurge());
 	Templates.AddItem(AdrenalineSurgeTrigger());
 	Templates.AddItem(Fortify());

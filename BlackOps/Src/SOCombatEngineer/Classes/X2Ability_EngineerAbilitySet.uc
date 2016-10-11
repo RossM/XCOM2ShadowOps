@@ -50,8 +50,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FocusedDefense());
 	Templates.AddItem(LineEmUp());				// Unused
 	Templates.AddItem(ControlledDetonation());	// Unused
-	Templates.AddItem(SurvivalInstinct());		// Move to hunter
-	Templates.AddItem(Paragon());
+	Templates.AddItem(SurvivalInstinct());		// Unused
+	Templates.AddItem(Paragon());				// Unused
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Mayhem());
 	Templates.AddItem(Saboteur());

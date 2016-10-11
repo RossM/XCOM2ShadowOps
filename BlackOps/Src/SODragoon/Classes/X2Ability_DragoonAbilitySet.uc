@@ -31,7 +31,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	
 	Templates.AddItem(ShieldProtocol());
 	Templates.AddItem(HeavyArmor());
-	Templates.AddItem(Finesse());
+	Templates.AddItem(Finesse());				// Non-LW only
 	Templates.AddItem(StealthProtocol());
 	Templates.AddItem(BurstFire());
 	Templates.AddItem(ShieldsUp());

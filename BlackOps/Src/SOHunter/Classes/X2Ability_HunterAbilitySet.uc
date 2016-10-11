@@ -24,13 +24,13 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 	
-	Templates.AddItem(SnapShot());
-	Templates.AddItem(SnapShotShot());
-	Templates.AddItem(SnapShotOverwatch());
+	Templates.AddItem(SnapShot());				// Non-LW only
+	Templates.AddItem(SnapShotShot());			// Non-LW only
+	Templates.AddItem(SnapShotOverwatch());		// Non-LW only
 	Templates.AddItem(HunterMark());
 	Templates.AddItem(VitalPoint());
 	Templates.AddItem(Precision());
-	Templates.AddItem(LowProfile());
+	Templates.AddItem(LowProfile());			// Non-LW only
 	Templates.AddItem(Sprint());
 	Templates.AddItem(Assassin());
 	Templates.AddItem(AssassinTrigger());
@@ -42,7 +42,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(TrackingSpawnTrigger());
 	Templates.AddItem(Bullseye());
 	Templates.AddItem(FirstStrike());
-	Templates.AddItem(DamnGoodGround());
+	Templates.AddItem(DamnGoodGround());		// Non-LW only
 	Templates.AddItem(PointBlank());
 	Templates.AddItem(Butcher());
 	Templates.AddItem(Reposition());
