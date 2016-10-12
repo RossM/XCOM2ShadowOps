@@ -11,8 +11,6 @@ static function EditTemplates()
 		AddAllSuppressionConditions();
 	}
 
-	ChangeWeaponTier('Sword_MG', 'magnetic'); // Fixes base game bug
-
 	KillLongWarDead();
 }
 
@@ -36,28 +34,6 @@ static function KillLongWarDead()
 			SoldierClassTemplate.NumInForcedDeck = 0;
 			SoldierClassTemplate.NumInDeck = 0;
 		}
-	}
-}
-
-// --- Items ---
-
-static function ChangeWeaponTier(name ItemName, name WeaponTech)
-{
-	local X2ItemTemplateManager			ItemManager;
-	local array<X2DataTemplate>			DataTemplateAllDifficulties;
-	local X2DataTemplate				DataTemplate;
-	local X2WeaponTemplate				Template;
-	
-	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
-	ItemManager.FindDataTemplateAllDifficulties(ItemName, DataTemplateAllDifficulties);
-	foreach DataTemplateAllDifficulties(DataTemplate)
-	{
-		Template = X2WeaponTemplate(DataTemplate);
-
-		if (Template == none)
-			return;
-
-		Template.WeaponTech = WeaponTech;
 	}
 }
 
