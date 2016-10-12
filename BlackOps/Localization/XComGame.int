@@ -1018,11 +1018,19 @@ Summary="Nearby squadmates get +10 Crit and +3 Mobility when you get a kill."
 DisplayName="Dragoon: Grace"
 Summary="+10 Dodge for each visible enemy, to a max of +50."
 
-[DigitalWarfareUnlock X2SoldierStatUnlockTemplate]
+[PackmasterUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Combat Engineer: Packmaster"
+Summary="Limited-use items in utility slots gain a bonus use."
+
+[AdrenalineSurgeUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Infantry: Adrenaline Surge"
+Summary="Nearby squadmates get +10 Crit and +3 Mobility when you get a kill."
+
+[DigitalWarfareUnlock_LW X2SoldierStatUnlockTemplate]
 DisplayName="Dragoon: Digital Warfare"
 Summary="Gain a second PCS slot."
 
-[StalkerUnlock X2SoldierStatUnlockTemplate]
+[StalkerUnlock_LW X2SoldierStatUnlockTemplate]
 DisplayName="Hunter: Stalker"
 Summary="Gain +3 Mobility while concealed."
 

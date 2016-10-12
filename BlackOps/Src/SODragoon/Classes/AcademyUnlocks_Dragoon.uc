@@ -17,7 +17,7 @@ static function X2SoldierStatUnlockTemplate DigitalWarfare()
 	local X2SoldierStatUnlockTemplate Template;
 	local ArtifactCost Resources;
 
-	`CREATE_X2TEMPLATE(class'X2SoldierStatUnlockTemplate', Template, 'DigitalWarfareUnlock');
+	`CREATE_X2TEMPLATE(class'X2SoldierStatUnlockTemplate', Template, 'DigitalWarfareUnlock_LW');
 
 	Template.AllowedClasses.AddItem('ShadowOps_Dragoon_LW');
 	Template.BoostStat = eStat_CombatSims;
