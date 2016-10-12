@@ -300,6 +300,9 @@
     <Content Include="Src\SOInfantry\Classes\AcademyUnlocks_Infantry.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SOInfantry\Classes\TemplateEditors_Infantry.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SOInfantry\Classes\UIUtilities_Strategy_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -325,6 +328,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOInfantry\Classes\X2Condition_SwapAmmo.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOInfantry\Classes\X2DownloadableContentInfo_SOInfantry.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOInfantry\Classes\X2Effect_Focus.uc">
