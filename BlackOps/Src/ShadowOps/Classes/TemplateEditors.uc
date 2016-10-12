@@ -1,7 +1,7 @@
 // This is an Unreal Script
 class TemplateEditors extends Object config(GameCore);
 
-var config array<name> GrenadeAbilities, SuppressionBlockedAbilities, OverwatchAbilities, MedikitAbilities;
+var config array<name> SuppressionBlockedAbilities, OverwatchAbilities, MedikitAbilities;
 var config array<name> LWClasses;
 
 static function EditTemplates()
@@ -9,7 +9,6 @@ static function EditTemplates()
 	// Tactical
 	AddAllDoNotConsumeAllAbilities();
 	AddAllPostActivationEvents();
-	ChangeAllToGrenadeActionPoints();
 	AddSwapAmmoAbilities();
 	FixHotloadAmmo();
 
@@ -122,17 +121,8 @@ static function AddDoNotConsumeAllEffect(name AbilityName, name EffectName)
 
 static function AddAllDoNotConsumeAllAbilities()
 {
-	local name DataName;
-
 	// Bullet Swarm
 	AddDoNotConsumeAllAbility('StandardShot', 'ShadowOps_BulletSwarm');
-
-	// Smoke and Mirrors, Fastball
-	foreach default.GrenadeAbilities(DataName)
-	{
-		AddDoNotConsumeAllAbility(DataName, 'ShadowOps_SmokeAndMirrors');
-		AddDoNotConsumeAllEffect(DataName, 'Fastball');
-	}
 }
 
 static function AddPostActivationEvent(name AbilityName, name EventName)
@@ -154,12 +144,6 @@ static function AddAllPostActivationEvents()
 {
 	local name DataName;
 
-	// Fastball
-	foreach default.GrenadeAbilities(DataName)
-	{
-		AddPostActivationEvent(DataName, 'GrenadeUsed');
-	}
-
 	// Fortify
 	foreach default.OverwatchAbilities(DataName)
 	{
@@ -170,45 +154,6 @@ static function AddAllPostActivationEvents()
 	foreach default.MedikitAbilities(DataName)
 	{
 		AddPostActivationEvent(DataName, 'MedikitUsed');
-	}
-}
-
-static function ChangeToGrenadeActionPoints(name AbilityName)
-{
-	local X2AbilityTemplateManager				AbilityManager;
-	local array<X2AbilityTemplate>				TemplateAllDifficulties;
-	local X2AbilityTemplate						Template;
-	local X2AbilityCost							AbilityCost;
-	local X2AbilityCost_ActionPoints			ActionPointCost;
-	local X2AbilityCost_GrenadeActionPoints		GrenadeCost;
-	local int									i;
-
-	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
-	AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
-	foreach TemplateAllDifficulties(Template)
-	{
-		for (i = 0; i < Template.AbilityCosts.Length; i++)
-		{
-			AbilityCost = Template.AbilityCosts[i];
-			ActionPointCost = X2AbilityCost_ActionPoints(AbilityCost);
-			if (ActionPointCost != none && !ActionPointCost.IsA('X2AbilityCost_GrenadeActionPoints'))
-			{
-				GrenadeCost = new class 'X2AbilityCost_GrenadeActionPoints'(ActionPointCost);
-				GrenadeCost.AllowedTypes.AddItem('grenade');
-
-				Template.AbilityCosts[i] = GrenadeCost;
-			}
-		}
-	}
-}
-
-static function ChangeAllToGrenadeActionPoints()
-{
-	local name DataName;
-
-	foreach default.GrenadeAbilities(DataName)
-	{
-		ChangeToGrenadeActionPoints(DataName);
 	}
 }
 

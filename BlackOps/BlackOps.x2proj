@@ -119,9 +119,6 @@
     <Content Include="Src\ShadowOps\Classes\UIScreenListener_UIAvengerHUD.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShadowOps\Classes\X2AbilityCost_GrenadeActionPoints.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShadowOps\Classes\X2Ability_AWC.uc">
       <SubType>Content</SubType>
     </Content>
@@ -162,6 +159,12 @@
     <Content Include="Src\SOCombatEngineer\Classes\AcademyUnlocks_CombatEngineer.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SOCombatEngineer\Classes\TemplateEditors_CombatEngineer.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOCombatEngineer\Classes\X2AbilityCost_GrenadeActionPoints.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SOCombatEngineer\Classes\X2Ability_EngineerAbilitySet.uc">
       <SubType>Content</SubType>
     </Content>
@@ -175,6 +178,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOCombatEngineer\Classes\X2Condition_Untouchable.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\SOCombatEngineer\Classes\X2DownloadableContentInfo_SOCombatEngineer.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOCombatEngineer\Classes\X2Effect_Aggression.uc">
