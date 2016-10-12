@@ -11,6 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Config\" />
+    <Folder Include="Config\SOItems" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
     <Folder Include="Src\" />
@@ -47,6 +48,12 @@
     <Folder Include="Src\XModBase_Utilities\Classes" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\SOItems\XComGameCore.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOItems\XComGameData_WeaponData.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\XComAI.ini">
       <SubType>Content</SubType>
     </Content>
