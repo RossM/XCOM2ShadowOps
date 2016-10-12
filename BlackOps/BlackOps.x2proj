@@ -11,6 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Config\" />
+    <Folder Include="Config\CritChanceChange" />
     <Folder Include="Config\SOItems" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
@@ -48,6 +49,12 @@
     <Folder Include="Src\XModBase_Utilities\Classes" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\CritChanceChange\XComGameCore.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\CritChanceChange\XComShadowOpsOptions.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOItems\XComGameCore.ini">
       <SubType>Content</SubType>
     </Content>
@@ -99,7 +106,7 @@
     <Content Include="Config\XComEngine.ini" />
     <Content Include="Config\XComGame.ini" />
     <Content Include="Localization\XComGame.int" />
-    <Content Include="Src\CritChanceChange\Classes\ModConfig.uc">
+    <Content Include="Src\CritChanceChange\Classes\ModConfig_CritChanceChange.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\CritChanceChange\Classes\X2Ability_Universal_BO.uc">

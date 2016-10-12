@@ -10,7 +10,7 @@ function GetFinalToHitModifiers(XComGameState_Effect EffectState, XComGameState_
 	local ShotModifierInfo ModInfo;
 	local float FinalAdjust;
 
-	if (!class'ModConfig'.default.bEnableRulesTweaks)
+	if (!class'ModConfig_CritChanceChange'.default.bEnableRulesTweaks)
 		return;
 
 	FinalAdjust = (default.MinimumHitChanceForNoCritPenalty - ShotBreakdown.ResultTable[eHit_Success]) * default.HitChanceCritPenaltyScale;
