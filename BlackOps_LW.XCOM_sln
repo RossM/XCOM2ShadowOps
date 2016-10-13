@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # XCOM ModBuddy Solution File, Format Version 11.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{5DAE07AF-E217-45C1-8DE7-FF99D6011E8A}") = "BlackOps", "BlackOps\BlackOps.x2proj", "{8E7F8D96-B335-46C3-83A6-9AF4051C347C}"
+Project("{5DAE07AF-E217-45C1-8DE7-FF99D6011E8A}") = "BlackOps_LW", "BlackOps_LW\BlackOps_LW.x2proj", "{8E7F8D96-B335-46C3-83A6-9AF4051C347C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
