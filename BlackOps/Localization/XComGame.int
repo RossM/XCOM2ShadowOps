@@ -652,6 +652,12 @@ LocFriendlyName="Anatomist"
 LocLongDescription="You deal <Ability:+CritDamage> damage on critical hits for each enemy of the same type you have killed, to a max of <Ability:+MaxCritDamage>."
 LocHelpText="You deal <Ability:+CritDamage> damage on critical hits for each enemy of the same type you have killed, to a max of <Ability:+MaxCritDamage>."
 
+[ShadowOps_ExtraMunitions X2AbilityTemplate]
+LocFriendlyName="Extra Munitions"
+LocLongDescription="You get a free standard grenade on each mission."
+LocHelpText="You get a free standard grenade on each mission."
+LocFlyOverText="Extra Munitions"
+
 ; === AWC abilities ===
 
 [ShadowOps_HipFire X2AbilityTemplate]
@@ -1030,9 +1036,13 @@ Summary="Nearby squadmates get +10 Crit and +3 Mobility when you get a kill."
 DisplayName="Dragoon: Digital Warfare"
 Summary="Gain a second PCS slot."
 
-[StalkerUnlock_LW X2SoldierStatUnlockTemplate]
+[StalkerUnlock_LW X2SoldierAbilityUnlockTemplate]
 DisplayName="Hunter: Stalker"
 Summary="Gain +3 Mobility while concealed."
+
+[ExtraMunitionsUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Extra Munitions"
+Summary="All soldiers gain a free standard grenade on each mission."
 
 ; === Gameplay tips ===
 

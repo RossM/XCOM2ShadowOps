@@ -56,6 +56,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Mayhem());
 	Templates.AddItem(Saboteur());
 	Templates.AddItem(Anatomist());
+	Templates.AddItem(ExtraMunitions());
 
 	return Templates;
 }
@@ -937,4 +938,18 @@ static function X2AbilityTemplate Anatomist()
 	Effect.ScaleMax = default.AnatomistMaxKills;
 
 	return Passive('ShadowOps_Anatomist', "img:///UILibrary_BlackOps.UIPerk_anatomist", true, Effect);
+}
+
+static function X2AbilityTemplate ExtraMunitions()
+{
+	local X2AbilityTemplate Template;
+	local XMBEffect_AddUtilityItem ItemEffect;
+
+	Template = Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_BlackOps.UIPerk_extramunitions", true);
+
+	ItemEffect = new class 'XMBEffect_AddUtilityItem';
+	ItemEffect.DataName = 'FragGrenade';
+	Template.AddTargetEffect(ItemEffect);
+
+	return Template;
 }
