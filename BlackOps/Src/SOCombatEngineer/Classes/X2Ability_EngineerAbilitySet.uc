@@ -11,7 +11,6 @@ var config int FocusedDefenseDefense, FocusedDefenseDodge;
 var config int FractureCritModifier;
 var config int LineEmUpOffense, LineEmUpCrit;
 var config float ControlledDetonationDamageReduction;
-var config int SurvivalInstinctDefenseBonus, SurvivalInstinctCritBonus;
 var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
 var config int MayhemDamageBonus;
 var config array<name> MayhemExcludeAbilities;
@@ -50,7 +49,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FocusedDefense());
 	Templates.AddItem(LineEmUp());				// Unused
 	Templates.AddItem(ControlledDetonation());	// Unused
-	Templates.AddItem(SurvivalInstinct());		// Unused
 	Templates.AddItem(Paragon());				// Unused
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Mayhem());
@@ -797,32 +795,6 @@ static function X2AbilityTemplate ControlledDetonation()
 
 	// TODO: icon
 	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-}
-
-static function X2AbilityTemplate SurvivalInstinct()
-{
-	local XMBEffect_ConditionalBonus Effect;
-	local X2Condition_UnitStatCheck Condition;
-
-	// Create a condition that checks that the unit is at less than 100% HP.
-	// X2Condition_UnitStatCheck can also check absolute values rather than percentages, by
-	// using "false" instead of "true" for the last argument.
-	Condition = new class'X2Condition_UnitStatCheck';
-	Condition.AddCheckStat(eStat_HP, 100, eCheck_LessThan,,, true);
-
-	// Create a conditional bonus effect
-	Effect = new class'XMBEffect_ConditionalBonus';
-
-	// The effect grants +10 Crit chance and +20 Defense
-	Effect.AddToHitModifier(default.SurvivalInstinctCritBonus, eHit_Crit);
-	Effect.AddToHitAsTargetModifier(-default.SurvivalInstinctDefenseBonus, eHit_Success);
-
-	// The effect only applies while wounded
-	EFfect.AbilityShooterConditions.AddItem(Condition);
-	Effect.AbilityTargetConditionsAsTarget.AddItem(Condition);
-	
-	// Create the template using a helper function
-	return Passive('ShadowOps_SurvivalInstinct', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate Paragon()

@@ -1044,6 +1044,10 @@ Summary="Gain +3 Mobility while concealed."
 DisplayName="Extra Munitions"
 Summary="All soldiers gain a free standard grenade on each mission."
 
+[SurvivalInstinct_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Survival Instinct"
+Summary="Injured soldiers gain +20 Defense and +10 Crit chance."
+
 ; === Gameplay tips ===
 
 ; Changing gameplay tips doesn't actually work for some reason
