@@ -4,9 +4,6 @@ SnapShotPenaltyText="This unit has an aim penalty for overwatching with a single
 BullseyePenaltyName="Rattled"
 BullseyePenaltyText="This unit has -20 penalties to Aim, Defense and Will."
 
-[X2Effect_Universal_BO]
-LowHitChanceCritModifier="Hit chance"
-
 ; === Upgrade info ===
 
 [X2DownloadableContentInfo_BlackOps]
