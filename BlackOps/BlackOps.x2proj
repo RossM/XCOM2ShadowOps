@@ -103,6 +103,9 @@
     <Content Include="Localization\ShadowOps.int">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Localization\SOHunter.int">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="ReadMe.txt" />
     <Content Include="ModPreview.jpg" />
     <Content Include="Config\XComEditor.ini" />
