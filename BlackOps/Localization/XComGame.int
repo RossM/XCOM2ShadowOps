@@ -175,6 +175,12 @@ LocLongDescription="Once per mission, call in an airstrike that does 8-12 damage
 LocHelpText="Call in an airstrike that does 8-12 damage in a large area. Requires two actions and only works outdoors."
 LocFlyOverText="Airstrike"
 
+[ShadowOps_AgainstTheOdds X2AbilityTemplate]
+LocFriendlyName="Against the Odds"
+LocLongDescription="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
+LocHelpText="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
+LocFlyOverText="Against the Odds"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
@@ -323,6 +329,12 @@ LocLongDescription="You have <Ability:+Mobility/> Mobility and are 20% harder to
 LocHelpText="You have <Ability:+Mobility/> Mobility and are 20% harder to detect while concealed."
 LocFlyOverText="Lightfoot"
 
+[ShadowOps_Charge X2AbilityTemplate]
+LocFriendlyName="Charge!"
+LocLongDescription="Take a standard action after dashing."
+LocHelpText="Take a standard action after dashing."
+LocFlyOverText="Charge!"
+
 ; === Hunter abilities ===
 
 [ShadowOps_SnapShot X2AbilityTemplate]
@@ -468,12 +480,6 @@ LocFriendlyName="Last Stand"
 LocLongDescription="Once per mission, become immune to death and incapacitation until the end of your next turn."
 LocHelpText="Become immune to death and incapacitation until the end of your next turn."
 LocFlyOverText="Last Stand"
-
-[ShadowOps_AgainstTheOdds X2AbilityTemplate]
-LocFriendlyName="Against the Odds"
-LocLongDescription="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
-LocHelpText="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
-LocFlyOverText="Against the Odds"
 
 ; === Engineer abilities ===
 

@@ -21,7 +21,7 @@ var config int SensorOverlaysCritBonus;
 var config int SuperchargeChargeBonus;
 var config array<int> ReverseEngineeringHackBonus;
 
-var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges;
+var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
 var config int BurstFireAmmo;
 
@@ -51,6 +51,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Supercharge());
 	Templates.AddItem(ReverseEngineering());
 	Templates.AddItem(Scout());
+	Templates.AddItem(Charge());
 
 	return Templates;
 }
@@ -946,4 +947,25 @@ static function X2AbilityTemplate Scout()
 	Effect.DataName = 'BattleScanner';
 
 	return Passive('ShadowOps_Scout', "img:///UILibrary_BlackOps.UIPerk_scout", true, Effect);
+}
+
+static function X2AbilityTemplate Charge()
+{
+	local X2AbilityTemplate                 Template;
+	local X2AbilityCharges                  Charges;
+	local X2AbilityCost_Charges             ChargesCost;
+
+	Template = class'X2Ability_RangerAbilitySet'.static.RunAndGunAbility('ShadowOps_Charge');
+
+	Charges = new class'X2AbilityCharges';
+	Charges.InitialCharges = default.ChargeCharges;
+	Template.AbilityCharges = Charges;
+
+	ChargesCost = new class'X2AbilityCost_Charges';
+	ChargesCost.NumCharges = 1;
+	Template.AbilityCosts.AddItem(ChargesCost);
+
+	Template.AbilityCooldown = none;
+
+	return Template;
 }
