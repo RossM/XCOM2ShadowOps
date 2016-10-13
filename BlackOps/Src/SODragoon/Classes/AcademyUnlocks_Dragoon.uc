@@ -9,7 +9,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_Dragoon_LW') != INDEX_NONE)
 	{
 		Templates.AddItem(DigitalWarfare());
-		Templates.AddItem(AddClassUnlock('ChargeUnlock_LW', 'ShadowOps_Dragoon_LW', 'RunAndGun'));
+		Templates.AddItem(AddBrigadierUnlock('ChargeUnlock_LW', 'ShadowOps_Dragoon_LW', 'RunAndGun'));
 	}
 
 	return Templates;

@@ -13,6 +13,7 @@ var config int TacticianConventionalDamage, TacticianMagneticDamage, TacticianBe
 var config array<name> SuppressionAbilities;
 var config WeaponDamageValue AirstrikeDamage;
 var config int AirstrikeCharges;
+var config int AgainstTheOddsAimBonus, AgainstTheOddsMax;
 
 var config name FreeAmmoForPocket;
 
@@ -52,6 +53,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ImprovedSuppression());
 	Templates.AddItem(CoupDeGrace());
 	Templates.AddItem(Airstrike());
+	Templates.AddItem(AgainstTheOdds());
 
 	return Templates;
 }
@@ -1533,6 +1535,26 @@ static simulated function Airstrike_BuildVisualization(XComGameState VisualizeGa
 
 }
 
+// Perk name:		Tactical Sense
+// Perk effect:		You get +10 Dodge per visible enemy, to a max of +50.
+// Localized text:	"You get <Ability:+Dodge/> Dodge per visible enemy, to a max of <Ability:+MaxDodge/>."
+// Config:			(AbilityName="XMBExample_TacticalSense")
+static function X2AbilityTemplate AgainstTheOdds()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBValue_Visibility Value;
+	 
+	Value = new class'XMBValue_Visibility';
+	Value.bCountEnemies = true;
+	Value.bSquadsight = true;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddToHitModifier(default.AgainstTheOddsAimBonus, eHit_Success);
+	Effect.ScaleValue = Value;
+	Effect.ScaleMax = default.AgainstTheOddsMax;
+
+	return Passive('ShadowOps_AgainstTheOdds', "img:///UILibrary_BlackOps.UIPerk_againsttheodds", true, Effect);
+}
 
 
 DefaultProperties

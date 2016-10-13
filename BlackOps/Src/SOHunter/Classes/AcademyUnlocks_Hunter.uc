@@ -9,7 +9,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_Hunter_LW') != INDEX_NONE)
 	{
 		Templates.AddItem(AddClassUnlock('StalkerUnlock_LW', 'ShadowOps_Hunter_LW', 'ShadowOps_Stalker'));
-		Templates.AddItem(AddBrigadierUnlock('SurvivalInstinct_LW', 'ShadowOps_Hunter_LW', 'ShadowOps_SurvivalInstinct'));
+		Templates.AddItem(AddBrigadierUnlock('SurvivalInstinctUnlock_LW', 'ShadowOps_Hunter_LW', 'ShadowOps_SurvivalInstinct'));
 	}
 
 	return Templates;

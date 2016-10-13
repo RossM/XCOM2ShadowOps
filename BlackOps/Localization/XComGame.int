@@ -469,6 +469,12 @@ LocLongDescription="Once per mission, become immune to death and incapacitation 
 LocHelpText="Become immune to death and incapacitation until the end of your next turn."
 LocFlyOverText="Last Stand"
 
+[ShadowOps_AgainstTheOdds X2AbilityTemplate]
+LocFriendlyName="Against the Odds"
+LocLongDescription="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
+LocHelpText="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
+LocFlyOverText="Against the Odds"
+
 ; === Engineer abilities ===
 
 [ShadowOps_DenseSmoke X2AbilityTemplate]
@@ -1046,11 +1052,15 @@ Summary="All soldiers gain a free standard grenade on each mission."
 
 [ChargeUnlock_LW X2SoldierAbilityUnlockTemplate]
 DisplayName="Charge!"
-Summary="All soldiers get one use of Run and Gun."
+Summary="All soldiers get one use of Run and Gun each mission."
 
-[SurvivalInstinct_LW X2SoldierAbilityUnlockTemplate]
+[SurvivalInstinctUnlock_LW X2SoldierAbilityUnlockTemplate]
 DisplayName="Survival Instinct"
 Summary="Injured soldiers gain +20 Defense and +10 Crit chance."
+
+[AgainstTheOddsUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Against the Odds"
+Summary="All soldiers gain +1 Aim per enemy the squad can see (max +15)."
 
 ; === Gameplay tips ===
 
