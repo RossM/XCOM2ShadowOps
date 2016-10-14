@@ -14,6 +14,7 @@ var config array<name> SuppressionAbilities;
 var config WeaponDamageValue AirstrikeDamage;
 var config int AirstrikeCharges;
 var config int AgainstTheOddsAimBonus, AgainstTheOddsMax;
+var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
 
 var config name FreeAmmoForPocket;
 
@@ -54,6 +55,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(CoupDeGrace());
 	Templates.AddItem(Airstrike());
 	Templates.AddItem(AgainstTheOdds());
+	Templates.AddItem(Paragon());
 
 	return Templates;
 }
@@ -1561,6 +1563,26 @@ static function X2AbilityTemplate AgainstTheOdds()
 	Effect.ScaleMax = default.AgainstTheOddsMax;
 
 	return Passive('ShadowOps_AgainstTheOdds', "img:///UILibrary_BlackOps.UIPerk_againsttheodds", true, Effect);
+}
+
+static function X2AbilityTemplate Paragon()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_PersistentStatChange Effect;
+
+	Effect = new class'X2Effect_PersistentStatChange';
+	Effect.AddPersistentStatChange(eStat_HP, default.ParagonHPBonus);
+	Effect.AddPersistentStatChange(eStat_Offense, default.ParagonOffenseBonus);
+	Effect.AddPersistentStatChange(eStat_Will, default.ParagonWillBonus);
+
+	// TODO: icon
+	Template = Passive('ShadowOps_Paragon', "img:///UILibrary_BlackOps.UIPerk_paragon", true, Effect);
+
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.HealthLabel, eStat_HP, default.ParagonHPBonus);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.AimLabel, eStat_Offense, default.ParagonOffenseBonus);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.WillLabel, eStat_Will, default.ParagonWillBonus);
+
+	return Template;
 }
 
 

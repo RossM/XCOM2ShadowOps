@@ -11,7 +11,6 @@ var config int FocusedDefenseDefense, FocusedDefenseDodge;
 var config int FractureCritModifier;
 var config int LineEmUpOffense, LineEmUpCrit;
 var config float ControlledDetonationDamageReduction;
-var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
 var config int MayhemDamageBonus;
 var config array<name> MayhemExcludeAbilities;
 var config int SaboteurDamageBonus;
@@ -49,7 +48,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(FocusedDefense());
 	Templates.AddItem(LineEmUp());				// Unused
 	Templates.AddItem(ControlledDetonation());	// Unused
-	Templates.AddItem(Paragon());				// Unused
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Mayhem());
 	Templates.AddItem(Saboteur());
@@ -795,26 +793,6 @@ static function X2AbilityTemplate ControlledDetonation()
 
 	// TODO: icon
 	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-}
-
-static function X2AbilityTemplate Paragon()
-{
-	local X2AbilityTemplate Template;
-	local X2Effect_PersistentStatChange Effect;
-
-	Effect = new class'X2Effect_PersistentStatChange';
-	Effect.AddPersistentStatChange(eStat_HP, default.ParagonHPBonus);
-	Effect.AddPersistentStatChange(eStat_Offense, default.ParagonOffenseBonus);
-	Effect.AddPersistentStatChange(eStat_Will, default.ParagonWillBonus);
-
-	// TODO: icon
-	Template = Passive('ShadowOps_Paragon', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
-
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.HealthLabel, eStat_HP, default.ParagonHPBonus);
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.AimLabel, eStat_Offense, default.ParagonOffenseBonus);
-	Template.SetUIStatMarkup(class'XLocalizedData'.default.WillLabel, eStat_Will, default.ParagonWillBonus);
-
-	return Template;
 }
 
 static function X2AbilityTemplate DevilsLuck()

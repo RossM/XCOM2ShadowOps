@@ -181,6 +181,12 @@ LocLongDescription="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max 
 LocHelpText="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
 LocFlyOverText="Against the Odds"
 
+[ShadowOps_Paragon X2AbilityTemplate]
+LocFriendlyName="Elite"
+LocLongDescription="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
+LocHelpText="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
+LocFlyOverText="Elite"
+
 ; === Dragoon abilities ===
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
@@ -634,12 +640,6 @@ LocFriendlyName="Survival Instinct"
 LocLongDescription="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
 LocHelpText="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
 LocFlyOverText="Survival Instinct"
-
-[ShadowOps_Paragon X2AbilityTemplate]
-LocFriendlyName="Paragon"
-LocLongDescription="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
-LocHelpText="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
-LocFlyOverText="Paragon"
 
 [ShadowOps_DevilsLuck X2AbilityTemplate]
 LocFriendlyName="Devil's Luck"
