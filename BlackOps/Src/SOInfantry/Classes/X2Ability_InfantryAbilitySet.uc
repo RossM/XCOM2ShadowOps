@@ -595,6 +595,7 @@ static function X2AbilityTemplate Flush()
 	local X2AbilityCooldown                 Cooldown;
 	local X2Effect_SaveHitResult			SaveHitResultEffect;
 	local X2Effect_PreviewDamage			PreviewDamageEffect;
+	local X2AbilityCost_ActionPoints		AbilityCost;
 
 	// Macro to do localisation and stuffs
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Flush');
@@ -637,7 +638,10 @@ static function X2AbilityTemplate Flush()
 	// Only at single targets that are in range.
 	Template.AbilityTargetStyle = default.SimpleSingleTarget;
 
-	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));	
+	// Make the cost
+	AbilityCost = ActionPointCost(eCost_WeaponConsumeAll);
+	AbilityCost.bFreeCost = true;
+	Template.AbilityCosts.AddItem(AbilityCost);
 
 	// Ammo
 	AmmoCost = new class'X2AbilityCost_Ammo';	
@@ -721,6 +725,9 @@ static function X2AbilityTemplate FlushShot()
 	AmmoCost = new class'X2AbilityCost_Ammo';
 	AmmoCost.iAmmo = 1;
 	Template.AbilityCosts.AddItem(AmmoCost);
+
+	// Actually apply action point cost now
+	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));	
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
