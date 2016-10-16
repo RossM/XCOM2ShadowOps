@@ -86,6 +86,9 @@
     <Content Include="Config\SOHunter\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOInfantry\XComAI.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOInfantry\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
