@@ -12,6 +12,10 @@
   <ItemGroup>
     <Folder Include="Config\" />
     <Folder Include="Config\CritChanceChange" />
+    <Folder Include="Config\SOCombatEngineer" />
+    <Folder Include="Config\SODragoon" />
+    <Folder Include="Config\SOHunter" />
+    <Folder Include="Config\SOInfantry" />
     <Folder Include="Config\SOItems" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
@@ -53,6 +57,18 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\CritChanceChange\XComShadowOpsOptions.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOCombatEngineer\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOItems\XComGameCore.ini">
