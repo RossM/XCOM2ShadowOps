@@ -68,6 +68,9 @@
     <Content Include="Config\SOCombatEngineer\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOCombatEngineer\XComGameData_SoldierSkills.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SODragoon\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
@@ -77,6 +80,9 @@
     <Content Include="Config\SODragoon\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SODragoon\XComGameData_SoldierSkills.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOHunter\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
@@ -84,6 +90,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOHunter\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter\XComGameData_SoldierSkills.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOInfantry\XComAI.ini">
@@ -96,6 +105,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOInfantry\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry\XComGameData_SoldierSkills.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOItems\XComGameCore.ini">
