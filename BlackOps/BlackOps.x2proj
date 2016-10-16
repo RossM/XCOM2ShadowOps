@@ -149,9 +149,6 @@
     <Content Include="Config\XComShadowOpsOptions.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\XComStrategyTuning.ini">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Content\FX_ShadowOps_Dragoon.upk">
       <SubType>Content</SubType>
     </Content>
@@ -2711,6 +2708,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBGameState_EventTarget.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Utilities\Classes\XMBTemplateUtilities.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Utilities\Classes\XMBValue.uc">

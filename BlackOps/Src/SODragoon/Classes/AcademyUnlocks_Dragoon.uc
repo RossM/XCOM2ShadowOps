@@ -5,11 +5,11 @@ static function array<X2DataTemplate> CreateTemplates()
 	local array<X2DataTemplate> Templates;
 		
 	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_Dragoon') != INDEX_NONE)
-		Templates.AddItem(AddClassUnlock('TacticalSenseUnlock', 'ShadowOps_Dragoon', 'ShadowOps_TacticalSense'));
+		Templates.AddItem(class'XMBTemplateUtilities'.static.AddClassUnlock('TacticalSenseUnlock', 'ShadowOps_Dragoon', 'ShadowOps_TacticalSense'));
 	if (class'X2SoldierClass_DefaultClasses'.default.SoldierClasses.Find('ShadowOps_Dragoon_LW') != INDEX_NONE)
 	{
 		Templates.AddItem(DigitalWarfare());
-		Templates.AddItem(AddBrigadierUnlock('ChargeUnlock_LW', 'ShadowOps_Dragoon_LW', 'ShadowOps_Charge'));
+		Templates.AddItem(class'XMBTemplateUtilities'.static.AddBrigadierUnlock('ChargeUnlock_LW', 'ShadowOps_Dragoon_LW', 'ShadowOps_Charge'));
 	}
 
 	return Templates;
@@ -41,51 +41,3 @@ static function X2SoldierStatUnlockTemplate DigitalWarfare()
 	return Template;
 }
 
-static function X2SoldierAbilityUnlockTemplate AddClassUnlock(name DataName, name ClassName, name AbilityName, string Image = "img:///UILibrary_StrategyImages.GTS.GTS_FNG")
-{
-	local X2SoldierAbilityUnlockTemplate Template;
-	local ArtifactCost Resources;
-
-	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, DataName);
-
-	Template.AllowedClasses.AddItem(ClassName);
-	Template.AbilityName = AbilityName;
-	Template.strImage = Image;
-
-	// Requirements
-	Template.Requirements.RequiredHighestSoldierRank = 5;
-	Template.Requirements.RequiredSoldierClass = ClassName;
-	Template.Requirements.RequiredSoldierRankClassCombo = true;
-	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
-
-	// Cost
-	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 75;
-	Template.Cost.ResourceCosts.AddItem(Resources);
-	
-	return Template;
-}
-
-static function X2SoldierAbilityUnlockTemplate AddBrigadierUnlock(name DataName, name ClassName, name AbilityName, string Image = "img:///UILibrary_StrategyImages.GTS.GTS_FNG")
-{
-	local X2SoldierAbilityUnlockTemplate Template;
-	local ArtifactCost Resources;
-
-	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, DataName);
-
-	Template.AbilityName = AbilityName;
-	Template.strImage = Image;
-
-	// Requirements
-	Template.Requirements.RequiredHighestSoldierRank = 8;
-	Template.Requirements.RequiredSoldierClass = ClassName;
-	Template.Requirements.RequiredSoldierRankClassCombo = true;
-	Template.Requirements.bVisibleIfSoldierRankGatesNotMet = true;
-
-	// Cost
-	Resources.ItemTemplateName = 'Supplies';
-	Resources.Quantity = 150;
-	Template.Cost.ResourceCosts.AddItem(Resources);
-	
-	return Template;
-}
