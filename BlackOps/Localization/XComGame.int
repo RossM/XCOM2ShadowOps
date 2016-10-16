@@ -41,10 +41,10 @@ LocPromotionPopupText="<Bullet/> This ability gets more useful in the late game,
 
 [ShadowOps_FullAuto X2AbilityTemplate]
 LocFriendlyName="Full Auto"
-LocLongDescription="Take a shot with an aim penalty of <Ability:ToHit/>. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo."
-LocHelpText="Take shots with an aim penalty of <Ability:ToHit/> until you miss or run out of ammo. Costs both actions."
+LocLongDescription="Take a shot with an aim penalty of <Ability:ToHit/>. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo. Requires both actions. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Take shots with an aim penalty of <Ability:ToHit/> until you miss or run out of ammo. Requires both actions."
 LocFlyOverText="Full Auto"
-LocPromotionPopupText="<Bullet/> Full Auto can deal enormous amounts of damage with a full magazine and the right ammo.<br/><Bullet/> This ability costs both actions to use. <br/><Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Full Auto can deal enormous amounts of damage with a full magazine and the right ammo.<br/><Bullet/> This ability Requires both actions to use. <br/><Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_FullAuto2 X2AbilityTemplate]
 LocFriendlyName="Full Auto"
@@ -53,7 +53,7 @@ LocPromotionPopupText=""
 
 [ShadowOps_ZoneOfControl X2AbilityTemplate]
 LocFriendlyName="Zone of Control"
-LocLongDescription="Take a reaction shot against any enemy that moves or attacks within your vision."
+LocLongDescription="Take a reaction shot against any enemy that moves or attacks within your vision. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Enhanced overwatch that can fire multiple times in a turn."
 LocFlyOverText="Zone of Control"
 LocPromotionPopupText="<Bullet/> Zone of Control will switch to pistol overwatch shots when the primary weapon is out of ammo. <br/><Bullet/> There is no limit to the amount of Zone of Control shots an Infantry can take in a turn. <br/><Bullet/> Zone of Control has a <Ability:SelfCooldown/> turn cooldown.<br/>"
@@ -73,7 +73,7 @@ LocPromotionPopupText="<Bullet/> Zero In can help compensate for not being able 
 
 [ShadowOps_Flush X2AbilityTemplate]
 LocFriendlyName="Flush"
-LocLongDescription="Fire a pistol shot that automatically hits and forces the target to move to new cover."
+LocLongDescription="Fire a pistol shot that automatically hits and forces the target to move to new cover. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Fire a pistol shot that automatically hits and forces the target to move to new cover."
 LocFlyOverText="Flush"
 LocPromotionPopupText="<Bullet/> Flush can force an enemy to trigger your other soldiers' reaction fire.<br/><Bullet/> Flush has a <Ability:SelfCooldown/> turn cooldown. <br/>"
@@ -171,8 +171,8 @@ LocFlyOverText="Coup de Grace"
 
 [ShadowOps_Airstrike X2AbilityTemplate]
 LocFriendlyName="Airstrike"
-LocLongDescription="Once per mission, call in an airstrike that does 8-12 damage in a large area. Requires two actions and only works outdoors."
-LocHelpText="Call in an airstrike that does 8-12 damage in a large area. Requires two actions and only works outdoors."
+LocLongDescription="Once per mission, call in an airstrike that does 8-12 damage in a large area. Costs both actions and only works outdoors."
+LocHelpText="Call in an airstrike that does 8-12 damage in a large area. Costs both actions and only works outdoors."
 LocFlyOverText="Airstrike"
 
 [ShadowOps_AgainstTheOdds X2AbilityTemplate]
@@ -225,7 +225,7 @@ LocPromotionPopupText="<Bullet/> Stealth Protocol can be used on any soldier, so
 
 [ShadowOps_BurstFire X2AbilityTemplate]
 LocFriendlyName="Barrage"
-LocLongDescription="Attack all targets in a straight line and damage or destroy cover. Cannon only."
+LocLongDescription="Attack all targets in a straight line and damage or destroy cover. Cannon only. Uses <Ability:SelfAmmoCost/> ammo. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Attack all targets in a straight line and damage or destroy cover."
 LocFlyOverText="Barrage"
 LocPromotionPopupText="<Bullet/> Barrage has a 70% chance to damage units and a 100% chance to damage or destroy cover. <br/><Bullet/> Barrage can hit multiple enemies if you position yourself correctly, but it's okay to use it on just one.<br/><Bullet/> Be aware of what Barrage is going to destroy before you fire, including whatever is behind the target.<br/><Bullet/> Be careful when aiming Barrage from full cover. The soldier may \"step out\", causing Barrage to hit a different line than you expected.<br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
@@ -273,7 +273,7 @@ LocPromotionPopupText="<Bullet/> Renewal Protocol will get a unit that is bleedi
 
 [ShadowOps_StasisField X2AbilityTemplate]
 LocFriendlyName="Stasis Field"
-LocLongDescription="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage."
+LocLongDescription="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage."
 LocFlyOverText="Stasis Field"
 LocPromotionPopupText="<Bullet/> Stasis Field affects both allied and enemy units.<br/><Bullet/> Stasis Field has a <Ability:SelfCooldown/> turn cooldown.<br/>"
@@ -306,8 +306,8 @@ LocPromotionPopupText="<Bullet/> Will reduces a soldier's chance of panicking, i
 
 [ShadowOps_SensorOverlays X2AbilityTemplate]
 LocFriendlyName="Sensor Overlays"
-LocLongDescription="All allies get <Ability:+Crit> Crit chance against enemies you can see."
-LocHelpText="All allies get <Ability:+Crit> Crit chance against enemies you can see."
+LocLongDescription="All squad members get <Ability:+Crit> Crit chance against enemies you can see."
+LocHelpText="All squad members get <Ability:+Crit> Crit chance against enemies you can see."
 LocFlyOverText="Sensor Overlays"
 
 [ShadowOps_Supercharge X2AbilityTemplate]
@@ -366,7 +366,7 @@ LocFlyOverText="Overwatch: Snap Shot"
 
 [ShadowOps_HunterMark X2AbilityTemplate]
 LocFriendlyName="Mark"
-LocLongDescription="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it. The bonus lasts until you mark another target. Using this ability will not break concealment."
+LocLongDescription="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it. The bonus lasts until you mark another target. Using this ability will not break concealment. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it."
 LocFlyOverText="Mark"
 LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns where you have to move or reload your sniper rifle.<br/><Bullet/> Use Mark on dangerous enemies before triggering an ambush.<br/><Bullet/> Mark followed by Snap Shot is more accurage than a standard sniper rifle shot, and also helps the rest of the squad.<br/><Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
@@ -394,7 +394,7 @@ LocPromotionPopupText="<Bullet/> The bonus is lost if the attacker is flanking y
 
 [ShadowOps_Sprint X2AbilityTemplate]
 LocFriendlyName="Sprint"
-LocLongDescription="Gain a bonus move action this turn."
+LocLongDescription="Gain a bonus move action this turn. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Gain a bonus move action this turn."
 LocFlyOverText="Sprint"
 LocPromotionPopupText="<Bullet/> Sprint can be used to move very long distances in a single turn, or to move and then take a normal sniper rifle shot.<br/><Bullet/> The extra move action from Sprint is wasted if you use an ability that ends your turn, like firing your weapon, before taking the move.<br/><Bullet/> Sprint has a <Ability:SelfCooldown/> turn cooldown.<br/>"
@@ -408,14 +408,14 @@ LocPromotionPopupText="<Bullet/> You must have cover from all enemies that can s
 
 [ShadowOps_Fade X2AbilityTemplate]
 LocFriendlyName="Fade"
-LocLongDescription="Gain concealment that is broken if you move."
+LocLongDescription="Gain concealment that is broken if you move. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Gain concealment that is broken if you move."
 LocFlyOverText="Fade"
 LocPromotionPopupText="<Bullet/> Fade will let you use your First Strike bonus multiple times during a battle.<br/><Bullet/> Concealment granted by Fade can also be broken normally.<br/><Bullet/> Fade consumes an action and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_SliceAndDice X2AbilityTemplate]
 LocFriendlyName="Slice and Dice"
-LocLongDescription="Attack any enemy within movement range with your sword. If you hit, make a free second sword attack."
+LocLongDescription="Attack any enemy within movement range with your sword. If you hit, make a free second sword attack. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Attack any enemy within movement range with your sword. If you hit, make a free second sword attack."
 LocFlyOverText="Slice and Dice"
 LocPromotionPopupText="<Bullet/> Slice and Dice has a <Ability:SelfCooldown/> turn cooldown.<br/>"
@@ -433,7 +433,7 @@ LocFlyOverText="Tracking"
 
 [ShadowOps_Bullseye X2AbilityTemplate]
 LocFriendlyName="Bullseye"
-LocLongDescription="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will."
+LocLongDescription="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will."
 LocFlyOverText="Bullseye"
 LocPromotionPopupText="<Bullet/> Bullseye is good for weakening tough enemies while also dealing extra damage.<br/><Bullet/> Bullseye applies -20 penalties to Aim, Defense, and Will that last until the end of the battle. <br/><Bullet/> Bullseye has a <Ability:SelfCooldown/> turn cooldown. <br/>"
@@ -505,21 +505,21 @@ LocPromotionPopupText="<Bullet/> Smoke grenades provide a +20 Defense bonus to a
 
 [ShadowOps_Breach X2AbilityTemplate]
 LocFriendlyName="Breach"
-LocLongDescription="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits. Shotgun only."
+LocLongDescription="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits. Shotgun only. Uses <Ability:SelfAmmoCost/> ammo. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits."
 LocFlyOverText="Breach"
 LocPromotionPopupText="<Bullet/> More advanced weapons will deal more damage and shred more armor.<br/><Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Fastball X2AbilityTemplate]
 LocFriendlyName="Fastball"
-LocLongDescription="The next grenade you throw or launch this turn doesn't cost an action."
+LocLongDescription="The next grenade you throw or launch this turn doesn't cost an action. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="The next grenade you throw or launch this turn doesn't cost an action."
 LocFlyOverText="Fastball"
 LocPromotionPopupText="<Bullet/> It's usually best to use Fastball whenever you get a chance. If you save it until you really need it, you'll run out of grenades before you find that perfect chance.<br/><Bullet/> Throwing or launching a grenade with Fastball does not end the turn. <br/><Bullet/> Fastball has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Fracture X2AbilityTemplate]
 LocFriendlyName="Fracture"
-LocLongDescription="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocLongDescription="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
 LocFlyOverText="Fracture"
 LocPromotionPopupText="<Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
@@ -559,7 +559,7 @@ LocPromotionPopupText="<Bullet/> The bonus affects all units in the cloud, so gr
 
 [ShadowOps_SlamFire X2AbilityTemplate]
 LocFriendlyName="Slam Fire"
-LocLongDescription="For the rest of the turn, whenever you get a critical hit with your <Ability:WeaponName/>, your actions are refunded."
+LocLongDescription="For the rest of the turn, whenever you get a critical hit with your <Ability:WeaponName/>, your actions are refunded. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="For the rest of the turn, whenever you get a critical hit with your <Ability:WeaponName/>, your actions are refunded."
 LocFlyOverText="Slam Fire"
 LocPromotionPopupText="<Bullet/> With the proper setup, you can trigger Slam Fire many times in a turn. Try using Fastball to remove enemies' cover, or dropping a smoke grenade with Combat Drugs to boost your critical hit chance. <br/><Bullet/> If you activate Slam Fire at the beginning of the turn you can move or reload between shots (once). <br/><Bullet/> Equip your weapon with a Laser Sight and an Expanded Magazine or Autoloader to maximize Slam Fire's potential. <br/>"
@@ -631,8 +631,8 @@ LocFlyOverText="Pyromaniac"
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Skirmisher"
-LocLongDescription="Move after taking a single action that would normally end your turn."
-LocHelpText="Move after taking a single action that would normally end your turn."
+LocLongDescription="Move after taking a single action that would normally end your turn as your first action."
+LocHelpText="Move after taking a single action that would normally end your turn as your first action."
 LocFlyOverText="Skirmisher"
 
 [ShadowOps_SurvivalInstinct X2AbilityTemplate]
@@ -655,8 +655,8 @@ LocFlyOverText="Mayhem"
 
 [ShadowOps_Saboteur X2AbilityTemplate]
 LocFriendlyName="Saboteur"
-LocLongDescription="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects."
-LocHelpText="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects."
+LocLongDescription="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects such as relays and gas tanks."
+LocHelpText="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects such as relays and gas tanks."
 LocFlyOverText="Saboteur"
 
 [ShadowOps_Anatomist X2AbilityTemplate]
@@ -674,7 +674,7 @@ LocFlyOverText="Extra Munitions"
 
 [ShadowOps_HipFire X2AbilityTemplate]
 LocFriendlyName="Hip Fire"
-LocLongDescription="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
+LocLongDescription="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Fire your <Ability:WeaponName/> at a target. This attack does not cost an action."
 LocFlyOverText="Hip Fire"
 LocPromotionPopupText="<Bullet/> Hip Fire has a <Ability:SelfCooldown/> turn cooldown.<br/>"
