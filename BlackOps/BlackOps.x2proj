@@ -62,16 +62,31 @@
     <Content Include="Config\SOCombatEngineer\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOCombatEngineer\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SODragoon\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOHunter\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOHunter\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOInfantry\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOInfantry\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOItems\XComGameCore.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOItems\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOItems\XComGameData_WeaponData.ini">
@@ -84,9 +99,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\XComGameCore.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\XComGameData_SoldierSkills.ini">
