@@ -561,7 +561,7 @@ static function X2AbilityTemplate MovingTarget()
 	Effect.AddToHitAsTargetModifier(-default.MovingTargetDefenseBonus);
 	Effect.AddToHitAsTargetModifier(default.MovingTargetDodgeBonus, eHit_Graze);
 
-	return Passive('ShadowOps_MovingTarget', "img:///UILibrary_BlackOps.UIPerk_movingtarget", false, Effect);
+	return Passive('ShadowOps_MovingTarget', "img:///UILibrary_BlackOps.UIPerk_movingtarget", true, Effect);
 }
 
 static function X2AbilityTemplate Entrench()
@@ -724,7 +724,7 @@ static function X2AbilityTemplate HitAndRun()
 
 	// Create a triggered ability that will activate whenever the unit uses an ability that meets the condition
 	// TODO: icon
-	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_skirmisher", false, Effect, 'AbilityActivated');
+	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_skirmisher", true, Effect, 'AbilityActivated');
 
 	// Trigger abilities don't appear as passives. Add a passive ability icon.
 	AddIconPassive(Template);

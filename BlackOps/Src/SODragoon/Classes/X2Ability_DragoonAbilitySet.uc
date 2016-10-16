@@ -857,7 +857,7 @@ static function X2AbilityTemplate TacticalSense()
 	Effect.DodgeModifier = default.TacticalSenseDodgeBonus;
 	Effect.MaxDodgeModifier = default.TacticalSenseMaxDodgeBonus;
 
-	return Passive('ShadowOps_TacticalSense', "img:///UILibrary_BlackOps.UIPerk_grace", false, Effect);
+	return Passive('ShadowOps_TacticalSense', "img:///UILibrary_BlackOps.UIPerk_grace", true, Effect);
 }
 
 static function X2AbilityTemplate Lightfoot()
