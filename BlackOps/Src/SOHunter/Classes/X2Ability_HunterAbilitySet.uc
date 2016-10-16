@@ -307,7 +307,7 @@ static function X2AbilityTemplate VitalPoint()
 	Effect.Modifiers = default.VitalPointModifiers;
 	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
-	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_BlackOps.UIPerk_vitalpoint", false, Effect);
+	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_BlackOps.UIPerk_keenedge", false, Effect);
 }
 
 static function X2AbilityTemplate Precision()
