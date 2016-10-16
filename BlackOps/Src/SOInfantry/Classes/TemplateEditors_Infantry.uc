@@ -7,17 +7,20 @@ static function EditTemplates()
 	local name DataName;
 
 	// Bullet Swarm
+	`Log("SOInfantry: Editing" @ 'StandardShot');
 	AddDoNotConsumeAllAbility('StandardShot', 'ShadowOps_BulletSwarm');
 
 	// Fortify
 	foreach default.OverwatchAbilities(DataName)
 	{
+		`Log("SOInfantry: Editing" @ DataName);
 		AddPostActivationEvent(DataName, 'OverwatchUsed');
 	}
 
 	// Second Wind
 	foreach default.MedikitAbilities(DataName)
 	{
+		`Log("SOInfantry: Editing" @ DataName);
 		AddPostActivationEvent(DataName, 'MedikitUsed');
 	}
 

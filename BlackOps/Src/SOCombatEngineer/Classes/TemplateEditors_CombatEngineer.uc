@@ -10,6 +10,7 @@ static function EditTemplates()
 	// Smoke and Mirrors, Fastball
 	foreach default.GrenadeAbilities(DataName)
 	{
+		`Log("SOCombatEngineer: Editing" @ DataName);
 		AddDoNotConsumeAllAbility(DataName, 'ShadowOps_SmokeAndMirrors');
 		AddDoNotConsumeAllEffect(DataName, 'Fastball');
 		AddPostActivationEvent(DataName, 'GrenadeUsed');

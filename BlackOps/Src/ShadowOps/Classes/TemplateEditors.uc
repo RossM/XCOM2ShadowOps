@@ -78,6 +78,7 @@ static function AddAllSuppressionConditions()
 
 	foreach default.SuppressionBlockedAbilities(DataName)
 	{
+		`Log("ShadowOps: AddSuppressionCondition" @ DataName);
 		AddSuppressionCondition(DataName);
 	}
 }
