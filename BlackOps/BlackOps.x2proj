@@ -143,9 +143,6 @@
     <Content Include="Config\XComGameData_SoldierSkills.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\XComGameData_WeaponData.ini">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Config\XComShadowOpsOptions.ini">
       <SubType>Content</SubType>
     </Content>
@@ -289,9 +286,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOCombatEngineer\Classes\X2Effect_IncrementUntouchable.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\SOCombatEngineer\Classes\X2Effect_SlugShot.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOCombatEngineer\Classes\X2Effect_SmokeGrenade_BO.uc">

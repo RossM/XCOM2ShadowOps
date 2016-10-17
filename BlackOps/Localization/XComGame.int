@@ -596,12 +596,6 @@ LocHelpText="You get an additional <Ability:+Defense/> Defense and <Ability:+Dod
 LocFlyOverText="Moving Target"
 LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Moving Target is a good choice. <br/>"
 
-;[ShadowOps_SlugShot X2AbilityTemplate]
-;LocFriendlyName="Wrecker"
-;LocLongDescription="Fire a special shot with bonuses of up to +10 Aim and +20 Crit chance at medium and long range. It also deals automatic critical damage when targeting objects."
-;LocHelpText="Fire a special shot with bonuses at medium and long range. It also deals automatic critical damage when targeting objects."
-;LocPromotionPopupText="<Bullet/> Wrecker makes the shotgun much more effective at medium and long range. <br/>"
-
 [ShadowOps_FocusedDefense X2AbilityTemplate]
 LocFriendlyName="Focused Defense"
 LocLongDescription="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
