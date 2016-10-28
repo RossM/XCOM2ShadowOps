@@ -441,6 +441,9 @@
     <Content Include="Src\SOItems\Classes\X2DownloadableContentInfo_SOItems.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\SOItems\Classes\X2Effect_FlechetteRounds.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\SOItems\Classes\X2Item_Ammo_BO.uc">
       <SubType>Content</SubType>
     </Content>
