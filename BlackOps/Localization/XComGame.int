@@ -331,8 +331,8 @@ LocFlyOverText="Scout"
 
 [ShadowOps_Lightfoot X2AbilityTemplate]
 LocFriendlyName="Lightfoot"
-LocLongDescription="You have <Ability:+Mobility/> Mobility and are 20% harder to detect while concealed."
-LocHelpText="You have <Ability:+Mobility/> Mobility and are 20% harder to detect while concealed."
+LocLongDescription="Gain <Ability:+Mobility/> Mobility. You are 20% harder to detect while concealed."
+LocHelpText="Gain <Ability:+Mobility/> Mobility. You are 20% harder to detect while concealed."
 LocFlyOverText="Lightfoot"
 
 [ShadowOps_Charge X2AbilityTemplate]
