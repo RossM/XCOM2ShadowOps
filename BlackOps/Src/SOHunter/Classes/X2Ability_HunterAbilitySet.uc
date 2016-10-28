@@ -201,6 +201,8 @@ static function X2DataTemplate HunterMark()
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
+	Template.AddShooterEffectExclusions();
+
 	// Target must be an enemy
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
 	UnitPropertyCondition.ExcludeDead = true;
