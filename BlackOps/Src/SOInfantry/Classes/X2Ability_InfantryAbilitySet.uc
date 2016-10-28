@@ -1273,6 +1273,7 @@ static function X2AbilityTemplate ReadyForAnything()
 	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('ShadowOps_ReadyForAnything');
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_readyforanything";
 	Template.OverrideAbilities.AddItem('StandardShot');
+	Template.bDontDisplayInAbilitySummary = false;
 
 	AbilityEffect = new class'X2Effect_ImmediateAbilityActivation';
 	AbilityEffect.AbilityName = 'ShadowOps_ReadyForAnythingOverwatch';
