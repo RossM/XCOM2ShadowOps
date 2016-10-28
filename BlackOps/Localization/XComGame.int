@@ -477,8 +477,8 @@ LocFlyOverText="Evasive"
 
 [ShadowOps_Stalker X2AbilityTemplate]
 LocFriendlyName="Stalker"
-LocLongDescription="Gain <Ability:+Mobility/> Mobility while concealed."
-LocHelpText="Gain <Ability:+Mobility/> Mobility while concealed."
+LocLongDescription="Gain <Ability:+Mobility/> Mobility and <Ability:+ToHit/> Aim while concealed."
+LocHelpText="Gain <Ability:+Mobility/> Mobility and <Ability:+ToHit/> Aim while concealed."
 LocFlyOverText="Stalker"
 
 [ShadowOps_LastStand X2AbilityTemplate]

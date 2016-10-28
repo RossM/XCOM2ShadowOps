@@ -15,7 +15,7 @@ var config float TrackingRadius;
 var config array<ExtShotModifierInfo> VitalPointModifiers;
 var config float PointBlankMultiplier;
 var config float ButcherDamageMultiplier;
-var config int StalkerMobilityBonus;
+var config int StalkerMobilityBonus, StalkerOffenseBonus;
 var config int LastStandDuration, LastStandCharges;
 var config int SurvivalInstinctDefenseBonus, SurvivalInstinctCritBonus;
 
@@ -934,6 +934,7 @@ static function X2AbilityTemplate Stalker()
 
 	Effect = new class'XMBEffect_ConditionalStatChange';
 	Effect.AddPersistentStatChange(eStat_Mobility, default.StalkerMobilityBonus);
+	Effect.AddPersistentStatChange(eStat_Offense, default.StalkerOffenseBonus);
 	Effect.Conditions.AddItem(new class'XMBCondition_Concealed');
 
 	return Passive('ShadowOps_Stalker', "img:///UILibrary_BlackOps.UIPerk_stalker", true, Effect);
