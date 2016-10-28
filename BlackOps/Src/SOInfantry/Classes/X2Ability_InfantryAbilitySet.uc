@@ -1268,18 +1268,11 @@ static function X2AbilityTemplate Tactician()
 static function X2AbilityTemplate ReadyForAnything()
 {
 	local X2AbilityTemplate Template;
-	local X2Effect_ImmediateAbilityActivation AbilityEffect;
 
 	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('ShadowOps_ReadyForAnything');
 	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_readyforanything";
 	Template.OverrideAbilities.AddItem('StandardShot');
 	Template.bDontDisplayInAbilitySummary = false;
-
-	AbilityEffect = new class'X2Effect_ImmediateAbilityActivation';
-	AbilityEffect.AbilityName = 'ShadowOps_ReadyForAnythingOverwatch';
-	AbilityEffect.bApplyOnHit = true;
-	AbilityEffect.bApplyOnMiss = true;
-	Template.AddShooterEffect(AbilityEffect);
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_ReadyForAnythingOverwatch');
 
@@ -1291,6 +1284,7 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 	local X2AbilityTemplate                 Template;
 	local X2AbilityCost                     Cost;
 	local X2Condition_UnitActionPoints		ActionPointCondition;
+	local X2AbilityTrigger_EventListener	EventListener;
 
 	Template = new class'X2AbilityTemplate'(class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('Overwatch'));
 	Template.SetTemplateName('ShadowOps_ReadyForAnythingOverwatch');
@@ -1310,7 +1304,13 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 
 	// Placeholder trigger
 	Template.AbilityTriggers.Length = 0;
-	Template.AbilityTriggers.AddItem(new class'X2AbilityTrigger_Placeholder');
+
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'StandardShotActivated';
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	Template.AbilityTriggers.AddItem(EventListener);
 	
 	// Don't display in HUD
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
