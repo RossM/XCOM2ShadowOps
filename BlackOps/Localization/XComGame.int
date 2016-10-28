@@ -366,7 +366,7 @@ LocFlyOverText="Overwatch: Snap Shot"
 
 [ShadowOps_HunterMark X2AbilityTemplate]
 LocFriendlyName="Mark"
-LocLongDescription="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it. The bonus lasts until you mark another target. Using this ability will not break concealment. <Ability:SelfCooldown/> turn cooldown."
+LocLongDescription="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it. The bonus never expires, but you can only have one target Marked at a time. Using this ability will not break concealment. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it."
 LocFlyOverText="Mark"
 LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns where you have to move or reload your sniper rifle.<br/><Bullet/> Use Mark on dangerous enemies before triggering an ambush.<br/><Bullet/> Mark followed by Snap Shot is more accurage than a standard sniper rifle shot, and also helps the rest of the squad.<br/><Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
