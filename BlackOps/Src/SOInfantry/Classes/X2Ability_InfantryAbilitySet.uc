@@ -1290,6 +1290,7 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 {
 	local X2AbilityTemplate                 Template;
 	local X2AbilityCost                     Cost;
+	local X2Condition_UnitActionPoints		ActionPointCondition;
 
 	Template = new class'X2AbilityTemplate'(class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('Overwatch'));
 	Template.SetTemplateName('ShadowOps_ReadyForAnythingOverwatch');
@@ -1300,6 +1301,12 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 		if (Cost.IsA('X2AbilityCost_ActionPoints'))
 			Template.AbilityCosts.RemoveItem(Cost);
 	}
+
+	// Require that the unit have no standard action points available
+	// This handles the case where the unit's action was refunded by a hair trigger
+	ActionPointCondition = new class'X2Condition_UnitActionPoints';
+	ActionPointCondition.AddActionPointCheck(0);
+	Template.AbilityShooterConditions.AddItem(ActionPointCondition);
 
 	// Placeholder trigger
 	Template.AbilityTriggers.Length = 0;
