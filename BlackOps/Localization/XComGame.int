@@ -104,7 +104,7 @@ LocFriendlyName="Adrenaline Surge"
 LocLongDescription="When you get a kill, you and nearby friendly units get <Ability:+Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and <Ability:+Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
 LocHelpText="<Ability:+Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and <Ability:+Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
 LocFlyOverText="Adrenaline Surge"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> If you get a kill during the enemy turn, the bonus lasts until the end of your next turn.<br/><Bullet/> Adrenaline Surge has a range of 8 tiles.<br/>"
 
 [ShadowOps_AdrenalineSurgeTrigger X2AbilityTemplate]
 LocFriendlyName="Adrenaline Surge"
@@ -130,14 +130,14 @@ LocFriendlyName="First Aid"
 LocLongDescription="You have one free medikit use on every mission. Each carried medikit gives you two additional uses."
 LocHelpText="You have one free medikit use on every mission. Each carried medikit gives you two additional uses."
 LocFlyOverText="First Aid"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The free medkit also grants immunity to poison.</br>"
 
 [ShadowOps_SecondWind X2AbilityTemplate]
 LocFriendlyName="Second Wind"
 LocLongDescription="Using a medikit on an injured unit also grants that unit a bonus action point."
 LocHelpText="Using a medikit on an injured unit also grants that unit a bonus action point."
 LocFlyOverText="Second Wind"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> If you use a medikit on yourself, you gain the bonus action point.<br/><Bullet/> Medikits can still only be used on injured units.<br/>"
 
 [ShadowOps_SecondWindTrigger X2AbilityTemplate]
 LocFriendlyName="Second Wind"
@@ -151,35 +151,35 @@ LocFriendlyName="Tactician"
 LocLongDescription="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage. Rifle only."
 LocHelpText="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage."
 LocFlyOverText="Tactician"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Tactician stacks with the effect of a stock.<br/>"
 
 [ShadowOps_ReadyForAnything X2AbilityTemplate]
 LocFriendlyName="Ready for Anything"
 LocLongDescription="When you make a standard attack with your <Ability:WeaponName/> you automatically enter overwatch."
 LocHelpText="Fire a shot at a target, then enter overwatch."
 LocFlyOverText="Ready for Anything"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> You won't enter overwatch if you are out of ammo.<br/>"
 
 [ShadowOps_ImprovedSuppression X2AbilityTemplate]
 LocFriendlyName="Improved Suppression"
 LocLongDescription="Your Suppression ability also disorients the target."
 LocHelpText="Your Suppression ability also disorients the target."
 LocFlyOverText="Improved Suppression"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Disoriented units have reduced Aim and Mobility, and can't use most special abilities.<br/><Bullet/> The disorientation is applied when you activate suppression.<br/><Bullet/> Having the suppression broken won't remove the disorientation early.<br/>"
 
 [ShadowOps_CoupDeGrace X2AbilityTemplate]
 LocFriendlyName="Coup de Grace"
 LocLongDescription="Killing an enemy with your pistol doesn't cost an action."
 LocHelpText="Killing an enemy with your pistol doesn't cost an action."
 LocFlyOverText="Coup de Grace"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> This affects all pistol attacks, not just standard pistol shots.<br/>"
 
 [ShadowOps_Airstrike X2AbilityTemplate]
 LocFriendlyName="Airstrike"
 LocLongDescription="Once per mission, call in an airstrike that does 8-12 damage in a large area. Costs both actions and only works outdoors."
 LocHelpText="Call in an airstrike that does 8-12 damage in a large area. Costs both actions and only works outdoors."
 LocFlyOverText="Airstrike"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The airstrike will destroy almost all cover in the area of effect.<br/>"
 
 [ShadowOps_AgainstTheOdds X2AbilityTemplate]
 LocFriendlyName="Against the Odds"
@@ -209,7 +209,7 @@ LocFriendlyName="Advanced Shield Protocol"
 LocLongDescription="Shield Protocol no longer costs an action to use."
 LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. This ability doesn't cost an action."
 LocFlyOverText="Advanced Shield Protocol""
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
 [ShadowOps_HeavyArmor X2AbilityTemplate]
 LocFriendlyName="Tank"
@@ -296,8 +296,8 @@ LocPromotionPopupText="<Bullet/> Using Puppet Protocol will only break concealme
 
 [ShadowOps_TacticalSense X2AbilityTemplate]
 LocFriendlyName="Grace"
-LocLongDescription="You get <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
-LocHelpText="You get <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
+LocLongDescription="You gain <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
+LocHelpText="You gain <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
 LocFlyOverText="Grace"
 LocPromotionPopupText="TODO"
 
@@ -306,7 +306,7 @@ LocFriendlyName="Aegis"
 LocLongDescription="Shield Protocol also reduces all incoming damage by 33%."
 LocHelpText="Shield Protocol also reduces all incoming damage by 33%."
 LocFlyOverText="Aegis"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The reduction applies to all damage taken while the shield is active, not just damage absorbed by the shield.<br/>"
 
 [ShadowOps_IronWill X2AbilityTemplate]
 LocFriendlyName="Iron Will"
@@ -327,7 +327,7 @@ LocFriendlyName="Supercharge"
 LocLongDescription="All GREMLIN abilities gain an additional charge."
 LocHelpText="All GREMLIN abilities gain an additional charge."
 LocFlyOverText="Supercharge"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> GREMLIN abilities include Shield Protocol, Renewal Protocol, and Stealth Protocol.<br/>"
 
 [ShadowOps_ReverseEngineering X2AbilityTemplate]
 LocFriendlyName="Reverse Engineering"
@@ -341,14 +341,14 @@ LocFriendlyName="Scout"
 LocLongDescription="Gain one battle scanner use each mission."
 LocHelpText="Gain one battle scanner use each mission."
 LocFlyOverText="Scout"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> This stacks with uses from carried battle scanners.<br/>"
 
 [ShadowOps_Lightfoot X2AbilityTemplate]
 LocFriendlyName="Lightfoot"
 LocLongDescription="Gain <Ability:+Mobility/> Mobility. You are 20% harder to detect while concealed."
 LocHelpText="Gain <Ability:+Mobility/> Mobility. You are 20% harder to detect while concealed."
 LocFlyOverText="Lightfoot"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The extra mobility from Lightfoot can help you to get a flank or to reach the objective quickly, but be careful you don't get too far ahead of the rest of the squad.<br/><Bullet/> The improved concealment stacks with improved concealment from other sources such as ECM.<br/>"
 
 [ShadowOps_Charge X2AbilityTemplate]
 LocFriendlyName="Charge!"
@@ -473,42 +473,42 @@ LocFriendlyName="Point Blank"
 LocLongDescription="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
 LocHelpText="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
 LocFlyOverText="Point Blank"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Point Blank reduces the maximum range penalty for a short-range sniper rifle shot from -30 to -10.<br/><Bullet/> Point Blank does not affect the aim penalty from Snap Shot.<br/>"
 
 [ShadowOps_Butcher X2AbilityTemplate]
 LocFriendlyName="Butcher"
 LocLongDescription="Increases damage against organic targets by 30%."
 LocHelpText="Increases damage against organic targets by 30%."
 LocFlyOverText="Butcher"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Organic targets means all non-mechanical units.<br/>"
 
 [ShadowOps_Reposition X2AbilityTemplate]
 LocFriendlyName="Reposition"
 LocLongDescription="You can take a standard move action after firing your <Ability:WeaponName/>."
 LocHelpText="Fire your <Ability:WeaponName/> at a target, then move."
 LocFlyOverText="Reposition"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Reposition only allows standard moves, not other abilities such as reloading your weapon.<br/>"
 
 [ShadowOps_Evasive X2AbilityTemplate]
 LocFriendlyName="Evasive"
 LocLongDescription="You are immune to multi-target and area attacks."
 LocHelpText="You are immune to multi-target and area attacks."
 LocFlyOverText="Evasive"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Area attacks include grenades and other explosives.<br/>"
 
 [ShadowOps_Stalker X2AbilityTemplate]
 LocFriendlyName="Stalker"
 LocLongDescription="Gain <Ability:+Mobility/> Mobility and <Ability:+ToHit/> Aim while concealed."
 LocHelpText="Gain <Ability:+Mobility/> Mobility and <Ability:+ToHit/> Aim while concealed."
 LocFlyOverText="Stalker"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The bonuses are lost immediately when you lose concealment.<br/>"
 
 [ShadowOps_LastStand X2AbilityTemplate]
 LocFriendlyName="Last Stand"
 LocLongDescription="Once per mission, become immune to death and incapacitation until the end of your next turn."
 LocHelpText="Become immune to death and incapacitation until the end of your next turn."
 LocFlyOverText="Last Stand"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> You can still take damage, but it will never reduce you below 1 hp.<br/><Bullet/> You can't be knocked unconscious, disoriented, or otherwise incapacitated.<br/>"
 
 ; === Engineer abilities ===
 
@@ -558,7 +558,7 @@ LocFriendlyName="Packmaster"
 LocLongDescription="Limited-use items in utility slots gain a bonus use. This does not include grenades in the grenade-only slot."
 LocHelpText="Limited-use items in utility slots gain a bonus use. This does not include grenades in the grenade-only slot."
 LocFlyOverText="Packmaster"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> This includes non-grenade items such as medikits and mimic beacons.<br/>"
 
 [ShadowOps_Entrench X2AbilityTemplate]
 LocFriendlyName="Entrench"
@@ -625,14 +625,14 @@ LocFriendlyName="Focused Defense"
 LocLongDescription="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
 LocHelpText="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
 LocFlyOverText="Focused Defense"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The bonus doesn't apply against melee attacks.<br/><Bullet/> If multiple enemies are equally distant, you get the bonus against all of them.<br/>"
 
 [ShadowOps_LineEmUp X2AbilityTemplate]
 LocFriendlyName="Line 'Em Up"
 LocLongDescription="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance against the closest visible enemy."
 LocHelpText="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance against the closest visible enemy."
 LocFlyOverText="Line 'Em Up"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> If multiple enemies are equally distant, you get the bonus against all of them.<br/>"
 
 [ShadowOps_ControlledDetonation X2AbilityTemplate]
 LocFriendlyName="Controlled Detonation"
@@ -646,55 +646,55 @@ LocFriendlyName="Pyromaniac"
 LocLongDescription="You get a free incendiary grenade on each mission."
 LocHelpText="You get a free incendiary grenade on each mission."
 LocFlyOverText="Pyromaniac"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.<br/>"
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Skirmisher"
 LocLongDescription="Move after taking a single action that would normally end your turn as your first action."
 LocHelpText="Move after taking a single action that would normally end your turn as your first action."
 LocFlyOverText="Skirmisher"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> This doesn't affect abilities that require two action points to use.<br/><Bullet/> You can only take a standard move, not use other actions such as reloading your weapon.<br/>"
 
 [ShadowOps_SurvivalInstinct X2AbilityTemplate]
 LocFriendlyName="Survival Instinct"
 LocLongDescription="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
 LocHelpText="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
 LocFlyOverText="Survival Instinct"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The bonuses are lost if you are healed back to full health.<br/>"
 
 [ShadowOps_DevilsLuck X2AbilityTemplate]
 LocFriendlyName="Devil's Luck"
 LocLongDescription="You are immune to the first shot that hits you each mission."
 LocHelpText="You are immune to the first shot that hits you each mission."
 LocFlyOverText="Devil's Luck"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Hits include crits and grazes.<br/>"
 
 [ShadowOps_Mayhem X2AbilityTemplate]
 LocFriendlyName="Mayhem"
 LocLongDescription="Your grenades and special attacks deal <Ability:+Damage> damage."
 LocHelpText="Your grenades and special attacks deal <Ability:+Damage> damage."
 LocFlyOverText="Mayhem"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Special attacks include Breach, Fracture, and heavy weapons."
 
 [ShadowOps_Saboteur X2AbilityTemplate]
 LocFriendlyName="Saboteur"
 LocLongDescription="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects such as relays and gas tanks."
 LocHelpText="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects such as relays and gas tanks."
 LocFlyOverText="Saboteur"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Saboteur doesn't affect grenades or special attacks.<br/>"
 
 [ShadowOps_Anatomist X2AbilityTemplate]
 LocFriendlyName="Anatomist"
 LocLongDescription="You deal <Ability:+CritDamage> damage on critical hits for each enemy of the same type you have killed, to a max of <Ability:+MaxCritDamage>."
 LocHelpText="You deal <Ability:+CritDamage> damage on critical hits for each enemy of the same type you have killed, to a max of <Ability:+MaxCritDamage>."
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> You get bonus damage for each enemy of the same general type you have killed. For example, ADVENT Troopers and Advanced Troopers are the same general type.<br/><Bullet/> This counts kills by the same soldier, across all missions.<br/>"
 
 [ShadowOps_ExtraMunitions X2AbilityTemplate]
 LocFriendlyName="Extra Munitions"
-LocLongDescription="You get a free standard grenade on each mission."
-LocHelpText="You get a free standard grenade on each mission."
+LocLongDescription="You get a free frag grenade or plasma grenade on each mission."
+LocHelpText="You get a free frag grenade or plasma grenade on each mission."
 LocFlyOverText="Extra Munitions"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.<br/>"
 
 ; === AWC abilities ===
 
