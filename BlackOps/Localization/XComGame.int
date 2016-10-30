@@ -186,14 +186,14 @@ LocFriendlyName="Against the Odds"
 LocLongDescription="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
 LocHelpText="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
 LocFlyOverText="Against the Odds"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> If you're facing enough enemies to hit the <Ability:+MaxToHit/> cap, run.<br/>"
 
 [ShadowOps_Paragon X2AbilityTemplate]
 LocFriendlyName="Elite"
 LocLongDescription="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
 LocHelpText="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
 LocFlyOverText="Elite"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> These bonuses are in addition to the normal bonuses from leveling up.<br/>"
 
 ; === Dragoon abilities ===
 
@@ -299,7 +299,7 @@ LocFriendlyName="Grace"
 LocLongDescription="You gain <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
 LocHelpText="You gain <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
 LocFlyOverText="Grace"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet> Dodge increases the chance that an incoming attack will graze, dealing half damage.<br/><Bullet/> This doesn't count enemies only visible through squadsight.<br/>"
 
 [ShadowOps_Aegis X2AbilityTemplate]
 LocFriendlyName="Aegis"
@@ -320,7 +320,7 @@ LocFriendlyName="Sensor Overlays"
 LocLongDescription="All squad members get <Ability:+Crit> Crit chance against enemies you can see."
 LocHelpText="All squad members get <Ability:+Crit> Crit chance against enemies you can see."
 LocFlyOverText="Sensor Overlays"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> This doesn't count enemies only visible through squadsight.<br/>"
 
 [ShadowOps_Supercharge X2AbilityTemplate]
 LocFriendlyName="Supercharge"
@@ -355,7 +355,7 @@ LocFriendlyName="Charge!"
 LocLongDescription="Take a standard action after dashing."
 LocHelpText="Take a standard action after dashing."
 LocFlyOverText="Charge!"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Charge! has one charge.<br/>"
 
 ; === Hunter abilities ===
 
@@ -399,7 +399,7 @@ LocFriendlyName="Precision"
 LocLongDescription="You get <Ability:+ToHit/> Aim against targets in full cover."
 LocHelpText="You get <Ability:+ToHit/> Aim against targets in full cover."
 LocFlyOverText="Precision"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Precision only works with ranged attacks.<br/>"
 
 [ShadowOps_LowProfile X2AbilityTemplate]
 LocFriendlyName="Low Profile"
@@ -466,7 +466,7 @@ LocFriendlyName="Damn Good Ground"
 LocLongDescription="You get an additional <Ability:+ToHit/> Aim and <Ability:+Defense/> Defense against targets at lower elevation."
 LocHelpText="You get an additional <Ability:+ToHit/> Aim and <Ability:+Defense/> Defense against targets at lower elevation."
 LocFlyOverText="Damn Good Ground"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> The bonus stacks with the normal Aim bonus for higher elevation.<br/>"
 
 [ShadowOps_PointBlank X2AbilityTemplate]
 LocFriendlyName="Point Blank"
@@ -639,7 +639,7 @@ LocFriendlyName="Controlled Detonation"
 LocLongDescription="Your explosives deal <Ability:DamageReductionPercent/> less damage to allies."
 LocHelpText="Your explosives deal <Ability:DamageReductionPercent/> less damage to allies."
 LocFlyOverText="Controlled Detonation"
-LocPromotionPopupText="TODO"
+LocPromotionPopupText="<Bullet/> Allies includes yourself.<br/><Bullet/> Explosives may still cause effects such as burning.<br/>"
 
 [ShadowOps_Pyromaniac X2AbilityTemplate]
 LocFriendlyName="Pyromaniac"
