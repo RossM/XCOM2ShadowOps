@@ -670,6 +670,7 @@ static function X2AbilityTemplate HitAndRun()
 	local X2AbilityTemplate Template;
 	local XMBCondition_AbilityCost CostCondition;
 	local XMBCondition_AbilityName NameCondition;
+	local X2Condition_UnitActionPoints ActionPointCondition;
 
 	// Add a single movement-only action point to the unit
 	Effect = new class'X2Effect_GrantActionPoints';
@@ -696,6 +697,11 @@ static function X2AbilityTemplate HitAndRun()
 	NameCondition.ExcludeAbilityNames.AddItem('HunkerDown');
 	NameCondition.ExcludeAbilityNames.AddItem('ShadowOps_Entrench');
 	AddTriggerTargetCondition(Template, NameCondition);
+
+	// Don't trigger if there are any reserved action points
+	ActionPointCondition = new class'X2Condition_UnitActionPoints';
+	ActionPointCondition.AddActionPointCheck(0,, true);
+	Template.AbilityShooterConditions.AddItem(ActionPointCondition);
 
 	// Show a flyover when Hit and Run is activated
 	Template.bShowActivation = true;
