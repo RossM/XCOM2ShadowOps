@@ -514,8 +514,8 @@ LocPromotionPopupText="<Bullet/> You can still take damage, but it will never re
 
 [ShadowOps_DenseSmoke X2AbilityTemplate]
 LocFriendlyName="Dense Smoke"
-LocLongDescription="Your smoke grenades have an increased radius and provide an additional +20 Defense."
-LocHelpText="Your smoke grenades have an increased radius and provide an additional +20 Defense."
+LocLongDescription="Your smoke grenades provide an additional +20 Defense."
+LocHelpText="Your smoke grenades provide an additional +20 Defense."
 LocFlyOverText="Dense Smoke"
 LocPromotionPopupText="<Bullet/> Smoke grenades with Dense Smoke provide the same defensive bonus as full cover, but you are still vulnerable to critical hits if you get flanked. <br/><Bullet/> The total bonus from a Dense Smoke grenade is +40 defense. The added defense will also reduce your chance of being critically hit by 20. <br/>"
 
