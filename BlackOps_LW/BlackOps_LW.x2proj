@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Guid>2794d77c-d369-415b-9bd6-52b8e5f601e6</Guid>
     <Name>Shadow Ops</Name>
-    <Description>This mod adds four new classes: Combat Engineer, Dragoon, Hunter, and Infantry. It also changes several game rules and items to support the new classes. The new classes together can fill all the roles of the original classes (except psi) and are designed to completely replace the base classes. I suggest not using other gameplay-changing mods on your first playthrough with this mod, especially if you are using the new classes to replace the basic classes.</Description>
+    <Description>Shadow Ops LW</Description>
     <SteamPublishID>0</SteamPublishID>
     <AssemblyName>ShadowOps</AssemblyName>
     <RootNamespace>ShadowOps</RootNamespace>
@@ -13,11 +13,11 @@
     <Folder Include="Config\" />
     <Folder Include="Config\CritChanceChange" />
     <Folder Include="Config\SOItems" />
-	  <Folder Include="Config\SOCombatEngineer_LW" />
-	  <Folder Include="Config\SODragoon_LW" />
-	  <Folder Include="Config\SOHunter_LW" />
-	  <Folder Include="Config\SOInfantry_LW" />
-	  <Folder Include="Content\" />
+    <Folder Include="Config\SOCombatEngineer_LW" />
+    <Folder Include="Config\SODragoon_LW" />
+    <Folder Include="Config\SOHunter_LW" />
+    <Folder Include="Config\SOInfantry_LW" />
+    <Folder Include="Content\" />
     <Folder Include="Localization\" />
     <Folder Include="Src\" />
     <Folder Include="Src\CritChanceChange\Classes" />
@@ -59,19 +59,19 @@
     <Content Include="Config\SOItems\*.ini">
       <SubType>Content</SubType>
     </Content>
-	  <Content Include="Config\SOCombatEngineer_LW\*.ini">
-		  <SubType>Content</SubType>
-	  </Content>
-	  <Content Include="Config\SODragoon_LW\*.ini">
-		  <SubType>Content</SubType>
-	  </Content>
-	  <Content Include="Config\SOHunter_LW\*.ini">
-		  <SubType>Content</SubType>
-	  </Content>
-	  <Content Include="Config\SOInfantry_LW\*.ini">
-		  <SubType>Content</SubType>
-	  </Content>
-	  <Content Include="Config\*.ini">
+    <Content Include="Config\SOCombatEngineer_LW\*.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon_LW\*.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter_LW\*.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry_LW\*.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\*.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Content\*.upk">
