@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Guid>2794d77c-d369-415b-9bd6-52b8e5f601e6</Guid>
+    <Guid>ec45b5cd-348a-4b4e-83e1-c3a1748e09e2</Guid>
     <Name>Shadow Ops</Name>
     <Description>Shadow Ops LW</Description>
     <SteamPublishID>0</SteamPublishID>
