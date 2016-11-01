@@ -42,3 +42,6 @@ A. The Shadow Ops LW classes are meant to be more defensive and less offensive t
 
 [b]Q. What's this "Hit Chance" modifier to Crit?[/b]
 A. Shots with a hit chance below 85% get a penalty to critical hit chance equal to half the difference. This fixes the problem of low-percentage shots always being crits if they hit without reducing the power of crit-boosting abilities such as Aggression.
+
+[b]Q. Can I make a remix of this, or reuse your code and art in my own mod?[/b]
+A. Yes! I love seeing what other people can make from my stuff. All I ask is for appropriate credit.
