@@ -1097,6 +1097,8 @@ static function X2AbilityTemplate FortifyTrigger()
 	Template.AbilityTriggers.AddItem(Trigger);
 
 	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.EffectName = 'Fortify';
+	Effect.DuplicateResponse = eDupe_Refresh;
 	Effect.AddToHitAsTargetModifier(-default.FortressDefenseModifier);
 	Effect.BuildPersistentEffect(1, false, true,, eGameRule_PlayerTurnBegin);
 	Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, ,,Template.AbilitySourceName);
