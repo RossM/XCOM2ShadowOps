@@ -1076,7 +1076,7 @@ Summary="Gain a second PCS slot."
 
 [StalkerUnlock_LW X2SoldierAbilityUnlockTemplate]
 DisplayName="Hunter: Stalker"
-Summary="Gain +3 Mobility while concealed."
+Summary="Gain +3 Mobility and +10 Aim while concealed."
 
 [ExtraMunitionsUnlock_LW X2SoldierAbilityUnlockTemplate]
 DisplayName="Extra Munitions"
