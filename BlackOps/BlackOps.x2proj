@@ -19,6 +19,12 @@
     <Folder Include="Config\SOItems" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
+    <Folder Include="Localization\CritChanceChange" />
+    <Folder Include="Localization\SOItems" />
+    <Folder Include="Localization\SOInfantry" />
+    <Folder Include="Localization\SODragoon" />
+    <Folder Include="Localization\SOCombatEngineer" />
+    <Folder Include="Localization\SOHunter" />
     <Folder Include="Src\" />
     <Folder Include="Src\CritChanceChange\Classes" />
     <Folder Include="Src\GremlinStealthFix\Classes" />
@@ -167,13 +173,28 @@
     <Content Include="Content\UILibrary_SOItems.upk">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Localization\CritChanceChange.int">
+    <Content Include="Localization\CritChanceChange\CritChanceChange.int">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Localization\ShadowOps.int">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Localization\SOHunter.int">
+    <Content Include="Localization\SOCombatEngineer\XComGame.int">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\SODragoon\XComGame.int">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\SOHunter\XComGame.int">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\SOHunter\SOHunter.int">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\SOInfantry\XComGame.int">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\SOItems\XComGame.int">
       <SubType>Content</SubType>
     </Content>
     <Content Include="ReadMe.txt" />

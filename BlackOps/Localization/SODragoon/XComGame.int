@@ -1,0 +1,240 @@
+; === Dragoon abilities ===
+
+[ShadowOps_ShieldProtocol X2AbilityTemplate]
+LocFriendlyName="Shield Protocol"
+LocLongDescription="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. The shield lasts until the end of the mission or until it is destroyed, and also grants poison immunity."
+LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage."
+LocFlyOverText="Shield Protocol""
+LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
+
+[ShadowOps_AdvancedShieldProtocol X2AbilityTemplate]
+LocFriendlyName="Advanced Shield Protocol"
+LocLongDescription="Shield Protocol no longer costs an action to use."
+LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. This ability doesn't cost an action."
+LocFlyOverText="Advanced Shield Protocol""
+LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
+
+[ShadowOps_HeavyArmor X2AbilityTemplate]
+LocFriendlyName="Tank"
+LocLongDescription="You gain additional Armor points based on your equipped armor."
+LocHelpText="You gain additional Armor points based on your equipped armor."
+LocFlyOverText="Tank"
+LocPromotionPopupText="<Bullet/> A Dragoon with Tank and an EXO or WAR suit can absorb truly ridiculous amounts of damage, especially if combined with a Plated Vest or Reinforced Vest.<br/><Bullet/> The shield from Shield Protocol doesn't benefit from armor directly, but any excess damage that isn't absorbed by the shield will be reduced by armor. Armor can completely protect against small amounts of damage as long as at least one point gets blocked by the shield.<br/><Bullet/> Light and medium armors provide one extra point of Armor, while heavy armor provides two extra points of Armor.<br/>"
+
+[ShadowOps_Finesse X2AbilityTemplate]
+LocFriendlyName="Finesse"
+LocLongDescription="Gain <Ability:+ToHit/> Aim and <Ability:+Mobility/> Mobility while equipped with a rifle."
+LocHelpText="Gain <Ability:+ToHit/> Aim and <Ability:+Mobility/> Mobility while equipped with a rifle."
+LocFlyOverText="Finesse"
+LocPromotionPopupText="<Bullet/> The extra mobility from Finesse can help you to get a flank or to reach the objective quickly, but be careful you don't get too far ahead of the rest of the squad.<br/><Bullet> The bonuses from Finesse are lost if you equip a cannon. Weapons that can be equipped by any unit that can equip a rifle, such as the Boltcaster, count as rifles for Finesse.<br/><Bullet/> Learning Finesse will automatically equip the highest-level rifle in your inventory.<br/>"
+
+[ShadowOps_StealthProtocol X2AbilityTemplate]
+LocFriendlyName="Stealth Protocol"
+LocLongDescription="Give a friendly unit concealment."
+LocHelpText="Give a friendly unit concealment."
+LocFlyOverText="Stealth Protocol"
+LocPromotionPopupText="<Bullet/> Stealth Protocol can be used on any soldier, so consider who you plan on using it on when selecting your squad.<br/><Bullet/> Sometimes Stealth Protocol can be used to protect a soldier in a sticky situation, but it won't work on a soldier who is flanked by an enemy.<br/><Bullet/> Using Stealth Protocol costs an action.<br/><Bullet/> The effect is removed if the Dragoon dies or evacs.<br/><Bullet/> Stealth Protocol has one charge per mission.<br/>"
+
+[ShadowOps_BurstFire X2AbilityTemplate]
+LocFriendlyName="Barrage"
+LocLongDescription="Attack all targets in a straight line and damage or destroy cover. Cannon only. Uses <Ability:SelfAmmoCost/> ammo. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Attack all targets in a straight line and damage or destroy cover."
+LocFlyOverText="Barrage"
+LocPromotionPopupText="<Bullet/> Barrage has a 70% chance to damage units and a 100% chance to damage or destroy cover. <br/><Bullet/> Barrage can hit multiple enemies if you position yourself correctly, but it's okay to use it on just one.<br/><Bullet/> Be aware of what Barrage is going to destroy before you fire, including whatever is behind the target.<br/><Bullet/> Be careful when aiming Barrage from full cover. The soldier may \"step out\", causing Barrage to hit a different line than you expected.<br/><Bullet/> Barrage requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_ShieldsUp X2AbilityTemplate]
+LocFriendlyName="Shields Up"
+LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
+LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
+LocFlyOverText="Shields Up"
+LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
+
+[ShadowOps_ECM X2AbilityTemplate]
+LocFriendlyName="ECM"
+LocLongDescription="All squad members are 20% more difficult for enemies to detect while concealed."
+LocHelpText="All squad members are 20% more difficult for enemies to detect while concealed."
+LocFlyOverText="ECM"
+LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or evacs.<br/>"
+
+[ShadowOps_Rocketeer X2AbilityTemplate]
+LocFriendlyName="Rocketeer"
+LocLongDescription="Your heavy weapon gains a bonus use."
+LocHelpText="Your heavy weapon gains a bonus use."
+LocFlyOverText="Rocketeer"
+LocPromotionPopupText="<Bullet/> Heavy weapons are weapons such as the rocket launcher that can only be mounted on an EXO or WAR suit.<br/>"
+
+[ShadowOps_Vanish X2AbilityTemplate]
+LocFriendlyName="Vanish"
+LocLongDescription="If you begin your turn with no enemies able to see you, you gain concealment. This effect has a 2 turn cooldown."
+LocHelpText="If you begin your turn with no enemies able to see you, you gain concealment."
+LocFlyOverText="Vanish"
+LocPromotionPopupText="<Bullet/> Units with Vanish make excellent scouts. If they get spotted, just retreat and regain concealment.<br/><Bullet/> There's no limit to the number of times a unit can regain concealment using Vanish.<br/><Bullet/> Vanish has a 2 turn cooldown. <br/>"
+
+[ShadowOps_VanishTrigger X2AbilityTemplate]
+LocFriendlyName="Vanish"
+LocLongDescription="If you begin your turn with no enemies able to see you, you gain concealment. This effect has a 2 turn cooldown."
+LocHelpText="If you begin your turn with no enemies able to see you, you gain concealment."
+LocFlyOverText="Vanish"
+
+[ShadowOps_RestorationProtocol X2AbilityTemplate]
+LocFriendlyName="Renewal Protocol"
+LocLongDescription="Grants a unit <Ability:Heal/> points of HP regeneration every turn, to a maximum of <Ability:MaxHeal/> points. Also stabilizes and revives bleeding out or unconscious units and removes some debuffs."
+LocHelpText="Grants a unit HP regeneration every turn, and stabilizes and revives bleeding out or unconscious units."
+LocFlyOverText="Renewal Protocol"
+LocPromotionPopupText="<Bullet/> Renewal Protocol will get a unit that is bleeding out or unconscious up and back into the fight. Try to save it for a unit that really needs it.<br/><Bullet/> Renewal Protocol restores 2 HP per turn, to a maximum of 8 HP. The first tick of healing is applied immediately when it is used.<br/><Bullet/> The Battlefield Medicine foundry project will increase the amount to 3 HP per turn. <br/><Bullet/> Advanced GREMLINs will heal more total HP.  <br/><Bullet/> Restoration Protocol has one charge per mission. <br/>"
+
+[ShadowOps_StasisField X2AbilityTemplate]
+LocFriendlyName="Stasis Field"
+LocLongDescription="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Puts the Dragoon and all nearby units into stasis for one turn. Units in stasis cannot act and are immune to damage."
+LocFlyOverText="Stasis Field"
+LocPromotionPopupText="<Bullet/> Stasis Field affects both allied and enemy units.<br/><Bullet/> Stasis Field has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_PuppetProtocol X2AbilityTemplate]
+LocFriendlyName="Puppet Protocol"
+LocLongDescription="Takes permanent control of an enemy robotic unit. You can only puppet one unit per mission. Using this ability will not break individual concealment if it succeeds."
+LocHelpText="Takes permanent control of an enemy robotic unit. You can only puppet one unit per mission."
+LocFlyOverText="Puppet Protocol"
+LocPromotionPopupText="<Bullet/> Using Puppet Protocol will only break concealment if the attempt fails.<br/><Bullet/> A failed Puppet Protocol attempt does not use a charge. <br/><Bullet/> Puppet Protocol has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_TacticalSense X2AbilityTemplate]
+LocFriendlyName="Grace"
+LocLongDescription="You gain <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
+LocHelpText="You gain <Ability:+Dodge/> Dodge for each enemy you can see, to a max of <Ability:+MaxDodge/>."
+LocFlyOverText="Grace"
+LocPromotionPopupText="<Bullet> Dodge increases the chance that an incoming attack will graze, dealing half damage.<br/><Bullet/> This doesn't count enemies only visible through squadsight.<br/>"
+
+[ShadowOps_Aegis X2AbilityTemplate]
+LocFriendlyName="Aegis"
+LocLongDescription="Shield Protocol also reduces all incoming damage by 33%."
+LocHelpText="Shield Protocol also reduces all incoming damage by 33%."
+LocFlyOverText="Aegis"
+LocPromotionPopupText="<Bullet/> The reduction applies to all damage taken while the shield is active, not just damage absorbed by the shield.<br/>"
+
+[ShadowOps_IronWill X2AbilityTemplate]
+LocFriendlyName="Iron Will"
+LocLongDescription="Increases Will by <Ability:Will>."
+LocHelpText="Increases Will by <Ability:Will>."
+LocFlyOverText="Iron Will"
+LocPromotionPopupText="<Bullet/> Will reduces a soldier's chance of panicking, increases their resistance to psionic attacks, and increases their chance of bleeding out rather than dying. <br/>"
+
+[ShadowOps_SensorOverlays X2AbilityTemplate]
+LocFriendlyName="Sensor Overlays"
+LocLongDescription="All squad members get <Ability:+Crit> Crit chance against enemies you can see."
+LocHelpText="All squad members get <Ability:+Crit> Crit chance against enemies you can see."
+LocFlyOverText="Sensor Overlays"
+LocPromotionPopupText="<Bullet/> This doesn't count enemies only visible through squadsight.<br/>"
+
+[ShadowOps_Supercharge X2AbilityTemplate]
+LocFriendlyName="Supercharge"
+LocLongDescription="All GREMLIN abilities gain an additional charge."
+LocHelpText="All GREMLIN abilities gain an additional charge."
+LocFlyOverText="Supercharge"
+LocPromotionPopupText="<Bullet/> GREMLIN abilities include Shield Protocol, Renewal Protocol, and Stealth Protocol.<br/>"
+
+[ShadowOps_ReverseEngineering X2AbilityTemplate]
+LocFriendlyName="Reverse Engineering"
+LocLongDescription="Hacking an enemy unit grants a permanent boost to Hacking score."
+LocHelpText="Hacking an enemy unit grants a permanent boost to Hacking score."
+LocFlyOverText="Reverse Engineering"
+LocPromotionPopupText="<Bullet/> Abilities that hack enemy units include Haywire Protocol, Puppet Protocol, Skulljack, and Skullmine. <br/><Bullet/> You get the boost to Hacking score even if the hack fails. <br/>"
+
+[ShadowOps_Scout X2AbilityTemplate]
+LocFriendlyName="Scout"
+LocLongDescription="Gain one battle scanner use each mission."
+LocHelpText="Gain one battle scanner use each mission."
+LocFlyOverText="Scout"
+LocPromotionPopupText="<Bullet/> This stacks with uses from carried battle scanners.<br/>"
+
+[ShadowOps_Lightfoot X2AbilityTemplate]
+LocFriendlyName="Lightfoot"
+LocLongDescription="Gain <Ability:+Mobility/> Mobility. You are 20% harder to detect while concealed."
+LocHelpText="Gain <Ability:+Mobility/> Mobility. You are 20% harder to detect while concealed."
+LocFlyOverText="Lightfoot"
+LocPromotionPopupText="<Bullet/> The extra mobility from Lightfoot can help you to get a flank or to reach the objective quickly, but be careful you don't get too far ahead of the rest of the squad.<br/><Bullet/> The improved concealment stacks with improved concealment from other sources such as ECM.<br/>"
+
+[ShadowOps_Charge X2AbilityTemplate]
+LocFriendlyName="Charge!"
+LocLongDescription="Take a standard action after dashing."
+LocHelpText="Take a standard action after dashing."
+LocFlyOverText="Charge!"
+LocPromotionPopupText="<Bullet/> Charge! has one charge.<br/>"
+
+; === Class templates ===
+
+[ShadowOps_Dragoon X2SoldierClassTemplate]
+DisplayName="Dragoon"
+ClassSummary="The Dragoon is a versatile class that can bring our heaviest weapons and armor to the front lines, or run fast and light for infilitration missions. They excel at protecting and supporting the rest of the squad."
+LeftAbilityTreeTitle="Paladin"
+RightAbilityTreeTitle="Ghost"
+RandomNickNames[0]="Breaker"
+RandomNickNames[1]="Circuit"
+RandomNickNames[2]="Core Dump"
+RandomNickNames[3]="Cyber"
+RandomNickNames[4]="Cyborg"
+RandomNickNames[5]="Griffon"
+RandomNickNames[6]="Hammer"
+RandomNickNames[7]="Harpy"
+RandomNickNames[8]="Hydra"
+RandomNickNames[9]="Iron"
+RandomNickNames[10]="Manticore"
+RandomNickNames[11]="Minotaur"
+RandomNickNames[12]="Labyrinth"
+RandomNickNames[13]="One More Try"
+RandomNickNames[14]="Phoenix"
+RandomNickNames[15]="Pied Piper"
+RandomNickNames[16]="Redscreen"
+RandomNickNames[17]="Rocket"
+RandomNickNames[18]="Saber"
+RandomNickNames[19]="Sphinx"
+RandomNickNames[20]="Steel"
+RandomNickNames[21]="The Accountant"
+RandomNickNames[22]="Unicorn"
+RandomNickNames_Male[0]="Orc"
+RandomNickNames_Female[0]="Siren"
+
+[ShadowOps_Dragoon_LW X2SoldierClassTemplate]
+DisplayName="Dragoon"
+ClassSummary="The Dragoon is a versatile class that can bring our heaviest weapons and armor to the front lines, or run fast and light for infilitration missions. They excel at protecting and supporting the rest of the squad."
+LeftAbilityTreeTitle="Paladin"
+RightAbilityTreeTitle="Ghost"
+RandomNickNames[0]="Breaker"
+RandomNickNames[1]="Circuit"
+RandomNickNames[2]="Core Dump"
+RandomNickNames[3]="Cyber"
+RandomNickNames[4]="Cyborg"
+RandomNickNames[5]="Griffon"
+RandomNickNames[6]="Hammer"
+RandomNickNames[7]="Harpy"
+RandomNickNames[8]="Hydra"
+RandomNickNames[9]="Iron"
+RandomNickNames[10]="Manticore"
+RandomNickNames[11]="Minotaur"
+RandomNickNames[12]="Labyrinth"
+RandomNickNames[13]="One More Try"
+RandomNickNames[14]="Phoenix"
+RandomNickNames[15]="Pied Piper"
+RandomNickNames[16]="Redscreen"
+RandomNickNames[17]="Rocket"
+RandomNickNames[18]="Saber"
+RandomNickNames[19]="Sphinx"
+RandomNickNames[20]="Steel"
+RandomNickNames[21]="The Accountant"
+RandomNickNames[22]="Unicorn"
+RandomNickNames_Male[0]="Orc"
+RandomNickNames_Female[0]="Siren"
+
+; === GTS ability templates ===
+
+[TacticalSenseUnlock X2SoldierAbilityUnlockTemplate]
+DisplayName="Dragoon: Grace"
+Summary="+10 Dodge for each visible enemy, to a max of +50."
+
+[DigitalWarfareUnlock_LW X2SoldierStatUnlockTemplate]
+DisplayName="Dragoon: Digital Warfare"
+Summary="Gain a second PCS slot."
+
+[ChargeUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Charge!"
+Summary="All soldiers get one use of Run and Gun each mission."
+

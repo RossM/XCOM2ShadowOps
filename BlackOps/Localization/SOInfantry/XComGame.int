@@ -1,0 +1,279 @@
+; === Infantry abilities ===
+
+[ShadowOps_BulletSwarm X2AbilityTemplate]
+LocFriendlyName="Bullet Swarm"
+LocLongDescription="Firing your <Ability:WeaponName/> with your first action no longer ends your turn."
+LocHelpText="Fire your <Ability:WeaponName/> at a target. This does not end your turn if used as your first action."
+LocFlyOverText="Bullet Swarm"
+LocPromotionPopupText="<Bullet/> Bullet Swarm can deal a lot of damage, but it chews through ammo fast. Consider using a weapon with an expanded magazine or auto-loader.<br/><Bullet/>Good positioning will help you get the most of both shots each turn.<br/><Bullet/> Firing your pistol still ends your turn.<br/>"
+
+[ShadowOps_Bandolier X2AbilityTemplate]
+LocFriendlyName="Bandolier"
+LocLongDescription="Grants an extra utility item slot only usable for ammo."
+LocHelpText="Grants an extra utility item slot only usable for ammo."
+LocFlyOverText="Bandolier"
+LocPromotionPopupText="<Bullet/> Infantry can equip two different ammo items at the same time, but can only benefit from one at a time. If two ammo items are equipped the Infantry will gain a Swap Ammo ability that allows them to change the active ammo type.<br/><Bullet/> Consider which ammo you should take on each mission. Infantry become much more powerful when equipped with an ammo type appropriate to the situation.<br/>"
+
+[ShadowOps_Magnum X2AbilityTemplate]
+LocFriendlyName="Magnum"
+LocLongDescription="Your pistol attacks get <Ability:+ToHit/> Aim and deal <Ability:+Damage/> damage."
+LocHelpText="Your pistol attacks get <Ability:+ToHit/> Aim and deal <Ability:+Damage/> damage."
+LocFlyOverText="Magnum"
+LocPromotionPopupText="<Bullet/> Even without Magnum, your pistol is more accurate than your rifle at close range.<br/><Bullet/> Combining Magnum with ammo that adds extra damage will give you guaranteed kills on ADVENT Troopers at point-blank range."
+
+[ShadowOps_GoodEye X2AbilityTemplate]
+LocFriendlyName="Good Eye"
+LocLongDescription="Your shots can't be dodged."
+LocHelpText="Your shots can't be dodged."
+LocFlyOverText="Good Eye"
+LocPromotionPopupText="<Bullet/> This ability gets more useful in the late game, when many enemies have dodge chances.<br/>"
+
+[ShadowOps_FullAuto X2AbilityTemplate]
+LocFriendlyName="Full Auto"
+LocLongDescription="Take a shot with an aim penalty of <Ability:ToHit/>. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo. Requires both actions. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Take shots with an aim penalty of <Ability:ToHit/> until you miss or run out of ammo. Requires both actions."
+LocFlyOverText="Full Auto"
+LocPromotionPopupText="<Bullet/> Full Auto can deal enormous amounts of damage with a full magazine and the right ammo.<br/><Bullet/> This ability Requires both actions to use. <br/><Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_FullAuto2 X2AbilityTemplate]
+LocFriendlyName="Full Auto"
+LocFlyOverText="Full Auto"
+LocPromotionPopupText=""
+
+[ShadowOps_ZoneOfControl X2AbilityTemplate]
+LocFriendlyName="Zone of Control"
+LocLongDescription="Take a reaction shot against any enemy that moves or attacks within your vision. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Enhanced overwatch that can fire multiple times in a turn."
+LocFlyOverText="Zone of Control"
+LocPromotionPopupText="<Bullet/> Zone of Control will switch to pistol overwatch shots when the primary weapon is out of ammo. <br/><Bullet/> There is no limit to the amount of Zone of Control shots an Infantry can take in a turn. <br/><Bullet/> Zone of Control has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_ZoneOfControlShot X2AbilityTemplate]
+LocFriendlyName="Zone of Control Shot"
+
+[ShadowOps_ZoneOfControlPistolShot X2AbilityTemplate]
+LocFriendlyName="Zone of Control Pistol Shot"
+
+[ShadowOps_ZeroIn X2AbilityTemplate]
+LocFriendlyName="Zero In"
+LocLongDescription="When you miss an attack, you get <Ability:+ToHit/> Aim on your next attack."
+LocHelpText="When you miss an attack, you get <Ability:+ToHit/> Aim on your next attack."
+LocFlyOverText="Zero In"
+LocPromotionPopupText="<Bullet/> Zero In can help compensate for not being able to move to get a better shot while using Bullet Swarm. It makes it much more likely that at least one shot in a turn will hit.<br/><Bullet/> Zero In doesn't apply to reaction shots.<br/>"
+
+[ShadowOps_Flush X2AbilityTemplate]
+LocFriendlyName="Flush"
+LocLongDescription="Fire a pistol shot that automatically hits and forces the target to move to new cover. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Fire a pistol shot that automatically hits and forces the target to move to new cover."
+LocFlyOverText="Flush"
+LocPromotionPopupText="<Bullet/> Flush can force an enemy to trigger your other soldiers' reaction fire.<br/><Bullet/> Flush has a <Ability:SelfCooldown/> turn cooldown. <br/>"
+
+[ShadowOps_RifleSuppression X2AbilityTemplate]
+LocFriendlyName="Rifle Suppression"
+LocLongDescription="Fire a barrage that pins down a target, granting reaction fire against it if it moves, and imposing a <Ability:SUPPRESSIONPENALTY/> penalty to the target's aim."
+LocHelpText="Penalize target's aim and shoot them if they move."
+LocFlyOverText="Rifle Suppression"
+LocPromotionPopupText="<Bullet/> Suppressed enemies take a -50 penalty to their Aim and can't use grenades.<br/><Bullet/> The reaction shot from Rifle Suppression has a <Ability:+ToHit:SuppressionShot/> aim modifier.<br/><Bullet/> Suppression doesn't benefit from Covering Fire.<br/><Bullet/> Rifle Suppression costs <Ability:SelfAmmoCost/> ammo points to use, but has no cooldown.<br/><Bullet/> Rifle Suppression will be canceled if the suppressing unit is damaged.<br/><Bullet/> If multiple units suppress a target, the aim penalty will stack.<br/>"
+
+[ShadowOps_Focus X2AbilityTemplate]
+LocFriendlyName="Focus"
+LocLongDescription="Your first reaction shot each turn is guaranteed to hit."
+LocHelpText="Your first reaction shot each turn is guaranteed to hit."
+LocFlyOverText="Focus"
+LocPromotionPopupText="<Bullet/> This ability goes well with other abilities that boost your overwatch, like Covering Fire.<br/><Bullet/> Your reaction shots can still be dodged.<br/>"
+
+[ShadowOps_Resilience X2AbilityTemplate]
+LocFriendlyName="Resilience"
+LocLongDescription="You can't be critically hit."
+LocHelpText="You can't be critically hit."
+LocFlyOverText="Resilience"
+LocPromotionPopupText="<Bullet/> Resilience is useful for controlling the amount of damage you take if you get flanked.<br/><Bullet/> Just because you can't be crit doesn't mean you won't die if you stand out in the open.<br/>"
+
+[ShadowOps_AdrenalineSurge X2AbilityTemplate]
+LocFriendlyName="Adrenaline Surge"
+LocLongDescription="When you get a kill, you and nearby friendly units get <Ability:+Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and <Ability:+Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
+LocHelpText="<Ability:+Crit:ShadowOps_AdrenalineSurgeTrigger/> Crit chance and <Ability:+Mobility:ShadowOps_AdrenalineSurgeTrigger/> Mobility until the end of your turn."
+LocFlyOverText="Adrenaline Surge"
+LocPromotionPopupText="<Bullet/> If you get a kill during the enemy turn, the bonus lasts until the end of your next turn.<br/><Bullet/> Adrenaline Surge has a range of 8 tiles.<br/>"
+
+[ShadowOps_AdrenalineSurgeTrigger X2AbilityTemplate]
+LocFriendlyName="Adrenaline Surge"
+LocLongDescription="When you get a kill, you and nearby friendly units get <Ability:+Crit/> Crit chance and <Ability:+Mobility/> Mobility until the end of your turn."
+LocHelpText="<Ability:+Crit/> Crit chance and <Ability:+Mobility/> Mobility until the end of your turn."
+LocFlyOverText="Adrenaline Surge"
+
+[ShadowOps_Fortify X2AbilityTemplate]
+LocFriendlyName="Fortify"
+LocLongDescription="Whenever you enter overwatch or use suppression, you gain <Ability:+Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
+LocHelpText="Whenever you enter overwatch or use suppression, you gain <Ability:+Defense:ShadowOps_FortifyTrigger/> Defense until the start of your next turn."
+LocFlyOverText="Fortify"
+LocPromotionPopupText="<Bullet/> Fortify will work with any activated ability that gives you reaction shots, including Zone of Control. <br/>"
+
+[ShadowOps_FortifyTrigger X2AbilityTemplate]
+LocFriendlyName="Fortify"
+LocLongDescription="<Ability:+Defense/> Defense until the start of your next turn."
+LocHelpText="<Ability:+Defense/> Defense until the start of your next turn."
+LocFlyOverText="Fortify"
+
+[ShadowOps_FirstAid X2AbilityTemplate]
+LocFriendlyName="First Aid"
+LocLongDescription="You have one free medikit use on every mission. Each carried medikit gives you two additional uses."
+LocHelpText="You have one free medikit use on every mission. Each carried medikit gives you two additional uses."
+LocFlyOverText="First Aid"
+LocPromotionPopupText="<Bullet/> The free medkit also grants immunity to poison.</br>"
+
+[ShadowOps_SecondWind X2AbilityTemplate]
+LocFriendlyName="Second Wind"
+LocLongDescription="Using a medikit on an injured unit also grants that unit a bonus action point."
+LocHelpText="Using a medikit on an injured unit also grants that unit a bonus action point."
+LocFlyOverText="Second Wind"
+LocPromotionPopupText="<Bullet/> If you use a medikit on yourself, you gain the bonus action point.<br/><Bullet/> Medikits can still only be used on injured units.<br/>"
+
+[ShadowOps_SecondWindTrigger X2AbilityTemplate]
+LocFriendlyName="Second Wind"
+LocLongDescription="Using a medikit on an injured unit also grants that unit a bonus action point."
+LocHelpText="Using a medikit on an injured unit also grants that unit a bonus action point."
+LocFlyOverText="Second Wind"
+LocHitMessage="Second Wind"
+
+[ShadowOps_Tactician X2AbilityTemplate]
+LocFriendlyName="Tactician"
+LocLongDescription="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage. Rifle only."
+LocHelpText="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage."
+LocFlyOverText="Tactician"
+LocPromotionPopupText="<Bullet/> Tactician stacks with the effect of a stock.<br/>"
+
+[ShadowOps_ReadyForAnything X2AbilityTemplate]
+LocFriendlyName="Ready for Anything"
+LocLongDescription="When you make a standard attack with your <Ability:WeaponName/> you automatically enter overwatch."
+LocHelpText="Fire a shot at a target, then enter overwatch."
+LocFlyOverText="Ready for Anything"
+LocPromotionPopupText="<Bullet/> You won't enter overwatch if you are out of ammo.<br/>"
+
+[ShadowOps_ImprovedSuppression X2AbilityTemplate]
+LocFriendlyName="Improved Suppression"
+LocLongDescription="Your Suppression ability also disorients the target."
+LocHelpText="Your Suppression ability also disorients the target."
+LocFlyOverText="Improved Suppression"
+LocPromotionPopupText="<Bullet/> Disoriented units have reduced Aim and Mobility, and can't use most special abilities.<br/><Bullet/> The disorientation is applied when you activate suppression.<br/><Bullet/> Having the suppression broken won't remove the disorientation early.<br/>"
+
+[ShadowOps_CoupDeGrace X2AbilityTemplate]
+LocFriendlyName="Coup de Grace"
+LocLongDescription="Killing an enemy with your pistol doesn't cost an action."
+LocHelpText="Killing an enemy with your pistol doesn't cost an action."
+LocFlyOverText="Coup de Grace"
+LocPromotionPopupText="<Bullet/> This affects all pistol attacks, not just standard pistol shots.<br/>"
+
+[ShadowOps_Airstrike X2AbilityTemplate]
+LocFriendlyName="Airstrike"
+LocLongDescription="Once per mission, call in an airstrike that does 8-12 damage in a large area. Costs both actions and only works outdoors."
+LocHelpText="Call in an airstrike that does 8-12 damage in a large area. Costs both actions and only works outdoors."
+LocFlyOverText="Airstrike"
+LocPromotionPopupText="<Bullet/> The airstrike will destroy almost all cover in the area of effect.<br/>"
+
+[ShadowOps_AgainstTheOdds X2AbilityTemplate]
+LocFriendlyName="Against the Odds"
+LocLongDescription="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
+LocHelpText="Gain <Ability:+ToHit/> Aim per enemy the squad can see (max <Ability:+MaxToHit/>)."
+LocFlyOverText="Against the Odds"
+LocPromotionPopupText="<Bullet/> If you're facing enough enemies to hit the <Ability:+MaxToHit/> cap, run.<br/>"
+
+[ShadowOps_Paragon X2AbilityTemplate]
+LocFriendlyName="Elite"
+LocLongDescription="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
+LocHelpText="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/> Will."
+LocFlyOverText="Elite"
+LocPromotionPopupText="<Bullet/> These bonuses are in addition to the normal bonuses from leveling up.<br/>"
+
+; === Other abilities ===
+
+[ShadowOps_SwapAmmo X2AbilityTemplate]
+LocFriendlyName="Swap Ammo"
+LocLongDescription="Reload your weapons with <Ability:AssociatedWeapon/>."
+LocHelpText="Reload your weapons with <Ability:AssociatedWeapon/>."
+
+; === Class templates ===
+
+[ShadowOps_Infantry X2SoldierClassTemplate]
+DisplayName="Infantry"
+ClassSummary="Our Infantry bring to bear sustained firepower at short and medium ranges. They're a key member of any squad."
+LeftAbilityTreeTitle="Rifleman"
+RightAbilityTreeTitle="Support"
+RandomNickNames[0]="Ace"
+RandomNickNames[1]="Barrel"
+RandomNickNames[2]="Brass"
+RandomNickNames[3]="Broadside"
+RandomNickNames[4]="Cyclops"
+RandomNickNames[5]="Eagle"
+RandomNickNames[6]="Falcon"
+RandomNickNames[7]="Gorgon"
+RandomNickNames[8]="Hailstorm"
+RandomNickNames[9]="Hawk"
+RandomNickNames[10]="Ice"
+RandomNickNames[11]="Joker"
+RandomNickNames[12]="Lead"
+RandomNickNames[13]="Not Again"
+RandomNickNames[14]="Royal Flush"
+RandomNickNames[15]="Santa"
+RandomNickNames[16]="Storm"
+RandomNickNames[17]="Tracer"
+RandomNickNames[18]="Trey"
+RandomNickNames[19]="Two Hands"
+RandomNickNames[20]="Vampire"
+RandomNickNames[21]="Warlord"
+RandomNickNames[22]="Zero"
+RandomNickNames_Female[0]="Baroness"
+RandomNickNames_Female[1]="Kitty"
+RandomNickNames_Female[2]="Queen"
+RandomNickNames_Male[0]="Baron"
+RandomNickNames_Male[1]="King"
+RandomNickNames_Male[2]="Snowman"
+
+[ShadowOps_Infantry_LW X2SoldierClassTemplate]
+DisplayName="Infantry"
+ClassSummary="Our Infantry bring to bear sustained firepower at short and medium ranges. They're a key member of any squad."
+LeftAbilityTreeTitle="Rifleman"
+RightAbilityTreeTitle="Support"
+RandomNickNames[0]="Ace"
+RandomNickNames[1]="Barrel"
+RandomNickNames[2]="Brass"
+RandomNickNames[3]="Broadside"
+RandomNickNames[4]="Cyclops"
+RandomNickNames[5]="Eagle"
+RandomNickNames[6]="Falcon"
+RandomNickNames[7]="Gorgon"
+RandomNickNames[8]="Hailstorm"
+RandomNickNames[9]="Hawk"
+RandomNickNames[10]="Ice"
+RandomNickNames[11]="Joker"
+RandomNickNames[12]="Lead"
+RandomNickNames[13]="Not Again"
+RandomNickNames[14]="Royal Flush"
+RandomNickNames[15]="Santa"
+RandomNickNames[16]="Storm"
+RandomNickNames[17]="Tracer"
+RandomNickNames[18]="Trey"
+RandomNickNames[19]="Two Hands"
+RandomNickNames[20]="Vampire"
+RandomNickNames[21]="Warlord"
+RandomNickNames[22]="Zero"
+RandomNickNames_Female[0]="Baroness"
+RandomNickNames_Female[1]="Kitty"
+RandomNickNames_Female[2]="Queen"
+RandomNickNames_Male[0]="Baron"
+RandomNickNames_Male[1]="King"
+RandomNickNames_Male[2]="Snowman"
+
+; === GTS ability templates ===
+
+[AdrenalineSurgeUnlock X2SoldierAbilityUnlockTemplate]
+DisplayName="Infantry: Adrenaline Surge"
+Summary="Nearby squadmates get +10 Crit and +3 Mobility when you get a kill."
+
+[AdrenalineSurgeUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Infantry: Adrenaline Surge"
+Summary="Nearby squadmates get +10 Crit and +3 Mobility when you get a kill."
+
+[AgainstTheOddsUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Against the Odds"
+Summary="All soldiers gain +1 Aim per enemy the squad can see (max +15)."
+
