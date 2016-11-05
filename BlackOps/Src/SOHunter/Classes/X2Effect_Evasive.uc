@@ -35,6 +35,8 @@ function bool GetExtValue(LWTuple Tuple)
 		if (AbilityTemplate.AbilityMultiTargetStyle == none)
 			continue;
 
+		EffectsCondition = none;
+
 		foreach AbilityTemplate.AbilityMultiTargetConditions(Condition)
 		{
 			EffectsCondition = X2Condition_UnitEffects(Condition);
