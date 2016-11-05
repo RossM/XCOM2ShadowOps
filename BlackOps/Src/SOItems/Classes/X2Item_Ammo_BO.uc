@@ -82,7 +82,7 @@ static function X2DataTemplate CreateTigerRounds()
 	local ArtifactCost Resources;
 
 	`CREATE_X2TEMPLATE(class'X2AmmoTemplate', Template, 'ShadowOps_TigerRounds');
-	Template.strImage = "img:///UILibrary_SOItemsw.X2InventoryIcons.Inv_Tiger_Rounds";
+	Template.strImage = "img:///UILibrary_SOItems.X2InventoryIcons.Inv_Tiger_Rounds";
 	DamageValue.Shred = default.TigerShred;
 	Template.AddAmmoDamageModifier(none, DamageValue);
 	Template.TradingPostValue = 15;
@@ -116,7 +116,7 @@ static function X2DataTemplate CreateDepletedEleriumRounds()
 	local ArtifactCost Resources;
 
 	`CREATE_X2TEMPLATE(class'X2AmmoTemplate', Template, 'ShadowOps_DepletedEleriumRounds');
-	Template.strImage = "img:///UILibrary_SOItemsw.X2InventoryIcons.Inv_Depleted_Elerium_Rounds";
+	Template.strImage = "img:///UILibrary_SOItems.X2InventoryIcons.Inv_Depleted_Elerium_Rounds";
 	DamageValue.Damage = default.DepletedEleriumDamageModifier;
 	DamageValue.Shred = default.DepletedEleriumShred;
 	Template.AddAmmoDamageModifier(none, DamageValue);
