@@ -752,7 +752,7 @@ static function X2AbilityTemplate ControlledDetonation()
 	Effect.AbilityTargetConditions.AddItem(default.LivingFriendlyTargetProperty);
 
 	// TODO: icon
-	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_SOCombatEngineer.UIPerk_AWC", true, Effect);
+	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_SOCombatEngineer.UIPerk_controlleddetonation", true, Effect);
 }
 
 static function X2AbilityTemplate DevilsLuck()
