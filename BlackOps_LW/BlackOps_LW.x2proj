@@ -19,7 +19,8 @@
     <Folder Include="Config\SOInfantry_LW" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
-    <Folder Include="Localization\SOItems" />
+	  <Folder Include="Localization\CritChanceChange" />
+	  <Folder Include="Localization\SOItems" />
     <Folder Include="Localization\SOCombatEngineer" />
     <Folder Include="Localization\SODragoon" />
     <Folder Include="Localization\SOHunter" />
@@ -85,7 +86,8 @@
     <Content Include="ReadMe.txt" />
     <Content Include="ModPreview.jpg" />
     <Content Include="Localization\*.int" />
-    <Content Include="Localization\SODragoon\*.int" />
+	  <Content Include="Localization\CritChanceChange\*.int" />
+	  <Content Include="Localization\SODragoon\*.int" />
     <Content Include="Localization\SOHunter\*.int" />
     <Content Include="Localization\SOInfantry\*.int" />
     <Content Include="Localization\SOCombatEngineer\*.int" />
