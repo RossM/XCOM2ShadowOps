@@ -35,7 +35,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Packmaster());
 	Templates.AddItem(Entrench());
 	Templates.AddItem(Aggression());			// Non-LW only
-	Templates.AddItem(PurePassive('ShadowOps_CombatDrugs', "img:///UILibrary_BlackOps.UIPerk_combatdrugs", true));
+	Templates.AddItem(PurePassive('ShadowOps_CombatDrugs', "img:///UILibrary_SOCombatEngineer.UIPerk_combatdrugs", true));
 	Templates.AddItem(SlamFire());
 	Templates.AddItem(DangerZone());
 	Templates.AddItem(ChainReaction());			// Unused
@@ -64,7 +64,7 @@ static function X2AbilityTemplate SmokeAndMirrors()
 	Effect.DataName = 'SmokeGrenade';
 	Effect.BaseCharges = 1;
 
-	return Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_BlackOps.UIPerk_smokeandmirrors", false, Effect);
+	return Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, Effect);
 }
 
 static function X2AbilityTemplate DeepPockets()
@@ -102,7 +102,7 @@ static function X2AbilityTemplate Breach()
 	
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_breach";
+	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_breach";
 	Template.Hostility = eHostility_Offensive;
 	Template.DisplayTargetHitChance = false;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CORPORAL_PRIORITY;
@@ -169,7 +169,7 @@ static function X2AbilityTemplate Fastball()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fastball');
 	
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fastball";
+	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_fastball";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
 	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
@@ -218,7 +218,7 @@ static function X2AbilityTemplate FastballRemovalTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FastballRemovalTrigger');
 	
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fastball";
+	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_fastball";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -257,7 +257,7 @@ static function X2AbilityTemplate FractureAbility()
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_FractureDamage');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fracture";
+	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_fracture";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.Hostility = eHostility_Offensive;
@@ -347,7 +347,7 @@ static function X2AbilityTemplate Aggression()
 	Effect.MaxCritModifier = default.AggressionMaxCritModifier;
 	Effect.GrenadeCritDamage = default.AggressionGrenadeCritDamage;
 
-	return Passive('ShadowOps_Aggression', "img:///UILibrary_BlackOps.UIPerk_aggression", true, Effect);
+	return Passive('ShadowOps_Aggression', "img:///UILibrary_SOCombatEngineer.UIPerk_aggression", true, Effect);
 }
 
 static function X2AbilityTemplate SlamFire()
@@ -362,7 +362,7 @@ static function X2AbilityTemplate SlamFire()
 	SlamFireEffect.AbilityTargetConditions.AddItem(default.CritCondition);
 	SlamFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
 
-	Template = SelfTargetActivated('ShadowOps_SlamFire', "img:///UILibrary_BlackOps.UIPerk_slamfire", true, SlamFireEffect, class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY, eCost_Free);
+	Template = SelfTargetActivated('ShadowOps_SlamFire', "img:///UILibrary_SOCombatEngineer.UIPerk_slamfire", true, SlamFireEffect, class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY, eCost_Free);
 	AddCooldown(Template, default.SlamFireCooldown);
 
 	class'X2Ability_RangerAbilitySet'.static.SuperKillRestrictions(Template, 'Serial_SuperKillCheck');
@@ -484,7 +484,7 @@ static function X2AbilityTemplate Packmaster()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Packmaster');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_packmaster";
+	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_packmaster";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -525,7 +525,7 @@ static function X2AbilityTemplate DangerZone()
 	Effect.fBonusRadius = default.DangerZoneBonusRadius;
 	Effect.fBreachBonusRadius = default.DangerZoneBreachBonusRadius;
 
-	return Passive('ShadowOps_DangerZone', "img:///UILibrary_BlackOps.UIPerk_dangerzone", true, Effect);
+	return Passive('ShadowOps_DangerZone', "img:///UILibrary_SOCombatEngineer.UIPerk_dangerzone", true, Effect);
 }
 
 static function X2AbilityTemplate DenseSmoke()
@@ -538,7 +538,7 @@ static function X2AbilityTemplate DenseSmoke()
 	Effect.IncludeItemNames.AddItem('SmokeGrenade');
 	Effect.IncludeItemNames.AddItem('SmokeGrenadeMk2');
 
-	return Passive('ShadowOps_DenseSmoke', "img:///UILibrary_BlackOps.UIPerk_densesmoke", true, Effect);
+	return Passive('ShadowOps_DenseSmoke', "img:///UILibrary_SOCombatEngineer.UIPerk_densesmoke", true, Effect);
 }
 
 static function X2AbilityTemplate HeatAmmo()
@@ -548,7 +548,7 @@ static function X2AbilityTemplate HeatAmmo()
 	Effect = new class'X2Effect_HeatAmmo';
 	Effect.DamageMultiplier = default.HeatAmmoDamageMultiplier;
 
-	return Passive('ShadowOps_HeatAmmo', "img:///UILibrary_BlackOps.UIPerk_heatammo", true, Effect);
+	return Passive('ShadowOps_HeatAmmo', "img:///UILibrary_SOCombatEngineer.UIPerk_heatammo", true, Effect);
 }
 
 static function X2AbilityTemplate MovingTarget()
@@ -560,7 +560,7 @@ static function X2AbilityTemplate MovingTarget()
 	Effect.AddToHitAsTargetModifier(-default.MovingTargetDefenseBonus);
 	Effect.AddToHitAsTargetModifier(default.MovingTargetDodgeBonus, eHit_Graze);
 
-	return Passive('ShadowOps_MovingTarget', "img:///UILibrary_BlackOps.UIPerk_movingtarget", true, Effect);
+	return Passive('ShadowOps_MovingTarget', "img:///UILibrary_SOCombatEngineer.UIPerk_movingtarget", true, Effect);
 }
 
 static function X2AbilityTemplate Entrench()
@@ -651,7 +651,7 @@ static function X2AbilityTemplate Pyromaniac()
 	local XMBEffect_AddUtilityItem ItemEffect;
 
 	// TODO: icon
-	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_BlackOps.UIPerk_pyromaniac", true);
+	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_SOCombatEngineer.UIPerk_pyromaniac", true);
 
 	ItemEffect = new class 'XMBEffect_AddUtilityItem';
 	ItemEffect.DataName = 'Firebomb';
@@ -679,7 +679,7 @@ static function X2AbilityTemplate HitAndRun()
 
 	// Create a triggered ability that will activate whenever the unit uses an ability that meets the condition
 	// TODO: icon
-	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_BlackOps.UIPerk_skirmisher", true, Effect, 'AbilityActivated');
+	Template = SelfTargetTrigger('ShadowOps_HitAndRun', "img:///UILibrary_SOCombatEngineer.UIPerk_skirmisher", true, Effect, 'AbilityActivated');
 
 	// Trigger abilities don't appear as passives. Add a passive ability icon.
 	AddIconPassive(Template);
@@ -725,7 +725,7 @@ static function X2AbilityTemplate FocusedDefense()
 	Effect.AbilityTargetConditionsAsTarget.AddItem(new class'X2Condition_ClosestVisibleEnemy');
 
 	// TODO: icon
-	return Passive('ShadowOps_FocusedDefense', "img:///UILibrary_BlackOps.UIPerk_focuseddefense", true, Effect);
+	return Passive('ShadowOps_FocusedDefense', "img:///UILibrary_SOCombatEngineer.UIPerk_focuseddefense", true, Effect);
 }
 
 static function X2AbilityTemplate LineEmUp()
@@ -739,7 +739,7 @@ static function X2AbilityTemplate LineEmUp()
 	Effect.AbilityTargetConditions.AddItem(new class'X2Condition_ClosestVisibleEnemy');
 
 	// TODO: icon
-	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_SOCombatEngineer.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate ControlledDetonation()
@@ -752,7 +752,7 @@ static function X2AbilityTemplate ControlledDetonation()
 	Effect.AbilityTargetConditions.AddItem(default.LivingFriendlyTargetProperty);
 
 	// TODO: icon
-	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_SOCombatEngineer.UIPerk_AWC", true, Effect);
 }
 
 static function X2AbilityTemplate DevilsLuck()
@@ -760,7 +760,7 @@ static function X2AbilityTemplate DevilsLuck()
 	local X2AbilityTemplate Template;
 
 	// TODO: icon
-	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_BlackOps.UIPerk_devilsluck", true, new class'X2Effect_DevilsLuck');
+	Template = Passive('ShadowOps_DevilsLuck', "img:///UILibrary_SOCombatEngineer.UIPerk_devilsluck", true, new class'X2Effect_DevilsLuck');
 
 	// Add a secondary ability to provide bonuses on the shot
 	AddSecondaryAbility(Template, DevilsLuckTrigger());
@@ -781,7 +781,7 @@ static function X2AbilityTemplate DevilsLuckTrigger()
 	Effect.CleanupType = eCleanup_BeginTactical;
 
 	// TODO: icon
-	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_BlackOps.UIPerk_devilsluck", false, Effect, 'AbilityActivated', eFilter_None);
+	Template = SelfTargetTrigger('ShadowOps_DevilsLuckTrigger', "img:///UILibrary_SOCombatEngineer.UIPerk_devilsluck", false, Effect, 'AbilityActivated', eFilter_None);
 	XMBAbilityTrigger_EventListener(Template.AbilityTriggers[0]).bAsTarget = true;
 
 	HitResultCondition = new class'XMBCondition_AbilityHitResult';
@@ -811,7 +811,7 @@ static function X2AbilityTemplate Mayhem()
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	// TODO: icon
-	return Passive('ShadowOps_Mayhem', "img:///UILibrary_BlackOps.UIPerk_mayhem", true, Effect);
+	return Passive('ShadowOps_Mayhem', "img:///UILibrary_SOCombatEngineer.UIPerk_mayhem", true, Effect);
 }
 
 static function X2AbilityTemplate Saboteur()
@@ -834,7 +834,7 @@ static function X2AbilityTemplate Saboteur()
 	Effect.AbilityTargetConditions.AddItem(AbilityNameCondition);
 
 	// TODO: icon
-	return Passive('ShadowOps_Saboteur', "img:///UILibrary_BlackOps.UIPerk_saboteur", false, Effect);
+	return Passive('ShadowOps_Saboteur', "img:///UILibrary_SOCombatEngineer.UIPerk_saboteur", false, Effect);
 }
 
 static function X2AbilityTemplate Anatomist()
@@ -847,7 +847,7 @@ static function X2AbilityTemplate Anatomist()
 	Effect.ScaleValue = new class'X2Value_Anatomist';
 	Effect.ScaleMax = default.AnatomistMaxKills;
 
-	return Passive('ShadowOps_Anatomist', "img:///UILibrary_BlackOps.UIPerk_anatomist", true, Effect);
+	return Passive('ShadowOps_Anatomist', "img:///UILibrary_SOCombatEngineer.UIPerk_anatomist", true, Effect);
 }
 
 static function X2AbilityTemplate ExtraMunitions()
@@ -855,7 +855,7 @@ static function X2AbilityTemplate ExtraMunitions()
 	local X2AbilityTemplate Template;
 	local XMBEffect_AddUtilityItem ItemEffect;
 
-	Template = Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_BlackOps.UIPerk_extramunitions", true);
+	Template = Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true);
 
 	ItemEffect = new class 'XMBEffect_AddUtilityItem';
 	ItemEffect.DataName = 'FragGrenade';

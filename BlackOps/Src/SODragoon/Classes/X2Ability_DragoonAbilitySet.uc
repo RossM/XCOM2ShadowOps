@@ -45,7 +45,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(TacticalSense());
 	Templates.AddItem(AdvancedShieldProtocol());
 	Templates.AddItem(Lightfoot());
-	Templates.AddItem(PurePassive('ShadowOps_Aegis', "img:///UILibrary_BlackOps.UIPerk_aegis", false));
+	Templates.AddItem(PurePassive('ShadowOps_Aegis', "img:///UILibrary_SODragoon.UIPerk_aegis", false));
 	Templates.AddItem(IronWill());
 	Templates.AddItem(SensorOverlays());
 	Templates.AddItem(Supercharge());
@@ -56,7 +56,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	return Templates;
 }
 
-static function X2AbilityTemplate ShieldProtocol(optional name TemplateName = 'ShadowOps_ShieldProtocol', optional string Icon = "img:///UILibrary_BlackOps.UIPerk_shieldprotocol", optional EActionPointCost Cost = eCost_Single)
+static function X2AbilityTemplate ShieldProtocol(optional name TemplateName = 'ShadowOps_ShieldProtocol', optional string Icon = "img:///UILibrary_SODragoon.UIPerk_shieldprotocol", optional EActionPointCost Cost = eCost_Single)
 {
 	local X2AbilityTemplate                     Template;
 	local X2Condition_UnitProperty              TargetProperty;
@@ -122,7 +122,7 @@ static function X2AbilityTemplate AdvancedShieldProtocol()
 {
 	local X2AbilityTemplate                     Template;
 
-	Template = ShieldProtocol('ShadowOps_AdvancedShieldProtocol', "img:///UILibrary_BlackOps.UIPerk_advancedshieldprotocol", eCost_Free);
+	Template = ShieldProtocol('ShadowOps_AdvancedShieldProtocol', "img:///UILibrary_SODragoon.UIPerk_advancedshieldprotocol", eCost_Free);
 	Template.OverrideAbilities.AddItem('ShadowOps_ShieldProtocol');
 
 	return Template;
@@ -156,7 +156,7 @@ static function X2AbilityTemplate HeavyArmor()
 	Template = new class'X2AbilityTemplate_Dragoon'(BaseTemplate);
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_heavyarmor";
+	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_heavyarmor";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -329,7 +329,7 @@ static function X2AbilityTemplate StealthProtocol()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_StealthProtocol');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_stealthprotocol";
+	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_stealthprotocol";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Defensive;
 	Template.bLimitTargetIcons = true;
@@ -415,7 +415,7 @@ static function X2AbilityTemplate BurstFire()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	// Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
 	// Template.HideErrors.AddItem('AA_WeaponIncompatible');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_burstfire";
+	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_burstfire";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 	Template.bLimitTargetIcons = true;
 
@@ -513,7 +513,7 @@ static function X2AbilityTemplate ECM()
 static function X2AbilityTemplate Vanish()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('ShadowOps_Vanish', "img:///UILibrary_BlackOps.UIPerk_vanish", true);
+	Template = PurePassive('ShadowOps_Vanish', "img:///UILibrary_SODragoon.UIPerk_vanish", true);
 	Template.AdditionalAbilities.AddItem('ShadowOps_VanishTrigger');
 
 	return Template;
@@ -532,7 +532,7 @@ static function X2AbilityTemplate VanishTrigger()
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_vanish";
+	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_vanish";
 
 	Template.AbilityToHitCalc = default.DeadEye;
 	Template.AbilityTargetStyle = default.SelfTarget;
@@ -584,7 +584,7 @@ static function X2AbilityTemplate RestorationProtocol()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_RestorationProtocol');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_restorationprotocol";
+	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_restorationprotocol";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Defensive;
 	Template.bLimitTargetIcons = true;
@@ -688,7 +688,7 @@ static function X2AbilityTemplate StasisField()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_StasisField');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_stasisfield";
+	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_stasisfield";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Offensive;
 	Template.bLimitTargetIcons = true;
@@ -744,7 +744,7 @@ static function X2AbilityTemplate PuppetProtocol()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_PuppetProtocol');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_puppetprotocol";
+	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_puppetprotocol";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
 	Template.Hostility = eHostility_Neutral;
@@ -817,7 +817,7 @@ static function X2AbilityTemplate Rocketeer()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Rocketeer');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_rocketeer";
+	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_rocketeer";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -857,7 +857,7 @@ static function X2AbilityTemplate TacticalSense()
 	Effect.DodgeModifier = default.TacticalSenseDodgeBonus;
 	Effect.MaxDodgeModifier = default.TacticalSenseMaxDodgeBonus;
 
-	return Passive('ShadowOps_TacticalSense', "img:///UILibrary_BlackOps.UIPerk_grace", true, Effect);
+	return Passive('ShadowOps_TacticalSense', "img:///UILibrary_SODragoon.UIPerk_grace", true, Effect);
 }
 
 static function X2AbilityTemplate Lightfoot()
@@ -883,7 +883,7 @@ static function X2AbilityTemplate IronWill()
 	Effect = new class'X2Effect_PersistentStatChange';
 	Effect.AddPersistentStatChange(eStat_Will, default.IronWillBonus);
 
-	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_BlackOps.UIPerk_iron_will", true, Effect);
+	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_SODragoon.UIPerk_iron_will", true, Effect);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.PsiOffenseLabel, eStat_Will, default.IronWillBonus);
 
 	return Template;
@@ -899,7 +899,7 @@ static function X2AbilityTemplate SensorOverlays()
 	Effect.AddToHitModifier(default.SensorOverlaysCritBonus, eHit_Crit);
 	Effect.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
 
-	return SquadPassive('ShadowOps_SensorOverlays', "img:///UILibrary_BlackOps.UIPerk_sensoroverlays", false, Effect);
+	return SquadPassive('ShadowOps_SensorOverlays', "img:///UILibrary_SODragoon.UIPerk_sensoroverlays", false, Effect);
 }
 
 static function X2AbilityTemplate Supercharge()
@@ -910,7 +910,7 @@ static function X2AbilityTemplate Supercharge()
 	Effect = new class'X2Effect_Supercharge';
 	Effect.BonusCharges = default.SuperchargeChargeBonus;
 
-	Template = Passive('ShadowOps_Supercharge', "img:///UILibrary_BlackOps.UIPerk_supercharge", false);
+	Template = Passive('ShadowOps_Supercharge', "img:///UILibrary_SODragoon.UIPerk_supercharge", false);
 
 	Template.AddTargetEffect(Effect);
 
@@ -926,7 +926,7 @@ static function X2AbilityTemplate ReverseEngineering()
 	Effect = new class'X2Effect_ReverseEngineering';
 	Effect.HackBonus = default.ReverseEngineeringHackBonus;
 
-	Template = SelfTargetTrigger('ShadowOps_ReverseEngineering', "img:///UILibrary_BlackOps.UIPerk_reverseengineering", false, Effect, 'AbilityActivated');
+	Template = SelfTargetTrigger('ShadowOps_ReverseEngineering', "img:///UILibrary_SODragoon.UIPerk_reverseengineering", false, Effect, 'AbilityActivated');
 
 	Condition = new class'XMBCondition_AbilityName';
 	Condition.IncludeAbilityNames.AddItem('FinalizeHaywire');
@@ -946,7 +946,7 @@ static function X2AbilityTemplate Scout()
 	Effect = new class'XMBEffect_AddUtilityItem';
 	Effect.DataName = 'BattleScanner';
 
-	return Passive('ShadowOps_Scout', "img:///UILibrary_BlackOps.UIPerk_scout", true, Effect);
+	return Passive('ShadowOps_Scout', "img:///UILibrary_SODragoon.UIPerk_scout", true, Effect);
 }
 
 static function X2AbilityTemplate Charge()

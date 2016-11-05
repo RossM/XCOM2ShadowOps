@@ -152,6 +152,21 @@
     <Content Include="Content\UILibrary_BlackOps.upk">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Content\UILibrary_SOCombatEngineer.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_SODragoon.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_SOHunter.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_SOInfantry.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\UILibrary_SOItems.upk">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Localization\CritChanceChange.int">
       <SubType>Content</SubType>
     </Content>

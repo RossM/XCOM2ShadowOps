@@ -72,7 +72,7 @@ static function X2AbilityTemplate SnapShotShot()
 
 	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('ShadowOps_SnapShotShot');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_snapshot_shot";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_snapshot_shot";
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideIfOtherAvailable;
 	Template.HideIfAvailable.AddItem('SniperStandardFire');
 
@@ -148,7 +148,7 @@ static function X2AbilityTemplate SnapShotOverwatch()
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideIfOtherAvailable;
 	Template.HideIfAvailable.AddItem('SniperRifleOverwatch');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_snapshot_overwatch";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_snapshot_overwatch";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.OVERWATCH_PRIORITY;
 	Template.bDisplayInUITooltip = false;
 	Template.bDisplayInUITacticalText = false;
@@ -180,7 +180,7 @@ static function X2DataTemplate HunterMark()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_HunterMark');
 
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_huntermark";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_huntermark";
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.Hostility = eHostility_Offensive;
@@ -309,7 +309,7 @@ static function X2AbilityTemplate VitalPoint()
 	Effect.Modifiers = default.VitalPointModifiers;
 	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
-	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_BlackOps.UIPerk_keenedge", false, Effect);
+	return Passive('ShadowOps_VitalPoint', "img:///UILibrary_SOHunter.UIPerk_keenedge", false, Effect);
 }
 
 static function X2AbilityTemplate Precision()
@@ -320,7 +320,7 @@ static function X2AbilityTemplate Precision()
 	PrecisionEffect.AbilityTargetConditions.AddItem(default.FullCoverCondition);
 	PrecisionEffect.AddToHitModifier(default.PrecisionOffenseBonus);
 
-	return Passive('ShadowOps_Precision', "img:///UILibrary_BlackOps.UIPerk_precision", true, PrecisionEffect);
+	return Passive('ShadowOps_Precision', "img:///UILibrary_SOHunter.UIPerk_precision", true, PrecisionEffect);
 }
 
 static function X2AbilityTemplate LowProfile()
@@ -331,7 +331,7 @@ static function X2AbilityTemplate LowProfile()
 	LowProfileEffect.AbilityTargetConditionsAsTarget.AddItem(default.HalfCoverCondition);
 	LowProfileEffect.AddToHitAsTargetModifier(-default.LowProfileDefenseBonus);
 
-	return Passive('ShadowOps_LowProfile', "img:///UILibrary_BlackOps.UIPerk_lowprofile", true, LowProfileEffect);
+	return Passive('ShadowOps_LowProfile', "img:///UILibrary_SOHunter.UIPerk_lowprofile", true, LowProfileEffect);
 }
 
 static function X2AbilityTemplate Sprint()
@@ -343,7 +343,7 @@ static function X2AbilityTemplate Sprint()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Sprint');
 	
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_sprint";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_sprint";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
 	Template.Hostility = eHostility_Neutral;
@@ -389,7 +389,7 @@ static function X2AbilityTemplate Assassin()
 	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
 	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
 
-	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_BlackOps.UIPerk_assassin", true, Effect);
+	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_SOHunter.UIPerk_assassin", true, Effect);
 	Template.AdditionalAbilities.AddItem('ShadowOps_AssassinTrigger');
 
 	return Template;
@@ -405,7 +405,7 @@ static function X2AbilityTemplate AssassinTrigger()
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 
-	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_BlackOps.UIPerk_assassin", false, StealthEffect, 'Assassin');
+	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_SOHunter.UIPerk_assassin", false, StealthEffect, 'Assassin');
 
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
@@ -426,7 +426,7 @@ static function X2AbilityTemplate Fade()
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 	StealthEffect.EffectAddedFn = Fade_EffectAdded;
 
-	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_BlackOps.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, eCost_Single);
+	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_SOHunter.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, eCost_Single);
 	AddCooldown(Template, default.FadeCooldown);
 
 	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
@@ -471,7 +471,7 @@ static function X2AbilityTemplate SliceAndDice()
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.CinescriptCameraType = "Ranger_Reaper";
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_sliceanddice";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_sliceanddice";
 	Template.bHideOnClassUnlock = false;
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilityConfirmSound = "TacticalUI_SwordConfirm";
@@ -567,7 +567,7 @@ static function X2AbilityTemplate SliceAndDice2()
 	Template.CinescriptCameraType = "Ranger_Reaper";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_sliceanddice";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_sliceanddice";
 
 	Trigger = new class'X2AbilityTrigger_EventListener';
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
@@ -615,7 +615,7 @@ static function X2AbilityTemplate SliceAndDice2()
 static function X2AbilityTemplate Tracking()
 {
 	local X2AbilityTemplate						Template;
-	Template = PurePassive('ShadowOps_Tracking', "img:///UILibrary_BlackOps.UIPerk_tracking", true);
+	Template = PurePassive('ShadowOps_Tracking', "img:///UILibrary_SOHunter.UIPerk_tracking", true);
 	Template.AdditionalAbilities.AddItem('ShadowOps_TrackingTrigger');
 	Template.AdditionalAbilities.AddItem('ShadowOps_TrackingSpawnTrigger');
 
@@ -633,7 +633,7 @@ static function X2AbilityTemplate TrackingTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TrackingTrigger');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_tracking";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_tracking";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
@@ -704,7 +704,7 @@ static function X2AbilityTemplate TrackingSpawnTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_TrackingSpawnTrigger');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_tracking";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_tracking";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
@@ -755,7 +755,7 @@ static function X2AbilityTemplate Bullseye()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Bullseye');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_bullseye";
+	Template.IconImage = "img:///UILibrary_SOHunter.UIPerk_bullseye";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
@@ -862,7 +862,7 @@ static function X2AbilityTemplate FirstStrike()
 	Condition = new class'X2Condition_FirstStrike';
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
-	return Passive('ShadowOps_FirstStrike', "img:///UILibrary_BlackOps.UIPerk_firststrike", true, Effect);
+	return Passive('ShadowOps_FirstStrike', "img:///UILibrary_SOHunter.UIPerk_firststrike", true, Effect);
 }
 
 static function X2AbilityTemplate DamnGoodGround()
@@ -880,7 +880,7 @@ static function X2AbilityTemplate DamnGoodGround()
 	// This condition applies when the unit is the attacker
 	Effect.AbilityTargetConditions.AddItem(default.HeightDisadvantageCondition);
 
-	return Passive('ShadowOps_DamnGoodGround', "img:///UILibrary_BlackOps.UIPerk_damngoodground", true, Effect);
+	return Passive('ShadowOps_DamnGoodGround', "img:///UILibrary_SOHunter.UIPerk_damngoodground", true, Effect);
 }
 
 static function X2AbilityTemplate PointBlank()
@@ -890,7 +890,7 @@ static function X2AbilityTemplate PointBlank()
 	Effect = new class'X2Effect_PointBlank';
 	Effect.RangePenaltyMultiplier = default.PointBlankMultiplier;
 
-	return Passive('ShadowOps_PointBlank', "img:///UILibrary_BlackOps.UIPerk_point_blank", false, Effect);
+	return Passive('ShadowOps_PointBlank', "img:///UILibrary_SOHunter.UIPerk_point_blank", false, Effect);
 }
 
 static function X2AbilityTemplate Butcher()
@@ -900,7 +900,7 @@ static function X2AbilityTemplate Butcher()
 	Effect = new class'X2Effect_Butcher';
 	Effect.DamageMultiplier = default.ButcherDamageMultiplier;
 
-	return Passive('ShadowOps_Butcher', "img:///UILibrary_BlackOps.UIPerk_butcher", true, Effect);
+	return Passive('ShadowOps_Butcher', "img:///UILibrary_SOHunter.UIPerk_butcher", true, Effect);
 }
 
 static function X2AbilityTemplate Reposition()
@@ -908,14 +908,14 @@ static function X2AbilityTemplate Reposition()
 	local X2AbilityTemplate Template, SecondaryTemplate;
 	local X2Effect_GrantActionPoints Effect;
 
-	Template = Attack('ShadowOps_Reposition', "img:///UILibrary_BlackOps.UIPerk_reposition", false,, class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY, eCost_WeaponConsumeAll);
+	Template = Attack('ShadowOps_Reposition', "img:///UILibrary_SOHunter.UIPerk_reposition", false,, class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY, eCost_WeaponConsumeAll);
 	Template.PostActivationEvents.AddItem('RepositionActivated');
 	Template.OverrideAbilities.AddItem('SniperStandardFire');
 
 	Effect = new class'X2Effect_GrantActionPoints';
 	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
 	Effect.NumActionPoints = 1;
-	SecondaryTemplate = SelfTargetTrigger('ShadowOps_RepositionTrigger', "img:///UILibrary_BlackOps.UIPerk_reposition", false, Effect, 'RepositionActivated');
+	SecondaryTemplate = SelfTargetTrigger('ShadowOps_RepositionTrigger', "img:///UILibrary_SOHunter.UIPerk_reposition", false, Effect, 'RepositionActivated');
 	SecondaryTemplate.bShowActivation = true;
 
 	AddSecondaryAbility(Template, SecondaryTemplate);
@@ -925,7 +925,7 @@ static function X2AbilityTemplate Reposition()
 
 static function X2AbilityTemplate Evasive()
 {
-	return Passive('ShadowOps_Evasive', "img:///UILibrary_BlackOps.UIPerk_evasive", true, new class'X2Effect_Evasive');
+	return Passive('ShadowOps_Evasive', "img:///UILibrary_SOHunter.UIPerk_evasive", true, new class'X2Effect_Evasive');
 }
 
 static function X2AbilityTemplate Stalker()
@@ -937,7 +937,7 @@ static function X2AbilityTemplate Stalker()
 	Effect.AddPersistentStatChange(eStat_Offense, default.StalkerOffenseBonus);
 	Effect.Conditions.AddItem(new class'XMBCondition_Concealed');
 
-	return Passive('ShadowOps_Stalker', "img:///UILibrary_BlackOps.UIPerk_stalker", true, Effect);
+	return Passive('ShadowOps_Stalker', "img:///UILibrary_SOHunter.UIPerk_stalker", true, Effect);
 }
 
 static function X2AbilityTemplate LastStand()
@@ -948,7 +948,7 @@ static function X2AbilityTemplate LastStand()
 	Effect = new class'X2Effect_LastStand';
 	Effect.BuildPersistentEffect(default.LastStandDuration, false, true, false, eGameRule_PlayerTurnEnd);
 
-	Template = SelfTargetActivated('ShadowOps_LastStand', "img:///UILibrary_BlackOps.UIPerk_laststand", true, Effect,, eCost_Free);
+	Template = SelfTargetActivated('ShadowOps_LastStand', "img:///UILibrary_SOHunter.UIPerk_laststand", true, Effect,, eCost_Free);
 	AddCharges(Template, default.LastStandCharges);
 
 	return Template;
@@ -977,5 +977,5 @@ static function X2AbilityTemplate SurvivalInstinct()
 	Effect.AbilityTargetConditionsAsTarget.AddItem(Condition);
 	
 	// Create the template using a helper function
-	return Passive('ShadowOps_SurvivalInstinct', "img:///UILibrary_BlackOps.UIPerk_survivalinstinct", true, Effect);
+	return Passive('ShadowOps_SurvivalInstinct', "img:///UILibrary_SOHunter.UIPerk_survivalinstinct", true, Effect);
 }

@@ -25,7 +25,7 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 	
-	Templates.AddItem(PurePassive('ShadowOps_BulletSwarm', "img:///UILibrary_BlackOps.UIPerk_bulletswarm", true));
+	Templates.AddItem(PurePassive('ShadowOps_BulletSwarm', "img:///UILibrary_SOInfantry.UIPerk_bulletswarm", true));
 	Templates.AddItem(Bandolier());
 	Templates.AddItem(SwapAmmo());
 	Templates.AddItem(Magnum());
@@ -131,7 +131,7 @@ static function X2AbilityTemplate SwapAmmo()
 	
 	Template.AbilitySourceName = 'eAbilitySource_Standard';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_ShowIfAvailable;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_swapammo";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_swapammo";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.RELOAD_PRIORITY;
 	Template.bDisplayInUITooltip = false;
 	Template.bDisplayInUITacticalText = false;
@@ -198,7 +198,7 @@ static function X2AbilityTemplate Magnum()
 	MagnumEffect.AddDamageModifier(default.MagnumDamageBonus);
 	MagnumEffect.AddToHitModifier(default.MagnumOffenseBonus);
 
-	return Passive('ShadowOps_Magnum', "img:///UILibrary_BlackOps.UIPerk_magnum", false, MagnumEffect);
+	return Passive('ShadowOps_Magnum', "img:///UILibrary_SOInfantry.UIPerk_magnum", false, MagnumEffect);
 }
 
 static function X2AbilityTemplate GoodEye()
@@ -207,7 +207,7 @@ static function X2AbilityTemplate GoodEye()
 
 	GoodEyeEffect = new class'X2Effect_GoodEye';
 
-	return Passive('ShadowOps_GoodEye', "img:///UILibrary_BlackOps.UIPerk_zeroin", true, GoodEyeEffect);
+	return Passive('ShadowOps_GoodEye', "img:///UILibrary_SOInfantry.UIPerk_zeroin", true, GoodEyeEffect);
 }
 
 static function X2AbilityTemplate FullAuto()
@@ -223,7 +223,7 @@ static function X2AbilityTemplate FullAuto()
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fullauto";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_fullauto";
 	Template.AbilityConfirmSound = "TacticalUI_ActivateAbility";
 
 	Template.TargetingMethod = class'X2TargetingMethod_OverTheShoulder';
@@ -330,7 +330,7 @@ static function X2AbilityTemplate FullAuto2()
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fullauto";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_fullauto";
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
@@ -355,7 +355,7 @@ static function X2AbilityTemplate ZoneOfControl()
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_AlwaysShow;
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_zoneofcontrol";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	Template.bDisplayInUITooltip = false;
 	Template.bDisplayInUITacticalText = false;
@@ -580,7 +580,7 @@ static function X2AbilityTemplate ZeroIn()
 	ZeroInEffect = new class'X2Effect_ZeroIn';
 	ZeroInEffect.AccuracyBonus = default.ZeroInOffenseBonus;
 
-	return Passive('ShadowOps_ZeroIn', "img:///UILibrary_BlackOps.UIPerk_goodeye", true, ZeroInEffect);
+	return Passive('ShadowOps_ZeroIn', "img:///UILibrary_SOInfantry.UIPerk_goodeye", true, ZeroInEffect);
 }
 
 static function X2AbilityTemplate Flush()
@@ -604,7 +604,7 @@ static function X2AbilityTemplate Flush()
 	Template.AdditionalAbilities.AddItem('ShadowOps_FlushShot');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_flush";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_flush";
 	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.DisplayTargetHitChance = true;
@@ -810,7 +810,7 @@ static function X2AbilityTemplate RifleSuppression()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_RifleSuppression');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_riflesupression";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_riflesupression";
 	
 	AmmoCost = new class'X2AbilityCost_Ammo';	
 	AmmoCost.iAmmo = 2;
@@ -943,7 +943,7 @@ static function X2AbilityTemplate RifleSuppressionBonus()
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	// Create the template using a helper function
-	Template = Passive('ShadowOps_RifleSuppressionBonus', "img:///UILibrary_BlackOps.UIPerk_riflesupression", false, Effect);
+	Template = Passive('ShadowOps_RifleSuppressionBonus', "img:///UILibrary_SOInfantry.UIPerk_riflesupression", false, Effect);
 
 	HidePerkIcon(Template);
 
@@ -956,7 +956,7 @@ static function X2AbilityTemplate Focus()
 
 	Effect = new class'X2Effect_Focus';
 
-	return Passive('ShadowOps_Focus', "img:///UILibrary_BlackOps.UIPerk_focus", true, Effect);
+	return Passive('ShadowOps_Focus', "img:///UILibrary_SOInfantry.UIPerk_focus", true, Effect);
 }
 
 static function X2AbilityTemplate Resilience()
@@ -965,7 +965,7 @@ static function X2AbilityTemplate Resilience()
 
 	Effect = new class'X2Effect_Resilience';
 
-	return Passive('ShadowOps_Resilience', "img:///UILibrary_BlackOps.UIPerk_resilience", true, Effect);
+	return Passive('ShadowOps_Resilience', "img:///UILibrary_SOInfantry.UIPerk_resilience", true, Effect);
 }
 
 static function X2AbilityTemplate AdrenalineSurge()
@@ -1065,7 +1065,7 @@ static function X2AbilityTemplate Fortify()
 {
 	local X2AbilityTemplate         Template;
 
-	Template = PurePassive('ShadowOps_Fortify', "img:///UILibrary_BlackOps.UIPerk_fortify");
+	Template = PurePassive('ShadowOps_Fortify', "img:///UILibrary_SOInfantry.UIPerk_fortify");
 	Template.AdditionalAbilities.AddItem('ShadowOps_FortifyTrigger');
 
 	Template.bCrossClassEligible = true;
@@ -1081,7 +1081,7 @@ static function X2AbilityTemplate FortifyTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FortifyTrigger');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_fortify";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_fortify";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
@@ -1121,14 +1121,14 @@ static function X2AbilityTemplate FirstAid()
 	Effect.BaseCharges = 1;
 	Effect.BonusCharges = 1;
 
-	return Passive('ShadowOps_FirstAid', "img:///UILibrary_BlackOps.UIPerk_firstaid", true, Effect);
+	return Passive('ShadowOps_FirstAid', "img:///UILibrary_SOInfantry.UIPerk_firstaid", true, Effect);
 }
 
 static function X2AbilityTemplate SecondWind()
 {
 	local X2AbilityTemplate Template;
 
-	Template = PurePassive('ShadowOps_SecondWind', "img:///UILibrary_BlackOps.UIPerk_secondwind", false);
+	Template = PurePassive('ShadowOps_SecondWind', "img:///UILibrary_SOInfantry.UIPerk_secondwind", false);
 	Template.AdditionalAbilities.AddItem('ShadowOps_SecondWindTrigger');
 
 	return Template;
@@ -1142,7 +1142,7 @@ static function X2AbilityTemplate SecondWindTrigger()
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SecondWindTrigger');
 
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_secondwind";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_secondwind";
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
 	Template.Hostility = eHostility_Neutral;
@@ -1257,7 +1257,7 @@ static function X2AbilityTemplate Tactician()
 
 	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
-	Template = Passive('ShadowOps_Tactician', "img:///UILibrary_BlackOps.UIPerk_tactician", false, Effect);
+	Template = Passive('ShadowOps_Tactician', "img:///UILibrary_SOInfantry.UIPerk_tactician", false, Effect);
 
 	InventoryCondition = new class'X2Condition_UnitInventory';
 	InventoryCondition.RelevantSlot = eInvSlot_PrimaryWeapon;
@@ -1272,7 +1272,7 @@ static function X2AbilityTemplate ReadyForAnything()
 	local X2AbilityTemplate Template;
 
 	Template = class'X2Ability_WeaponCommon'.static.Add_StandardShot('ShadowOps_ReadyForAnything');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_readyforanything";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_readyforanything";
 	Template.OverrideAbilities.AddItem('StandardShot');
 	Template.bDontDisplayInAbilitySummary = false;
 
@@ -1331,7 +1331,7 @@ static function X2AbilityTemplate ImprovedSuppression()
 	Effect.VisualizationFn = EffectFlyOver_Visualization;
 	Effect.TargetConditions.Length = 0;
 
-	Template = TargetedDebuff('ShadowOps_ImprovedSuppression', "img:///UILibrary_BlackOps.UIPerk_improvedsuppression", false, none,, eCost_None);
+	Template = TargetedDebuff('ShadowOps_ImprovedSuppression', "img:///UILibrary_SOInfantry.UIPerk_improvedsuppression", false, none,, eCost_None);
 	Template.AddTargetEffect(Effect);
 
 	Template.AbilityShooterConditions.Length = 0;
@@ -1365,7 +1365,7 @@ static function X2AbilityTemplate CoupDeGrace()
 	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
 	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
-	return Passive('ShadowOps_CoupDeGrace', "img:///UILibrary_BlackOps.UIPerk_coupdegrace", false, Effect);
+	return Passive('ShadowOps_CoupDeGrace', "img:///UILibrary_SOInfantry.UIPerk_coupdegrace", false, Effect);
 }
 
 static function X2AbilityTemplate Airstrike()
@@ -1382,7 +1382,7 @@ static function X2AbilityTemplate Airstrike()
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Airstrike');
 
 	// Icon Properties
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_airstrike";
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_airstrike";
 	Template.ShotHUDPriority = default.AUTO_PRIORITY;
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_AlwaysShow;
 	Template.DisplayTargetHitChance = false;
@@ -1572,7 +1572,7 @@ static function X2AbilityTemplate AgainstTheOdds()
 	Effect.ScaleValue = Value;
 	Effect.ScaleMax = default.AgainstTheOddsMax;
 
-	return Passive('ShadowOps_AgainstTheOdds', "img:///UILibrary_BlackOps.UIPerk_againsttheodds", true, Effect);
+	return Passive('ShadowOps_AgainstTheOdds', "img:///UILibrary_SOInfantry.UIPerk_againsttheodds", true, Effect);
 }
 
 static function X2AbilityTemplate Paragon()
@@ -1586,7 +1586,7 @@ static function X2AbilityTemplate Paragon()
 	Effect.AddPersistentStatChange(eStat_Will, default.ParagonWillBonus);
 
 	// TODO: icon
-	Template = Passive('ShadowOps_Paragon', "img:///UILibrary_BlackOps.UIPerk_paragon", true, Effect);
+	Template = Passive('ShadowOps_Paragon', "img:///UILibrary_SOInfantry.UIPerk_paragon", true, Effect);
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.HealthLabel, eStat_HP, default.ParagonHPBonus);
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.AimLabel, eStat_Offense, default.ParagonOffenseBonus);
