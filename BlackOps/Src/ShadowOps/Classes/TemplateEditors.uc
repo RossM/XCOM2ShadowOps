@@ -6,10 +6,7 @@ var config array<name> LWClasses;
 
 static function EditTemplates()
 {
-	if (class'ModConfig'.default.bEnableRulesTweaks)
-	{
-		AddAllSuppressionConditions();
-	}
+	AddAllSuppressionConditions();
 
 	KillLongWarDead();
 }

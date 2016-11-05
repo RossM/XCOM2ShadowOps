@@ -28,8 +28,7 @@ static function X2DataTemplate CreateReinforcedVest()
 	Template.PointsToComplete = 0;
 	Template.Tier = 2;
 	
-	if (class'ModConfig_Items'.default.bEnableNewItems)
-		Template.RewardDecks.AddItem('ExperimentalArmorRewards');
+	Template.RewardDecks.AddItem('ExperimentalArmorRewards');
 
 	Template.SetUIStatMarkup(class'XLocalizedData'.default.ArmorLabel, eStat_ArmorMitigation, default.ReinforcedVestMitigationAmount);
 	

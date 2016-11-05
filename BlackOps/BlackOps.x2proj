@@ -56,9 +56,6 @@
     <Content Include="Config\CritChanceChange\XComGameCore.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\CritChanceChange\XComShadowOpsOptions.ini">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Config\SOCombatEngineer\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
@@ -143,9 +140,6 @@
     <Content Include="Config\XComGameData_SoldierSkills.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\XComShadowOpsOptions.ini">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Content\FX_ShadowOps_Dragoon.upk">
       <SubType>Content</SubType>
     </Content>
@@ -173,9 +167,6 @@
     <Content Include="Config\XComEngine.ini" />
     <Content Include="Config\XComGame.ini" />
     <Content Include="Localization\XComGame.int" />
-    <Content Include="Src\CritChanceChange\Classes\ModConfig_CritChanceChange.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\CritChanceChange\Classes\X2Ability_Universal_BO.uc">
       <SubType>Content</SubType>
     </Content>
@@ -186,9 +177,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\LW_Tuple\Classes\LWTuple.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\ModConfig.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\TemplateEditors.uc">
@@ -424,9 +412,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOInfantry\Classes\X2Effect_ZeroIn.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\SOItems\Classes\ModConfig_Items.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SOItems\Classes\TemplateEditors_Items.uc">

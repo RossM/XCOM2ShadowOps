@@ -18,29 +18,25 @@ static function EditTemplates()
 	local name DataName;
 	local TemplateEdit Edit;
 
-	// Items
-	if (class'ModConfig_Items'.default.bEnableNewItems)
+	foreach default.ExtraStartingItems(DataName)
 	{
-		foreach default.ExtraStartingItems(DataName)
-		{
-			`Log("SOItems: ChangeToStartingItem" @ DataName);
-			ChangeToStartingItem(DataName);
-		}
-		foreach default.InfiniteItems(DataName)
-		{
-			`Log("SOItems: ChangeToInfiniteItem" @ DataName);
-			ChangeToInfiniteItem(DataName);
-		}
-		foreach default.DisabledItems(DataName)
-		{
-			`Log("SOItems: DisableItem" @ DataName);
-			DisableItem(DataName);
-		}
-		foreach default.BuildableItems(Edit)
-		{
-			`Log("SOItems: ApplyTemplateEdit" @ Edit.ItemName);
-			ApplyTemplateEdit(Edit);
-		}
+		`Log("SOItems: ChangeToStartingItem" @ DataName);
+		ChangeToStartingItem(DataName);
+	}
+	foreach default.InfiniteItems(DataName)
+	{
+		`Log("SOItems: ChangeToInfiniteItem" @ DataName);
+		ChangeToInfiniteItem(DataName);
+	}
+	foreach default.DisabledItems(DataName)
+	{
+		`Log("SOItems: DisableItem" @ DataName);
+		DisableItem(DataName);
+	}
+	foreach default.BuildableItems(Edit)
+	{
+		`Log("SOItems: ApplyTemplateEdit" @ Edit.ItemName);
+		ApplyTemplateEdit(Edit);
 	}
 }
 
