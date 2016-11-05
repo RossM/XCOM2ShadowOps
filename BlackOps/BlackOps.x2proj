@@ -59,10 +59,16 @@
     <Folder Include="Src\XModBase_Utilities\Classes" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\CritChanceChange\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\CritChanceChange\XComGameCore.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOCombatEngineer\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOCombatEngineer\XComEngine.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOCombatEngineer\XComGameCore.ini">
@@ -80,6 +86,9 @@
     <Content Include="Config\SODragoon\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SODragoon\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SODragoon\XComGameCore.ini">
       <SubType>Content</SubType>
     </Content>
@@ -93,6 +102,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOHunter\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter\XComEngine.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOHunter\XComGameCore.ini">
@@ -113,6 +125,9 @@
     <Content Include="Config\SOInfantry\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOInfantry\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOInfantry\XComGameCore.ini">
       <SubType>Content</SubType>
     </Content>
@@ -123,6 +138,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOInfantry\XComStrategyTuning.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOItems\XComEngine.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOItems\XComGameCore.ini">

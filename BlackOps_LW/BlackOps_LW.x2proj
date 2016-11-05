@@ -18,13 +18,13 @@
     <Folder Include="Config\SOHunter_LW" />
     <Folder Include="Config\SOInfantry_LW" />
     <Folder Include="Content\" />
-	  <Folder Include="Localization\" />
-	  <Folder Include="Localization\SOItems" />
-	  <Folder Include="Localization\SOCombatEngineer" />
-	  <Folder Include="Localization\SODragoon" />
-	  <Folder Include="Localization\SOHunter" />
-	  <Folder Include="Localization\SOInfantry" />
-	  <Folder Include="Src\" />
+    <Folder Include="Localization\" />
+    <Folder Include="Localization\SOItems" />
+    <Folder Include="Localization\SOCombatEngineer" />
+    <Folder Include="Localization\SODragoon" />
+    <Folder Include="Localization\SOHunter" />
+    <Folder Include="Localization\SOInfantry" />
+    <Folder Include="Src\" />
     <Folder Include="Src\CritChanceChange\Classes" />
     <Folder Include="Src\GremlinStealthFix\Classes" />
     <Folder Include="Src\LW_Tuple" />
@@ -85,12 +85,12 @@
     <Content Include="ReadMe.txt" />
     <Content Include="ModPreview.jpg" />
     <Content Include="Localization\*.int" />
-	  <Content Include="Localization\SODragoon\*.int" />
-	  <Content Include="Localization\SOHunter\*.int" />
-	  <Content Include="Localization\SOInfantry\*.int" />
-	  <Content Include="Localization\SOCombatEngineer\*.int" />
-	  <Content Include="Localization\SOItems\*.int" />
-	  <Content Include="Src\CritChanceChange\Classes\*.uc">
+    <Content Include="Localization\SODragoon\*.int" />
+    <Content Include="Localization\SOHunter\*.int" />
+    <Content Include="Localization\SOInfantry\*.int" />
+    <Content Include="Localization\SOCombatEngineer\*.int" />
+    <Content Include="Localization\SOItems\*.int" />
+    <Content Include="Src\CritChanceChange\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\GremlinStealthFix\Classes\*.uc">
