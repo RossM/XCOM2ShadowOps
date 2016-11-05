@@ -6,11 +6,8 @@ static function array<X2DataTemplate> CreateTemplates()
 {
 	local array<X2DataTemplate> Templates;
 
-	if (class'ModConfig'.default.bEnableRulesTweaks)
-	{
-		Templates.AddItem(AddPanicAbility_Damage());
-		Templates.AddItem(AddPanicAbility_UnitPanicked());
-	}
+	Templates.AddItem(AddPanicAbility_Damage());
+	Templates.AddItem(AddPanicAbility_UnitPanicked());
 
 	return Templates;
 }

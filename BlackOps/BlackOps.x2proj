@@ -219,9 +219,6 @@
     <Content Include="Src\ShadowOps\Classes\X2Effect_AIControl.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\ShieldPanicFix\Classes\ModConfig.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\ShieldPanicFix\Classes\X2AbilityOverrides_BO.uc">
       <SubType>Content</SubType>
     </Content>
