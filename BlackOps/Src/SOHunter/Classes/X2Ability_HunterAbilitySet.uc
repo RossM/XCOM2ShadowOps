@@ -539,7 +539,7 @@ function bool SliceAndDiceDamagePreview(XComGameState_Ability AbilityState, Stat
 
 	History = `XCOMHISTORY;
 	AbilityOwner = XComGameState_Unit(History.GetGameStateForObjectID(AbilityState.OwnerStateObject.ObjectID));
-	SliceAndDice2Ref = AbilityOwner.FindAbility('SliceAndDice2');
+	SliceAndDice2Ref = AbilityOwner.FindAbility('ShadowOps_SliceAndDice2');
 	SliceAndDice2Ability = XComGameState_Ability(History.GetGameStateForObjectID(SliceAndDice2Ref.ObjectID));
 	if (SliceAndDice2Ability == none)
 	{
