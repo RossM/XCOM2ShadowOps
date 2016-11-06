@@ -888,6 +888,7 @@ defaultproperties
 		ExcludeDead=true
 		ExcludeFriendlyToSource=false
 		ExcludeHostileToSource=true
+		RequireSquadmates=true
 		FailOnNonUnits=true
 	End Object
 	LivingFriendlyTargetProperty = DefaultLivingFriendlyTargetProperty
