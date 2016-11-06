@@ -3,6 +3,16 @@
 [h1]Balance[/h1]
 Shadow Ops LW is balanced to be more difficult than the Long War Perk Pack, and requires different strategy and tactics. It is intended for experienced players who enjoy a challenge.
 
+[h1]Included Mods[/h1]
+This pack includes all of the following mods, as well as some other balance changes. Note that the pack is not compatible with the individual mods. Use one or the other.
+
+LW Combat Engineer (coming soon)
+[url=http://steamcommunity.com/sharedfiles/filedetails/?id=794399943]LW Dragoon[/url]
+LW Hunter (coming soon)
+LW Infantry (coming soon)
+Item Pack (coming soon)
+[url=http://steamcommunity.com/sharedfiles/filedetails/?id=702851783]Crit Chance Change[/url]
+
 [h1]Classes[/h1]
 Each class in Shadow Ops LW has two main paths with distinctly defined battlefield roles and strong synergies between perks. That doesn't mean that you can only build soldiers along those paths, though - every ability is useful in the right situation.
 
