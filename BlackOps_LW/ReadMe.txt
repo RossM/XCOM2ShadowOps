@@ -6,7 +6,7 @@ Shadow Ops LW is balanced to be more difficult than the Long War Perk Pack, and 
 [h1]Included Mods[/h1]
 This pack includes all of the following mods, as well as some other balance changes. Note that the pack is not compatible with the individual mods. Use one or the other.
 
-LW Combat Engineer (coming soon)
+[url=http://steamcommunity.com/sharedfiles/filedetails/?id=795292464]LW Combat Engineer[/url]
 [url=http://steamcommunity.com/sharedfiles/filedetails/?id=794399943]LW Dragoon[/url]
 LW Hunter (coming soon)
 LW Infantry (coming soon)
