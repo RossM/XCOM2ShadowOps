@@ -8,6 +8,9 @@ event name CallMeetsCondition(XComGameState_BaseObject kTarget)
 	if (TargetUnit == none)
 		return 'AA_NotAUnit';
 
+	if (TargetUnit.IsRobotic())
+		return 'AA_UnitIsImmune';
+
 	if (TargetUnit.GetCurrentStat(eStat_HP) < TargetUnit.GetMaxStat(eStat_HP))
 		return 'AA_Success';
 
