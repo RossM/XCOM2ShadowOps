@@ -16,7 +16,7 @@ event OnInit(UIScreen Screen)
 
 	// This needs to be checked for each new save loaded
 	CreateStartingItems();
-	PerformUpgrades();
+	// PerformUpgrades();
 }
 
 function PerformUpgrades()
@@ -37,11 +37,6 @@ function PerformUpgrades()
 
 	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(NewGameState.CreateStateObject(class'XComGameState_ShadowOpsUpgradeInfo', UpgradeInfo != none ? UpgradeInfo.ObjectId : -1));
 	NewGameState.AddStateObject(UpgradeInfo);
-
-	if (UpgradeInfo.PerformUpgrade('GrantFreeRespecs1', NewGameState))
-		bChanged = true;
-	//if (UpgradeInfo.ShowUpgradePopupIfNeeded())
-	//	bChanged = true;
 
 	if (bChanged)
 		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
