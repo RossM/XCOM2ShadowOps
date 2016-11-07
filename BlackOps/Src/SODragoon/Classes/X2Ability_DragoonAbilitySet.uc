@@ -494,6 +494,7 @@ static function X2AbilityTemplate ShieldsUp()
 	ShieldedEffect.ConventionalAmount = default.ConventionalShieldsUp;
 	ShieldedEffect.MagneticAmount = default.MagneticShieldsUp;
 	ShieldedEffect.BeamAmount = default.BeamShieldsUp;
+	ShieldedEffect.AegisDamageReduction = 0;
 
 	return SquadPassive('ShadowOps_ShieldsUp', "img:///UILibrary_PerkIcons.UIPerk_absorption_fields", false, ShieldedEffect);
 }
