@@ -24,7 +24,9 @@ simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XCo
 		if (GrenadeTemplate != none)
 		{
 			if (GrenadeTemplate.DataName == 'SmokeGrenade' ||
-				GrenadeTemplate.DataName == 'SmokeGrenadeMk2')
+				GrenadeTemplate.DataName == 'SmokeGrenadeMk2' ||
+				GrenadeTemplate.DataName == 'DenseSmokeGrenade' ||  // For Long War Perk Pack implementation of Dense Smoke
+				GrenadeTemplate.DataName == 'DenseSmokeGrenadeMk2') // For Long War Perk Pack implementation of Dense Smoke
 			{
 				if (AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors'))
 					return false;
