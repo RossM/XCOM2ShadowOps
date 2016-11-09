@@ -32,6 +32,7 @@ static function X2SoldierAbilityUnlockTemplate AddBrigadierUnlock(name DataName,
 
 	`CREATE_X2TEMPLATE(class'X2SoldierAbilityUnlockTemplate', Template, DataName);
 
+	Template.bAllClasses = true;
 	Template.AbilityName = AbilityName;
 	Template.strImage = Image;
 
