@@ -19,8 +19,8 @@
     <Folder Include="Config\SOInfantry_LW" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
-	  <Folder Include="Localization\CritChanceChange" />
-	  <Folder Include="Localization\SOItems" />
+    <Folder Include="Localization\CritChanceChange" />
+    <Folder Include="Localization\SOItems" />
     <Folder Include="Localization\SOCombatEngineer" />
     <Folder Include="Localization\SODragoon" />
     <Folder Include="Localization\SOHunter" />
@@ -86,12 +86,15 @@
     <Content Include="ReadMe.txt" />
     <Content Include="ModPreview.jpg" />
     <Content Include="Localization\*.int" />
-	  <Content Include="Localization\CritChanceChange\*.int" />
-	  <Content Include="Localization\SODragoon\*.int" />
+    <Content Include="Localization\CritChanceChange\*.int" />
+    <Content Include="Localization\SODragoon\*.int" />
     <Content Include="Localization\SOHunter\*.int" />
     <Content Include="Localization\SOInfantry\*.int" />
     <Content Include="Localization\SOCombatEngineer\*.int" />
     <Content Include="Localization\SOItems\*.int" />
+    <Content Include="ShadowOps.XComMod">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\CritChanceChange\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
@@ -136,4 +139,16 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
+  <Target Name="ReplaceModInfo" AfterTargets="Build">
+    <ItemGroup>
+      <ModInfoFiles Include="@(Content)" Condition="'%(Extension)' == '.XComMod'">
+        <TargetDir>$(OutputDir)</TargetDir>
+        <TargetPath>$(OutputDir)%(Filename)%(Extension)</TargetPath>
+      </ModInfoFiles>
+    </ItemGroup>
+    <Message Importance="High" Text="Replacing mod info..." />
+    <Copy SourceFiles="@(ModInfoFiles)" SkipUnchangedFiles="true" DestinationFiles="%(TargetPath)">
+      <Output TaskParameter="CopiedFiles" ItemName="_CopiedFiles" />
+    </Copy>
+  </Target>
 </Project>
