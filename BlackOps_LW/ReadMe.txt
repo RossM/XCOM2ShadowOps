@@ -10,7 +10,7 @@ This pack includes all of the following mods, as well as some other balance chan
 [url=http://steamcommunity.com/sharedfiles/filedetails/?id=794399943]LW Dragoon[/url]
 [url=http://steamcommunity.com/sharedfiles/filedetails/?id=795788370]LW Hunter[/url]
 [url=http://steamcommunity.com/sharedfiles/filedetails/?id=796592388]LW Infantry[/url]
-Item Pack (coming soon)
+[url=http://steamcommunity.com/sharedfiles/filedetails/?id=797658630]Item Pack[/url]
 [url=http://steamcommunity.com/sharedfiles/filedetails/?id=702851783]Crit Chance Change[/url]
 
 [h1]Classes[/h1]
