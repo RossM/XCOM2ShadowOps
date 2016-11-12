@@ -37,22 +37,47 @@ function bool GetExtValue(LWTuple Tuple)
 
 		EffectsCondition = none;
 
-		foreach AbilityTemplate.AbilityMultiTargetConditions(Condition)
+		// Modify multitarget conditions
+		if (AbilityTemplate.AbilityMultiTargetConditions.Length > 0)
 		{
-			EffectsCondition = X2Condition_UnitEffects(Condition);
-			if (EffectsCondition != none)
-				break;
-		}
+			foreach AbilityTemplate.AbilityMultiTargetConditions(Condition)
+			{
+				EffectsCondition = X2Condition_UnitEffects(Condition);
+				if (EffectsCondition != none)
+					break;
+			}
 
-		if (EffectsCondition == none)
-		{
-			EffectsCondition = new class'X2Condition_UnitEffects';
-			AbilityTemplate.AbilityMultiTargetConditions.AddItem(EffectsCondition);
-		}
+			if (EffectsCondition == none)
+			{
+				EffectsCondition = new class'X2Condition_UnitEffects';
+				AbilityTemplate.AbilityMultiTargetConditions.AddItem(EffectsCondition);
+			}
 
-		if (EffectsCondition.ExcludeEffects.Find('EffectName', EffectName) == INDEX_NONE)
+			if (EffectsCondition.ExcludeEffects.Find('EffectName', EffectName) == INDEX_NONE)
+			{
+				EffectsCondition.AddExcludeEffect(EffectName, 'AA_UnitIsImmune');
+			}
+		}
+		else
 		{
-			EffectsCondition.AddExcludeEffect(EffectName, 'AA_UnitIsImmune');
+			// If there are no multitarget conditions, target conditions are used instead.
+			foreach AbilityTemplate.AbilityTargetConditions(Condition)
+			{
+				EffectsCondition = X2Condition_UnitEffects(Condition);
+				if (EffectsCondition != none)
+					break;
+			}
+
+			if (EffectsCondition == none)
+			{
+				EffectsCondition = new class'X2Condition_UnitEffects';
+				AbilityTemplate.AbilityTargetConditions.AddItem(EffectsCondition);
+			}
+
+			if (EffectsCondition.ExcludeEffects.Find('EffectName', EffectName) == INDEX_NONE)
+			{
+				EffectsCondition.AddExcludeEffect(EffectName, 'AA_UnitIsImmune');
+			}
 		}
 	}
 
