@@ -889,11 +889,14 @@ simulated function UpdateAbilitiesArray()
 	UpdateWatchVariables();
 	CheckForHelpMessages();
 	DoTutorialChecks();
-	//INS:
-	if(m_iCurrentIndex >= 0 && m_arrAbilities[m_iCurrentIndex].AvailableTargets.Length > 1)
-		m_arrAbilities[m_iCurrentIndex].AvailableTargets = SortTargets(m_arrAbilities[m_iCurrentIndex].AvailableTargets);
-	else if(m_iPreviousIndexForSecondaryMovement >= 0 && m_arrAbilities[m_iPreviousIndexForSecondaryMovement].AvailableTargets.Length > 1)
-		m_arrAbilities[m_iPreviousIndexForSecondaryMovement].AvailableTargets = SortTargets(m_arrAbilities[m_iPreviousIndexForSecondaryMovement].AvailableTargets);
+	if( `ISCONTROLLERACTIVE )
+	{
+		//INS:
+		if( m_iCurrentIndex >= 0 && m_arrAbilities[m_iCurrentIndex].AvailableTargets.Length > 1 )
+			m_arrAbilities[m_iCurrentIndex].AvailableTargets = SortTargets(m_arrAbilities[m_iCurrentIndex].AvailableTargets);
+		else if( m_iPreviousIndexForSecondaryMovement >= 0 && m_arrAbilities[m_iPreviousIndexForSecondaryMovement].AvailableTargets.Length > 1 )
+			m_arrAbilities[m_iPreviousIndexForSecondaryMovement].AvailableTargets = SortTargets(m_arrAbilities[m_iPreviousIndexForSecondaryMovement].AvailableTargets);
+	}
 }
 
 simulated function DoTutorialChecks()
@@ -1565,7 +1568,7 @@ simulated function array<AvailableTarget> SortTargets(array<AvailableTarget> Ava
 	SortOriginPoint = `XCOMHISTORY.GetVisualizer(XComTacticalController(PC).GetActiveUnit().ObjectID).Location;
 	SortOriginPoint.Z = 0.0;
 
-	AvailableTargets.Sort(SortTargetsByLocation);
+	AvailableTargets.Sort(SortTargetsByLocation); 
 	
 	return AvailableTargets;
 }
@@ -1636,9 +1639,12 @@ simulated function bool SetAbilityByIndex( int AbilityIndex, optional bool Activ
 	m_iMouseTargetedAbilityIndex = AbilityIndex; // make sure this gets updated
 	m_iCurrentIndex = AbilityIndex;
 	
-	if(AvailableActionInfo.AvailableTargets.Length > 1)
-		AvailableActionInfo.AvailableTargets = SortTargets(AvailableActionInfo.AvailableTargets);
-	
+	if( `ISCONTROLLERACTIVE )
+	{
+		if( AvailableActionInfo.AvailableTargets.Length > 1 )
+			AvailableActionInfo.AvailableTargets = SortTargets(AvailableActionInfo.AvailableTargets);
+	}
+
 	if(TargetingMethod != none)
 	{
 		// if switching abilities, the previous targeting method will still be active. Cancel it.
@@ -1705,7 +1711,7 @@ simulated function bool SetAbilityByIndex( int AbilityIndex, optional bool Activ
 	if( `ISCONTROLLERACTIVE == false )
 		TacticalHUD.RealizeTargetingReticules(DefaultTargetIndex);
 	else
-		TacticalHUD.TargetHighestHitChanceEnemy();
+		TacticalHUD.TargetHighestHitChanceEnemy(); 
 	TacticalHUD.m_kShotHUD.Update();
 
 	return true;

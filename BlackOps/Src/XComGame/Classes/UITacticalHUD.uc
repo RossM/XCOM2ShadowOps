@@ -455,7 +455,9 @@ simulated function TargetHighestHitChanceEnemy()
 	local int i;
 	
 	AvailableActionInfo = m_kAbilityHUD.GetSelectedAction();
-	//AvailableActionInfo.AvailableTargets = m_kAbilityHUD.SortTargets(AvailableActionInfo.AvailableTargets);
+	
+	if( `ISCONTROLLERACTIVE == false )
+		AvailableActionInfo.AvailableTargets = m_kAbilityHUD.SortTargets(AvailableActionInfo.AvailableTargets);
 
 	Targets = AvailableActionInfo.AvailableTargets;
 	for (i = 0; i < Targets.Length; i++)
@@ -496,8 +498,11 @@ simulated function RaiseTargetSystem()
 	XComTacticalController(PC).m_bInputInShotHUD = true;
 
 	// attempt to target the default guy (will open shot hud even without enemy, this should be cleaned up)
-	//TargetEnemy(0);
-	TargetHighestHitChanceEnemy();
+	
+	if( `ISCONTROLLERACTIVE )
+		TargetHighestHitChanceEnemy();
+	else
+		TargetEnemy(0);
 
 	if( m_kMouseControls != none )
 		m_kMouseControls.UpdateControls();
@@ -877,10 +882,14 @@ simulated function InternalUpdate(bool bForceUpdate, int HistoryIndex)
 		m_kStatsContainer.UpdateStats();
 
 		// Re-raise target system if an abilities update was requested.
-		if ( m_isMenuRaised )
-			//TargetEnemy( 0 );
-			TargetHighestHitChanceEnemy();
-		
+		if( m_isMenuRaised )
+		{
+			if( `ISCONTROLLERACTIVE )
+				TargetHighestHitChanceEnemy();
+			else
+				TargetEnemy( 0 );
+		}
+				
 		m_kAbilityHUD.UpdateAbilitiesArray();
 		m_kEnemyTargets.RefreshTargetHoverData();
 		m_kEnemyTargets.RefreshAllTargetsBuffs();
