@@ -589,9 +589,7 @@ static function X2AbilityTemplate Flush()
 	local X2AbilityCost_Ammo                AmmoCost;
 	local X2Condition_Visibility            VisibilityCondition;
 	local X2Condition_UnitProperty			PropertyCondition;
-	local X2Condition_CanActivateAbility	AbilityCondition;
 	local X2Effect_GrantActionPoints		ActionPointEffect;
-	local X2Effect_RunBehaviorTree			FlushEffect;
 	local X2Effect_Persistent				PersistentEffect;
 	local X2AbilityToHitCalc_StandardAim    StandardAim;
 	local X2AbilityCooldown                 Cooldown;
@@ -629,12 +627,6 @@ static function X2AbilityTemplate Flush()
 	PropertyCondition.FailOnNonUnits = true;
 	Template.AbilityTargetConditions.AddItem(PropertyCondition);
 
-	// Require that the target can take a move
-	AbilityCondition = new class'X2Condition_CanActivateAbility';
-	AbilityCondition.AbilityName = 'StandardMove';
-	AbilityCondition.bIgnoreCosts = true;
-	Template.AbilityTargetConditions.AddItem(AbilityCondition);
-
 	// Can't shoot while dead
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	// Only at single targets that are in range.
@@ -642,7 +634,6 @@ static function X2AbilityTemplate Flush()
 
 	// Make the cost
 	AbilityCost = ActionPointCost(eCost_WeaponConsumeAll);
-	AbilityCost.bFreeCost = true;
 	Template.AbilityCosts.AddItem(AbilityCost);
 
 	// Ammo
@@ -680,12 +671,6 @@ static function X2AbilityTemplate Flush()
 	ActionPointEffect.bApplyOnMiss = true;
 	Template.AddTargetEffect(ActionPointEffect);
 
-	FlushEffect = new class'X2Effect_RunBehaviorTree';
-	FlushEffect.BehaviorTreeName = 'FlushMove';
-	FlushEffect.bApplyOnHit = true;
-	FlushEffect.bApplyOnMiss = true;
-	Template.AddTargetEffect(FlushEffect);
-
 	PreviewDamageEffect = new class'X2Effect_PreviewDamage';
 	PreviewDamageEffect.WrappedEffect = class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect();
 	Template.AddTargetEffect(PreviewDamageEffect);
@@ -709,7 +694,34 @@ static function X2AbilityTemplate Flush()
 
 	Template.bCrossClassEligible = false;
 
+	Template.BuildNewGameStateFn = Flush_BuildGameState;
+
 	return Template;	
+}
+
+static function XComGameState Flush_BuildGameState(XComGameStateContext Context)
+{
+	local XComGameState NewGameState;
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameState_Unit SourceUnit, TargetUnit;
+	local XComGameStateHistory History;
+
+	History = `XCOMHISTORY;
+
+	NewGameState = TypicalAbility_BuildGameState(Context);
+
+	AbilityContext = XComGameStateContext_Ability(NewGameState.GetContext());
+
+	SourceUnit = XComGameState_Unit(History.GetGameStateForObjectID(AbilityContext.InputContext.SourceObject.ObjectID));	
+	TargetUnit = XComGameState_Unit(History.GetGameStateForObjectID(AbilityContext.InputContext.PrimaryTarget.ObjectID));	
+
+	// Force the target to move
+	TargetUnit.AutoRunBehaviorTree('FlushMove', 1, History.GetCurrentHistoryIndex() + 1, false, false);
+
+	// Shoot the target if it didn't move
+	SourceUnit.AutoRunBehaviorTree('FlushShotIfAvailable', 1, History.GetCurrentHistoryIndex() + 1, false, false);
+
+	return NewGameState;
 }
 
 static function X2AbilityTemplate FlushShot()
@@ -727,9 +739,6 @@ static function X2AbilityTemplate FlushShot()
 	AmmoCost = new class'X2AbilityCost_Ammo';
 	AmmoCost.iAmmo = 1;
 	Template.AbilityCosts.AddItem(AmmoCost);
-
-	// Actually apply action point cost now
-	Template.AbilityCosts.AddItem(ActionPointCost(eCost_WeaponConsumeAll));	
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 
@@ -768,6 +777,10 @@ static function X2AbilityTemplate FlushShot()
 	Trigger.EventObserverClass = class'X2TacticalGameRuleset_AttackObserver';
 	Trigger.MethodName = 'InterruptGameState';
 	Template.AbilityTriggers.AddItem(Trigger);
+
+	// The ability will be triggered by an AIBT script if the target fails to trigger
+	// it by moving (for example, it has no available moves)
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
