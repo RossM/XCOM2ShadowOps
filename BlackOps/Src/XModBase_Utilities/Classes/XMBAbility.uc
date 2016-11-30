@@ -491,18 +491,25 @@ static function X2AbilityTemplate TargetedBuff(name DataName, string IconImage, 
 }
 
 // Helper function for creating an ability that affects all friendly units.
-static function X2AbilityTemplate SquadPassive(name DataName, string IconImage, bool bCrossClassEligible, X2Effect Effect)
+static function X2AbilityTemplate SquadPassive(name DataName, string IconImage, bool bCrossClassEligible, X2Effect_Persistent Effect)
 {
 	local X2AbilityTemplate	Template, TriggerTemplate;
+	local X2Condition_UnitEffectsWithAbilitySource Condition;
 	local XMBAbilityTrigger_EventListener EventListener;
 
 	// Create a normal passive, which triggers when the unit enters play. This
 	// also provides the icon for the ability.
 	Template = Passive(DataName, IconImage, bCrossClassEligible, none);
 
+	Effect.BuildPersistentEffect(1, true, false, false);
+
 	// The passive applies the effect to all friendly units at the start of play.
 	Template.AbilityMultiTargetStyle = new class'X2AbilityMultiTarget_AllAllies';
 	Template.AddMultiTargetEffect(Effect);
+	 
+	Condition = new class'X2Condition_UnitEffectsWithAbilitySource';
+	Condition.AddExcludeEffect(Effect.EffectName, 'AA_UnitIsImmune');
+	Effect.TargetConditions.AddItem(Condition);
 
 	// Create a triggered ability which will apply the effect to friendly units
 	// that are created after play begins.
