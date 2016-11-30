@@ -79,7 +79,7 @@ LocFriendlyName="Focus"
 LocLongDescription="Your first reaction shot each turn is guaranteed to hit."
 LocHelpText="Your first reaction shot each turn is guaranteed to hit."
 LocFlyOverText="Focus"
-LocPromotionPopupText="<Bullet/> This ability goes well with other abilities that boost your overwatch, like Covering Fire.<br/><Bullet/> Your reaction shots can still be dodged.<br/>"
+LocPromotionPopupText="<Bullet/> This ability goes well with other abilities that boost your overwatch, like Fortify.<br/><Bullet/> Your reaction shots can still be dodged.<br/>"
 
 [ShadowOps_Resilience X2AbilityTemplate]
 LocFriendlyName="Resilience"
