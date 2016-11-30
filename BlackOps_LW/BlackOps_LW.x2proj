@@ -92,7 +92,14 @@
     <Content Include="Localization\SOInfantry\*.int" />
     <Content Include="Localization\SOCombatEngineer\*.int" />
     <Content Include="Localization\SOItems\*.int" />
-    <Content Include="ShadowOps.XComMod">
+	  <Content Include="Localization\*.chn" />
+	  <Content Include="Localization\CritChanceChange\*.chn" />
+	  <Content Include="Localization\SODragoon\*.chn" />
+	  <Content Include="Localization\SOHunter\*.chn" />
+	  <Content Include="Localization\SOInfantry\*.chn" />
+	  <Content Include="Localization\SOCombatEngineer\*.chn" />
+	  <Content Include="Localization\SOItems\*.chn" />
+	  <Content Include="ShadowOps.XComMod">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\CritChanceChange\Classes\*.uc">
