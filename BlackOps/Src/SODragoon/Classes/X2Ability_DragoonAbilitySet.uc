@@ -479,7 +479,7 @@ static function X2AbilityTemplate BurstFire()
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
-	Template.bCrossClassEligible = true;
+	Template.bCrossClassEligible = false;
 
 	return Template;
 }
