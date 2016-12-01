@@ -634,6 +634,7 @@ static function X2AbilityTemplate Flush()
 
 	// Make the cost
 	AbilityCost = ActionPointCost(eCost_WeaponConsumeAll);
+	AbilityCost.bFreeCost = true;
 	Template.AbilityCosts.AddItem(AbilityCost);
 
 	// Ammo
@@ -733,8 +734,13 @@ static function X2AbilityTemplate FlushShot()
 	local X2AbilityTrigger_Event					Trigger;
 	local X2Effect									Effect;
 	local X2Effect_RemoveEffects					RemoveEffect;
+	local X2AbilityCost_ActionPoints		AbilityCost;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FlushShot');
+
+	// Make the cost
+	AbilityCost = ActionPointCost(eCost_WeaponConsumeAll);
+	Template.AbilityCosts.AddItem(AbilityCost);
 
 	AmmoCost = new class'X2AbilityCost_Ammo';
 	AmmoCost.iAmmo = 1;
