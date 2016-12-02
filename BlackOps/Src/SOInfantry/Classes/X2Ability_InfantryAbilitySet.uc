@@ -272,7 +272,7 @@ static function X2AbilityTemplate FullAuto()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildVisualizationFn = FullAuto_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_FullAuto2');
@@ -333,15 +333,110 @@ static function X2AbilityTemplate FullAuto2()
 	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_fullauto";
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.BuildVisualizationFn = FullAuto_BuildVisualization;
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_FullAuto2');
 	Template.PostActivationEvents.AddItem('ShadowOps_FullAuto2');
-	Template.bShowActivation = true;
+	// Template.bShowActivation = true;
 	Template.CinescriptCameraType = "StandardGunFiring";
 
 	return Template;
+}
+
+simulated function FullAuto_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameStateContext Context;
+	local XComGameStateContext_Ability TestAbilityContext;
+	local int EventChainIndex, TrackIndex, ActionIndex;
+	local XComGameStateHistory History;
+	local X2Action_EnterCover EnterCoverAction;
+	local X2Action_EndCinescriptCamera EndCinescriptCameraAction;
+	local X2Action_ExitCover ExitCoverAction;
+	local X2Action_StartCinescriptCamera StartCinescriptCameraAction;
+	local bool bFoundThisAction, bSkipExitCover, bSkipEnterCover;
+
+	// Build the first shot of Rapid Fire's visualization
+	TypicalAbility_BuildVisualization(VisualizeGameState, OutVisualizationTracks);
+
+	Context = VisualizeGameState.GetContext();
+	AbilityContext = XComGameStateContext_Ability(Context);
+
+	if( AbilityContext.EventChainStartIndex != 0 )
+	{
+		History = `XCOMHISTORY;
+
+		// This GameState is part of a chain, which means there may be a second shot for rapid fire
+		for( EventChainIndex = AbilityContext.EventChainStartIndex; !Context.bLastEventInChain; ++EventChainIndex )
+		{
+			Context = History.GetGameStateFromHistory(EventChainIndex).GetContext();
+			TestAbilityContext = XComGameStateContext_Ability(Context);
+
+			if (TestAbilityContext.AssociatedState.HistoryIndex == AbilityContext.AssociatedState.HistoryIndex)
+			{
+				bFoundThisAction = true;
+				continue;
+			}
+
+			if( (TestAbilityContext.InputContext.AbilityTemplateName == 'ShadowOps_FullAuto' ||
+				 TestAbilityContext.InputContext.AbilityTemplateName == 'ShadowOps_FullAuto2') &&
+				TestAbilityContext.InputContext.SourceObject.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID &&
+				TestAbilityContext.InputContext.PrimaryTarget.ObjectID == AbilityContext.InputContext.PrimaryTarget.ObjectID )
+			{
+				if (bFoundThisAction)
+					bSkipEnterCover = true;
+				else
+					bSkipExitCover = true;
+			}
+		}
+
+		if (bSkipEnterCover)
+		{
+			for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
+			{
+				if( OutVisualizationTracks[TrackIndex].StateObject_NewState.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID)
+				{
+					// Found the Source track
+					break;
+				}
+			}
+
+			for( ActionIndex = OutVisualizationTracks[TrackIndex].TrackActions.Length - 1; ActionIndex >= 0; --ActionIndex )
+			{
+				EnterCoverAction = X2Action_EnterCover(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+				EndCinescriptCameraAction = X2Action_EndCinescriptCamera(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+				if ( (EnterCoverAction != none) ||
+						(EndCinescriptCameraAction != none) )
+				{
+					OutVisualizationTracks[TrackIndex].TrackActions.Remove(ActionIndex, 1);
+				}
+			}
+		}
+
+		if (bSkipExitCover)
+		{
+			for( TrackIndex = 0; TrackIndex < OutVisualizationTracks.Length; ++TrackIndex )
+			{
+				if( OutVisualizationTracks[TrackIndex].StateObject_NewState.ObjectID == AbilityContext.InputContext.SourceObject.ObjectID)
+				{
+					// Found the Source track
+					break;
+				}
+			}
+
+			for( ActionIndex = OutVisualizationTracks[TrackIndex].TrackActions.Length - 1; ActionIndex >= 0; --ActionIndex )
+			{
+				ExitCoverAction = X2Action_ExitCover(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+				StartCinescriptCameraAction = X2Action_StartCinescriptCamera(OutVisualizationTracks[TrackIndex].TrackActions[ActionIndex]);
+				if ( (ExitCoverAction != none) ||
+						(StartCinescriptCameraAction != none) )
+				{
+					OutVisualizationTracks[TrackIndex].TrackActions.Remove(ActionIndex, 1);
+				}
+			}
+		}
+	}
 }
 
 static function X2AbilityTemplate ZoneOfControl()
