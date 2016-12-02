@@ -38,6 +38,7 @@ Shadow Ops LW includes four new ammo types and one new vest type that give your 
 DerBK, for design review of the LW version.
 robojumper, for help with animation.
 Varyar1g, for playtesting the LW version.
+MantLemon, for the simplified Chinese translation.
 Everyone who played the Shadow Ops Class Pack for great feedback.
 
 [h1]FAQ[/h1]
