@@ -157,12 +157,19 @@ LocHelpText="You are immune to the first shot that hits you each mission."
 LocFlyOverText="Devil's Luck"
 LocPromotionPopupText="<Bullet/> Hits include crits and grazes.<br/>"
 
+;[ShadowOps_Mayhem X2AbilityTemplate]
+;LocFriendlyName="Mayhem"
+;LocLongDescription="Your grenades and special attacks deal <Ability:+Damage> damage."
+;LocHelpText="Your grenades and special attacks deal <Ability:+Damage> damage."
+;LocFlyOverText="Mayhem"
+;LocPromotionPopupText="<Bullet/> Special attacks include Breach, Fracture, and heavy weapons."
+
 [ShadowOps_Mayhem X2AbilityTemplate]
 LocFriendlyName="Mayhem"
-LocLongDescription="Your grenades and special attacks deal <Ability:+Damage> damage."
-LocHelpText="Your grenades and special attacks deal <Ability:+Damage> damage."
+LocLongDescription="All your attacks deal <Ability:+Damage> damage."
+LocHelpText="All your attacks deal <Ability:+Damage> damage."
 LocFlyOverText="Mayhem"
-LocPromotionPopupText="<Bullet/> Special attacks include Breach, Fracture, and heavy weapons."
+LocPromotionPopupText="<Bullet/> Mayhem also increases the damage from burning, poison, or acid caused by your attacks.<br/>"
 
 [ShadowOps_Saboteur X2AbilityTemplate]
 LocFriendlyName="Saboteur"
