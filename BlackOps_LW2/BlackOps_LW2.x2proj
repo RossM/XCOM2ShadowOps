@@ -51,9 +51,6 @@
     <Content Include="Config\SOClasses_LW2\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\SOCombatEngineer_LW2\XComClassData.ini">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Config\SOCombatEngineer_LW2\XComEngine.ini">
       <SubType>Content</SubType>
     </Content>
@@ -69,9 +66,6 @@
     <Content Include="Config\SOCombatEngineer_LW2\XComStrategyTuning.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\SODragoon_LW2\XComClassData.ini">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Config\SODragoon_LW2\XComEngine.ini">
       <SubType>Content</SubType>
     </Content>
@@ -85,9 +79,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SODragoon_LW2\XComStrategyTuning.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOHunter_LW2\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOHunter_LW2\XComEngine.ini">
@@ -106,9 +97,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOInfantry_LW2\XComAI.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOInfantry_LW2\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOInfantry_LW2\XComEngine.ini">
