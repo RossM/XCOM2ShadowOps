@@ -11,8 +11,8 @@ var config int FocusedDefenseDefense, FocusedDefenseDodge;
 var config int FractureCritModifier;
 var config int LineEmUpOffense, LineEmUpCrit;
 var config float ControlledDetonationDamageReduction;
-var config int MayhemDamageBonus;
-var config array<name> MayhemExcludeAbilities;
+var config int MayhemDamageBonus, MayhemLW2DamageBonus;
+var config array<name> MayhemExcludeAbilities, MayhemLW2ExcludeAbilities;
 var config int SaboteurDamageBonus;
 var config int AnatomistDamageBonus, AnatomistMaxKills;
 var config float HeatAmmoDamageMultiplier;
@@ -49,6 +49,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ControlledDetonation());	// Unused
 	Templates.AddItem(DevilsLuck());
 	Templates.AddItem(Mayhem());
+	Templates.AddItem(Mayhem_LW2());
 	Templates.AddItem(Saboteur());
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(ExtraMunitions());
@@ -812,6 +813,22 @@ static function X2AbilityTemplate Mayhem()
 
 	// TODO: icon
 	return Passive('ShadowOps_Mayhem', "img:///UILibrary_SOCombatEngineer.UIPerk_mayhem", true, Effect);
+}
+
+static function X2AbilityTemplate Mayhem_LW2()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBCondition_AbilityName Condition;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddDamageModifier(default.MayhemLW2DamageBonus);
+
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.ExcludeAbilityNames = default.MayhemLW2ExcludeAbilities;
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	// TODO: icon
+	return Passive('ShadowOps_Mayhem_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_mayhem", true, Effect);
 }
 
 static function X2AbilityTemplate Saboteur()

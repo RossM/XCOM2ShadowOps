@@ -11,6 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Config\" />
+    <Folder Include="Config\SOClasses_LW2" />
     <Folder Include="Config\SOCombatEngineer_LW2" />
     <Folder Include="Config\SODragoon_LW2" />
     <Folder Include="Config\SOHunter_LW2" />
@@ -47,16 +48,82 @@
     <Folder Include="Src\XModBase_Utilities\Classes" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\SOCombatEngineer_LW2\*.ini">
+    <Content Include="Config\SOClasses_LW2\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\SODragoon_LW2\*.ini">
+    <Content Include="Config\SOCombatEngineer_LW2\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\SOHunter_LW2\*.ini">
+    <Content Include="Config\SOCombatEngineer_LW2\XComEngine.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Config\SOInfantry_LW2\*.ini">
+    <Content Include="Config\SOCombatEngineer_LW2\XComGameCore.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOCombatEngineer_LW2\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOCombatEngineer_LW2\XComGameData_SoldierSkills.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOCombatEngineer_LW2\XComStrategyTuning.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon_LW2\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon_LW2\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon_LW2\XComGameCore.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon_LW2\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon_LW2\XComGameData_SoldierSkills.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SODragoon_LW2\XComStrategyTuning.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter_LW2\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter_LW2\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter_LW2\XComGameCore.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter_LW2\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter_LW2\XComGameData_SoldierSkills.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOHunter_LW2\XComStrategyTuning.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry_LW2\XComAI.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry_LW2\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry_LW2\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry_LW2\XComGameCore.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry_LW2\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry_LW2\XComGameData_SoldierSkills.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOInfantry_LW2\XComStrategyTuning.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\*.ini">
@@ -101,10 +168,10 @@
     <Content Include="Src\SOInfantry\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
-	  <Content Include="Src\XComGame\Classes\*.uc">
-		  <SubType>Content</SubType>
-	  </Content>
-	  <Content Include="Src\XModBase_Core_1_2_1\Classes\*.uc">
+    <Content Include="Src\XComGame\Classes\*.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\XModBase_Core_1_2_1\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\*.uc">
