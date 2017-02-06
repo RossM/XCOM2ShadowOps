@@ -21,6 +21,7 @@ var config int SensorOverlaysCritBonus;
 var config int SuperchargeChargeBonus;
 var config array<int> ReverseEngineeringHackBonus;
 var config array<name> RocketeerLW2AbilityNames;
+var config int EatThisAimBonus, EatThisCritBonus, EatThisMaxTiles;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -54,6 +55,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Scout());
 	Templates.AddItem(Charge());
 	Templates.AddItem(Rocketeer_LW2());
+	Templates.AddItem(EatThis());
 
 	return Templates;
 }
@@ -981,8 +983,24 @@ static function X2AbilityTemplate Rocketeer_LW2()
 	Effect = new class'XMBEffect_AddAbilityCharges';
 	Effect.AbilityNames = default.RocketeerLW2AbilityNames;
 
-	Template = Passive('ShadowOps_Rocketeer_LW2', "img:///UILibrary_SODragoon.UIPerk_rocketeer", none);
+	Template = Passive('ShadowOps_Rocketeer_LW2', "img:///UILibrary_SODragoon.UIPerk_rocketeer", false, none);
 	Template.AddTargetEffect(Effect);
 
 	return Template;
+}
+
+static function X2AbilityTemplate EatThis()
+{
+	local XMBEffect_ConditionalBonus Effect;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddToHitModifier(default.EatThisAimBonus, eHit_Success);
+	Effect.AddToHitModifier(default.EatThisCritBonus, eHit_Crit);
+
+	Effect.ScaleValue = new class'XMBValue_Distance';
+	Effect.ScaleMultiplier = -1.0 / default.EatThisMaxTiles;
+	Effect.ScaleBase = 1.0 - Effect.ScaleMultiplier;
+	Effect.ScaleMax = 1.0;
+
+	return Passive('ShadowOps_EatThis', "img:///UILibrary_SODragoon.UIPerk_eatthis", false, Effect);
 }

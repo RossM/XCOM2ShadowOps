@@ -160,6 +160,20 @@ LocHelpText="Take a standard action after dashing."
 LocFlyOverText="Charge!"
 LocPromotionPopupText="<Bullet/> Charge! has one charge.<br/>"
 
+[ShadowOps_Rocketeer_LW2 X2AbilityTemplate]
+LocFriendlyName="Rocketeer"
+LocLongDescription="Your heavy weapon gains a bonus use."
+LocHelpText="Your heavy weapon gains a bonus use."
+LocFlyOverText="Rocketeer"
+LocPromotionPopupText="<Bullet/> Heavy weapons are weapons such as the rocket launcher that can only be mounted on an EXO or WAR suit.<br/>"
+
+[ShadowOps_EatThis X2AbilityTemplate]
+LocFriendlyName="Eat This!"
+LocLongDescription="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range."
+LocHelpText="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range."
+LocFlyOverText="Eat This!"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Dragoon X2SoldierClassTemplate]
@@ -237,4 +251,3 @@ Summary="Gain a second PCS slot."
 [ChargeUnlock_LW X2SoldierAbilityUnlockTemplate]
 DisplayName="Charge!"
 Summary="All soldiers get one use of Run and Gun each mission."
-
