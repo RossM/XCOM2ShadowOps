@@ -20,6 +20,7 @@ var config int IronWillBonus;
 var config int SensorOverlaysCritBonus;
 var config int SuperchargeChargeBonus;
 var config array<int> ReverseEngineeringHackBonus;
+var config array<name> RocketeerLW2AbilityNames;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -52,6 +53,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ReverseEngineering());
 	Templates.AddItem(Scout());
 	Templates.AddItem(Charge());
+	Templates.AddItem(Rocketeer_LW2());
 
 	return Templates;
 }
@@ -967,6 +969,20 @@ static function X2AbilityTemplate Charge()
 	Template.AbilityCosts.AddItem(ChargesCost);
 
 	Template.AbilityCooldown = none;
+
+	return Template;
+}
+
+static function X2AbilityTemplate Rocketeer_LW2()
+{
+	local X2AbilityTemplate                 Template;
+	local XMBEffect_AddAbilityCharges		Effect;
+	
+	Effect = new class'XMBEffect_AddAbilityCharges';
+	Effect.AbilityNames = default.RocketeerLW2AbilityNames;
+
+	Template = Passive('ShadowOps_Rocketeer_LW2', "img:///UILibrary_SODragoon.UIPerk_rocketeer", none);
+	Template.AddTargetEffect(Effect);
 
 	return Template;
 }
