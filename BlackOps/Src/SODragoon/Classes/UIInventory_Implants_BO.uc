@@ -2,27 +2,41 @@ class UIInventory_Implants_BO extends UIInventory_Implants;
 
 simulated function InitScreen(XComPlayerController InitController, UIMovie InitMovie, optional name InitName)
 {
+	local XComGameState_Unit Unit;
+
 	super.InitScreen(InitController, InitMovie, InitName);
 
 	`Log("Init UIInventory_Implants_BO");
 
 	if (`HQPRES.ScreenStack.IsNotInStack(class'UIArmory_Implants'))
 	{
-		`Log("Switching to UIArmory_Implants");
-		`HQPRES.ScreenStack.Pop(self);
-		`HQPRES.UIArmory_Implants(UIArmory_MainMenu(`HQPRES.ScreenStack.GetFirstInstanceOf(class'UIArmory_MainMenu')).GetUnitRef());
+		Unit = UIArmory_MainMenu(Movie.Pres.ScreenStack.GetScreen(class'UIArmory_MainMenu')).GetUnit();
+
+		if (Unit.GetCurrentStat(eStat_CombatSims) > 1 || Unit.HasSoldierAbility('ShadowOps_DigitalWarfare'))
+		{
+			`Log("Switching to UIArmory_Implants_BO");
+			`HQPRES.ScreenStack.Pop(self);
+			UIArmory_Implants(`HQPRES.ScreenStack.Push(Spawn(class'UIArmory_Implants_BO', `HQPRES), `HQPRES.Get3DMovie())).InitImplants(Unit.GetReference());
+		}
 	}
 }
 
 simulated function OnReceiveFocus()
 {
+	local XComGameState_Unit Unit;
+
 	super.OnReceiveFocus();
 
 	if (`HQPRES.ScreenStack.IsNotInStack(class'UIArmory_Implants'))
 	{
-		`Log("Switching to UIArmory_Implants");
-		`HQPRES.ScreenStack.Pop(self);
-		`HQPRES.UIArmory_Implants(UIArmory_MainMenu(`HQPRES.ScreenStack.GetFirstInstanceOf(class'UIArmory_MainMenu')).GetUnitRef());
+		Unit = UIArmory_MainMenu(Movie.Pres.ScreenStack.GetScreen(class'UIArmory_MainMenu')).GetUnit();
+
+		if (Unit.GetCurrentStat(eStat_CombatSims) > 1 || Unit.HasSoldierAbility('ShadowOps_DigitalWarfare'))
+		{
+			`Log("Switching to UIArmory_Implants_BO");
+			`HQPRES.ScreenStack.Pop(self);
+			UIArmory_Implants(`HQPRES.ScreenStack.Push(Spawn(class'UIArmory_Implants_BO', `HQPRES), `HQPRES.Get3DMovie())).InitImplants(Unit.GetReference());
+		}
 	}
 }
 
