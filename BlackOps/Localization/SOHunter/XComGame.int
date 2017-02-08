@@ -110,11 +110,11 @@ LocFlyOverText="Damn Good Ground"
 LocPromotionPopupText="<Bullet/> The bonus stacks with the normal Aim bonus for higher elevation.<br/>"
 
 [ShadowOps_PointBlank X2AbilityTemplate]
-LocFriendlyName="Point Blank"
+LocFriendlyName="Hipfire"
 LocLongDescription="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
 LocHelpText="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
-LocFlyOverText="Point Blank"
-LocPromotionPopupText="<Bullet/> Point Blank reduces the maximum range penalty for a short-range sniper rifle shot from -30 to -10.<br/><Bullet/> Point Blank does not affect the aim penalty from Snap Shot.<br/>"
+LocFlyOverText="Hipfire"
+LocPromotionPopupText="<Bullet/> Hipfire reduces the maximum range penalty for a short-range sniper rifle shot from -30 to -10.<br/><Bullet/> Hipfire does not affect the aim penalty from Snap Shot.<br/>"
 
 [ShadowOps_Butcher X2AbilityTemplate]
 LocFriendlyName="Butcher"
@@ -131,10 +131,10 @@ LocFlyOverText="Reposition"
 LocPromotionPopupText="<Bullet/> Reposition only allows standard moves, not other abilities such as reloading your weapon.<br/>"
 
 [ShadowOps_Evasive X2AbilityTemplate]
-LocFriendlyName="Evasive"
+LocFriendlyName="Sixth Sense"
 LocLongDescription="You are immune to multi-target and area attacks."
 LocHelpText="You are immune to multi-target and area attacks."
-LocFlyOverText="Evasive"
+LocFlyOverText="Sixth Sense"
 LocPromotionPopupText="<Bullet/> Area attacks include grenades and other explosives.<br/>"
 
 [ShadowOps_Stalker X2AbilityTemplate]
