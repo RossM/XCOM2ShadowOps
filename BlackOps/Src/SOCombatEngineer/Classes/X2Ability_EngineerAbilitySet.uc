@@ -16,6 +16,8 @@ var config array<name> MayhemExcludeAbilities, MayhemLW2ExcludeAbilities;
 var config int SaboteurDamageBonus;
 var config int AnatomistDamageBonus, AnatomistMaxKills;
 var config float HeatAmmoDamageMultiplier;
+var config WeaponDamageValue BullRushDamage;
+var config int BullRushHitModifier;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -53,6 +55,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Saboteur());
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(ExtraMunitions());
+	Templates.AddItem(BullRush());
 
 	return Templates;
 }
@@ -877,6 +880,43 @@ static function X2AbilityTemplate ExtraMunitions()
 	ItemEffect = new class 'XMBEffect_AddUtilityItem';
 	ItemEffect.DataName = 'FragGrenade';
 	Template.AddTargetEffect(ItemEffect);
+
+	return Template;
+}
+
+// Perk name:		Bull Rush
+// Perk effect:		Make an unarmed melee attack that stuns the target. Whenever you take damage, this ability's cooldown resets.
+// Localized text:	"Make an unarmed melee attack that stuns the target. Whenever you take damage, this ability's cooldown resets."
+// Config:			(AbilityName="XMBExample_BullRush")
+static function X2AbilityTemplate BullRush()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_ApplyWeaponDamage DamageEffect;
+	local X2Effect StunnedEffect;
+	local X2AbilityToHitCalc_StandardMelee ToHitCalc;
+
+	// Create a damage effect. X2Effect_ApplyWeaponDamage is used to apply all types of damage, not
+	// just damage from weapon attacks.
+	DamageEffect = new class'X2Effect_ApplyWeaponDamage';
+
+	DamageEffect.EffectDamageValue = default.BullRushDamage;
+	DamageEffect.bIgnoreBaseDamage = true;
+
+	Template = MeleeAttack('ShadowOps_BullRush', "img:///UILibrary_SOCombatEngineer.UIPerk_bullrush", true, DamageEffect,, eCost_SingleConsumeAll);
+	
+	// The default hit chance for melee attacks is low. Add +20 to the attack to match swords.
+	ToHitCalc = new class'X2AbilityToHitCalc_StandardMelee';
+	ToHitCalc.BuiltInHitMod = default.BullRushHitModifier;
+	Template.AbilityToHitCalc = ToHitCalc;
+
+	// Create a stun effect that removes 2 actions and has a 100% chance of success if the attack hits.
+	StunnedEffect = class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, 100, false);
+	AddSecondaryEffect(Template, StunnedEffect);
+
+	// The default fire animation depends on the ability's associated weapon - shooting for a gun or 
+	// slashing for a sword. If the ability has no associated weapon, no animation plays. Use an
+	// alternate animation, FF_Melee, which is a generic melee attack that works with any weapon.
+	Template.CustomFireAnim = 'FF_Melee';
 
 	return Template;
 }
