@@ -27,8 +27,9 @@ function RegisterForEvents(XComGameState_Effect EffectGameState)
 
 static function EventListenerReturn EventHandler(XComGameState_BaseObject SourceState, Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
-	local XComGameState_Unit UnitState, NewUnitState;
+	local XComGameState_Unit UnitState, SourceUnitState, NewUnitState;
 	local XComGameState_Effect NewEffectState;
+	local XComGameState_Ability AbilityState;
 	local XComGameState NewGameState;
 	local XMBEffect_ConditionalStatChange EffectTemplate;
 	local XComGameState_Effect EffectState;
@@ -39,11 +40,13 @@ static function EventListenerReturn EventHandler(XComGameState_BaseObject Source
 		return ELR_NoInterrupt;
 
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
+	SourceUnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.SourceStateObjectRef.ObjectID));
+	AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(EffectState.ApplyEffectParameters.AbilityStateObjectRef.ObjectID));
 
 	EffectTemplate = XMBEffect_ConditionalStatChange(EffectState.GetX2Effect());
 
 	bOldApplicable = EffectState.StatChanges.Length > 0;
-	bNewApplicable = class'XMBEffectUtilities'.static.CheckShooterConditions(EffectTemplate.Conditions, EffectState, UnitState, none, none) == 'AA_Success';
+	bNewApplicable = class'XMBEffectUtilities'.static.CheckTargetConditions(EffectTemplate.Conditions, EffectState, SourceUnitState, UnitState, AbilityState) == 'AA_Success';
 
 	if (bOldApplicable != bNewApplicable)
 	{

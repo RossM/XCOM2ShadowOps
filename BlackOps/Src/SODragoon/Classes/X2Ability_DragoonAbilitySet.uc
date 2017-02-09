@@ -22,6 +22,7 @@ var config int SuperchargeChargeBonus;
 var config array<int> ReverseEngineeringHackBonus;
 var config array<name> RocketeerLW2AbilityNames;
 var config int EatThisAimBonus, EatThisCritBonus, EatThisMaxTiles;
+var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -1005,3 +1006,18 @@ static function X2AbilityTemplate EatThis()
 
 	return Passive('ShadowOps_EatThis', "img:///UILibrary_SODragoon.UIPerk_eatthis", false, Effect);
 }
+
+static function X2AbilityTemplate Inspiration()
+{
+	local XMBEffect_ConditionalStatChange Effect;
+
+	Effect = new class'XMBEffect_ConditionalStatChange';
+	Effect.EffectName = 'Inspiration';
+	Effect.DuplicateResponse = eDupe_Allow;
+	Effect.AddPersistentStatChange(eStat_Dodge, default.InspirationDodgeBonus);
+	Effect.AddPersistentStatChange(eStat_Will, default.InspirationWillBonus);
+	Effect.Conditions.AddItem(TargetWithinTiles(default.InspirationMaxTiles));
+
+	return SquadPassive('ShadowOps_Inspiration', "img:///UILibrary_SODragoon.UIPerk_inspiration", false, Effect);
+}
+
