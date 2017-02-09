@@ -181,6 +181,13 @@ LocHelpText="Allies within 10 tiles of you gain <Ability:+Dodge/> Dodge and <Abi
 LocFlyOverText="Inspiration"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
+[ShadowOps_DigitalWarfare X2AbilityTemplate]
+LocFriendlyName="Digital Warfare"
+LocLongDescription="Gain a second PCS slot."
+LocHelpText="Gain a second PCS slot."
+LocFlyOverText="Digital Warfare"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Dragoon X2SoldierClassTemplate]

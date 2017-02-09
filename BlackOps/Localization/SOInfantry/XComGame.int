@@ -157,10 +157,10 @@ LocFlyOverText="Improved Suppression"
 LocPromotionPopupText="<Bullet/> Disoriented units have reduced Aim and Mobility, and can't use most special abilities.<br/><Bullet/> The disorientation is applied when you activate suppression.<br/><Bullet/> Having the suppression broken won't remove the disorientation early.<br/>"
 
 [ShadowOps_CoupDeGrace X2AbilityTemplate]
-LocFriendlyName="Coup de Grace"
+LocFriendlyName="Liquidator"
 LocLongDescription="Killing an enemy with your pistol doesn't cost an action."
 LocHelpText="Killing an enemy with your pistol doesn't cost an action."
-LocFlyOverText="Coup de Grace"
+LocFlyOverText="Liquidator"
 LocPromotionPopupText="<Bullet/> This affects all pistol attacks, not just standard pistol shots.<br/>"
 
 [ShadowOps_Airstrike X2AbilityTemplate]

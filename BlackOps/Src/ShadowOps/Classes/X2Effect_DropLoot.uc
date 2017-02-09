@@ -17,21 +17,5 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 		return;
 	}
 
-	LootManager = class'X2LootTableManager'.static.GetLootTableManager();
-
-	History = `XCOMHISTORY;
-	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom', true));
-	if( XComHQ != none && XComHQ.SoldierUnlockTemplates.Find('VultureUnlock') != INDEX_NONE )
-	{
-		// vulture loot roll
-		LootManager.RollForLootCarrier(Unit.GetMyTemplate().VultureLoot, Loot);
-	}
-	else
-	{
-		// roll on regular timed loot if vulture is not enabled
-		LootManager.RollForLootCarrier(Unit.GetMyTemplate().TimedLoot, Loot);
-	}
-
-	`Log("Adding loot:" @ class'X2LootTableManager'.static.LootResultsToString(Loot));
-	Unit.SetLoot(Loot);
+	Unit.RollForTimedLoot();
 }

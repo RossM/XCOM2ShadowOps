@@ -54,6 +54,9 @@
     <Content Include="Config\SOClasses_LW2\XComGameData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOClasses_LW2\XComLW_AWCPack.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOCombatEngineer_LW2\XComEngine.ini">
       <SubType>Content</SubType>
     </Content>
