@@ -12,6 +12,7 @@ static function EditTemplates()
 	{
 		`Log("SOCombatEngineer: Editing" @ DataName);
 		AddDoNotConsumeAllAbility(DataName, 'ShadowOps_SmokeAndMirrors');
+		AddDoNotConsumeAllAbility(DataName, 'ShadowOps_SmokeAndMirrors_LW2');
 		AddDoNotConsumeAllEffect(DataName, 'Fastball');
 		AddPostActivationEvent(DataName, 'GrenadeUsed');
 		ChangeToGrenadeActionPoints(DataName);

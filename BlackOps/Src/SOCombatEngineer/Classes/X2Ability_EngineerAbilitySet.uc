@@ -56,6 +56,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(ExtraMunitions());
 	Templates.AddItem(BullRush());
+	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false));
 
 	return Templates;
 }

@@ -165,8 +165,8 @@ LocPromotionPopupText="<Bullet/> This affects all pistol attacks, not just stand
 
 [ShadowOps_Airstrike X2AbilityTemplate]
 LocFriendlyName="Airstrike"
-LocLongDescription="Once per mission, call in an airstrike that does 8-12 damage in a large area. Costs both actions and only works outdoors."
-LocHelpText="Call in an airstrike that does 8-12 damage in a large area. Costs both actions and only works outdoors."
+LocLongDescription="Once per mission, call in an airstrike that does 8-12 damage in a large area. Costs both actions."
+LocHelpText="Call in an airstrike that does 8-12 damage in a large area. Costs both actions."
 LocFlyOverText="Airstrike"
 LocPromotionPopupText="<Bullet/> The airstrike will destroy almost all cover in the area of effect.<br/>"
 

@@ -28,7 +28,7 @@ simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XCo
 				GrenadeTemplate.DataName == 'DenseSmokeGrenade' ||  // For Long War Perk Pack implementation of Dense Smoke
 				GrenadeTemplate.DataName == 'DenseSmokeGrenadeMk2') // For Long War Perk Pack implementation of Dense Smoke
 			{
-				if (AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors'))
+				if (AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors') || AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors_LW2'))
 					return false;
 			}
 		}
@@ -44,7 +44,7 @@ simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XCo
 		}
 		for (i = 0; i < DoNotConsumeAllSoldierAbilities.Length; ++i)
 		{
-			if (DoNotConsumeAllSoldierAbilities[i] == 'ShadowOps_SmokeAndMirrors')
+			if (DoNotConsumeAllSoldierAbilities[i] == 'ShadowOps_SmokeAndMirrors' || DoNotConsumeAllSoldierAbilities[i] == 'ShadowOps_SmokeAndMirrors_LW2')
 				continue;
 			if (AbilityOwner.HasSoldierAbility(DoNotConsumeAllSoldierAbilities[i]))
 				return false;

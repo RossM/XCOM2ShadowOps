@@ -191,6 +191,19 @@ LocHelpText="You get a free frag grenade or plasma grenade on each mission."
 LocFlyOverText="Extra Munitions"
 LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.<br/>"
 
+[ShadowOps_BullRush X2AbilityTemplate]
+LocFriendlyName="Bull Rush"
+LocLongDescription="Make a special melee attack against any enemy within movement range that deals little damage but stuns the target for 1 turn."
+LocHelpText="Make a special melee attack against any enemy within movement range that deals little damage but stuns the target for 1 turn."
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
+[ShadowOps_SmokeAndMirrors_LW2 X2AbilityTemplate]
+LocFriendlyName="Smoke and Mirrors"
+LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn."
+LocHelpText="Launching or throwing a smoke grenade as your first action does not end your turn."
+LocFlyOverText="Smoke and Mirrors"
+LocPromotionPopupText="<Bullet/> TODO. <br/>"
+
 ; === Class templates ===
 
 [ShadowOps_CombatEngineer X2SoldierClassTemplate]

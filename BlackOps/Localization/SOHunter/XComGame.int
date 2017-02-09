@@ -50,11 +50,11 @@ LocFlyOverText="Low Profile"
 LocPromotionPopupText="<Bullet/> The bonus is lost if the attacker is flanking you.<br/>"
 
 [ShadowOps_Sprint X2AbilityTemplate]
-LocFriendlyName="Sprint"
+LocFriendlyName="Double Time"
 LocLongDescription="Gain a bonus move action this turn. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Gain a bonus move action this turn."
-LocFlyOverText="Sprint"
-LocPromotionPopupText="<Bullet/> Sprint can be used to move very long distances in a single turn, or to move and then take a normal sniper rifle shot.<br/><Bullet/> The extra move action from Sprint is wasted if you use an ability that ends your turn, like firing your weapon, before taking the move.<br/><Bullet/> Sprint has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocFlyOverText="Double Time"
+LocPromotionPopupText="<Bullet/> Double Time can be used to move very long distances in a single turn, or to move and then take a normal sniper rifle shot.<br/><Bullet/> The extra move action from Double Time is wasted if you use an ability that ends your turn, like firing your weapon, before taking the move.<br/><Bullet/> Double Time has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_Assassin X2AbilityTemplate]
 LocFriendlyName="Assassin"

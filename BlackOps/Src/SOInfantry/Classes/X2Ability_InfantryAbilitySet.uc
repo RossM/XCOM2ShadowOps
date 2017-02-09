@@ -1535,11 +1535,6 @@ static function X2AbilityTemplate Airstrike()
 	FireEffect.bCheckForLOSFromTargetLocation = false;
 	Template.AddMultiTargetEffect(FireEffect);
 
-	UnitProperty = new class'X2Condition_UnitProperty';
-	UnitProperty.ExcludeDead = true;
-	UnitProperty.IsOutdoors = true;
-	Template.AbilityShooterConditions.AddItem(UnitProperty);
-
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
 	StandardAim.bGuaranteedHit = true;
 	StandardAim.bAllowCrit = false;
