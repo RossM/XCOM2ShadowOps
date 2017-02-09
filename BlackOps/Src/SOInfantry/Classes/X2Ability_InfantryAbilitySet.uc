@@ -4,7 +4,7 @@ class X2Ability_InfantryAbilitySet extends XMBAbility
 var name AlwaysReadyEffectName, FlushEffectName;
 
 var config int MagnumDamageBonus, MagnumOffenseBonus;
-var config int FullAutoHitModifier;
+var config int FullAutoHitModifier, FullAutoCumulativeHitModifier;
 var config int ZeroInOffenseBonus;
 var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, AdrenalineSurgeCooldown;
 var config int FortressDefenseModifier;
@@ -269,6 +269,8 @@ static function X2AbilityTemplate FullAuto()
 	Template.bAllowAmmoEffects = true;
 	Template.bAllowBonusWeaponEffects = true;
 
+	Template.AddShooterEffect(FullAutoPenalty());
+
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
@@ -320,6 +322,8 @@ static function X2AbilityTemplate FullAuto2()
 	Template.bAllowAmmoEffects = true;
 	Template.bAllowBonusWeaponEffects = true;
 
+	Template.AddShooterEffect(FullAutoPenalty());
+
 	Trigger = new class'X2AbilityTrigger_EventListener';
 	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
 	Trigger.ListenerData.EventID = 'ShadowOps_FullAuto2';
@@ -342,6 +346,24 @@ static function X2AbilityTemplate FullAuto2()
 	Template.CinescriptCameraType = "StandardGunFiring";
 
 	return Template;
+}
+
+static function X2Effect_Persistent FullAutoPenalty()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBCondition_AbilityName Condition;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddToHitModifier(default.FullAutoCumulativeHitModifier);
+	Effect.EffectName = 'FullAutoPenalty';
+
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.IncludeAbilityNames.AddItem('ShadowOps_FullAuto');
+	Condition.IncludeAbilityNames.AddItem('ShadowOps_FullAuto2');
+
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	return Effect;
 }
 
 simulated function FullAuto_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)

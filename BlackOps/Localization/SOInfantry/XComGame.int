@@ -30,10 +30,10 @@ LocPromotionPopupText="<Bullet/> This ability gets more useful in the late game,
 
 [ShadowOps_FullAuto X2AbilityTemplate]
 LocFriendlyName="Full Auto"
-LocLongDescription="Take a shot with an aim penalty of <Ability:ToHit/>. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo. Requires both actions. <Ability:SelfCooldown/> turn cooldown."
-LocHelpText="Take shots with an aim penalty of <Ability:ToHit/> until you miss or run out of ammo. Requires both actions."
+LocLongDescription="Take a shot with a <Ability:ToHit/> Aim penalty. If you hit the target, you take another shot on the target automatically. You keep taking shots until you miss or run out of ammo. The Aim penalty increases with each shot. Requires both actions. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Take shots until you miss or run out of ammo. There is a cumulative <Ability:ToHit/> Aim penalty on each shot. Requires both actions."
 LocFlyOverText="Full Auto"
-LocPromotionPopupText="<Bullet/> Full Auto can deal enormous amounts of damage with a full magazine and the right ammo.<br/><Bullet/> This ability Requires both actions to use. <br/><Bullet/> Full Auto requires <Ability:SelfAmmoCost/> ammo points, and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+LocPromotionPopupText="<Bullet/> Full Auto can deal enormous amounts of damage with a full magazine and the right ammo.<br/><Bullet/> This ability requires both actions to use. <br/><Bullet/> Full Auto has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
 [ShadowOps_FullAuto2 X2AbilityTemplate]
 LocFriendlyName="Full Auto"
