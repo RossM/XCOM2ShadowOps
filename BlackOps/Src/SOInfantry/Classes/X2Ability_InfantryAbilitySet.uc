@@ -9,7 +9,7 @@ var config int ZeroInOffenseBonus;
 var config int AdrenalineSurgeCritBonus, AdrenalineSurgeMobilityBonus, AdrenalineSurgeCooldown;
 var config int FortressDefenseModifier;
 var config int RifleSuppressionAimBonus;
-var config int TacticianConventionalDamage, TacticianMagneticDamage, TacticianBeamDamage;
+var config array<ExtShotModifierInfo> TacticianModifiers;
 var config array<name> SuppressionAbilities;
 var config WeaponDamageValue AirstrikeDamage;
 var config int AirstrikeCharges;
@@ -1365,9 +1365,7 @@ static function X2AbilityTemplate Tactician()
 	local X2AbilityTemplate Template;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddDamageModifier(default.TacticianConventionalDamage, eHit_Miss, 'conventional');
-	Effect.AddDamageModifier(default.TacticianMagneticDamage, eHit_Miss, 'magnetic');
-	Effect.AddDamageModifier(default.TacticianBeamDamage, eHit_Miss, 'beam');
+	Effect.Modifiers = default.TacticianModifiers;
 
 	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
@@ -1490,7 +1488,6 @@ static function X2AbilityTemplate Airstrike()
 	local X2Effect_ApplyFireToWorld			FireEffect;
 	local X2AbilityToHitCalc_StandardAim	StandardAim;
 	local X2AbilityMultiTarget_Cylinder		MultiTarget;
-	local X2Condition_UnitProperty			UnitProperty;
 
 	// Macro to do localisation and stuffs
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Airstrike');

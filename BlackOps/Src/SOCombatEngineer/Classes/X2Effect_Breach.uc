@@ -1,7 +1,13 @@
 class X2Effect_Breach extends X2Effect_ApplyWeaponDamage implements(XMBEffectInterface)
 	config(GameData_SoldierSkills);
 
-var config WeaponDamageValue ConventionalDamageValue, MagneticDamageValue, BeamDamageValue;
+struct ExtWeaponDamageValue
+{
+	var WeaponDamageValue DamageValue;
+	var name WeaponTech;
+};
+
+var config array<ExtWeaponDamageValue> DamageModifiers;
 
 function WeaponDamageValue GetBonusEffectDamageValue(XComGameState_Ability AbilityState, XComGameState_Item SourceWeapon, StateObjectReference TargetRef)
 {
@@ -9,10 +15,9 @@ function WeaponDamageValue GetBonusEffectDamageValue(XComGameState_Ability Abili
 	local X2WeaponTemplate WeaponTemplate;
 	local XComGameState_Unit SourceUnit;
 	local XComGameStateHistory History;
+	local int index;
 
 	History = `XCOMHISTORY;
-
-	DamageValue = default.ConventionalDamageValue;
 
 	SourceUnit = XComGameState_Unit(History.GetGameStateForObjectID(AbilityState.OwnerStateObject.ObjectID));
 	if ((SourceWeapon != none) &&
@@ -21,10 +26,9 @@ function WeaponDamageValue GetBonusEffectDamageValue(XComGameState_Ability Abili
 		WeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
 		if (WeaponTemplate != none)
 		{
-			if (WeaponTemplate.WeaponTech == 'magnetic')
-				DamageValue = default.MagneticDamageValue;
-			else if (WeaponTemplate.WeaponTech == 'beam')
-				DamageValue = default.BeamDamageValue;
+			index = DamageModifiers.Find('WeaponTech', WeaponTemplate.WeaponTech);
+			if (index != INDEX_NONE)
+				DamageValue = DamageModifiers[index].DamageValue;
 		}
 	}
 
@@ -37,6 +41,7 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 {
 	local XComGameState_Item SourceItem;
 	local X2WeaponTemplate WeaponTemplate;
+	local int index;
 
 	if (AbilityState != none)
 	{
@@ -51,15 +56,13 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 			WeaponTemplate = X2WeaponTemplate(SourceItem.GetMyTemplate());
 			if (WeaponTemplate != none)
 			{
-				TagValue = string(ConventionalDamageValue.Shred);
-				if (WeaponTemplate.WeaponTech == 'magnetic')
-					TagValue = string(MagneticDamageValue.Shred);
-				else if (WeaponTemplate.WeaponTech == 'beam')
-					TagValue = string(BeamDamageValue.Shred);
+				index = DamageModifiers.Find('WeaponTech', WeaponTemplate.WeaponTech);
+				if (index != INDEX_NONE)
+					TagValue = string(DamageModifiers[index].DamageValue.Shred);
 				return true;
 			}
 		}
-		TagValue = ConventionalDamageValue.Shred$"/"$MagneticDamageValue.Shred$"/"$BeamDamageValue.Shred;
+		TagValue = string(DamageModifiers[0].DamageValue.Shred);
 		return true;
 	}
 
