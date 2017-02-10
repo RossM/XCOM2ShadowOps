@@ -223,6 +223,18 @@ RandomNickNames_Male[1]="Green Man"
 RandomNickNames_Male[2]="Lion"
 RandomNickNames_Male[3]="Sandman"
 
+[ShadowOps_Hunter_LW2 X2SoldierClassTemplate]
+DisplayName="Hunter"
+ClassSummary="TODO"
+LeftAbilityTreeTitle="Marksman"
+RightAbilityTreeTitle="Tracker"
+
+[ShadowOps_Survivalist_LW2 X2SoldierClassTemplate]
+DisplayName="Survivalist"
+ClassSummary="TODO"
+LeftAbilityTreeTitle="Sentry"
+RightAbilityTreeTitle="Raider"
+
 ; === GTS ability templates ===
 
 [DamnGoodGroundUnlock X2SoldierAbilityUnlockTemplate]

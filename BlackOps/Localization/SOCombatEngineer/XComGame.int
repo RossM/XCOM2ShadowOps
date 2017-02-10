@@ -268,6 +268,18 @@ RandomNickNames[22]="Thunder"
 RandomNickNames[23]="Torque"
 RandomNickNames[24]="Wrench"
 
+[ShadowOps_CombatEngineer_LW2 X2SoldierClassTemplate]
+DisplayName="Combat Engineer"
+ClassSummary="Combat Engineers are experts at using grenades both offensively and defensively. If you want something blown up, torn down, or hidden in smoke, bring a Combat Engineer."
+LeftAbilityTreeTitle="Pioneer"
+RightAbilityTreeTitle="Sapper"
+
+[ShadowOps_Scrapper_LW2 X2SoldierClassTemplate]
+DisplayName="Scrapper"
+ClassSummary="TODO"
+LeftAbilityTreeTitle="Thug"
+RightAbilityTreeTitle="Brawler"
+
 ; === GTS ability templates ===
 
 [PackmasterUnlock X2SoldierAbilityUnlockTemplate]

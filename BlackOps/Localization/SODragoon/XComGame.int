@@ -252,6 +252,24 @@ RandomNickNames[22]="Unicorn"
 RandomNickNames_Male[0]="Orc"
 RandomNickNames_Female[0]="Siren"
 
+[ShadowOps_CombatEngineer_LW2 X2SoldierClassTemplate]
+DisplayName="Crusader"
+ClassSummary="TODO"
+LeftAbilityTreeTitle="Paladin"
+RightAbilityTreeTitle="Hospitaler"
+
+[ShadowOps_Dragoon_LW X2SoldierClassTemplate]
+DisplayName="Dragoon"
+ClassSummary="TODO"
+LeftAbilityTreeTitle="Lancer"
+RightAbilityTreeTitle="Fusilier"
+
+[ShadowOps_Ghost_LW2 X2SoldierClassTemplate]
+DisplayName="Ghost"
+ClassSummary="TODO"
+LeftAbilityTreeTitle="Wraith"
+RightAbilityTreeTitle="Banshee"
+
 ; === GTS ability templates ===
 
 [TacticalSenseUnlock X2SoldierAbilityUnlockTemplate]
