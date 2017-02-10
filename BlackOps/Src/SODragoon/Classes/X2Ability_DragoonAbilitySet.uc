@@ -984,6 +984,7 @@ static function X2AbilityTemplate Rocketeer_LW2()
 	
 	Effect = new class'XMBEffect_AddAbilityCharges';
 	Effect.AbilityNames = default.RocketeerLW2AbilityNames;
+	Effect.BonusCharges = 1;
 
 	Template = Passive('ShadowOps_Rocketeer_LW2', "img:///UILibrary_SODragoon.UIPerk_rocketeer", false, none);
 	Template.AddTargetEffect(Effect);

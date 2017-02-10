@@ -37,7 +37,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	local XComGameState_Ability AbilityState;
 	local XComGameStateHistory History;
 	local StateObjectReference ObjRef;
-	local int Charges;
+	local int Charges, NewCharges;
 	
 	NewUnit = XComGameState_Unit(kNewTargetState);
 	if (NewUnit == none)
@@ -56,11 +56,11 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 			Charges = bAllowUseAmmoAsCharges ? AbilityState.GetCharges() : AbilityState.iCharges;
 			if (MaxCharges < 0 || Charges < MaxCharges)
 			{
-				Charges += BonusCharges;
-				if (MaxCharges >= 0 && Charges > MaxCharges)
-					Charges = MaxCharges;
+				NewCharges = Charges + BonusCharges;
+				if (MaxCharges >= 0 && NewCharges > MaxCharges)
+					NewCharges = MaxCharges;
 
-				SetCharges(AbilityState, Charges, NewGameState);
+				AddCharges(AbilityState, NewCharges - Charges, NewGameState);
 			}
 		}
 	}
@@ -71,12 +71,15 @@ function bool IsValidAbility(XComGameState_Ability AbilityState)
 	return AbilityNames.Find(AbilityState.GetMyTemplateName()) != INDEX_NONE;
 }
 
-simulated function SetCharges(XComGameState_Ability Ability, int Charges, XComGameState NewGameState)
+simulated function AddCharges(XComGameState_Ability Ability, int Charges, XComGameState NewGameState)
 {
 	local XComGameState_Item Weapon;
 	local X2AbilityTemplate Template;
 
 	Template = Ability.GetMyTemplate();
+
+	`Log("[XMBEffect_AddAbilityCharges] Adding" @ Charges @ "charges to" @ Template.LocFriendlyName);
+
 	if (Template != None && Template.bUseAmmoAsChargesForHUD && bAllowUseAmmoAsCharges)
 	{
 		if (Ability.SourceAmmo.ObjectID > 0)
@@ -103,7 +106,7 @@ simulated function SetCharges(XComGameState_Ability Ability, int Charges, XComGa
 	else
 	{
 		Ability = XComGameState_Ability(NewGameState.CreateStateObject(Ability.class, Ability.ObjectID));
-		Ability.iCharges = Charges;
+		Ability.iCharges += Charges;
 		NewGameState.AddStateObject(Ability);
 	}
 }
