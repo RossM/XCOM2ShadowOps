@@ -8,7 +8,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 
 	`Log("Init UIInventory_Implants_BO");
 
-	if (`HQPRES.ScreenStack.IsNotInStack(class'UIArmory_Implants'))
+	if (`HQPRES.ScreenStack.IsNotInStack(class'UIArmory_Implants_BO'))
 	{
 		Unit = UIArmory_MainMenu(Movie.Pres.ScreenStack.GetScreen(class'UIArmory_MainMenu')).GetUnit();
 
@@ -27,7 +27,7 @@ simulated function OnReceiveFocus()
 
 	super.OnReceiveFocus();
 
-	if (`HQPRES.ScreenStack.IsNotInStack(class'UIArmory_Implants'))
+	if (`HQPRES.ScreenStack.IsNotInStack(class'UIArmory_Implants_BO'))
 	{
 		Unit = UIArmory_MainMenu(Movie.Pres.ScreenStack.GetScreen(class'UIArmory_MainMenu')).GetUnit();
 
