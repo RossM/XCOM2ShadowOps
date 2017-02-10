@@ -893,7 +893,7 @@ static function X2AbilityTemplate BullRush()
 {
 	local X2AbilityTemplate Template;
 	local X2Effect_ApplyWeaponDamage DamageEffect;
-	local X2Effect StunnedEffect;
+	local X2Effect_Persistent StunnedEffect;
 	local X2AbilityToHitCalc_StandardMelee ToHitCalc;
 
 	// Create a damage effect. X2Effect_ApplyWeaponDamage is used to apply all types of damage, not
@@ -912,7 +912,8 @@ static function X2AbilityTemplate BullRush()
 
 	// Create a stun effect that removes 2 actions and has a 100% chance of success if the attack hits.
 	StunnedEffect = class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, 100, false);
-	AddSecondaryEffect(Template, StunnedEffect);
+	StunnedEffect.VisualizationFn = EffectFlyOver_Visualization;
+	Template.AddTargetEffect(StunnedEffect);
 
 	// The default fire animation depends on the ability's associated weapon - shooting for a gun or 
 	// slashing for a sword. If the ability has no associated weapon, no animation plays. Use an
