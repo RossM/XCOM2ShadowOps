@@ -58,6 +58,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Rocketeer_LW2());
 	Templates.AddItem(EatThis());
 	Templates.AddItem(PurePassive('ShadowOps_DigitalWarfare', "img:///UILibrary_SODragoon.UIPerk_digitalwarfare", false));
+	Templates.AddItem(Inspiration());
 
 	return Templates;
 }
