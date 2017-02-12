@@ -20,7 +20,7 @@ var config int IronWillBonus;
 var config int SensorOverlaysCritBonus;
 var config int SuperchargeChargeBonus;
 var config array<int> ReverseEngineeringHackBonus;
-var config array<name> RocketeerLW2AbilityNames;
+var config array<name> RocketeerAbilityNames;
 var config int EatThisAimBonus, EatThisCritBonus, EatThisMaxTiles;
 var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
 
@@ -55,7 +55,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ReverseEngineering());
 	Templates.AddItem(Scout());
 	Templates.AddItem(Charge());
-	Templates.AddItem(Rocketeer_LW2());
 	Templates.AddItem(EatThis());
 	Templates.AddItem(PurePassive('ShadowOps_DigitalWarfare', "img:///UILibrary_SODragoon.UIPerk_digitalwarfare", false));
 	Templates.AddItem(Inspiration());
@@ -814,49 +813,6 @@ static function X2AbilityTemplate PuppetProtocol()
 	return Template;
 }
 
-static function X2AbilityTemplate Rocketeer()
-{
-	local X2AbilityTemplate						Template;
-	local X2AbilityTargetStyle                  TargetStyle;
-	local X2AbilityTrigger						Trigger;
-	local XMBEffect_AddItemChargesBySlot            ItemChargesEffect;
-	local X2Effect_Persistent					PersistentEffect;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Rocketeer');
-
-	// Icon Properties
-	Template.IconImage = "img:///UILibrary_SODragoon.UIPerk_rocketeer";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
-	Template.AbilityTriggers.AddItem(Trigger);
-
-	ItemChargesEffect = new class'XMBEffect_AddItemChargesBySlot';
-	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_HeavyWeapon);
-	Template.AddTargetEffect(ItemChargesEffect);
-
-	PersistentEffect = new class'X2Effect_Persistent';
-	PersistentEffect.EffectName = 'Rocketeer';
-	PersistentEffect.BuildPersistentEffect(1, true, true, true);
-	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage,,,Template.AbilitySourceName);
-	Template.AddTargetEffect(PersistentEffect);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	//  NOTE: No visualization on purpose!
-
-	Template.bCrossClassEligible = true;
-
-	return Template;
-}
-
 static function X2AbilityTemplate TacticalSense()
 {
 	local X2Effect_TacticalSense Effect;
@@ -978,17 +934,21 @@ static function X2AbilityTemplate Charge()
 	return Template;
 }
 
-static function X2AbilityTemplate Rocketeer_LW2()
+static function X2AbilityTemplate Rocketeer()
 {
 	local X2AbilityTemplate                 Template;
-	local XMBEffect_AddAbilityCharges		Effect;
+	local XMBEffect_AddAbilityCharges		ByNameEffect;
+	local XMBEffect_AddItemChargesBySlot	BySlotEffect;
 	
-	Effect = new class'XMBEffect_AddAbilityCharges';
-	Effect.AbilityNames = default.RocketeerLW2AbilityNames;
-	Effect.BonusCharges = 1;
+	Template = Passive('ShadowOps_Rocketeer', "img:///UILibrary_SODragoon.UIPerk_rocketeer", true, none);
 
-	Template = Passive('ShadowOps_Rocketeer_LW2', "img:///UILibrary_SODragoon.UIPerk_rocketeer", false, none);
-	Template.AddTargetEffect(Effect);
+	ByNameEffect = new class'XMBEffect_AddAbilityCharges';
+	ByNameEffect.AbilityNames = default.RocketeerAbilityNames;
+	Template.AddTargetEffect(ByNameEffect);
+
+	BySlotEffect = new class'XMBEffect_AddItemChargesBySlot';
+	BySlotEffect.ApplyToSlots.AddItem(eInvSlot_HeavyWeapon);
+	Template.AddTargetEffect(BySlotEffect);
 
 	return Template;
 }

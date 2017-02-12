@@ -58,10 +58,10 @@ LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or ev
 
 [ShadowOps_Rocketeer X2AbilityTemplate]
 LocFriendlyName="Rocketeer"
-LocLongDescription="Your heavy weapon gains a bonus use."
-LocHelpText="Your heavy weapon gains a bonus use."
+LocLongDescription="Your rocket launcher or heavy weapon gains a bonus use."
+LocHelpText="Your rocket launcher or heavy weapon gains a bonus use."
 LocFlyOverText="Rocketeer"
-LocPromotionPopupText="<Bullet/> Heavy weapons are weapons such as the rocket launcher that can only be mounted on an EXO or WAR suit.<br/>"
+LocPromotionPopupText="<Bullet/> Heavy weapons are weapons such as the shredder gun that can only be mounted on an EXO or WAR suit.<br/>"
 
 [ShadowOps_Vanish X2AbilityTemplate]
 LocFriendlyName="Vanish"
@@ -160,13 +160,6 @@ LocHelpText="Take a standard action after dashing."
 LocFlyOverText="Charge!"
 LocPromotionPopupText="<Bullet/> Charge! has one charge.<br/>"
 
-[ShadowOps_Rocketeer_LW2 X2AbilityTemplate]
-LocFriendlyName="Rocketeer"
-LocLongDescription="Your heavy weapon gains a bonus use."
-LocHelpText="Your heavy weapon gains a bonus use."
-LocFlyOverText="Rocketeer"
-LocPromotionPopupText="<Bullet/> Heavy weapons are weapons such as the rocket launcher that can only be mounted on an EXO or WAR suit.<br/>"
-
 [ShadowOps_EatThis X2AbilityTemplate]
 LocFriendlyName="Eat This!"
 LocLongDescription="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range."
@@ -252,23 +245,17 @@ RandomNickNames[22]="Unicorn"
 RandomNickNames_Male[0]="Orc"
 RandomNickNames_Female[0]="Siren"
 
-[ShadowOps_Crusader_LW2 X2SoldierClassTemplate]
-DisplayName="Crusader"
-ClassSummary="TODO"
-LeftAbilityTreeTitle="Paladin"
-RightAbilityTreeTitle="Hospitaler"
-
 [ShadowOps_Dragoon_LW2 X2SoldierClassTemplate]
 DisplayName="Dragoon"
 ClassSummary="TODO"
+LeftAbilityTreeTitle="Paladin"
+RightAbilityTreeTitle="Ghost"
+
+[ShadowOps_Heavy_LW2 X2SoldierClassTemplate]
+DisplayName="Heavy"
+ClassSummary="TODO"
 LeftAbilityTreeTitle="Lancer"
 RightAbilityTreeTitle="Fusilier"
-
-[ShadowOps_Ghost_LW2 X2SoldierClassTemplate]
-DisplayName="Ghost"
-ClassSummary="TODO"
-LeftAbilityTreeTitle="Wraith"
-RightAbilityTreeTitle="Banshee"
 
 ; === GTS ability templates ===
 
