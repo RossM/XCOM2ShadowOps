@@ -151,6 +151,13 @@ LocHelpText="Become immune to death and incapacitation until the end of your nex
 LocFlyOverText="Last Stand"
 LocPromotionPopupText="<Bullet/> You can still take damage, but it will never reduce you below 1 hp.<br/><Bullet/> You can't be knocked unconscious, disoriented, or otherwise incapacitated.<br/>"
 
+[ShadowOps_StingShot X2AbilityTemplate]
+LocFriendlyName="Sting Shot"
+LocLongDescription="Make a special shot with a <Ability:+ToHit:ShadowOps_StingShot_Bonuses/> Aim modifier that deals half damage but may panic the target. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Make a special shot that deals half damage but may panic the target."
+LocFlyOverText="Sting Shot"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Hunter X2SoldierClassTemplate]

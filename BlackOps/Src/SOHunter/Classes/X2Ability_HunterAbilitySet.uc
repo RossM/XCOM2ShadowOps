@@ -18,8 +18,9 @@ var config float ButcherDamageMultiplier;
 var config int StalkerMobilityBonus, StalkerOffenseBonus;
 var config int LastStandDuration, LastStandCharges;
 var config int SurvivalInstinctDefenseBonus, SurvivalInstinctCritBonus;
+var config int StingShotHitModifier, StingShotPercentDamageModifier, StingShotBasePanicChance;
 
-var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown;
+var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, StingShotCooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -51,6 +52,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Stalker());
 	Templates.AddItem(LastStand());
 	Templates.AddItem(SurvivalInstinct());
+	Templates.AddItem(StingShot());
 
 	return Templates;
 }
@@ -978,4 +980,44 @@ static function X2AbilityTemplate SurvivalInstinct()
 	
 	// Create the template using a helper function
 	return Passive('ShadowOps_SurvivalInstinct', "img:///UILibrary_SOHunter.UIPerk_survivalinstinct", true, Effect);
+}
+
+static function X2AbilityTemplate StingShot()
+{
+	local X2AbilityTemplate Template, PanicTemplate;
+	local XMBEffect_ConditionalBonus BonusEffect;
+	local X2AbilityToHitCalc_StatCheck_UnitVsUnit ToHitCalc;
+	local XMBAbilityTrigger_EventListener EventListener;
+
+	Template = Attack('ShadowOps_StingShot', "img:///UILibrary_SOHunter.UIPerk_stingshot", true, none,, eCost_WeaponConsumeAll);
+	AddCooldown(Template, default.StingShotCooldown);
+
+	BonusEffect = AddBonusPassive(Template);
+	BonusEffect.AddPercentDamageModifier(default.StingShotPercentDamageModifier);
+	BonusEffect.AddToHitModifier(default.StingShotHitModifier);
+
+	Template.PostActivationEvents.AddItem('StingShot');
+
+	PanicTemplate = TargetedDebuff('ShadowOps_StingShotPanic', "img:///UILibrary_SOHunter.UIPerk_stingshot", false, class'X2StatusEffects'.static.CreatePanickedStatusEffect(),, eCost_None);
+	PanicTemplate.bSkipFireAction = true;
+	PanicTemplate.SourceMissSpeech = '';
+	PanicTemplate.SourceHitSpeech = '';
+
+	PanicTemplate.AbilityTriggers.Length = 0;
+	EventListener = new class'XMBAbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'StingShot';
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	EventListener.AbilityTargetConditions.AddItem(default.HitCondition);
+	PanicTemplate.AbilityTriggers.AddItem(EventListener);
+	
+	HidePerkIcon(PanicTemplate);
+	AddSecondaryAbility(Template, PanicTemplate);
+
+	ToHitCalc = new class'X2AbilityToHitCalc_StatCheck_UnitVsUnit';
+	ToHitCalc.AttackerStat = eStat_Offense;
+	ToHitCalc.BaseValue = default.StingShotBasePanicChance;
+	PanicTemplate.AbilityToHitCalc = ToHitCalc;
+
+	return Template;
 }

@@ -783,6 +783,25 @@ static function AddSecondaryAbility(X2AbilityTemplate Template, X2AbilityTemplat
 	class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().AddAbilityTemplate(SecondaryTemplate);
 }
 
+static function XMBEffect_ConditionalBonus AddBonusPassive(X2AbilityTemplate Template, name DataName = name(Template.DataName $ "_Bonuses"))
+{
+	local X2AbilityTemplate PassiveTemplate;
+	local XMBEffect_ConditionalBonus BonusEffect;
+	local XMBCondition_AbilityName Condition;
+
+	BonusEffect = new class'XMBEffect_ConditionalBonus';
+	Condition = new class'XMBCondition_AbilityName';
+
+	Condition.IncludeAbilityNames.AddItem(Template.DataName);
+	BonusEffect.AbilityTargetConditions.AddItem(Condition);
+
+	PassiveTemplate = Passive(DataName, Template.IconImage, false, BonusEffect);
+	AddSecondaryAbility(Template, PassiveTemplate);
+	HidePerkIcon(PassiveTemplate);
+
+	return BonusEffect;
+}
+
 // Helper function for creating an X2Condition that requires a maximum distance between shooter and target.
 simulated static function X2Condition_UnitProperty TargetWithinTiles(int Tiles)
 {

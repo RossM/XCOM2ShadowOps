@@ -48,6 +48,7 @@ struct ExtShotModifierInfo
 	var ShotModifierInfo ModInfo;
 	var name WeaponTech;
 	var name Type;
+	var bool bPercent;
 };
 
 
@@ -118,6 +119,20 @@ function AddDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_
 	ExtModInfo.ModInfo.Value = Value;
 	ExtModInfo.WeaponTech = WeaponTech;
 	ExtModInfo.Type = 'Damage';
+	Modifiers.AddItem(ExtModInfo);
+}	
+
+// Adds a modifier to the damage of attacks made by the unit with the effect.
+function AddPercentDamageModifier(int Value, optional EAbilityHitResult ModType = eHit_Success, optional name WeaponTech = '')
+{
+	local ExtShotModifierInfo ExtModInfo;
+
+	ExtModInfo.ModInfo.ModType = ModType;
+	ExtModInfo.ModInfo.Reason = FriendlyName;
+	ExtModInfo.ModInfo.Value = Value;
+	ExtModInfo.WeaponTech = WeaponTech;
+	ExtModInfo.Type = 'Damage';
+	ExtModInfo.bPercent = true;
 	Modifiers.AddItem(ExtModInfo);
 }	
 
@@ -232,7 +247,10 @@ function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGa
 		if ((ExtModInfo.ModInfo.ModType == eHit_Success && class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult)) ||
 			ExtModInfo.ModInfo.ModType == AppliedData.AbilityResultContext.HitResult)
 		{
-			BonusDamage += ExtModInfo.ModInfo.Value;
+			if (ExtModInfo.bPercent)
+				BonusDamage += ExtModInfo.ModInfo.Value * CurrentDamage / 100;
+			else
+				BonusDamage += ExtModInfo.ModInfo.Value;
 		}
 	}
 
