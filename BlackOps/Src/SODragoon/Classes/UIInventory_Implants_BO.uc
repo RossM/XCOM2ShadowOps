@@ -228,10 +228,15 @@ simulated function InstallImplant()
 	local XComGameState_Unit UpdatedUnit;
 	local XComGameState_Item UpdatedImplant;
 	local XComGameState_HeadquartersXCom UpdatedHQ;
+	local UIArmory Armory;
 
 	UpdatedState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Install Personal Combat Sim");
 
-	UnitRef = UIArmory_Implants(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory_Implants')).GetUnit().GetReference();
+	Armory = UIArmory_Implants(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory_Implants'));
+	if (Armory == none)
+		Armory = UIArmory_MainMenu(Movie.Pres.ScreenStack.GetScreen(class'UIArmory_MainMenu'));
+	
+	UnitRef = Armory.GetUnit().GetReference();
 	UpdatedHQ = XComGameState_HeadquartersXCom(UpdatedState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 	UpdatedUnit = XComGameState_Unit(UpdatedState.CreateStateObject(class'XComGameState_Unit', UnitRef.ObjectID));
 	UpdatedState.AddStateObject(UpdatedHQ);
