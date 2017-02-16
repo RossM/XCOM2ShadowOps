@@ -204,6 +204,13 @@ LocHelpText="Launching or throwing a smoke grenade as your first action does not
 LocFlyOverText="Smoke and Mirrors"
 LocPromotionPopupText="<Bullet/> TODO. <br/>"
 
+[ShadowOps_BareKnuckle X2AbilityTemplate]
+LocFriendlyName="Bare Knuckle"
+LocLongDescription="Your melee attacks deal <Ability:+Damage/> damage."
+LocHelpText="Your melee attacks deal <Ability:+Damage/> damage."
+LocFlyOverText="Bare Knuckle"
+LocPromotionPopupText="<Bullet/> TODO. <br/>"
+
 ; === Class templates ===
 
 [ShadowOps_CombatEngineer X2SoldierClassTemplate]

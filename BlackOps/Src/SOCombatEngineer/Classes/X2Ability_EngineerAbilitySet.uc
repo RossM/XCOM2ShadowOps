@@ -18,6 +18,7 @@ var config int AnatomistDamageBonus, AnatomistMaxKills;
 var config float HeatAmmoDamageMultiplier;
 var config WeaponDamageValue BullRushDamage;
 var config int BullRushHitModifier;
+var config int BareKnuckleDamageBonus;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -57,6 +58,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ExtraMunitions());
 	Templates.AddItem(BullRush());
 	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false));
+	Templates.AddItem(BareKnuckle());
 
 	return Templates;
 }
@@ -921,4 +923,19 @@ static function X2AbilityTemplate BullRush()
 	Template.CustomFireAnim = 'FF_Melee';
 
 	return Template;
+}
+
+static function X2AbilityTemplate BareKnuckle()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBCondition_AbilityProperty Condition;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddDamageModifier(default.BareKnuckleDamageBonus);
+
+	Condition = new class'XMBCondition_AbilityProperty';
+	Condition.bRequireMelee = true;
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	return Passive('ShadowOps_BareKnuckle', "img:///UILibrary_SOCombatEngineer.UIPerk_bareknuckle", false, Effect);
 }

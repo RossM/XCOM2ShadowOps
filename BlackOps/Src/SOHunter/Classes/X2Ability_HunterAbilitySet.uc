@@ -1029,12 +1029,20 @@ static function X2AbilityTemplate ThisOnesMine()
 	local X2AbilityTemplate Template, PassiveTemplate;
 	local X2Effect_Persistent MarkEffect;
 	local X2Effect_ThisOnesMine BonusEffect;
+	local X2Condition_Visibility TargetVisibilityCondition;
 
 	MarkEffect = new class'X2Effect_Persistent';
 	MarkEffect.EffectName = 'ThisOnesMine';
 	MarkEffect.BuildPersistentEffect(default.ThisOnesMineDuration, false, true, false, eGameRule_PlayerTurnBegin);
 	Template = TargetedDebuff('ShadowOps_ThisOnesMine', "img:///UILibrary_SOHunter.UIPerk_thisonesmine", true, MarkEffect,, eCost_Free);
 	AddCooldown(Template, default.ThisOnesMineCooldown);
+	Template.ConcealmentRule = eConceal_Always;
+
+	TargetVisibilityCondition = new class'X2Condition_Visibility';
+	TargetVisibilityCondition.bRequireGameplayVisible = true;
+	TargetVisibilityCondition.bAllowSquadsight = true;
+	Template.AbilityTargetConditions.RemoveItem(default.GameplayVisibilityCondition);
+	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
 
 	BonusEffect = new class'X2Effect_ThisOnesMine';
 	BonusEffect.AddToHitModifier(default.ThisOnesMineCritBonus, eHit_Crit);
