@@ -16,32 +16,6 @@ event OnInit(UIScreen Screen)
 
 	// This needs to be checked for each new save loaded
 	CreateStartingItems();
-	// PerformUpgrades();
-}
-
-function PerformUpgrades()
-{
-	local XComGameState NewGameState;
-	local XComGameState_ShadowOpsUpgradeInfo UpgradeInfo;
-	local XComGameStateHistory History;
-	local bool bChanged;
-
-	History = `XCOMHISTORY;
-
-	foreach History.IterateByClassType(class'XComGameState_ShadowOpsUpgradeInfo', UpgradeInfo)
-	{
-		break;
-	}
-
-	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Shadow Ops Upgrades");
-
-	UpgradeInfo = XComGameState_ShadowOpsUpgradeInfo(NewGameState.CreateStateObject(class'XComGameState_ShadowOpsUpgradeInfo', UpgradeInfo != none ? UpgradeInfo.ObjectId : -1));
-	NewGameState.AddStateObject(UpgradeInfo);
-
-	if (bChanged)
-		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
-	else
-		History.CleanupPendingGameState(NewGameState);
 }
 
 // This function fixes up savefiles that are missing a starting item because the mod wasn't installed
