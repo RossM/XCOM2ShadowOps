@@ -158,6 +158,13 @@ LocHelpText="Make a special shot that deals half damage but may panic the target
 LocFlyOverText="Sting Shot"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
+[ShadowOps_ThisOnesMine X2AbilityTemplate]
+LocFriendlyName="This One's Mine"
+LocLongDescription="Mark a target, giving you <Ability:+Crit:ShadowOps_ThisOnesMine_Passive/> Crit chance and <Ability:+Defense:ShadowOps_ThisOnesMine_Passive/> Defense against it for 3 turns. This ability doesn't cost an action. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Mark a target, giving you <Ability:+Crit:ShadowOps_ThisOnesMine_Passive/> Crit chance and <Ability:+Defense:ShadowOps_ThisOnesMine_Passive/> Defense against it for 3 turns."
+LocFlyOverText="This One's Mine"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Hunter X2SoldierClassTemplate]

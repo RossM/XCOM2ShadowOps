@@ -19,8 +19,9 @@ var config int StalkerMobilityBonus, StalkerOffenseBonus;
 var config int LastStandDuration, LastStandCharges;
 var config int SurvivalInstinctDefenseBonus, SurvivalInstinctCritBonus;
 var config int StingShotHitModifier, StingShotPercentDamageModifier, StingShotBasePanicChance;
+var config int ThisOnesMineCritBonus, ThisOnesMineDefenseBonus, ThisOnesMineDuration;
 
-var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, StingShotCooldown;
+var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, StingShotCooldown, ThisOnesMineCooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -53,6 +54,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(LastStand());
 	Templates.AddItem(SurvivalInstinct());
 	Templates.AddItem(StingShot());
+	Templates.AddItem(ThisOnesMine());
 
 	return Templates;
 }
@@ -998,7 +1000,7 @@ static function X2AbilityTemplate StingShot()
 
 	Template.PostActivationEvents.AddItem('StingShot');
 
-	PanicTemplate = TargetedDebuff('ShadowOps_StingShotPanic', "img:///UILibrary_SOHunter.UIPerk_stingshot", false, class'X2StatusEffects'.static.CreatePanickedStatusEffect(),, eCost_None);
+	PanicTemplate = TargetedDebuff('ShadowOps_StingShot_Panic', "img:///UILibrary_SOHunter.UIPerk_stingshot", false, class'X2StatusEffects'.static.CreatePanickedStatusEffect(),, eCost_None);
 	PanicTemplate.bSkipFireAction = true;
 	PanicTemplate.SourceMissSpeech = '';
 	PanicTemplate.SourceHitSpeech = '';
@@ -1018,6 +1020,30 @@ static function X2AbilityTemplate StingShot()
 	ToHitCalc.AttackerStat = eStat_Offense;
 	ToHitCalc.BaseValue = default.StingShotBasePanicChance;
 	PanicTemplate.AbilityToHitCalc = ToHitCalc;
+
+	return Template;
+}
+
+static function X2AbilityTemplate ThisOnesMine()
+{
+	local X2AbilityTemplate Template, PassiveTemplate;
+	local X2Effect_Persistent MarkEffect;
+	local X2Effect_ThisOnesMine BonusEffect;
+
+	MarkEffect = new class'X2Effect_Persistent';
+	MarkEffect.EffectName = 'ThisOnesMine';
+	MarkEffect.BuildPersistentEffect(default.ThisOnesMineDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	Template = TargetedDebuff('ShadowOps_ThisOnesMine', "img:///UILibrary_SOHunter.UIPerk_thisonesmine", true, MarkEffect,, eCost_Free);
+	AddCooldown(Template, default.ThisOnesMineCooldown);
+
+	BonusEffect = new class'X2Effect_ThisOnesMine';
+	BonusEffect.AddToHitModifier(default.ThisOnesMineCritBonus, eHit_Crit);
+	BonusEffect.AddToHitAsTargetModifier(-default.ThisOnesMineDefenseBonus, eHit_Success);
+	BonusEffect.RequiredEffects.AddItem(MarkEffect.EffectName);
+
+	PassiveTemplate = Passive('ShadowOps_ThisOnesMine_Passive', "img:///UILibrary_SOHunter.UIPerk_thisonesmine", false, BonusEffect);
+	HidePerkIcon(PassiveTemplate);
+	AddSecondaryAbility(Template, PassiveTemplate);
 
 	return Template;
 }
