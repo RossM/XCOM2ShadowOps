@@ -252,7 +252,7 @@ LeftAbilityTreeTitle="Paladin"
 RightAbilityTreeTitle="Ghost"
 
 [ShadowOps_Heavy_LW2 X2SoldierClassTemplate]
-DisplayName="Heavy"
+DisplayName="Knight"
 ClassSummary="TODO"
 LeftAbilityTreeTitle="Lancer"
 RightAbilityTreeTitle="Fusilier"
