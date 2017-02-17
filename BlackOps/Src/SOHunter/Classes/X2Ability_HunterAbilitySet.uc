@@ -429,6 +429,7 @@ static function X2AbilityTemplate Fade()
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 	StealthEffect.EffectAddedFn = Fade_EffectAdded;
+	StealthEffect.EffectRemovedFn = Fade_EffectRemoved;
 
 	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_SOHunter.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, eCost_Single);
 	AddCooldown(Template, default.FadeCooldown);
@@ -457,6 +458,15 @@ static function Fade_EffectAdded(X2Effect_Persistent PersistentEffect, const out
 	EffectObj = EffectGameState;
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(EffectGameState.ApplyEffectParameters.TargetStateObjectRef.ObjectID));
 	EventMgr.RegisterForEvent(EffectObj, 'ObjectMoved', EffectGameState.GenerateCover_ObjectMoved, ELD_OnStateSubmitted, , UnitState);
+}
+
+static function Fade_EffectRemoved(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState NewGameState, bool bCleansed)
+{
+	local XComGameState_Unit UnitState;
+
+	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ApplyEffectParameters.TargetStateObjectRef.ObjectID));
+	if (UnitState != none)
+		`XEVENTMGR.TriggerEvent('EffectBreakUnitConcealment', UnitState, UnitState, NewGameState);
 }
 
 
