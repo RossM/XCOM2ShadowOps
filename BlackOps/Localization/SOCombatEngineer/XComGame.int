@@ -173,8 +173,8 @@ LocPromotionPopupText="<Bullet/> Mayhem also increases the damage from burning, 
 
 [ShadowOps_Saboteur X2AbilityTemplate]
 LocFriendlyName="Saboteur"
-LocLongDescription="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects such as relays and gas tanks."
-LocHelpText="Your standard <Ability:WeaponName/> attacks deal <Ability:+Damage> damage to inanimate objects such as relays and gas tanks."
+LocLongDescription="Your standard <Ability:WeaponName/> attacks deal <Ability:Damage>% more damage to inanimate objects such as relays and gas tanks."
+LocHelpText="Your standard <Ability:WeaponName/> attacks deal <Ability:Damage>% more damage to inanimate objects such as relays and gas tanks."
 LocFlyOverText="Saboteur"
 LocPromotionPopupText="<Bullet/> Saboteur doesn't affect grenades or special attacks.<br/>"
 

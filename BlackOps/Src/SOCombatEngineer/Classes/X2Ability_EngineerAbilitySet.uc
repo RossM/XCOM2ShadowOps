@@ -844,7 +844,7 @@ static function X2AbilityTemplate Saboteur()
 	local XMBCondition_AbilityName AbilityNameCondition;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddDamageModifier(default.SaboteurDamageBonus);
+	Effect.AddPercentDamageModifier(default.SaboteurDamageBonus);
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
 	UnitPropertyCondition.ExcludeAlive = true;
