@@ -105,7 +105,8 @@ simulated function UpdateData()
 		{
 			UnitName = Caps(Unit.GetName(eNameType_RankFull));
 			UnitPersonnelType = eUIPersonnel_Soldiers;
-			UnitTypeImage = class'UIUtilities_Image'.static.GetRankIcon(Unit.GetRank(), Unit.GetSoldierClassTemplateName());
+			//UnitTypeImage = class'UIUtilities_Image'.static.GetRankIcon(Unit.GetRank(), Unit.GetSoldierClassTemplateName());
+			UnitTypeImage = class'LWUtilities_Ranks'.static.GetRankIcon(Unit.GetRank(), Unit.GetSoldierClassTemplateName(), Unit);
 		}
 		else if(Unit.IsAnEngineer())
 		{

@@ -311,7 +311,11 @@ function string GetLocalizedCategory()
 	case 'heal':        return class'XGLocalizedData'.default.UtilityCatHeal;
 	case 'psidefense':	return class'XGLocalizedData'.default.UtilityCatPsiDefense;
 	case 'skulljack':	return class'XGLocalizedData'.default.UtilityCatSkulljack;
-	default:            return class'XGLocalizedData'.default.UtilityCatUnknown;
+	default:           
+		if(GetItemUnknownUtilityCategory() != "")  // LWS: add condition to try and pull from helper function
+			return GetItemUnknownUtilityCategory();
+		else
+			 return class'XGLocalizedData'.default.UtilityCatUnknown;
 	}
 }
 function array<int> GetItemStats()

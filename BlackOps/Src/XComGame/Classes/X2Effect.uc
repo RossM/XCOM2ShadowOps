@@ -5,6 +5,13 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Mods
+// tracktwo - Disable immunity flyover visuals if the unit is "immune" to the damage by virtue 
+//            of already being affected by it. This is only used in certain behavior nodes to
+//            allow scampering to bypass the hardcoded limitation that AI won't enter any 
+//            hazard tiles.
+
 class X2Effect extends Object
 	abstract
 	native(Core)
@@ -208,6 +215,9 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 	local bool bIsFirstImmunityVisualized;
 	local bool bShouldShowImmunity;
 	local X2Action_TimedWait WaitAction;
+    local Name DamageType; // LWS Added
+    local bool HasAllEffects; // LWS Added
+    local XComGameState_Unit Unit; // LWS Added
 
 	if (DelayVisualizationSec > 0.0f)
 	{
@@ -221,6 +231,29 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 		bIsFirstImmunityVisualized = X2Effect_Persistent(self).IsFirstMatchingEffectInEventChain(VisualizeGameState);
 	}
 	bShouldShowImmunity = bIsFirstImmunityVisualized && ((bShowImmunity && EffectApplyResult == 'AA_UnitIsImmune') || (bShowImmunityAnyFailure && EffectApplyResult != 'AA_Success'));
+
+    // LWS Mods: Don't show immunity if the unit is already affected by the damage types in question. See also the
+    // changes in XGAIBehavior: by temporarily setting the units as immune to hazards they are already affected by
+    // we can get them to scamper through hazard tiles instead of standing out in the open like a bunch of dummies.
+    Unit = XComGameState_Unit(BuildTrack.StateObject_NewState);
+    HasAllEffects = true;
+    if (Unit != none && bShouldShowImmunity)
+    {
+        foreach DamageTypes(DamageType)
+        {
+            if (!Unit.IsAlreadyTakingEffectDamage(DamageType))
+            {
+                HasAllEffects = false;
+                break;
+            }
+        }
+
+        if (HasAllEffects)
+        {
+            bShouldShowImmunity = false;
+        }
+    }
+    // END LWS Mods
 
 	if (bShouldShowImmunity && XComGameState_Unit(BuildTrack.StateObject_NewState) != none)
 	{

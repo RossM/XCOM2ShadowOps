@@ -5,6 +5,7 @@
 //           
 //  Game state information for any active X2Effects currently present in the tactical game.
 //
+//  LWS : Added ability to ApplyOnEffectFn when refreshing an effect
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
@@ -347,6 +348,7 @@ function OnRefresh(EffectAppliedData NewApplyEffectParameters, XComGameState New
 	local XComGameStateContext_Ability AbilityContext;
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityMultiTarget_BurstFire BurstFire;
+	local XComGameState_BaseObject Target;  // LWS Added
 
 	EffectTemplate = GetX2Effect();
 
@@ -366,6 +368,30 @@ function OnRefresh(EffectAppliedData NewApplyEffectParameters, XComGameState New
 				if (BurstFire != none)
 				{
 					iStacks += BurstFire.NumExtraShots;
+				}
+			}
+		}
+	}
+
+	//LWS Added
+	if (X2Effect_PersistentStatChange(EffectTemplate) != none && X2Effect_PersistentStatChange(EffectTemplate).bForceReapplyOnRefresh)
+	{
+		if ( EffectTemplate.EffectAddedFn != none)
+		{
+			if (NewApplyEffectParameters.TargetStateObjectRef.ObjectID > 0)
+			{
+				Target = NewGameState.GetGameStateForObjectID(NewApplyEffectParameters.TargetStateObjectRef.ObjectID);
+				if (Target == none)
+				{
+					Target = XComGameState_Unit(NewGameState.CreateStateObject(class' XComGameState_Unit', NewApplyEffectParameters.TargetStateObjectRef.ObjectID));
+					if (Target != none)
+					{
+						NewGameState.AddStateObject(Target);
+					}
+				}
+				if (Target != none)
+				{
+					EffectTemplate.EffectAddedFn (EffectTemplate, NewApplyEffectParameters, Target, NewGameState);
 				}
 			}
 		}

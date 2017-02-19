@@ -4,9 +4,21 @@
 //  PURPOSE: This object represents the instance data for X-Com's HQ in the 
 //           X-Com 2 strategy game
 //           
+// LWS		 Updated to prevent units with eStatus_OnMission from having gear stripped
+//			 Updated to make soldiers with eStatus_OnMission not be returned in GetDeployableSoldiers
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Mods:
+//
+// Tracktwo: GetSoldierEvents(): Call a new GetDisplayName() function for Rookie Training projects rather than
+//           directly using the new class template. Allows subclasses to override and avoids enormous log spam
+//           about accesses to None.
+//           GetScienceScore(): Trigger an event to let mods apply modifiers to the science rate.
+// tracktwo: GetCompletedResearchTechs(): Remove duplicate tech IDs from the returned list. Avoids listing the
+//           same repeatable tech multiple times in the archives.
+
 class XComGameState_HeadquartersXCom extends XComGameState_Airship 
 	native(Core) 
 	config(GameData)
@@ -401,12 +413,13 @@ static function SetUpHeadquarters(XComGameState StartState, optional bool bTutor
 		if (default.PossibleStartingRegions.Find(IterateRegion.GetMyTemplateName()) != INDEX_NONE)
 		{
 			AllStartingRegions.AddItem(IterateRegion);
-		}
 
-		// Try to find an optimal starting region
-		if(IterateRegion.CanBeStartingRegion(StartState))
-		{
-			BestStartingRegions.AddItem(IterateRegion);
+			// Try to find an optimal starting region
+			//if(IterateRegion.CanBeStartingRegion(StartState))
+			if (class'XComGameState_RegionLink'.static.IsEligibleStartRegion(StartState, IterateRegion)) // LWS: replacement to allow configurability for start regions
+			{
+				BestStartingRegions.AddItem(IterateRegion);
+			}
 		}
 	}
 
@@ -1936,7 +1949,8 @@ function array<XComGameState_Unit> GetSoldiers(optional bool bDontIncludeSquad =
 		{
 			if (Soldier.IsSoldier() && !Soldier.IsDead())
 			{
-				if(!bDontIncludeSquad || (bDontIncludeSquad && !IsUnitInSquad(Soldier.GetReference())))
+				// LWS: added condition to not retrieve soldiers with eStatus_OnMission when bDontIncludeSquad is true
+				if(!bDontIncludeSquad || (bDontIncludeSquad && !IsUnitInSquad(Soldier.GetReference()) && Soldier.GetStatus() != eStatus_OnMission))
 				{
 					Soldiers.AddItem(Soldier);
 				}
@@ -1960,7 +1974,7 @@ function array<XComGameState_Unit> GetDeployableSoldiers(optional bool bDontIncl
 
 		if(Soldier != none)
 		{
-			if(Soldier.IsSoldier() && Soldier.IsAlive() && (Soldier.GetStatus() == eStatus_Active || Soldier.GetStatus() == eStatus_PsiTraining || 
+			if(Soldier.IsSoldier() && Soldier.IsAlive() && Soldier.GetStatus() != eStatus_OnMission && (Soldier.GetStatus() == eStatus_Active || Soldier.GetStatus() == eStatus_PsiTraining || 
 				((bAllowWoundedSoldiers || Soldier.IgnoresInjuries()) && Soldier.IsInjured())))
 			{
 				if(!bDontIncludeSquad || (bDontIncludeSquad && !IsUnitInSquad(Soldier.GetReference())))
@@ -2301,6 +2315,7 @@ function int GetScienceScore(optional bool bAddLabBonus = false)
 	local XComGameState_Unit Scientist;
 	local XComGameState_FacilityXCom FacilityState;
 	local int idx, Score;
+	local array<X2DownloadableContentInfo> DLCInfos;
 
 	Score = default.XComHeadquarters_StartingScienceScore;
 	Score += BonusScienceScore;
@@ -2327,6 +2342,13 @@ function int GetScienceScore(optional bool bAddLabBonus = false)
 		{
 			Score += FacilityState.GetMyTemplate().ScienceBonus;
 		}
+	}
+
+	// LWS MODS: Allow mods to adjust the science score
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	for(idx = 0; idx < DLCInfos.Length; ++idx)
+	{
+		Score += DLCInfos[idx].GetScienceScoreMod(bAddLabBonus);
 	}
 
 	return Score;
@@ -5333,7 +5355,26 @@ function array<StateObjectReference> GetCompletedResearchTechs()
 			CompletedTechs.AddItem(TechState.GetReference());
 	}
 
+	// LWS mods: Strip duplicate entries before returning - some tech can be repeated multiple times, but we don't
+	// need to spam the archives with 15 ADVENT Datapads.
+	CompletedTechs.Sort(SortTechById);
+	for (idx = CompletedTechs.Length - 1; idx > 0; --idx)
+	{
+		if (CompletedTechs[idx].ObjectID == CompletedTechs[idx-1].ObjectID)
+		{
+			CompletedTechs.Remove(idx, 1);
+		}
+	}
+
 	return CompletedTechs;
+}
+
+function int SortTechById(StateObjectReference RefA, StateObjectReference RefB)
+{
+	if (RefA.ObjectID < RefB.ObjectID)
+		return 1;
+
+	return RefB.ObjectID < RefA.ObjectID ? -1 : 0;
 }
 
 //---------------------------------------------------------------------------------------
@@ -6601,7 +6642,8 @@ function GetSoldierEvents(out array<HQEvent> arrEvents)
 		if (TrainProject != none)
 		{			
 			UnitState = XComGameState_Unit(History.GetGameStateForObjectID(TrainProject.ProjectFocus.ObjectID));
-			kEvent.Data = Caps(TrainProject.GetTrainingClassTemplate().DisplayName) @ TrainRookieEventLabel @ UnitState.GetName(eNameType_RankFull);
+            // LWS Mod: Replace GetTrainingClassTemplate().DisplayName with new GetDisplayName() function.
+			kEvent.Data = Caps(TrainProject.GetDisplayName()) @ TrainRookieEventLabel @ UnitState.GetName(eNameType_RankFull);
 			kEvent.Hours = TrainProject.GetCurrentNumHoursRemaining();
 			kEvent.ImagePath = class'UIUtilities_Image'.const.EventQueue_Staff;
 			
@@ -7211,7 +7253,7 @@ final function SetPendingPointOfTravel(const out XComGameState_GeoscapeEntity Ge
 	NewGameState.AddStateObject(XComHQ);
 	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 	MapItem = `HQPRES.StrategyMap2D.GetMapItem(GeoscapeEntity);
-	if (MapItem != none && !bRTB)
+	if (MapItem != none && !bRTB && `ISCONTROLLERACTIVE)
 	{
 		//bsg-jneal (8.17.16): set the last map item to the selected point of travel then select it, this fixes an issue where the strategy map would focus back on a previously selected different map item incorrectly because LastSelectedMapItem was not updated before opening screens like Mission Ops.
 		`HQPRES.StrategyMap2D.LastSelectedMapItem = MapItem;

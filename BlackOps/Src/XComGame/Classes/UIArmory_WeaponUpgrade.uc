@@ -479,7 +479,8 @@ simulated function PreviewUpgrade(UIList ContainerList, int ItemIndex)
 	SlotIndex = UIArmory_WeaponUpgradeItem(SlotsList.GetSelectedItem()).SlotIndex;
 
 	Weapon.DeleteWeaponUpgradeTemplate(SlotIndex);
-	Weapon.ApplyWeaponUpgradeTemplate(UpgradeTemplate, SlotIndex);
+    if (UpgradeTemplate != none)
+	    Weapon.ApplyWeaponUpgradeTemplate(UpgradeTemplate, SlotIndex);
 
 	PreviousLocation = ActorPawn.Location;
 	CreateWeaponPawn(Weapon, ActorPawn.Rotation);
@@ -487,15 +488,19 @@ simulated function PreviewUpgrade(UIList ContainerList, int ItemIndex)
 
 	//Formulate the attachment specific location tag from the attach socket
 	WeaponTemplateName = Weapon.GetMyTemplateName();
-	for( WeaponAttachIndex = 0; WeaponAttachIndex < UpgradeTemplate.UpgradeAttachments.Length; ++WeaponAttachIndex )
-	{
-		if( UpgradeTemplate.UpgradeAttachments[WeaponAttachIndex].ApplyToWeaponTemplate == WeaponTemplateName &&
-		    UpgradeTemplate.UpgradeAttachments[WeaponAttachIndex].UIArmoryCameraPointTag != '' )
-		{
-			PawnLocationTag = UpgradeTemplate.UpgradeAttachments[WeaponAttachIndex].UIArmoryCameraPointTag;
-			break;
-		}
-	}
+
+    if (UpgradeTemplate != none)
+    {
+	    for( WeaponAttachIndex = 0; WeaponAttachIndex < UpgradeTemplate.UpgradeAttachments.Length; ++WeaponAttachIndex )
+	    {
+		    if( UpgradeTemplate.UpgradeAttachments[WeaponAttachIndex].ApplyToWeaponTemplate == WeaponTemplateName &&
+		        UpgradeTemplate.UpgradeAttachments[WeaponAttachIndex].UIArmoryCameraPointTag != '' )
+		    {
+			    PawnLocationTag = UpgradeTemplate.UpgradeAttachments[WeaponAttachIndex].UIArmoryCameraPointTag;
+			    break;
+		    }
+	    }
+    }
 	if(ActiveList != UpgradesList)
 	{
 		MouseGuard.SetActorPawn(ActorPawn); //When we're not selecting an upgrade, let the user spin the weapon around
@@ -506,7 +511,10 @@ simulated function PreviewUpgrade(UIList ContainerList, int ItemIndex)
 		MouseGuard.SetActorPawn(None); //Otherwise, grab the rotation to show them the upgrade as they select it
 	}
 
-	SetUpgradeText(UpgradeTemplate.GetItemFriendlyName(), UpgradeTemplate.GetItemBriefSummary());
+    if (UpgradeTemplate != none)
+	    SetUpgradeText(UpgradeTemplate.GetItemFriendlyName(), UpgradeTemplate.GetItemBriefSummary());
+    else 
+        SetUpgradeText();
 
 	WeaponStats.PopulateData(Weapon, UpgradeTemplate);
 

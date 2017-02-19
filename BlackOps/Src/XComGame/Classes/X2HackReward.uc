@@ -6,6 +6,14 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+//
+// LWS Modifications
+//
+//  - [tracktwo] Insight bugfix: Recompute project completion date after applying the discount.
+//               Fixes a vanilla bug where project completion time displayed in the UI is not
+//               updated to reflect the reward unless a staffing/project change is made.
+
 class X2HackReward extends X2DataSet
 	config(GameCore);
 
@@ -222,6 +230,9 @@ function ApplyInsight(XComGameState_Unit Hacker, XComGameState_BaseObject HackTa
 		NewGameState.AddStateObject(ResearchProjectState);
 
 		ResearchProjectState.ModifyProjectPointsRemaining(INSIGHT_TECH_COMPLETION_MOD);
+        // LWS: Update the projected completion date based on the current geoscape time. Otherwise the UI will show the stale
+        // value which is not recomputed unless the staffing changes.
+        ResearchProjectState.SetProjectedCompletionDateTime(class'XComGameState_GeoscapeEntity'.static.GetCurrentTime());
 	}
 }
 

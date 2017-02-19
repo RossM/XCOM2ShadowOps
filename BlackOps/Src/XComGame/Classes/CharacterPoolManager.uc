@@ -6,6 +6,10 @@
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
 
+// LWS Changes
+//
+// tracktwo - Plumb the mandatory country from CreateCharacter (if provided) to CreateSoldier so
+//            they actually take effect. Only useful for random soldiers.
 class CharacterPoolManager 
 	extends Object 
 	native(Core)
@@ -432,7 +436,7 @@ function XComGameState_Unit CreateCharacter(XComGameState StartState, optional E
 
 		CharacterGenerator = `XCOMGRI.Spawn(CharacterTemplate.CharacterGeneratorClass);
 		`assert(CharacterGenerator != none);
-		CharacterGeneratorResult = CharacterGenerator.CreateTSoldier(CharacterTemplateName);
+		CharacterGeneratorResult = CharacterGenerator.CreateTSoldier(CharacterTemplateName, , ForceCountry);
 
 		// Give Random Personality if not from pool
 		PersonalityTemplates = class'X2StrategyElementTemplateManager'.static.GetStrategyElementTemplateManager().GetAllTemplatesOfClass(class'X2SoldierPersonalityTemplate');

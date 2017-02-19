@@ -44,7 +44,8 @@ simulated function UpdateData()
 		SetSlotNameRank(Unit.GetName(eNameType_First), 
 						Unit.GetName(eNameType_Last), 
 						Unit.GetName(eNameType_Nick),
-						class'UIUtilities_Image'.static.GetRankIcon(Unit.GetRank(), Unit.GetSoldierClassTemplateName()),
+						//class'UIUtilities_Image'.static.GetRankIcon(Unit.GetRank(), Unit.GetSoldierClassTemplateName()),
+						class'LWUtilities_Ranks'.static.GetRankIcon(Unit.GetRank(), Unit.GetSoldierClassTemplateName(), Unit),
 						Unit.GetSoldierClassTemplate().IconImage);
 						
 		SetDaysRemaining(Status, TimeLabel, class'UIUtilities_Text'.static.GetColoredText(string(TimeValue), Unit.GetStatusUIState()));

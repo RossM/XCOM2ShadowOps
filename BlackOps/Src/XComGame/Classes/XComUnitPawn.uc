@@ -1479,6 +1479,38 @@ function CreateDefaultAttachments()
 	{
 		CreateBodyPartAttachment(DefaultAttachments[DefaultAttachmentIndex]);
 	}
+	if (XComHumanPawn(self) == none) // defer XComHumanPawn adjustments until part customization
+	{
+		DLCAppendSockets(); // LWS added call to helper function
+	}
+}
+
+// helper function added by LWS to allow DLC/Mods to append sockets to units
+function DLCAppendSockets()
+{
+	local array<X2DownloadableContentInfo> DLCInfos; 
+	local int i; 
+	local SkeletalMesh SkelMesh;
+	local string SkeletalMeshString;
+
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	for(i = 0; i < DLCInfos.Length; ++i)
+	{
+		SkeletalMeshString = DLCInfos[i].DLCAppendSockets(self);
+		if (SkeletalMeshString != "")
+		{
+			SkelMesh = SkeletalMesh(DynamicLoadObject(SkeletalMeshString, class'SkeletalMesh'));
+			if (SkelMesh != none)
+			{
+				//SkelMeshComp = new(self) class'SkeletalMeshComponent';
+				//SkelMeshComp.SetSkeletalMesh(BodyPartContent.SkeletalMesh);
+				//SkelMeshComp.SetParentAnimComponent(Mesh);
+				Mesh.AppendSockets(SkelMesh.Sockets, true);
+				//AttachComponent(SkelMeshComp);
+				//AttachedMeshes.AddItem(SkelMeshComp);
+			}
+		}
+	}
 }
 
 function CreateBodyPartAttachment(XComBodyPartContent BodyPartContent)
@@ -1784,6 +1816,7 @@ simulated function EquipWeapon( XComWeapon kWeapon, bool bImmediate, bool bIsRea
 // as a mechanism for syncing the visual state of a unit during gameplay!
 simulated function CreateVisualInventoryAttachments(UIPawnMgr PawnMgr, XComGameState_Unit UnitState, optional XComGameState CheckGameState, bool bSetAsVisualizer=true, bool OffsetCosmeticPawn=true)
 {
+	RemoveWeaponVisualInventoryAttachments(PawnMgr, UnitState);
 	CreateVisualInventoryAttachment(PawnMgr, eInvSlot_PrimaryWeapon, UnitState, CheckGameState, bSetAsVisualizer, OffsetCosmeticPawn);
 	CreateVisualInventoryAttachment(PawnMgr, eInvSlot_SecondaryWeapon, UnitState, CheckGameState, bSetAsVisualizer, OffsetCosmeticPawn);
 	CreateVisualInventoryAttachment(PawnMgr, eInvSlot_HeavyWeapon, UnitState, CheckGameState, bSetAsVisualizer, OffsetCosmeticPawn);
@@ -1794,6 +1827,85 @@ simulated function CreateVisualInventoryAttachments(UIPawnMgr PawnMgr, XComGameS
 	CreateVisualInventoryAttachment(PawnMgr, eInvSlot_QuinaryWeapon, UnitState, CheckGameState, bSetAsVisualizer, OffsetCosmeticPawn);
 	CreateVisualInventoryAttachment(PawnMgr, eInvSlot_SenaryWeapon, UnitState, CheckGameState, bSetAsVisualizer, OffsetCosmeticPawn);
 	CreateVisualInventoryAttachment(PawnMgr, eInvSlot_SeptenaryWeapon, UnitState, CheckGameState, bSetAsVisualizer, OffsetCosmeticPawn);
+	CreateVisualInventoryAttachment_Pistol(PawnMgr, eInvSlot_Utility, UnitState, CheckGameState, bSetAsVisualizer, OffsetCosmeticPawn);
+}
+
+//LW Added
+simulated function RemoveWeaponVisualInventoryAttachments(UIPawnMgr PawnMgr, XComGameState_Unit UnitState)
+{
+	local int PawnInfoIndex, i;
+	local XGInventoryItem PreviousItem;
+
+	if(PawnMgr != none)
+	{
+		PawnInfoIndex = PawnMgr.Pawns.Find('PawnRef', UnitState.ObjectID);
+		if(PawnInfoIndex >= 0)
+		{
+			for ( i = 0; i < PawnMgr.Pawns[PawnInfoIndex].Weapons.Length; ++i )
+			{
+				if (PawnMgr.Pawns[PawnInfoIndex].Weapons[i] != none)
+				{
+					PreviousItem = XGInventoryItem(PawnMgr.Pawns[PawnInfoIndex].Weapons[i]);
+					DetachItem(XComWeapon(PreviousItem.m_kEntity).Mesh);
+					PawnMgr.Pawns[PawnInfoIndex].Weapons[i].Destroy();
+				}
+			}
+		}
+	}
+}
+
+//LW Added
+simulated function CreateVisualInventoryAttachment_Pistol(UIPawnMgr PawnMgr, EInventorySlot InvSlot, XComGameState_Unit UnitState, XComGameState CheckGameState, bool bSetAsVisualizer, bool OffsetCosmeticPawn)
+{
+	local XGWeapon kWeapon;
+	local XComGameState_Item ItemState;
+	local X2EquipmentTemplate EquipmentTemplate;
+	local bool bRegularItem;	
+	local int i;
+	local name CatName;
+
+	for (i = 0; i < UnitState.InventoryItems.Length; ++i)
+	{
+		ItemState = UnitState.GetItemGameState(UnitState.InventoryItems[i], CheckGameState);
+		CatName = ItemState.GetWeaponCategory();
+		if(ItemState.InventorySlot != InvSlot || CatName != 'pistol')
+			ItemState = none;
+		else
+			break;
+	}
+	if (ItemState != none)
+	{
+		EquipmentTemplate = X2EquipmentTemplate(ItemState.GetMyTemplate());
+		
+		//Is this a cosmetic unit item?
+		bRegularItem = EquipmentTemplate == none || EquipmentTemplate.CosmeticUnitTemplate == "";
+		if(bRegularItem)
+		{
+			class'XGItem'.static.CreateVisualizer(ItemState, bSetAsVisualizer, self);
+			kWeapon = XGWeapon(ItemState.GetVisualizer());
+
+			if(kWeapon.m_kOwner != none)
+			{
+				kWeapon.m_kOwner.GetInventory().PresRemoveItem(kWeapon);
+			}
+
+			if(PawnMgr != none)
+			{
+				PawnMgr.AssociateWeaponPawn(InvSlot, ItemState.GetVisualizer(), UnitState.GetReference().ObjectID, self);
+			}
+
+			kWeapon.UnitPawn = self;
+			kWeapon.m_eSlot = X2WeaponTemplate(ItemState.GetMyTemplate()).StowedLocation; // right hand slot is for Primary weapons
+			EquipWeapon(kWeapon.GetEntity(), true, false);
+		}
+		else
+		{
+			if(PawnMgr != none)
+			{
+				SpawnCosmeticUnitPawn(PawnMgr, InvSlot, EquipmentTemplate.CosmeticUnitTemplate, UnitState, OffsetCosmeticPawn);
+			}
+		}
+	}  
 }
 
 simulated function SpawnCosmeticUnitPawn(UIPawnMgr PawnMgr, EInventorySlot InvSlot, string CosmeticUnitTemplate, XComGameState_Unit OwningUnit, bool OffsetForArmory)

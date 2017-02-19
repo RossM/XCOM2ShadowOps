@@ -2,6 +2,9 @@
 class UIPersonnel extends UIScreen
 	implements(IUISortableScreen);
 
+// LWS Mods:
+// tracktwo - Wrap SpawnNavHelpIcons() in check for using controller.
+
 enum EUIPersonnelType
 {
 	eUIPersonnel_Soldiers,
@@ -162,7 +165,9 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 	CreateSortHeaders();
 	UpdateNavHelp();
 	RefreshTitle();
-	SpawnNavHelpIcons();
+	// LWS: Avoid controler help buttons unless controller is active.
+	if (`ISCONTROLLERACTIVE)
+		SpawnNavHelpIcons();
 	
 	// ---------------------------------------------------------
 	if(m_eListType != eUIPersonnel_All)
@@ -365,6 +370,7 @@ simulated function PopulateListInstantly()
 	local UIPersonnel_ListItem kItem;
 	local StateObjectReference SoldierRef;
 	local array<StateObjectReference> CurrentData;
+	local class<UIPersonnel_SoldierListItem> NewClass; //LWS Added
 
 	CurrentData = GetCurrentData();
 
@@ -374,7 +380,9 @@ simulated function PopulateListInstantly()
 	{
 		if( m_eListType == eUIPersonnel_Soldiers || m_eCurrentTab == eUIPersonnel_Soldiers )
 		{
-			kItem = Spawn(class'UIPersonnel_SoldierListItem', m_kList.itemContainer);
+			// LWS Mods : allow recursive overriding of list item class
+			NewClass = class<UIPersonnel_SoldierListItem>(class'Helpers_LW'.static.LWCheckForRecursiveOverride(class'UIPersonnel_SoldierListItem'));
+			kItem = Spawn(NewClass, m_kList.itemContainer);
 			SoldierRef = CurrentData[m_kList.itemCount];
 			kItem.InitListItem(SoldierRef);
 
@@ -398,6 +406,7 @@ simulated function PopulateListSequentially( UIPanel Control )
 {
 	local UIPersonnel_ListItem kItem;
 	local array<StateObjectReference> CurrentData;
+	local class<UIPersonnel_SoldierListItem> NewClass; //LWS Added
 
 	CurrentData = GetCurrentData();
 
@@ -405,7 +414,9 @@ simulated function PopulateListSequentially( UIPanel Control )
 	{
 		if( m_eListType == eUIPersonnel_Soldiers )
 		{
-			kItem = Spawn(class'UIPersonnel_SoldierListItem', m_kList.itemContainer);
+			// LWS Mods : allow recursive overriding of list item class
+			NewClass = class<UIPersonnel_SoldierListItem>(class'Helpers_LW'.static.LWCheckForRecursiveOverride(class'UIPersonnel_SoldierListItem'));
+			kItem = Spawn(NewClass, m_kList.itemContainer);
 		}
 		else if( m_eListType == eUIPersonnel_Deceased )
 		{

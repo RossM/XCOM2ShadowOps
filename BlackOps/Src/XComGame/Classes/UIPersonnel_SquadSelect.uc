@@ -36,6 +36,10 @@ simulated function UpdateList()
 
 		if(HQState.IsUnitInSquad(UnitItem.UnitRef) || (Unit.IsInjured() && !bAllowWoundedSoldiers && !Unit.IgnoresInjuries()) || Unit.IsTraining() || Unit.IsPsiTraining())
 			UnitItem.SetDisabled(true);
+
+		// LWS : trigger now to allow overriding disabled status, and to add background elements
+		`XEVENTMGR.TriggerEvent('OnSoldierListItemUpdateDisabled', UnitItem, self);
+
 	}
 }
 

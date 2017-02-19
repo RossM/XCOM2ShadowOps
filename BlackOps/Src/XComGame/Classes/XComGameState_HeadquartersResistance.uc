@@ -7,6 +7,9 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Changes
+// tracktwo - Add a pre end-of-month event.
 class XComGameState_HeadquartersResistance extends XComGameState_BaseObject native(Core) config(GameData);
 
 // Basic Info
@@ -274,6 +277,9 @@ function OnEndOfMonth(XComGameState NewGameState)
 	XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
 	NewGameState.AddStateObject(XComHQ);
 
+    // Give mods a hook before the end of month processing begins.
+    `XEVENTMGR.TriggerEvent('PreEndOfMonth', self, self, NewGameState);
+
 	GiveSuppliesReward(NewGameState);
 	SetProjectedMonthInterval(`STRATEGYRULES.GameTime);
 	CleanUpResistanceGoods(NewGameState);
@@ -350,7 +356,8 @@ function GiveSuppliesReward(XComGameState NewGameState)
 	local int TotalReward;
 
 	History = `XCOMHISTORY;
-	TotalReward = GetSuppliesReward();
+	TotalReward = GetSuppliesReward(, true, NewGameState);
+
 	bEndOfMonthNotify = true;	
 	
 	if (TotalReward > 0)
@@ -358,23 +365,72 @@ function GiveSuppliesReward(XComGameState NewGameState)
 		CacheState = XComGameState_ResourceCache(History.GetSingleGameStateObjectForClass(class'XComGameState_ResourceCache'));
 		CacheState.ShowResourceCache(NewGameState, TotalReward);
 	}
+	else // LWS : Added to add DLC/Mod options for handling negative monthly income
+	{
+		ProcessNegativeMonthlyIncome(TotalReward, false, NewGameState);
+	}
+}
+
+// LWS Added utility function to process negative monthly income events and pass them to DLC/Mods
+function bool ProcessNegativeMonthlyIncome(int SupplyValue, optional bool DisplayOnly, optional XComGameState NewGameState)
+{
+	local XComLWTuple Tuple; 
+
+	Tuple = new class'XComLWTuple';
+	Tuple.Id = 'NegativeMonthlyIncome';
+	Tuple.Data.Add(3);
+	Tuple.Data[0].kind = XComLWTVBool;
+	Tuple.Data[0].b = false;  // whether negative supply events are possible
+	Tuple.Data[1].kind = XComLWTVInt;
+	Tuple.Data[1].i = SupplyValue;  // The amount of negative supplies
+	Tuple.Data[2].kind = XComLWTVBool;
+	Tuple.Data[2].b = DisplayOnly; // with the trigger is for display or gamestate
+
+	`XEVENTMGR.TriggerEvent('OnMonthlyNegativeSupplies', Tuple, self, NewGameState);
+
+	return Tuple.Data[0].b; // whether negative supply events are supported
 }
 
 //---------------------------------------------------------------------------------------
-function int GetSuppliesReward(optional bool bUseSavedPercentDecrease)
+function int GetSuppliesReward(optional bool bUseSavedPercentDecrease, optional bool bAwarding, optional XComGameState NewGameState)
 {
 	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState_WorldRegion RegionState;
 	local int SupplyReward;
+	local XComLWTuple OverrideSupplyDropTuple; //LWS added
+    local bool SupplyOverridden;
 
 	History = `XCOMHISTORY;
 	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 	SupplyReward = 0;
 
-	foreach History.IterateByClassType(class'XComGameState_WorldRegion', RegionState)
+    if (bAwarding)
+    {
+	    // LWS - set up a Tuple for return value - return value is supplies generated this month
+	    OverrideSupplyDropTuple = new class'XComLWTuple';
+	    OverrideSupplyDropTuple.Id = 'OverrideSupplyDrop';
+	    OverrideSupplyDropTuple.Data.Add(2);
+	    OverrideSupplyDropTuple.Data[0].kind = XComLWTVBool;
+	    OverrideSupplyDropTuple.Data[0].b = false;  // whether override is active
+	    OverrideSupplyDropTuple.Data[1].kind = XComLWTVInt;
+	    OverrideSupplyDropTuple.Data[1].i = 0;  // Return Value of supplies, if parameter 0 is set true
+
+	    `XEVENTMGR.TriggerEvent('OnMonthlySuppliesReward', OverrideSupplyDropTuple, self, NewGameState);
+
+        if(OverrideSupplyDropTuple.Data[0].b)
+	    {
+        	SupplyReward += OverrideSupplyDropTuple.Data[1].i;
+            SupplyOverridden = true;
+	    }
+    }
+
+	if (!SupplyOverridden)
 	{
-		SupplyReward += RegionState.GetSupplyDropReward();
+		foreach History.IterateByClassType(class'XComGameState_WorldRegion', RegionState)
+		{
+			SupplyReward += RegionState.GetSupplyDropReward();
+		}
 	}
 
 	SupplyReward += Round(float(SupplyReward) * (float(SupplyDropPercentIncrease) / 100.0));

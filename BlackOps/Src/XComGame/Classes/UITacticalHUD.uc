@@ -10,6 +10,8 @@
 //  Copyright (c) 2009-2016 Firaxis Games, Inc. All rights reserved.
 //--------------------------------------------------------------------------------------- 
 
+// LWS Mods:
+// tracktwo - Fix log spam from accessing "CharInfoButton" that is not initialized when using the mouse.
 class UITacticalHUD extends UIScreen dependson(X2GameRuleset);
 
 enum eUI_ReticleMode
@@ -90,7 +92,8 @@ simulated function HideInputButtonRelatedHUDElements(bool bHide)
 
 		m_kAbilityHUD.Hide();
 		m_kEnemyTargets.Hide();
-		CharInfoButton.Hide();
+		if (CharInfoButton != none)
+			CharInfoButton.Hide();
 	}
 	else
 	{
@@ -101,7 +104,8 @@ simulated function HideInputButtonRelatedHUDElements(bool bHide)
 			m_kEnemyTargets.Show();
 		}
 
-		CharInfoButton.Show();
+		if (CharInfoButton != none)
+			CharInfoButton.Show();
 
 		Show();
 	}
@@ -139,7 +143,8 @@ simulated function OnToggleHUDElements(SeqAct_ToggleHUDElements Action)
 					{
 						SkyrangerButton.Hide();
 					}
-					CharInfoButton.Hide();
+					if (CharInfoButton != none)
+						CharInfoButton.Hide();
 					break;
 				case eHUDElement_Countdown:
 					m_kCountdown.Hide(); 
@@ -175,7 +180,8 @@ simulated function OnToggleHUDElements(SeqAct_ToggleHUDElements Action)
 					{
 						SkyrangerButton.Show();
 					}
-					CharInfoButton.Show();
+					if (CharInfoButton != none)
+						CharInfoButton.Show();
 					break;
 				case eHUDElement_Countdown:
 					m_kCountdown.Show(); 
@@ -512,7 +518,8 @@ simulated function RaiseTargetSystem()
 
 	m_kObjectivesControl.Hide();
 	m_kShotInfoWings.Show();
-	CharInfoButton.Show();
+	if (CharInfoButton != none)
+		CharInfoButton.Show();
 
 	if (m_kEnemyTargets.GetEnemyCount() > 0)
 	{
@@ -655,7 +662,8 @@ simulated function UpdateNavHelp()
 	//If the label was set, show the help icon
 	if(LabelForInfoHelp != "")
 	{
-		CharInfoButton.SetText(LabelForInfoHelp);
+		if (CharInfoButton != none)
+			CharInfoButton.SetText(LabelForInfoHelp);
 	}	
 }
 
@@ -1054,7 +1062,8 @@ simulated function Show()
 
 	Pres = XComPresentationLayer(Movie.Pres);
 
-	CharInfoButton.Show();
+	if (CharInfoButton != none)
+		CharInfoButton.Show();
 	if( !Pres.m_kTurnOverlay.IsShowingAlienTurn() 
 	   && !Pres.m_kTurnOverlay.IsShowingOtherTurn()
 	   && !Pres.m_kTurnOverlay.IsShowingReflexAction() 

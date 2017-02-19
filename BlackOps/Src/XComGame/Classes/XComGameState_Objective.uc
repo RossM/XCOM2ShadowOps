@@ -5,6 +5,11 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Mods:
+// tracktwo - OnNarrativeEventTrigger - Add missing return statement and be more careful about accessing
+//                                      the HQPresentationLayer to avoid none warnings while in tactical.
+
 class XComGameState_Objective extends XComGameState_BaseObject
 	dependson(X2StrategyGameRulesetDataStructures) config(GameData);
 
@@ -982,14 +987,24 @@ static function BuildVisualizationForNarrative(XComGameState VisualizeGameState,
 
 function EventListenerReturn OnNarrativeEventTrigger(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
-	if (`HQPRES != none)
+	local XComHeadquartersGame HQGame;      // LWS Added
+	local XComHQPresentationLayer HQPres; // LWS Added
+
+	// LWS: Replace uses of `HQPRES with a local. Avoids log spam when in tactical.
+	HQGame = `HQGAME;
+	if (HQGame != none)
+		HQPres = XComHQPresentationLayer(XComHeadquartersController(HQGame.PlayerController).Pres);
+	if (HQPres != none)
 	{
-	return `HQPRES.OnNarrativeEventTrigger(self, EventData, EventSource, GameState, EventID);
+		return HQPres.OnNarrativeEventTrigger(self, EventData, EventSource, GameState, EventID);
 	}
 	else
 	{
 		DoNarrativeEventTrigger(EventData, EventSource, GameState, EventID);
 	}
+
+	// LWS Mods: Add return to remove obnoxious log spam.
+	return ELR_NoInterrupt;
 }
 
 function EventListenerReturn DoNarrativeEventTrigger(Object EventData, Object EventSource, XComGameState GameState, Name EventID)

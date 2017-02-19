@@ -8,6 +8,7 @@
 class X2Effect_PersistentStatChange extends X2Effect_ModifyStats;
 
 var array<StatChange>	m_aStatChanges;
+var bool				bForceReapplyOnRefresh; // LWS: new boolean to control forcing re-application
 
 simulated function AddPersistentStatChange(ECharStatType StatType, float StatAmount, optional EStatModOp InModOp=MODOP_Addition )
 {

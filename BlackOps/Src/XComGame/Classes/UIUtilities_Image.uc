@@ -826,6 +826,22 @@ simulated static function string GetPCSImage(XComGameState_Item Item)
 {
 	local ECharStatType StatType;
 
+	local XComLWTuple OverridePCSImageTuple;
+
+	//set up a Tuple for return value - true means the to-hit calcs were overridden, so you should simply exit
+	OverridePCSImageTuple = new class'XComLWTuple';
+	OverridePCSImageTuple.Id = 'OverrideGetPCSImage';
+	OverridePCSImageTuple.Data.Add(2);
+	OverridePCSImageTuple.Data[0].kind = XComLWTVBool;
+	OverridePCSImageTuple.Data[0].b = false;  // whether override is active
+	OverridePCSImageTuple.Data[1].kind = XComLWTVString;
+	OverridePCSImageTuple.Data[1].s = "";  // the image string being returned
+
+	`XEVENTMGR.TriggerEvent('OnGetPCSImage', OverridePCSImageTuple, Item);
+
+	if(OverridePCSImageTuple.Data[0].b)
+		return OverridePCSImageTuple.Data[1].s;
+
 	StatType = class'UIUtilities_Strategy'.static.GetStatBoost(Item).StatType;
 
 	switch(StatType)

@@ -1,3 +1,8 @@
+
+// LWS modifications:
+//
+// tracktwo - Allow mod overrides via tuple for choosing spawn locations.
+
 class XComParcelManager extends Object
 	native(Core)
 	dependson(XComTacticalMissionManager)
@@ -1192,11 +1197,27 @@ function ChooseSoldierSpawn()
 	local int SpawnIndex;
 	local float SpawnDistanceSq;
 	local float FurthestSpawnDistanceSq;
+	local array<X2DownloadableContentInfo> DLCInfos; // LWS Added
+	local int i; // LWS Added
 
 	// cache off the objective location for use in determining spawn ordering
 	`TACTICALMISSIONMGR.GetObjectivesCenterpoint(BattleDataState.MapData.ObjectiveLocation);
 	
 	GetValidSpawns(arrSpawns);
+
+    // LWS Modifications below: Allow a mod override of spawn point choice.
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	for(i = 0; i < DLCInfos.Length; ++i)
+	{
+		SoldierSpawn = DLCInfos[i].OverrideSoldierSpawn(BattleDataState.MapData.ObjectiveLocation, arrSpawns);
+		if (SoldierSpawn != none && SoldierSpawn.HasValidFloorLocations())
+		{
+			BattleDataState.MapData.SoldierSpawnLocation = SoldierSpawn.Location;
+			return;
+		}
+	}
+
+    // LWS: Original spawn scoring below.
 
 	// since these are sorted by suitability (but still random within a given suitability),
 	// keep taking the spawns off the top until we find a spawn that has valid spawn locations

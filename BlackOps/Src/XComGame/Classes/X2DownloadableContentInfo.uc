@@ -6,6 +6,12 @@
 //  certain in-game activities like loading a saved game. Should the DLC be installed
 //  to a campaign that was already started?
 //
+// LWS :	Added hook to allow AlternateMissionIntroDefinition
+//			Added hook to allow removal of weapon upgrades without replacement
+//			Added hook to allow overriding if item can be equipped
+//			Added hook to allow overriding number of utility slots
+//			Added hook to allow overriding of targeting reticle
+//          Added hook to allow toggling the display of flare/psi-gate on AI reinforcement.
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
@@ -153,4 +159,227 @@ static function bool AbilityTagExpandHandler(string InString, out string OutStri
 static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out array<AbilitySetupData> SetupData, optional XComGameState StartState, optional XComGameState_Player PlayerState, optional bool bMultiplayerDisplay)
 {
 
+}
+
+/////////////////////////////////
+///////// LWS ADDITIONS /////////
+/////////////////////////////////
+
+
+/// <summary>
+/// Called from XComGameState_Unit::ModifyEarnedSoldierAbilities
+/// Allows DLC/Mods to adjust add to the EarnedSoldierAbilities
+/// no return, just modify the EarnedAbilities out variable array
+static function ModifyEarnedSoldierAbilities(out array<SoldierClassAbilityType> EarnedAbilities, XComGameState_Unit UnitState)
+{
+    
+}
+
+/// <summary>
+/// Called from XComTacticalMissionManager:GetActiveMissionIntroDefinition before it returns the Default (but after any arrMission-specific override)
+//  Return true to use 
+/// </summary>
+static function bool UseAlternateMissionIntroDefinition(MissionDefinition ActiveMission, out MissionIntroDefinition MissionIntro)
+{
+	return false;
+}
+
+/// <summary>
+/// Called from UIArmory_WeaponUpgradeItem:UpdateDropItemButton 
+//  Return true to allow removal of the weapon upgrade without replacement 
+/// </summary>
+static function bool CanRemoveWeaponUpgrade(XComGameState_Item Weapon, X2WeaponUpgradeTemplate UpgradeTemplate, int SlotIndex)
+{
+	return false;
+}
+
+/// <summary>
+/// Called from XComGameState_Unit:CanAddItemToInventory 
+//  Return true to override the default with the out parameter
+/// </summary>
+static function bool CanAddItemToInventory(out int bCanAddItem, const EInventorySlot Slot, const X2ItemTemplate ItemTemplate, int Quantity, XComGameState_Unit UnitState, XComGameState CheckGameState)
+{
+	return false;
+}
+
+/// <summary>
+/// Called from XComGameState_Unit:DLCCanRemoveItemFromInventory 
+//  Return true to override the default with the out parameter
+//	Used only in XComGameState_Unit:MakeItemAvailable
+/// </summary>
+static function bool CanRemoveItemFromInventory(out int bCanRemoveItem,  XComGameState_Item Item, XComGameState_Unit UnitState, XComGameState CheckGameState)
+{
+	return false;
+}
+
+/// <summary>
+/// Called from XComGameState_Unit:GetNumUtilitySlots 
+//  Return true to immediately override the default with the out parameter (skipping any further DLCInfo checks)
+/// </summary> 
+static function bool GetNumUtilitySlotsOverride(out int NumSlots, XComGameState_Item Item, XComGameState_Unit UnitState, XComGameState CheckGameState)
+{
+	return false;
+}
+
+/// <summary>
+/// Called from XComGameState_Unit:ValidateLoadout
+//  Allows DLC/Mods to override the minimum number of utility slots to be set during validate loadout
+// modify the out parameter Value to make change
+/// </summary> 
+static function GetMinimumRequiredUtilityItems(out int Value, XComGameState_Unit UnitState, XComGameState NewGameState);
+
+/// <summary>
+/// Called from XComGameState_Ability:GetUIReticleIndex 
+//  Return true to immediately override the default with the out parameter (skipping any further DLCInfo checks)
+/// </summary> 
+static function bool SelectTargetingReticle(out int ReturnReticleIndex, XComGameState_Ability Ability, X2AbilityTemplate AbilityTemplate, XComGameState_Item Weapon)
+{
+	return false;
+}
+
+/// <summary>
+/// Called from XComGameState_HeadquartersAlien:GetCurrentDoom 
+//  Return true to immediately override the default with the out parameter (skipping any further DLCInfo checks)
+/// </summary> 
+static function int AddDoomModifier(XComGameState_HeadquartersAlien AlienHQ, bool bIgnorePending)
+{
+	return 0;
+}
+
+/// <summary>
+/// Called from XComGameState_MissionSite:CacheSelectedMissionData
+//  Encounter Data is modified immediately prior to being added to the SelectedMissionData
+/// </summary> 
+static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo Encounter, int ForceLevel, int AlertLevel, optional XComGameState_BaseObject SourceObject);
+
+/// <summary>
+/// Called from XComGroupSpawn:GetValidFloorLocations
+//  Allows DLC/Mods to override valid spawnable floor locations -- return true use FloorPoints and skip the defaults
+/// </summary> 
+static function bool GetValidFloorSpawnLocations(out array<Vector> FloorPoints, XComGroupSpawn SpawnPoint)
+{
+	return false;
+}
+
+/// <summary>
+/// Called from X2TacticalGameRuleset:state'CreateTacticalGame':UpdateTransitionMap
+//  Allows DLC/Mods to override the transition map used for loading screens pre/post tactical missions
+// return true if soldiers should be equipped with inventory items
+/// </summary> 
+static function bool LoadingScreenOverrideTransitionMap(optional out string OverrideMapName, optional X2TacticalGameRuleset Ruleset, optional XComGameState_Unit UnitState)
+{
+	return false;
+}
+
+/// <summary>
+/// Called from XComParcelManager:ChooseSoldierSpawn
+//  Allows DLC/Mods to override the soldier spawn point selection logic
+// return the selected spawn point, or none to use default logic
+/// </summary> 
+static function XComGroupSpawn OverrideSoldierSpawn(vector ObjectiveLocation, array<XComGroupSpawn> arrSpawns)
+{
+	return none;
+}
+
+/// <summary>
+/// Called from XComTacticalMissionManager:SelectObjectiveSpawns
+//  Allows DLC/Mods to override the the number of objective spawns in a mission
+// return -1 to use default logic for selecting number, of value >= 0 to use that value
+/// </summary> 
+static function int GetNumObjectivesToSpawn(XComGameState_BattleData BattleData)
+{
+	return -1;
+}
+
+/// <summary>
+/// Called from XComGameState_AIReinforcementSpawner::BuildVisualizationForSpawnerCreation.
+/// Allows DLC/Mods to disable the visualization of the reinforcement flare/psi-gate indicator.
+/// Return 'true' to disable the visualization. If any callee returns true, the visualization
+/// will be disabled.
+static function bool DisableAIReinforcementFlare(XComGameState_AIReinforcementSpawner SpawnerState)
+{
+    return false;
+}
+
+/// <summary>
+/// Called from XComGameState_Destructible::OverrideDestructibleInitialHealth. (new helper)
+/// Allows DLC/Mods to override the initial health of destructible objects
+/// Return true to override the existing health, returning new value in the out NewHealth
+/// will be disabled.
+static function bool OverrideDestructibleInitialHealth(out int NewHealth, XComGameState_Destructible DestructibleState, XComDestructibleActor Visualizer)
+{
+    return false;
+}
+
+/// <summary>
+///
+/// Called from XComTacticalController::DrawDebugLabels.
+/// Allows mods to draw debug information to the screen.
+function DrawDebugLabel(Canvas kCanvas)
+{
+}
+
+/// <summary>
+/// Called from UIShellDifficulty::DLCDisableTutorial. (new helper)
+/// Allows DLC/Mods to disable the tutorial (similar to how difficulty does in base game)
+/// Return true to disable tutorial from being active
+/// will be disabled.
+static function bool DLCDisableTutorial(UIShellDifficulty Screen)
+{
+    return false;
+}
+
+/// <summary>
+/// Called from XComGameState_Unit::OnAbilityActivated
+/// Allows DLC/Mods to modify the sound range of abilities. Only called for abilities that make sound.
+/// Return an additive modifier to the sound range. 
+static function int ModifySoundRange(XComGameState_Unit SourceUnit, XComGameState_Item Weapon, XComGameState_Ability Ability, XComGameState GameState)
+{
+    return 0;
+}
+
+/// <summary>
+/// Called from XComTacticalController::Visualizer_SelectNextUnit and XComTacticalController::Visualizer_SelectPrevUnit.
+/// Allows DLC/Mods to sort the array of units for tab order purposes.
+/// The Units array should be sorted in-place. This should be a stable sort to reduce the risk of tab order changing as you
+/// tab. 
+static function SortTabOrder(out array<XComGameState_Unit> Units, XComGameState_Unit CurrentUnit, bool TabbingForward)
+{
+}
+
+/// <summary>
+/// Called from XComUnitPawn::CreateDefaultAttachments
+/// Allows DLC/Mods to append sockets to an existing pawn type
+/// return the string name of a SkeletalMesh component whose sockets will be appended to the calling pawn
+static function string DLCAppendSockets(XComUnitPawn Pawn)
+{
+	return "";
+}
+
+/// <summary>
+/// Called from XComGameState_HeadquartersXCom::GetScienceScore
+/// Allows DLC/Mods to adjust the science score
+/// return the value by which to modify the science score, or 0 for no effect. The bAddLabBonus value is 'true' if
+// we are computing the science research rate, and 'false' if we're checking a science gate.
+static function int GetScienceScoreMod(bool bAddLabBonus)
+{
+    return 0;
+}
+
+/// <summary>
+/// Called from XComGameState_Ability::GetItemEnvironmentDamagePreview
+/// Allows DLC/Mods to dynamically adjust environment damage for an item
+/// Return the environment damage as a non-negative value to override
+static function int OverrideItemEnvironmentDamagePreview(XComGameState_Ability AbilityState)
+{
+    return -1;
+}
+
+/// <summary>
+/// Called from X2Effect_ApplyFireToWorld::AddWorldEffectTickEvents
+/// Allows DLC/Mods to override the world fire environment damage effects of fire
+/// Return true to override the base effect (which destroys all indestructible actors, ignoring toughness)
+static function bool OverrideWorldFireTickEvent(X2Effect_ApplyFireToWorld Effect, XComGameState_WorldEffectTileData TickingWorldEffect, XComGameState NewGameState)
+{
+    return false;
 }

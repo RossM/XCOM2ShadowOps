@@ -2,12 +2,18 @@
 //  FILE:    UIAvengerShortcuts.uc
 //  AUTHOR:  Brit Steiner --  12/22/2014
 //  PURPOSE:Soldier category options list. 
+//
+//  LWS: Added hooks for DLC/Mods to add additional items
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
 
 class UIAvengerShortcuts extends UIPanel
 	config(UI);
+
+// LWS Mods:
+// tracktwo - Add customizable sub-menu items to the avenger shortcuts
+// tracktwo - Fix some controller-related log spam when using the mouse.
 
 enum UIAvengerShortcutCategory
 {
@@ -44,6 +50,27 @@ struct UIAvengerShortcutMessageCategory
 	var delegate<MsgCallback> OnItemClicked;
 	var bool bAlert; 
 };
+
+// ******** BEGIN LWS VARIABLE CHANGES ***********
+
+// A custom sub-menu item. Contains an identifier to allow it to be located 
+// and updated in the future.
+struct UIAvengerShortcutSubMenuItem
+{
+    var name Id;
+    var UIAvengerShortcutMessage Message;
+};
+
+// A list of sub-menu items.
+struct AvengerSubMenuList
+{
+    var array<UIAvengerShortcutSubMenuItem> SubMenuItems;
+};
+
+// A sub-menu list for each category in UIAvengerShortcuts.
+var array<AvengerSubMenuList> ModSubMenus;
+
+// ******** END LWS VARIABLE CHANGES ***********
 
 var const config float CategoryBufferSpace; // pixel buffer between category buttons. 
 var const config float SubmenuYOffset;
@@ -151,6 +178,9 @@ simulated function UIAvengerShortcuts InitShortcuts(optional name InitName)
 	local UIX2MenuButton Button; 	
 	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;
+
+    // LWS : call any time before before UpdateCategories
+    ModSubMenus.length = eUIAvengerShortcutCat_MAX;
 
 	InitPanel(InitName); 
 	SetSize(300, 600);
@@ -262,7 +292,7 @@ simulated function SpawnNavHelpIcons()
 
 simulated function UpdateCategories()
 {
-	local int i;
+	local int i, j;
 	local UIAvengerShortcutMessageCategory CurrentCat;
 	local XComGameStateHistory History;
 	local XComGameState_FacilityXCom FacilityState;
@@ -305,6 +335,11 @@ simulated function UpdateCategories()
 		{
 			Categories[i].Button.Hide();
 		}
+		//LWS : Update the configurable submenus
+        for (j = 0; j < ModSubMenus[i].SubMenuItems.Length; ++j)
+        {
+            Categories[i].Messages.AddItem(ModSubMenus[i].SubMenuItems[j].Message);
+        }
 	}
 	OnCategoryButtonSizeRealized();
 }
@@ -358,9 +393,18 @@ simulated function OnCategoryButtonSizeRealized()
 
 	// Center to the category list along the bottom of the screen.
 	SetX(CurrentCatX * -0.5); 
-	LeftBumperIcon.SetX(-38.0 - LeftBumperIcon.Width / 2.0 - class'UIGamepadIcons'.const.X_OFFSET);
-	RightBumperIcon.SetX(CurrentCatX + 38.0 - RightBumperIcon.Width / 2.0 - class'UIGamepadIcons'.const.X_OFFSET);
-	RealizeListPosition();
+
+	// LWS: Don't adjust the bumpers unless we're using a controller
+	if (`ISCONTROLLERACTIVE)
+	{
+		LeftBumperIcon.SetX(-38.0 - LeftBumperIcon.Width / 2.0 - class'UIGamepadIcons'.const.X_OFFSET);
+		RightBumperIcon.SetX(CurrentCatX + 38.0 - RightBumperIcon.Width / 2.0 - class'UIGamepadIcons'.const.X_OFFSET);
+	}
+
+	// LWS: Need a category to display the list
+	if (CurrentCategory >= 0)
+		RealizeListPosition();
+
 	if( ShouldShowWhenRealized )
 		super.Show();
 }
@@ -1713,6 +1757,86 @@ simulated function RefreshTooltipShadowChamber(UITooltip Tooltip)
 }
 
 //==============================================================================
+
+// *************** BEGIN LWS HELPER FUNCTIONS *******************
+
+// Add a new sub-menu to the given category.
+simulated function AddSubMenu(int Category, out UIAvengerShortcutSubMenuItem Item)
+{
+    if (Category < 0 || Category > eUIAvengerShortcutCat_MAX)
+    {
+        `redscreen("UIAvengerShortcuts (LWS)::AddCategorySubMenu: Bad Shortcut category: " $ Category);
+        return;
+    }
+
+    ModSubMenus[Category].SubMenuItems.AddItem(Item);
+}
+
+simulated function UpdateSubMenu(int Category, out UIAvengerShortcutSubMenuItem Item)
+{
+    local int i;
+
+    if (Category < 0 || Category > eUIAvengerShortcutCat_MAX)
+    {
+        `redscreen("UIAvengerShortcut (LWS)::AddCategorySubMenu: Bad Shortcut category: " $ Category);
+        return;
+    }
+
+    for (i = 0; i < ModSubMenus[Category].SubMenuItems.Length; ++i)
+    {
+        if (ModSubMenus[Category].SubMenuItems[i].Id == Item.Id)
+        {
+            ModSubMenus[Category].SubmenuItems[i] = Item;
+            return;
+        }
+    }     
+}
+
+// Look up a given sub-menu in the current list for the given category. Returns true if found,
+// or false if no such menu exists.
+simulated function bool FindSubMenu(int Category, name Id, out UIAvengerShortcutSubMenuItem Item)
+{
+    local int i;
+
+    if (Category < 0 || Category > eUIAvengerShortcutCat_MAX)
+    {
+        `redscreen("UIAvengerShortcuts (LWS)::AddCategorySubMenu: Bad Shortcut category: " $ Category);
+        return false;
+    }
+
+    for (i = 0; i < ModSubMenus[Category].SubMenuItems.Length; ++i)
+    {
+        if (ModSubMenus[Category].SubMenuItems[i].Id == Id)
+        {
+            Item = ModSubMenus[Category].SubMenuItems[i];
+            return true;
+        }
+    }
+
+    return false;
+}
+
+simulated function RemoveSubMenu(int Category, name Id)
+{
+      local int i;
+
+    if (Category < 0 || Category > eUIAvengerShortcutCat_MAX)
+    {
+        `redscreen("UIAvengerShortcuts (LWS)::AddCategorySubMenu: Bad Shortcut category: " $ Category);
+        return;
+    }
+
+    for (i = 0; i < ModSubMenus[Category].SubMenuItems.Length; ++i)
+    {
+        if (ModSubMenus[Category].SubMenuItems[i].Id == Id)
+        {
+            ModSubMenus[Category].SubMenuItems.Remove(i, 1);
+            return;
+        }
+    }  
+}
+
+// *************** BEGIN LWS HELPER FUNCTIONS *******************
 
 defaultproperties
 {

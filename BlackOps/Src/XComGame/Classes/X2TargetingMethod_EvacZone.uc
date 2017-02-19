@@ -7,15 +7,20 @@
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //--------------------------------------------------------------------------------------- 
 
+
+// LWS Modifications
+//
+// tracktwo - Adjust access on members to protected so subclasses have more freedom
+
 class X2TargetingMethod_EvacZone extends X2TargetingMethod native(Core) config(GameCore);
 
 var config float NeededValidTileCoverage;
 
-var private XCom3DCursor Cursor;
-var private X2Actor_EvacZoneTarget EvacZoneTarget;
-var private bool bRestrictToSquadsightRange;
-var private XComGameState_Player AssociatedPlayerState;
-var private bool EnoughTilesValid;
+var protected XCom3DCursor Cursor;
+var protected X2Actor_EvacZoneTarget EvacZoneTarget;
+var protected bool bRestrictToSquadsightRange;
+var protected XComGameState_Player AssociatedPlayerState;
+var protected bool EnoughTilesValid;
 
 function Init(AvailableAction InAction)
 {

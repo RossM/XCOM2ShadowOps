@@ -194,12 +194,58 @@ function Update(float DeltaTime)
 	{		
 		GetTargetedActors(NewTargetLocation, CurrentlyMarkedTargets, Tiles);
 		CheckForFriendlyUnit(CurrentlyMarkedTargets);	
+		CheckForWorldEffectTileExclusion(CurrentlyMarkedTargets, Tiles);
 		MarkTargetedActors(CurrentlyMarkedTargets, (!AbilityIsOffensive) ? FiringUnit.GetTeam() : eTeam_None );
 		DrawAOETiles(Tiles);
 	}
 	DrawSplashRadius( );
 
 	super.Update(DeltaTime);
+}
+
+function CheckForWorldEffectTileExclusion(out array<Actor> CurrentlyMarkedTargets, array<TTile>Tiles)
+{
+	local XComGameState_Item WeaponItem;
+	local Actor TargetActor;
+	local XGUnit TargetUnit;
+	local XComGameState_Unit kUnitState;
+	local array<Actor> TargetsToRemove;
+	local TTile CheckTile;
+	local bool bFoundTile;
+
+	WeaponItem = Ability.GetSourceWeapon();
+	if (class'Helpers_LW'.default.GrenadeRequiresWorldEffectToAffectUnit.Find (WeaponItem.GetMyTemplateName()) == -1)
+	{
+		return;
+	}
+	foreach CurrentlyMarkedTargets(TargetActor)
+	{
+		TargetUnit = XGUnit(TargetActor);
+		if (TargetUnit != none )
+		{
+			kUnitState = TargetUnit.GetVisualizedGameState();
+			if (kUnitState != none)
+			{
+				bFoundTile = false;
+				foreach Tiles(CheckTile)
+				{
+					if (CheckTile == kUnitState.TileLocation)
+					{
+						bFoundTile = true;
+						break;
+					}
+				}
+				if (!bFoundTile)
+				{
+					TargetsToRemove.AddItem (TargetActor);
+				}
+			}
+		}
+	}
+	foreach TargetsToRemove (TargetActor)
+	{
+		CurrentlyMarkedTargets.RemoveItem (TargetActor);
+	}
 }
 
 function GetTargetLocations(out array<Vector> TargetLocations)

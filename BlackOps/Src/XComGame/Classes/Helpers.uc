@@ -1,8 +1,13 @@
 //-----------------------------------------------------------
 //
+// LWS Modifications:
+//
+// tracktwo - Add new optional template filter to GetNumCiviliansKilled
+//            Remove check for mission success when determining if a civ is killed - 
+//            if they aren't removed from the map (evac) they're considered dead.
 //-----------------------------------------------------------
 class Helpers extends Object
-	dependson(XComGameStateVisualizationMgr)
+	dependson(XComGameStateVisualizationMgr,XComLWTuple)
 	abstract
 	native;
 
@@ -271,6 +276,26 @@ static function int GetNumCiviliansKilled(optional out int iTotal, optional bool
 	local array<XComGameState_Unit> arrUnits;
 	local XGBattle_SP Battle;
 	local XComGameState_BattleData BattleData;
+    local XComLWTuple Tuple;
+    local XComLWTValue Value;
+
+    // LWS: First attempt a mod override
+    Tuple = new class'XComLWTuple';
+    Tuple.Id = 'GetNumCiviliansKilled';
+    Value.Kind = XComLWTVBool;
+    Value.b = bPostMission;
+    Tuple.Data.AddItem(Value);
+    `XEVENTMGR.TriggerEvent('GetNumCiviliansKilled', Tuple, none, none);
+
+    if (Tuple.Data.Length == 3 &&
+        Tuple.Data[0].Kind == XComLWTVBool &&
+        Tuple.Data[1].Kind == XComLWTVInt &&
+        Tuple.Data[2].Kind == XComLWTVInt)
+    {
+        // Expect num killed in Data[1] and total in Data[2]
+        iTotal = Tuple.Data[2].i;
+        return Tuple.Data[1].i;
+    }
 
 	Battle = XGBattle_SP(`BATTLE);
 	BattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
@@ -298,10 +323,8 @@ static function int GetNumCiviliansKilled(optional out int iTotal, optional bool
 			}
 			else if(bPostMission && !arrUnits[i].bRemovedFromPlay)
 			{
-				if(!BattleData.bLocalPlayerWon)
-				{
-					iKilled++;
-				}
+                if (!BattleData.bLocalPlayerWon)
+				    iKilled++;
 			}
 		}
 	}
@@ -424,7 +447,9 @@ static function bool GetFurthestReachableTileOnPath(out TTile FurthestReachable,
 			{
 				// Try floor tile.  Fixes failures with pathing from different elevations returning mid-air points that aren't in the tile cache.
 				FloorTile = PathTile;
-				FloorTile.Z = World.GetFloorTileZ(PathTile);
+                // LWS: Add the 'true' flag to this search so it has a better chance at finding a valid tile. Drone pods have difficulty finding
+                // valid paths without this flag set.
+				FloorTile.Z = World.GetFloorTileZ(PathTile, true);
 				if( FloorTile.Z != PathTile.Z && 
 				   (UnitVisualizer.m_kReachableTilesCache.IsTileReachable(FloorTile) 
 				    && (bAllowDash || UnitVisualizer.m_kReachableTilesCache.GetPathCostToTile(PathTile) <= MaxRange) ))

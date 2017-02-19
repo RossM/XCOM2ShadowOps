@@ -54,7 +54,8 @@ simulated function UIArmory_LoadoutItem InitLoadoutItem(XComGameState_Item Item,
 			}
 			else
 			{
-				SetCount(class'UIUtilities_Strategy'.static.GetXComHQ().GetNumItemInInventory(ItemTemplate.DataName));
+				//SetCount(class'UIUtilities_Strategy'.static.GetXComHQ().GetNumItemInInventory(ItemTemplate.DataName));
+				SetCount(Item.Quantity); // LWS fixes bug in how primary weapon count gets displayed
 			}
 		}
 	}
@@ -295,7 +296,8 @@ simulated function UpdateDropItemButton(optional XComGameState_Item Item)
 	if(UIArmory_Loadout_MP(Screen) != none)
 		bShowClearButton = Item != none && !UIArmory_Loadout_MP(Screen).GetUnit().ItemIsInMPBaseLoadout(Item.GetMyTemplateName());
 	else
-		bShowClearButton = Item != none && !ItemTemplate.bInfiniteItem || Item.HasBeenModified();
+		bShowClearButton = Item != none && Item.ItemCanBeUnequipped(); // LW- added to generalize unequippability of items
+		//bShowClearButton = Item != none && !ItemTemplate.bInfiniteItem || Item.HasBeenModified();
 	bCanBeCleared = bShowClearButton;
 	if(!Movie.IsMouseActive())
 		return; //should not show the PC button to clear item if in console mode
@@ -333,6 +335,7 @@ function OnDropItemClicked(UIButton kButton)
 	local XComGameState_Unit OwnerState;
 	local array<X2EquipmentTemplate> BestGearTemplates;
 	local bool bUpgradeSucceeded;
+	local XComLWTuple OverrideTuple;  //LW Added
 
 	if(UIArmory_Loadout_MP(Screen) != none)
 	{
@@ -358,11 +361,22 @@ function OnDropItemClicked(UIButton kButton)
 		{
 			XComHQ.PutItemInInventory(NewGameState, ItemState); // Add the dropped item back to the HQ
 
-			// Give the owner the best infinite item in its place
-			BestGearTemplates = OwnerState.GetBestGearForSlot(EquipmentSlot);
-			bUpgradeSucceeded = OwnerState.UpgradeEquipment(NewGameState, none, BestGearTemplates, EquipmentSlot, ReplacementItemState);
-			OwnerState.ValidateLoadout(NewGameState);
+			//set up a Tuple for return value -- LW Added
+			OverrideTuple = new class'XComLWTuple';
+			OverrideTuple.Id = 'OverrideItemCanBeUnequipped';
+			OverrideTuple.Data.Add(1);
+			OverrideTuple.Data[0].kind = XComLWTVBool;
+			OverrideTuple.Data[0].b = false;  // whether item is unequippable
 
+			`XEVENTMGR.TriggerEvent('OverrideItemCanBeUnequipped', OverrideTuple, ItemState);
+	
+			if(!OverrideTuple.Data[0].b)
+			{
+				// Give the owner the best infinite item in its place
+				BestGearTemplates = OwnerState.GetBestGearForSlot(EquipmentSlot);
+				bUpgradeSucceeded = OwnerState.UpgradeEquipment(NewGameState, none, BestGearTemplates, EquipmentSlot, ReplacementItemState);
+				OwnerState.ValidateLoadout(NewGameState);
+			}
 			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 			
 			if (bUpgradeSucceeded)

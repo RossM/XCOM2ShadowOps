@@ -1,5 +1,18 @@
 
-class UIInventory_LootRecovered extends UIInventory;
+// LWS Changes
+//
+// tracktwo - Moved VIP names out of UIInventory_VIPRecovered and into this class to support listing multiple VIPs. VIPs
+//            are now listed in the loot table under a separate "VIPs" section.
+
+class UIInventory_LootRecovered extends UIInventory config(UI) dependson(UIInventory_VIPRecovered);
+
+struct ExtraVIPIcon
+{
+    var name TemplateName;
+    var String Icon;
+};
+
+var config array<ExtraVIPIcon> ExtraVIPIcons;
 
 var array<StateObjectReference> UnlockedTechs;
 var UIInventory_VIPRecovered VIPPanel;
@@ -10,6 +23,7 @@ var localized string m_strLootRecovered;
 var localized string m_strArtifactRecovered;
 var localized string m_strArtifactRecoveredEvac;
 var localized string m_strArtifactRecoveredSweep;
+var localized string m_strVIPRecovered;
 
 simulated function InitScreen(XComPlayerController InitController, UIMovie InitMovie, optional name InitName)
 {
@@ -25,6 +39,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 	{
 		VIPPanel = Spawn(class'UIInventory_VIPRecovered', self).InitVIPRecovered();
 		VIPPanel.SetPosition(1300, 772); // position is based on guided out panel in Inventory.fla
+        VIPPanel.Hide(); // But don't display it: we only want the pawn.
 	}
 
 	`XCOMGRI.DoRemoteEvent('CIN_HideArmoryStaff'); //Hide the staff in the armory so that they don't overlap with the soldiers
@@ -36,9 +51,27 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 simulated function BuildScreen()
 {
 	super.BuildScreen();
+
+    List.OnSelectionChanged = LootSelectedItemChanged;
 	
 	// Transition instantly to from UIAfterAction to UIInventory_LootRecovered
 	if( bIsIn3D ) class'UIUtilities'.static.DisplayUI3D(DisplayTag, CameraTag, 0);
+}
+
+simulated function LootSelectedItemChanged(UIList ContainerList, int ItemIndex)
+{
+    local UIInventory_VIPListItem VIPListItem;
+
+    VIPListItem = UIInventory_VIPListItem(ContainerList.GetItem(ItemIndex));
+    if (VIPListItem != none)
+    {
+        ItemCard.Hide();
+    }
+    else
+    {
+        // Not a VIP. Use the superclass implementation
+        super.SelectedItemChanged(ContainerList, ItemIndex);
+    }
 }
 
 function ContinueAfterActionMatinee()
@@ -176,6 +209,13 @@ simulated function PopulateData()
 			AddLootItem(Artifacts[i]);
 	}
 
+    if(BattleData.RewardUnits.Length > 0)
+    {
+        Spawn(class'UIInventory_HeaderListItem', List.ItemContainer).InitHeaderItem("img:///UILibrary_Common.UIEvent_staff", m_strVIPRecovered);
+        for(i = 0; i <  BattleData.RewardUnits.Length; ++i)
+            AddVIPReward(BattleData.RewardUnits[i]);
+    }
+
 	SetCategory(List.ItemCount == 0 ? m_strNoLoot : "");
 
 	if(List.ItemCount > 0)
@@ -240,6 +280,69 @@ simulated function PopulateData()
 simulated function AddLootItem(XComGameState_Item ItemState)
 {
 	Spawn(class'UIInventory_ListItem', List.ItemContainer).InitInventoryListItem(ItemState.GetMyTemplate(), ItemState.Quantity, ItemState.GetReference());
+}
+
+simulated function AddVIPReward(StateObjectReference UnitRef)
+{
+    local XComGameState_Unit Unit;
+    local string VIPIcon, StatusLabel, VIPString;
+    local EUIState VIPState;
+    local EVIPStatus VIPStatus;
+    local XComGameState_MissionSite Mission;
+    local bool bDarkVIP;
+    local int i;
+
+    Unit = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(UnitRef.ObjectID));
+    Mission = XComGameState_MissionSite(`XCOMHISTORY.GetGameStateForObjectID(XComHQ.MissionRef.ObjectID));
+
+	VIPStatus = EVIPStatus(Mission.GetRewardVIPStatus(Unit));
+	bDarkVIP = Unit.GetMyTemplateName() == 'HostileVIPCivilian';
+
+	if(Unit.IsAnEngineer())
+	{
+    	VIPIcon = class'UIUtilities_Image'.const.EventQueue_Engineer;
+	}
+	else if(Unit.IsAScientist())
+	{
+		VIPIcon = class'UIUtilities_Image'.const.EventQueue_Science;
+	}
+	else if(bDarkVIP)
+	{
+		VIPIcon = class'UIUtilities_Image'.const.EventQueue_Advent;
+	}
+    else
+    {
+        // Check our extra icon array
+        i = ExtraVIPIcons.Find('TemplateName', Unit.GetMyTemplateName());
+        if (i != -1)
+        {
+            VIPIcon = ExtraVIPIcons[i].Icon;
+        }
+    }
+
+	switch(VIPStatus)
+	{
+	case eVIPStatus_Awarded:
+	case eVIPStatus_Recovered:
+		VIPState = eUIState_Good;
+		break;
+	default:
+		VIPState = eUIState_Bad;
+		break;
+	}
+
+	if(bDarkVIP)
+		StatusLabel = class'UIInventory_VIPRecovered'.default.m_strEnemyVIPStatus[VIPStatus];
+	else
+		StatusLabel = class'UIInventory_VIPRecovered'.default.m_strVIPStatus[VIPStatus];
+    
+    if (VIPIcon != "")
+    {
+        VIPString = class'UIUtilities_Text'.static.InjectImage(VIPIcon, 24, 24);
+    }
+    VIPString = VIPString $ Unit.GetFullName();
+    Spawn(class'UIInventory_VIPListItem', List.ItemContainer).InitVIPListItem(VIPstring, class'UIUtilities_Text'.static.GetColoredText(StatusLabel, VIPState));
+
 }
 
 simulated function UpdateNavHelp()

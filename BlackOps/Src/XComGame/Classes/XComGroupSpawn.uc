@@ -50,8 +50,21 @@ function bool IsBoxInside(Vector TestLocation, Vector TestExtents)
 }
 
 // gets all the floor locations that this group spawn encompasses
+//LWS : Modified with hook to allow DLC/Mods to alter the floor points
 function GetValidFloorLocations(out array<Vector> FloorPoints)
 {
+	local array<X2DownloadableContentInfo> DLCInfos;
+	local int i;
+
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	for(i = 0; i < DLCInfos.Length; ++i)
+	{
+		if(DLCInfos[i].GetValidFloorSpawnLocations(FloorPoints, self))
+		{
+			return; 
+		}
+	}
+
 	`XWORLD.GetFloorTilePositions(Location, 96 * 2, 64 * 2, FloorPoints, true);
 }
 
@@ -74,11 +87,21 @@ function bool HasValidFloorLocations()
 {
 	local XComTacticalMissionManager MissionManager;
 	local array<Vector> FloorPoints;
+	local int NumSoldiers;
 
 	GetValidFloorLocations(FloorPoints);
 
 	MissionManager = `TACTICALMISSIONMGR;
-	return FloorPoints.Length > class'X2StrategyGameRulesetDataStructures'.static.GetMaxSoldiersAllowedOnMission(MissionManager.ActiveMission);
+	if(`XCOMHQ != none)
+		NumSoldiers = `XCOMHQ.Squad.Length;
+	else
+		NumSoldiers = class'X2StrategyGameRulesetDataStructures'.static.GetMaxSoldiersAllowedOnMission(MissionManager.ActiveMission);
+
+	// For TQL, etc, where the soldier are coming from the Start State, always reserve space for six soldiers
+    if (NumSoldiers == 0)
+        NumSoldiers = 6;
+
+	return FloorPoints.Length > NumSoldiers;
 }
 
 defaultproperties

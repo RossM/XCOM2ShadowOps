@@ -4,6 +4,10 @@
 //  PURPOSE: Provides static functions that create X2Effects which can be applied to
 //           ability templates. Allows for effect reuse across different abilities.
 //           
+//  PI:	 Modified to force disorienting to reapply on refresh so that the OnEffect removal of overwatch will trigger
+//       Modified bind to use a eCleanup_BeginTactical cleanup policy on the Immobilized value it sets on the target
+//       unit. Avoids a very rare bug where a mission can end with this soldier still affected by the ability, so the
+//       unit can never again move.
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
@@ -301,9 +305,26 @@ static function BleedingOutVisualizationRemoved(XComGameState VisualizeGameState
 	UpdateUnitFlag(BuildTrack, VisualizeGameState.GetContext());
 }
 
+//LWS -- reworked to allow DLC/Mods to alter bleedout chance
 static function int GetBleedOutChance(XComGameState_Unit UnitState, int OverkillDamage)
 {
-	return UnitState.GetCurrentStat(eStat_Will) - default.BLEEDOUT_BASE;
+	local int BleedoutChance;
+	local XComLWTuple Tuple; // LWS  added
+
+	BleedoutChance = UnitState.GetCurrentStat(eStat_Will) - default.BLEEDOUT_BASE;
+
+	//LWS set up a Tuple -- to pass the overkill damage, and pass/return the bleedoutchance
+	Tuple = new class'XComLWTuple';
+	Tuple.Id = 'OverrideBleedoutChance';
+	Tuple.Data.Add(2);
+	Tuple.Data[0].kind = XComLWTVInt;
+	Tuple.Data[0].i = BleedoutChance;
+	Tuple.Data[1].kind = XComLWTVInt;
+	Tuple.Data[1].i = OverkillDamage;
+
+	`XEVENTMGR.TriggerEvent('OverrideBleedoutChance', Tuple, UnitState);
+
+	return Tuple.Data[0].i;
 }
 
 //this just adds the rupture flyover text, any sort of checking if this should happen, should happen elsewhere.
@@ -324,7 +345,7 @@ static function X2Effect_Burning CreateBurningStatusEffect(int DamagePerTick, in
 
 	BurningEffect = new class'X2Effect_Burning';
 	BurningEffect.EffectName = default.BurningName;
-	BurningEffect.BuildPersistentEffect(default.BURNING_TURNS,,,,eGameRule_PlayerTurnBegin);
+	BurningEffect.BuildPersistentEffect(default.BURNING_TURNS,,false,,eGameRule_PlayerTurnBegin); //LW bugfix so fire doesn't go away when the source dies
 	BurningEffect.SetDisplayInfo(ePerkBuff_Penalty, default.BurningFriendlyName, default.BurningFriendlyDesc, "img:///UILibrary_PerkIcons.UIPerk_burn");
 	BurningEffect.SetBurnDamage(DamagePerTick, DamageSpreadPerTick, 'Fire');
 	BurningEffect.VisualizationFn = BurningVisualization;
@@ -402,7 +423,7 @@ static function X2Effect_Burning CreateAcidBurningStatusEffect(int DamagePerTick
 
 	BurningEffect = new class'X2Effect_Burning';
 	BurningEffect.EffectName = default.AcidBurningName;
-	BurningEffect.BuildPersistentEffect(default.ACID_BURNING_TURNS, , , , eGameRule_PlayerTurnBegin);
+	BurningEffect.BuildPersistentEffect(default.ACID_BURNING_TURNS, ,false, , eGameRule_PlayerTurnBegin); // LW fix so acid effect doesn't go way when source dies
 	BurningEffect.SetDisplayInfo(ePerkBuff_Penalty, default.AcidBurningFriendlyName, default.AcidBurningFriendlyDesc, "img:///UILibrary_PerkIcons.UIPerk_burn");
 	BurningEffect.SetBurnDamage(DamagePerTick, DamageSpreadPerTick, 'Acid');
 	BurningEffect.VisualizationFn = AcidBurningVisualization;
@@ -558,6 +579,8 @@ static function X2Effect_PersistentStatChange CreateDisorientedStatusEffect(opti
 	PersistentStatChangeEffect.EffectHierarchyValue = default.DISORIENTED_HIERARCHY_VALUE;
 	PersistentStatChangeEffect.bRemoveWhenTargetDies = true;
 	PersistentStatChangeEffect.bIsImpairingMomentarily = true;
+
+	PersistentStatChangeEffect.bForceReapplyOnRefresh = true; // LWS: added to fix bug where disorient applied to an already-disoriented unit won't remove overwatch
 
 	PersistentStatChangeEffect.DamageTypes.AddItem(class'X2Item_DefaultDamageTypes'.default.DisorientDamageType);
 	if( bIsMentalDamage )
@@ -1289,7 +1312,11 @@ static function BoundEffectAdded(X2Effect_Persistent PersistentEffect, const out
 		return;
 
 	// Immobilize to prevent scamper, panic, or movement from enabling this unit to move again.
-	UnitState.SetUnitFloatValue(class'X2Ability_DefaultAbilitySet'.default.ImmobilizedValueName, 1, eCleanup_Never);
+	// PI Mods: Change cleanup policy to eCleanup_BeginTactical. I can think of no good reason why bind should
+	// persist across missions. I am unsure how it can even happen, but we have had a tester with a unit with a
+	// stuck eCleanup_Never Immobilized value, meaning they can never move or act in missions.
+	//UnitState.SetUnitFloatValue(class'X2Ability_DefaultAbilitySet'.default.ImmobilizedValueName, 1, eCleanup_Never);
+	UnitState.SetUnitFloatValue(class'X2Ability_DefaultAbilitySet'.default.ImmobilizedValueName, 1, eCleanup_BeginTactical);
 }
 
 static function BountEffectRemoved(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState NewGameState, bool bCleansed)

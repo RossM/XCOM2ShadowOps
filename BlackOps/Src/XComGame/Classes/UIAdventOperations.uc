@@ -1,3 +1,5 @@
+// LWS: Modified to add hook to SignalOnReceiveFocus when switching state from pending to active Dark Events
+
 class UIAdventOperations extends UIX2SimpleScreen;
 
 var public localized String m_strTitle;
@@ -77,17 +79,10 @@ simulated function RefreshNav()
 
 	NavHelp.ClearButtonHelp();
 
-	// Carry On
-	NavHelp.AddBackButton(OnContinueClicked);
-	if ( `ISCONTROLLERACTIVE && bResistanceReport)
-	{
-		NavHelp.AddContinueButton();
-	}
-
 	if( !bResistanceReport )
 	{
-		if( ALIENHQ().ActiveDarkEvents.Length > 0 )
-		{
+		//if( ALIENHQ().ActiveDarkEvents.Length > 0 ) // LWS : Removed so that toggle is shown even if there aren't active pending events, since there may be active events
+		//{
 			if (bShowActiveEvents)
 			{
 				NavHelp.AddCenterHelp(m_strShowPendingButton, class'UIUtilities_Input'.static.GetGamepadIconPrefix() $ class'UIUtilities_Input'.const.ICON_Y_TRIANGLE, FlipScreenMode);
@@ -96,7 +91,14 @@ simulated function RefreshNav()
 			{
 				NavHelp.AddCenterHelp(m_strShowActiveButton, class'UIUtilities_Input'.static.GetGamepadIconPrefix() $ class'UIUtilities_Input'.const.ICON_Y_TRIANGLE, FlipScreenMode);
 			}
-		}
+		//}
+	}
+
+	// Carry On
+	NavHelp.AddBackButton(OnContinueClicked);
+	if ( `ISCONTROLLERACTIVE &&  bResistanceReport)
+	{
+		NavHelp.AddContinueButton();
 	}
 }
 
@@ -348,6 +350,7 @@ simulated function FlipScreenMode()
 {
 	bShowActiveEvents = !bShowActiveEvents;
 	BuildScreen();
+	SignalOnReceiveFocus();
 }
 
 simulated function CloseScreen()

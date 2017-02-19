@@ -7,6 +7,11 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Mods:
+//
+// tracktwo - Add new helper function GetDisplayName() to show in the event log.
+
 class XComGameState_HeadquartersProjectTrainRookie extends XComGameState_HeadquartersProject native(Core);
 
 var() name NewClassName; // the name of the class the rookie will eventually be promoted to
@@ -93,6 +98,12 @@ function OnProjectCompleted()
 	{
 		`HQPRES.UITrainingComplete(ProjectFocus);
 	}
+}
+
+//LWS Mods: Add a helper function to get the display name used by the event log.
+function String GetDisplayName()
+{
+    return GetTrainingClassTemplate().DisplayName;
 }
 
 //---------------------------------------------------------------------------------------

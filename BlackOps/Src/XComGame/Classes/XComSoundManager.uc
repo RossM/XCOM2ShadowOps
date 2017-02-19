@@ -2,6 +2,11 @@
 // 
 // Manages common sound and music related tasks for XCOM
 
+// LWS Mods:
+// 
+// tracktwo - Added support for SoundCues in the PlaySoundEvent() function.
+// tracktwo - Added sound aliases.
+
 class XComSoundManager extends Actor config(GameData);
 
 struct native AkEventMapping
@@ -10,9 +15,31 @@ struct native AkEventMapping
 	var AkEvent TriggeredEvent;
 };
 
+// LWS: Equivalent to AkEventMapping but for sound cues.
+struct SoundCueMapping
+{
+    var string strKey;
+    var SoundCue Cue;
+};
+
+// LWS: Alias structure for mapping a standard sound event to an alternative.
+struct SoundAlias
+{
+    var string strKey;
+    var string strValue;
+};
+
 // Sound Mappings
 var config array<string> SoundEventPaths;
 var config array<AkEventMapping> SoundEvents;
+
+// LWS: Add a configurable sound event path mapping allowing mods
+// to replace any standard sound path with a custom version.
+var config array<SoundAlias> SoundAliases;
+
+// LWS: Add sound-cue based sounds
+var config array<string> SoundCuePaths;
+var config array<SoundCueMapping> SoundCues;
 
 struct AmbientChannel
 {
@@ -102,12 +129,25 @@ function PlaySoundEvent(string strKey)
 {
 	local int Index;
 
+    // LWS: Look for a sound alias first.
+    Index = SoundAliases.Find('strKey', strKey);
+    if (Index >= 0)
+        strKey = SoundAliases[Index].strValue;
+
 	Index = SoundEvents.Find('strKey', strKey);
 
 	if(Index != INDEX_NONE)
 	{
 		WorldInfo.PlayAkEvent(SoundEvents[Index].TriggeredEvent);
 	}
+    else
+    {
+        Index = SoundCues.Find('strKey', strKey);
+        if (Index != INDEX_NONE)
+        {
+            PlaySound(SoundCues[Index].Cue);
+        }
+    }
 }
 
 //---------------------------------------------------------------------------------------
@@ -123,6 +163,12 @@ function Init()
 	{
 		ContentMgr.RequestObjectAsync(SoundEventPaths[idx], self, OnAkEventMappingLoaded);
 	}
+
+    // LWS: Load sound cues
+    for (idx = 0; idx < SoundCuePaths.Length; idx++ )
+    {
+        ContentMgr.RequestObjectAsync(SoundCuePaths[idx], self, OnSoundCueMappingLoaded);
+    }
 }
 
 //---------------------------------------------------------------------------------------
@@ -139,6 +185,21 @@ function OnAkEventMappingLoaded(object LoadedArchetype)
 
 		SoundEvents.AddItem(EventMapping);
 	}
+}
+
+// LWS
+function OnSoundCueMappingLoaded(object LoadedArchetype)
+{
+    local SoundCue TempCue;
+    local SoundCueMapping CueMapping;
+
+    TempCue = SoundCue(LoadedArchetype);
+    if (TempCue != none)
+    {
+        CueMapping.strKey = string(TempCue.name);
+        CueMapping.Cue = TempCue;
+        SoundCues.AddItem(CueMapping);
+    }
 }
 
 //---------------------------------------------------------------------------------------

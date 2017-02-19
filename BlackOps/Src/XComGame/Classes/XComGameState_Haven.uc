@@ -170,12 +170,14 @@ function string GetDisplayName()
 
 function bool CanBeScanned()
 {
-	return (GetWorldRegion().IsStartingRegion());
+	// LW Mods: Allow the havens to be hidden.
+	return !class'Helpers_LW'.default.HideHavens;
 }
 
 function bool ShouldBeVisible()
 {
-	return (ResistanceActive() && GetWorldRegion().ResistanceLevel == eResLevel_Outpost);
+	// LW Mods: Allow the havens to be hidden.
+	return !class'Helpers_LW'.default.HideHavens;
 }
 
 function class<UIStrategyMapItem> GetUIClass()
@@ -218,7 +220,8 @@ function Rotator GetMeshRotator()
 
 protected function bool CanInteract()
 {
-	return (ResistanceActive() && GetWorldRegion().IsStartingRegion());
+	// LW Mods: Allow the havens to be hidden.
+	return !class'Helpers_LW'.default.HideHavens;
 }
 
 //---------------------------------------------------------------------------------------

@@ -7,6 +7,10 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Modifications:
+// tracktwo - Allow mod overrides of IsCauseAllowedForNonvisibleUnits.
+
 class XComGameState_AIUnitData extends XComGameState_BaseObject
 	dependson(X2AIBTBehavior)
 	config(AI)
@@ -912,6 +916,22 @@ static function bool IsCauseAbsoluteKnowledge( EAlertCause AlertCause )
 
 static function bool IsCauseAllowedForNonvisibleUnits(EAlertCause AlertCause)
 {
+    local XComLWTuple Tuple;
+    local XComLWTValue Value;
+
+    // BEGIN LWS MODS: Allow override of allowing a cause on non-visible units
+    Tuple = new class'XComLWTuple';
+    Value.i = AlertCause;
+    Value.Kind = XComLWTVInt;
+    Tuple.Data.AddItem(Value);
+    Tuple.Id = 'IsCauseAllowedForNonvisibleUnits';
+    `XEVENTMGR.TriggerEvent('IsCauseAllowedForNonvisibleUnits', Tuple);
+    
+    if (Tuple.Data.Length == 2 && Tuple.Data[1].Kind == XComLWTVBool)
+    {
+        return Tuple.Data[1].b;
+    }
+    // END LWS Mods
 	return AlertCause < eAC_Allow_Nonvisible_Cutoff_DO_NOT_SET_TO_THIS;
 }
 

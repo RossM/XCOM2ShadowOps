@@ -7,6 +7,8 @@
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //----------------------------------------------------------------------------
 
+// LWS: Added an event/tuple to change ability icon colors on the fly
+
 class UITacticalHUD_Ability extends UIPanel;
 
 var localized string m_strCooldownPrefix; 
@@ -61,7 +63,8 @@ simulated function UpdateData(int NewIndex, const out AvailableAction AvailableA
 	local XComGameState_Ability AbilityState;   //Holds INSTANCE data for the ability referenced by AvailableActionInfo. Ie. cooldown for the ability on a specific unit
 	local bool OverwatchHelpVisible;
 	local bool ReloadHelpVisible;
-
+	local XComLWTuple OverrideTuple, OverrideTuple2; // LWS adds some Tuples
+	
 	Index = NewIndex; 
 
 	//AvailableActionInfo function parameter holds UI-SPECIFIC data such as "is this ability visible to the HUD?" and "is this ability available"?
@@ -124,11 +127,39 @@ simulated function UpdateData(int NewIndex, const out AvailableAction AvailableA
 		BattleDataState = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
 		if(BattleDataState.IsAbilityObjectiveHighlighted(AbilityTemplate.DataName))
 		{
-			Icon.EnableMouseAutomaticColor(class'UIUtilities_Colors'.const.OBJECTIVEICON_HTML_COLOR, class'UIUtilities_Colors'.const.BLACK_HTML_COLOR);
+			OverrideTuple2 = new class'XComLWTuple';
+			OverrideTuple2.Id = 'OverrideObjectiveAbilityIconColor';
+			OverrideTuple2.Data.Add(2);
+			OverrideTuple2.Data[0].kind = XComLWTVBool;
+			OverrideTuple2.Data[0].b = false;  //whether to change color
+			OverrideTuple2.Data[1].kind = XComLWTVString;
+			OverrideTuple2.Data[1].s = "";  // the color coming back			
+			`XEVENTMGR.TriggerEvent('OverrideObjectiveAbilityIconColor', OverrideTuple2, AbilityState);
+			if (OverrideTuple2.Data[0].b)
+			{
+				Icon.EnableMouseAutomaticColor(OverrideTuple2.Data[1].s, class'UIUtilities_Colors'.const.BLACK_HTML_COLOR);
+			}
+			else
+			{
+				Icon.EnableMouseAutomaticColor(class'UIUtilities_Colors'.const.OBJECTIVEICON_HTML_COLOR, class'UIUtilities_Colors'.const.BLACK_HTML_COLOR);
+			}
 		}
 		else if(AbilityTemplate.AbilityIconColor != "")
 		{
-			Icon.EnableMouseAutomaticColor(AbilityTemplate.AbilityIconColor, class'UIUtilities_Colors'.const.BLACK_HTML_COLOR);
+			if (AbilityTemplate.AbilityIconColor == "Variable")
+			{
+				OverrideTuple = new class'XComLWTuple';
+				OverrideTuple.Id = 'OverrideAbilityIconColor';
+				OverrideTuple.Data.Add(1);
+				OverrideTuple.Data[0].kind = XComLWTVString;
+				OverrideTuple.Data[0].s = "";  // the color coming back			
+				`XEVENTMGR.TriggerEvent('OverrideAbilityIconColor', OverrideTuple, AbilityState);
+				Icon.EnableMouseAutomaticColor(OverrideTuple.Data[0].s, class'UIUtilities_Colors'.const.BLACK_HTML_COLOR);
+			}
+			else
+			{
+				Icon.EnableMouseAutomaticColor(AbilityTemplate.AbilityIconColor, class'UIUtilities_Colors'.const.BLACK_HTML_COLOR);
+			}
 		}
 		else
 		{
@@ -291,8 +322,11 @@ simulated function HideShine()
 
 simulated function SetAvailable(bool Available)
 {
-	IsAvailable = Available;
-	MC.FunctionBool("SetAvailable", IsAvailable);
+	if(IsAvailable != Available)
+	{
+		IsAvailable = Available;
+		MC.FunctionBool("SetAvailable", IsAvailable);
+	}
 }
 
 simulated function Show()

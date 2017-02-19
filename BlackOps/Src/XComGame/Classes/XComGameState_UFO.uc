@@ -110,6 +110,9 @@ function SetInterceptionTime()
 		InterceptionTime = GetCurrentTime();
 		class'X2StrategyGameRulesetDataStructures'.static.AddHours(InterceptionTime, HoursUntilIntercept);
 	}
+
+	//LWS add hook for modifying the interception time after it has been set
+	`XEVENTMGR.TriggerEvent('PostUFOSetInterceptionTime', self, self);
 }
 
 //---------------------------------------------------------------------------------------

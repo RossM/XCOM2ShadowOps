@@ -46,8 +46,29 @@ function SetInitialState(XComDestructibleActor InVisualizer)
 	{
 		Health = InVisualizer.Toughness.Health;
 	}
+	OverrideDestructibleInitialHealth(InVisualizer);  // LWS Added to override initial health in this initialization case
 
 	bRequiresVisibilityUpdate = true;
+}
+
+//LWS Added -- helper to call hook to override destructible health
+function OverrideDestructibleInitialHealth(XComDestructibleActor Visualizer, optional bool SetCurrentHealth = true)
+{
+	local array<X2DownloadableContentInfo> DLCInfos; 
+	local int i, NewHealth; 
+	
+ 	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	for(i = 0; i < DLCInfos.Length; ++i)
+	{
+		if (DLCInfos[i].OverrideDestructibleInitialHealth(NewHealth, self, Visualizer))
+		{
+			if (SetCurrentHealth)
+			{
+				Health = NewHealth;
+			}
+			Visualizer.TotalHealth = NewHealth;
+		}
+	}
 }
 
 function Actor FindOrCreateVisualizer( optional XComGameState Gamestate = none )
@@ -201,6 +222,7 @@ function TakeDamage( XComGameState NewGameState, const int DamageAmount, const i
 		{
 			Health = Visualizer.Toughness.Health;
 		}
+		OverrideDestructibleInitialHealth(Visualizer); // LWS Added to override initial health in this initialization case
 	}
 
 	// update health and fire death messages, if needed

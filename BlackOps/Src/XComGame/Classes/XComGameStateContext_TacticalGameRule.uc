@@ -584,7 +584,7 @@ private function SyncAllVisualizers(out array<VisualizationTrack> VisualizationT
 
 	foreach AssociatedState.IterateByClassType(class'XComGameState_BaseObject', VisualizedObject)
 	{
-		if(X2VisualizedInterface(VisualizedObject) != none)
+		if(X2VisualizedInterface(VisualizedObject) != none || LWVisualizedInterface(VisualizedObject) != none)
 		{
 			BuildTrack = EmptyTrack;
 			BuildTrack.StateObject_OldState = VisualizedObject;
@@ -592,7 +592,17 @@ private function SyncAllVisualizers(out array<VisualizationTrack> VisualizationT
 			BuildTrack.TrackActor = History.GetVisualizer(BuildTrack.StateObject_NewState.ObjectID);
 			class'X2Action_SyncVisualizer'.static.AddToVisualizationTrack(BuildTrack, self);
 
-			X2VisualizedInterface(VisualizedObject).AppendAdditionalSyncActions( BuildTrack );
+            if (X2VisualizedInterface(VisualizedObject) != none)
+            {
+			    X2VisualizedInterface(VisualizedObject).AppendAdditionalSyncActions( BuildTrack );
+            }
+            else
+            {
+                // tracktwo: X2VisualizedInterface is a native interface, so it cannot be implemented by
+                // non-native classes. A work-alike LWVisualizedInterface is used here to allow visualizations
+                // on custom game states without requiring them to be native.
+                LWVisualizedInterface(VisualizedObject).AppendAdditionalSyncActions(BuildTrack);
+            }
 
 			// force all these actions being used for save/load to just run to completion.
 			// timing is irrelevant

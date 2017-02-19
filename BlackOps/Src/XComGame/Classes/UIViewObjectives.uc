@@ -28,6 +28,18 @@ simulated function OnPurchaseClicked(UIList kList, int itemIndex)
 	//Do nothing else, since this is just a view screen.
 }
 
+// LWS : Added to enable UIScreenListeners to detect change events
+simulated function SelectedItemChanged(UIList ContainerList, int ItemIndex)
+{
+	super.SelectedItemChanged(ContainerList, ItemIndex);
+
+	if (itemIndex != iSelectedItem)
+	{
+		iSelectedItem = itemIndex;
+	}
+	SignalOnReceiveFocus(); // notify so the DLC/Mods can take action when item changes
+}
+
 //-------------- GAME DATA HOOKUP --------------------------------------------------------
 
 // Needed for blank inventory label to show up blank

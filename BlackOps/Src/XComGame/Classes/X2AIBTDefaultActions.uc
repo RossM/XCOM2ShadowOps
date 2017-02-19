@@ -4,6 +4,10 @@ class X2AIBTDefaultActions extends X2AIBTLeafNode
 	native(AI)
 	dependson(XGAIBehavior);
 
+// LWS Mods:
+//
+// tracktwo - DoNoiseAlert: Apply the alert only to aliens within a configurable sound range rather than all units on the map.
+
 var delegate<BTActionDelegate> m_dActionFn;
 var name m_MoveProfile;
 
@@ -1121,30 +1125,58 @@ function bt_status DoNoiseAlert() // contents basically stolen from SeqAct_DropA
 	local AlertAbilityInfo AlertInfo;
 	local XComGameState_Unit kUnitState;
 	local XComGameState_AIUnitData NewUnitAIState, kAIData;
+	local array<StateObjectReference> AliensInRange; // LWS Added
+	local bool CleanupAIData; // LWS Added
 
 	History = `XCOMHISTORY;
 
 	// Kick off mass alert to location.
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState( "BehaviorTree - DoNoiseAlert" );
 
+	// LWS: Create a new unit state for our civvy so they can be visualized
+	kUnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', m_kUnitState.ObjectID));
+	NewGameState.AddStateObject(kUnitState);
+
+	// LWS Add: Add visualization of this alert
+	XComGameStateContext_ChangeContainer(NewGameState.GetContext()).BuildVisualizationFn = BuildVisualizationForNoiseAlert;
+
 	AlertInfo.AlertTileLocation = m_kUnitState.TileLocation;
 	AlertInfo.AlertRadius = 1000;
 	AlertInfo.AlertUnitSourceID = m_kUnitState.ObjectID;
 	AlertInfo.AnalyzingHistoryIndex = History.GetCurrentHistoryIndex( ); //NewGameState.HistoryIndex; <- this value is -1.
+
+	// LWS added: Gather the units in sound range of this civvy.
+	class'Helpers_LW'.static.GetAlienUnitsInRange(m_kUnitState.TileLocation, class'Helpers_LW'.default.NoiseAlertSoundRange, AliensInRange);
 
 	foreach History.IterateByClassType( class'XComGameState_AIUnitData', kAIData )
 	{
 		kUnitState = XComGameState_Unit( History.GetGameStateForObjectID( kAIData.m_iUnitObjectID ) );
 		if (kUnitState != None && kUnitState.IsAlive( ))
 		{
-			NewUnitAIState = XComGameState_AIUnitData( NewGameState.CreateStateObject( kAIData.Class, kAIData.ObjectID ) );
+			// LWS Add: Skip units outside of sound range
+			if (AliensInRange.Find('ObjectID', kUnitState.ObjectID) < 0)
+				continue;
+			CleanupAIData = false;
+			// LWS: Check to see if we already have ai data for this unit in this game state (alert may already have been propagated to
+			// group members).
+			NewUnitAIState = XComGameState_AIUnitData(NewGameState.GetGameStateForObjectID(kAIData.ObjectID));
+			if (NewUnitAIState == none)
+			{
+				NewUnitAIState = XComGameState_AIUnitData( NewGameState.CreateStateObject( kAIData.Class, kAIData.ObjectID ) );
+				// LWS: This unit will need cleanup if we fail to add the alert.
+				CleanupAIData = true;
+			}
 			if( NewUnitAIState.AddAlertData( kAIData.m_iUnitObjectID, eAC_AlertedByYell, AlertInfo, NewGameState ) )
 			{
 				NewGameState.AddStateObject(NewUnitAIState);
 			}
 			else
 			{
-				NewGameState.PurgeGameStateForObjectID(NewUnitAIState.ObjectID);
+				// LWS Add: Don't cleanup this AI unit data unless we created it.
+				if (CleanupAIData)
+				{
+					NewGameState.PurgeGameStateForObjectID(NewUnitAIState.ObjectID);
+				}
 			}
 		}
 	}
@@ -1159,6 +1191,25 @@ function bt_status DoNoiseAlert() // contents basically stolen from SeqAct_DropA
 	}
 
 	return BTS_SUCCESS;
+}
+
+// LWS Add: Pop up a flyover for fleeing civvies.
+function BuildVisualizationForNoiseAlert(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{
+	local X2Action_PlaySoundAndFlyover SoundAndFlyover;
+	local VisualizationTrack        BuildTrack;
+	local XComGameState_Unit UnitState;
+
+	UnitState = XComGameState_Unit(VisualizeGameState.GetGameStateForObjectID(m_kUnitState.ObjectID));
+	if (UnitState == none)
+		return;
+
+	`XCOMHISTORY.GetCurrentAndPreviousGameStatesForObjectID(UnitState.ObjectID, BuildTrack.StateObject_OldState, BuildTrack.StateObject_NewState, , VisualizeGameState.HistoryIndex);
+	BuildTrack.StateObject_NewState = UnitState;
+	BuildTrack.TrackActor = UnitState.GetVisualizer();
+	SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, VisualizeGameState.GetContext()));
+	SoundAndFlyOver.SetSoundAndFlyOverParameters(None, class'X2Action_Yell'.default.m_sYellMessage, '', eColor_Bad);
+	OutVisualizationTracks.AddItem(BuildTrack);
 }
 
 function bt_status RunCivilianExitMap()

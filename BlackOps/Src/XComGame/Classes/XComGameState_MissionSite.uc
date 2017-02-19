@@ -6,6 +6,14 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Changes:
+//
+// tracktwo - Consider VIPs lost if they are not removed from play (i.e. they did not evac).
+//            Base game considered them all saved if not dead and the mission succeeded, which is
+//            insufficient for multi-VIP missions. This needs to be adjusted further if its desired
+//            to have multi-VIP missions that are not evac missions. 
+//
 class XComGameState_MissionSite extends XComGameState_GeoscapeEntity
 	native(Core);
 
@@ -104,6 +112,8 @@ function bool CacheSelectedMissionData(int ForceLevel, int AlertLevel)
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameStateHistory History;
 	local int LeaderForceLevelMod;
+	local array<X2DownloadableContentInfo> DLCInfos; // LWS: Added for hook
+	local int i; // LWS: Added for hook
 
 	if(SelectedMissionData.ForceLevel == ForceLevel && SelectedMissionData.AlertLevel == AlertLevel &&
 	   SelectedMissionData.SelectedMissionScheduleName != '')
@@ -166,6 +176,13 @@ function bool CacheSelectedMissionData(int ForceLevel, int AlertLevel)
 				NewEncounter.EncounterSpawnInfo.EncounterZoneOffsetAlongLOP = EncounterInfo.EncounterZoneOffsetAlongLOP;
 
 				NewEncounter.EncounterSpawnInfo.SpawnLocationActorTag = EncounterInfo.SpawnLocationActorTag;
+
+				//LWS: Added hook to allow post-creation adjustment of instantiated encounter info
+				DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+				for(i = 0; i < DLCInfos.Length; ++i)
+				{
+					DLCInfos[i].PostEncounterCreation(NewEncounter.SelectedEncounterName, NewEncounter.EncounterSpawnInfo, ForceLevel, AlertLevel, self);
+				}
 
 				SelectedMissionData.SelectedEncounters.AddItem(NewEncounter);
 			}
@@ -979,6 +996,28 @@ function bool AboutToExpire()
 
 function class<UIStrategyMapItem> GetUIClass()
 {
+	local XComLWTuple OverrideTuple; // LW  added
+	local class<UIStrategyMapItem> MapItemClass;
+
+	//LW set up a Tuple -- false means use regular UIClass, true means try and override it
+	OverrideTuple = new class'XComLWTuple';
+	OverrideTuple.Id = 'MissionSite_GetUIClass';
+	OverrideTuple.Data.Add(2);
+	OverrideTuple.Data[0].kind = XComLWTVBool;
+	OverrideTuple.Data[0].b = false; // override or not
+	OverrideTuple.Data[1].kind = XComLWTVString;
+	OverrideTuple.Data[1].s = "";
+
+	//LW add hook for mods to modify UI Class
+	`XEVENTMGR.TriggerEvent('MissionSite_GetUIClass', OverrideTuple, self);
+
+	if(OverrideTuple.Data[0].b)
+	{
+		MapItemClass = class<UIStrategyMapItem>(DynamicLoadObject(OverrideTuple.Data[1].s, class'Class'));
+		if(MapItemClass != none)
+			return MapItemClass;
+	}
+	
 	if(MakesDoom())
 	{
 		return class'UIStrategyMapItem_Mission'; //bsg-jneal (8.30.16): added DOOM to mission map items, use that class now
@@ -1147,6 +1186,7 @@ function ConfirmMission()
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XGStrategy StrategyGame;
 	local XComGameState NewGameState;
+	local XComLWTuple OverrideTuple; // LW  added
 
 	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Launch Mission Selected");
 	`XEVENTMGR.TriggerEvent('LaunchMissionSelected', , , NewGameState);
@@ -1172,8 +1212,22 @@ function ConfirmMission()
 	}
 	else
 	{
-		// Launch this Mission!
-		StrategyGame.LaunchTacticalBattle(ObjectID);
+		//LWS : Added hook to allow circumventing the typical mission launch process 
+
+		//LW set up a Tuple -- false means launch tactical battle as normal, true means a listener is launching it
+		OverrideTuple = new class'XComLWTuple';
+		OverrideTuple.Id = 'MissionSite_OverrideLaunchTacticalBattle';
+		OverrideTuple.Data.Add(1);
+		OverrideTuple.Data[0].kind = XComLWTVBool;
+		OverrideTuple.Data[0].b = false; // override or not
+
+		`XEVENTMGR.TriggerEvent('MissionSite_OverrideLaunchTacticalBattle', OverrideTuple, self);
+
+		if (OverrideTuple.Data[0].b == false)
+		{
+			// Launch this Mission!
+			StrategyGame.LaunchTacticalBattle(ObjectID);
+		}
 	}
 }
 
@@ -1539,6 +1593,23 @@ simulated function StateObjectReference GetRewardVIP()
 simulated function int GetRewardVIPStatus(XComGameState_Unit Unit)
 {
 	local XComGameState_BattleData BattleData;
+    local XComLWTuple Tuple;
+    local XComLWTValue Value;
+
+    // LWS: Allow mod overrides for VIP status. Triggers the 'GetRewardVIPStatus' event with
+    // a tuple with 1 object data object - the unit being rewarded. EventSource is the mission site.
+    // If the handler returns a tuple with an int in data[1], that value is used as the return value.
+    Tuple = new class'XComLWTuple';
+    Tuple.Id = 'GetRewardVIPStatus';
+    Value.Kind = XComLWTVObject;
+    Value.o = Unit;
+    Tuple.Data.AddItem(Value);
+    `XEVENTMGR.TriggerEvent('GetRewardVIPStatus', Tuple, self, none);
+
+    if (Tuple.Data.Length == 2 && Tuple.Data[1].Kind == XComLWTVInt)
+    {
+        return Tuple.Data[1].i;
+    }
 
 	if(Unit == none)
 		return eVIPStatus_Unknown;

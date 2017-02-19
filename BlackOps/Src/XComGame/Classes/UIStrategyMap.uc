@@ -6,6 +6,7 @@
 //
 //           UIStrategyMap_HUD
 //
+//	LWS:	 Adding hook to override what gets displayed for the resistance HQ icon
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //--------------------------------------------------------------------------------------- 
@@ -473,7 +474,7 @@ simulated function HideCursor()
 
 simulated function ShowCursor()
 {
-	if (!bCursorAlwaysVisible)
+	if (`ISCONTROLLERACTIVE && !bCursorAlwaysVisible)
 	{
 		if (m_eUIState != eSMS_Flight)
 		{
@@ -510,6 +511,9 @@ simulated function UIStrategyMapItem GetMapItem(XComGameState_GeoscapeEntity Ent
 	local int MapItemIndex;
 	local XComGameState_WorldRegion Region;
 	local XComGameState_GeoscapeEntity EntityState;
+	local array<int> PendingStatesNeedingLocations;  // LWS Added
+	local Vector NewLocation;  // LWS Added
+	local class<UIStrategyMapItem> NewClass; //LWS Added
 
 	WidgetName = name(Entity.GetUIWidgetName());
 
@@ -520,7 +524,9 @@ simulated function UIStrategyMapItem GetMapItem(XComGameState_GeoscapeEntity Ent
 	}
 	else
 	{
-		MapItem = Spawn(Entity.GetUIClass(), ItemContainer).InitMapItem(Entity);
+		// LWS Mods : allow recursive overriding of strategy map item classes
+		NewClass = class<UIStrategyMapItem>(class'Helpers_LW'.static.LWCheckForRecursiveOverride(Entity.GetUIClass()));
+		MapItem = Spawn(NewClass, ItemContainer).InitMapItem(Entity);
 		CachedWidgetNames.AddItem(WidgetName);
 		CachedMapItems.AddItem(MapItem);
 
@@ -532,6 +538,16 @@ simulated function UIStrategyMapItem GetMapItem(XComGameState_GeoscapeEntity Ent
 			Region = Entity.GetWorldRegion();
 		}
 
+		// LWS Mods: GetMapItem() and GetRandomLocationInRegion() are mutually recursive. When we get here and try to
+		// update all the map items that need locations, we'll call GetRandomLocationInRegion for each one asking for a new
+		// spot to put the new item. This in turn will call back into this function to get the MapItem for the Region itself,
+		// which will then decide it needs updates ...
+		//
+		// So: Do the updates in two parts. First iterate over all the entities in this region that need an update and cache them
+		// in a list, then reset their needs update flag to false. Submit this state if we found any such entities. Then we can iterate
+		// again, looking for entities in our cached list and for each one of those first request the new random location and then
+		// create a new game state for this entity with the updated locations. This ensures we only call GetRandomLocationInRegion
+		// after we have cleared the bNeedsLocationUpdate flag for each entity in the region.
 		if (Region != none)
 		{
 			History = `XCOMHISTORY;
@@ -543,9 +559,8 @@ simulated function UIStrategyMapItem GetMapItem(XComGameState_GeoscapeEntity Ent
 				{
 					EntityState = XComGameState_GeoscapeEntity(NewGameState.CreateStateObject(EntityState.Class, EntityState.ObjectID));
 					NewGameState.AddStateObject(EntityState);
-					EntityState.Location = Region.GetRandomLocationInRegion(, , EntityState);
-					EntityState.HandleUpdateLocation();
 					EntityState.bNeedsLocationUpdate = false;
+					PendingStatesNeedingLocations.AddItem(EntityState.ObjectID); // LWS Added
 				}
 			}
 
@@ -556,6 +571,24 @@ simulated function UIStrategyMapItem GetMapItem(XComGameState_GeoscapeEntity Ent
 			else
 			{
 				History.CleanupPendingGameState(NewGameState);
+			}
+
+			// LWS Added: handle setting new location for the entities that need it.
+			if (PendingStatesNeedingLocations.Length > 0)
+			{
+				foreach History.IterateByClassType(class'XComGameState_GeoscapeEntity', EntityState)
+				{
+					if(EntityState.Region == Region.GetReference() && PendingStatesNeedingLocations.Find(EntityState.ObjectID) >= 0)
+					{
+						NewLocation = Region.GetRandomLocationInRegion(, , EntityState);
+						NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Entity Locations Updated Part 2");
+						EntityState = XComGameState_GeoscapeEntity(NewGameState.CreateStateObject(EntityState.Class, EntityState.ObjectID));
+						NewGameState.AddStateObject(EntityState);
+						EntityState.Location = NewLocation;
+						EntityState.HandleUpdateLocation();
+						`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+					}
+				}
 			}
 		}
 	}
@@ -933,8 +966,11 @@ simulated function HideMissionButtons()
 	StrategyMapHUD.mc.BeginFunctionOp("AnimateMissionTrayOut");
 	StrategyMapHUD.mc.EndOp();
 	
-	LeftBumperIcon.Hide();
-	RightBumperIcon.Hide();
+	if (`ISCONTROLLERACTIVE)
+	{
+		LeftBumperIcon.Hide();
+		RightBumperIcon.Hide();
+	}
 }
 
 simulated function UpdateMissions()
@@ -945,6 +981,7 @@ simulated function UpdateMissions()
 	local int i, numScanSites, numMissions;
 	local XComGameStateHistory History;
 	local bool bGuerillaAdded;
+    local XComLWTuple Tuple; // LWS added for hook return
 	
 	ClearMissions();
 	ClearScanSites();
@@ -1002,6 +1039,17 @@ simulated function UpdateMissions()
 			if(i < MAX_NUM_STRATEGYICONS)
 			{
 				i++;
+				if (i == 1)  // LWS : added this block
+				{
+					Tuple = new class'XComLWTuple';
+					Tuple.Id = 'OnInsertFirstMissionIcon';
+					Tuple.Data.Add(1);
+					Tuple.Data[0].Kind = XComLWTVBool;
+					Tuple.Data[0].b = false;
+					`XEVENTMGR.TriggerEvent('OnInsertFirstMissionIcon', Tuple, self); // hook for replacing first mission icon, if XComGameState_Haven won't generate it
+					if (Tuple.Data[0].b)
+						i++;
+				}
 				if(ScanSite.IsA('XComGameState_Haven'))
 				{
 					MissionItemUI.MissionIcons[0].SetScanSite(ScanSite);
@@ -1319,7 +1367,7 @@ simulated function UpdateSelection(float DeltaTime)
 			}
 		}
 
-		if (bSelectNearest)
+		if (`ISCONTROLLERACTIVE && bSelectNearest)
 		{
 			SelectMapItemNearestLocation(ViewLocation);
 		}
@@ -1680,7 +1728,10 @@ simulated function OnLoseFocus()
 	HideMissionButtons();
 	HideDarkEventsButton();
 	NavBar.ClearButtonHelp(); //removed ForceClearButtonHelp() - JTA 2016/6/20
-	CenteredNavHelp.Hide();
+	if (CenteredNavHelp != none)
+	{
+		CenteredNavHelp.Hide();
+	}
 	HideTooltip();
 }
 
@@ -1713,7 +1764,10 @@ simulated function OnReceiveFocus()
 		bMoveViewLocation = false;
 		bSelectNearest = false;
 	}
-	SelectLastSelectedMapItem(); //bsg-jneal (8.17.16): reselect last map item since we cleared its focus when the map lost focus before.
+	if (`ISCONTROLLERACTIVE)
+	{
+		SelectLastSelectedMapItem(); //bsg-jneal (8.17.16): reselect last map item since we cleared its focus when the map lost focus before.
+	}
 }
 
 simulated function OnRemoved()

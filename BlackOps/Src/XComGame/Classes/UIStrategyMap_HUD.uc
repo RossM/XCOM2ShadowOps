@@ -3,6 +3,9 @@
 //  FILE:    UIStrategyMap_HUD
 //  AUTHOR:  Sam Batista
 //  PURPOSE: This is a prototype control that displays 2D information in the Strategy Map.
+//
+//	LWS:	 Adding code to adjust the doom meter to allow for configured alternative max doom amounts
+//			 Adding optimization of how doom meter is updated to avoid complex inner loops for alternative doom sources
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //--------------------------------------------------------------------------------------- 
@@ -121,7 +124,7 @@ simulated function UpdateMissingPersons()
 
 simulated function UpdateData()
 {
-	local int i;
+	local int i, MaxDoom, CurrentDoom;  // LWS : Added Max and Current Doom for better optimization
 	local XComGameState_HeadquartersAlien AlienHQ;
 	local XComGameState NewGameState;
 	local bool bPlayedSound;
@@ -186,11 +189,16 @@ simulated function UpdateData()
 			`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 		}
 
+		//LWS : Added code to adjust meter and doomBG based on the max configured doom
+		UpdateDoomMeterPosition(AlienHQ);
+
 		MC.BeginFunctionOp("UpdateDoomMeter");
 
-		for (i = 0; i < AlienHQ.GetMaxDoom(); ++i)
+		MaxDoom = AlienHQ.GetMaxDoom();			// LWS: retrieve local copy of MaxDoom
+		CurrentDoom = AlienHQ.GetCurrentDoom();  // LWS: retrieving local copy of CurrentDoom
+		for (i = 0; i < MaxDoom; ++i)   // LWS: Updated to use cached local copy of max doom to avoid spamming the MaxDoom method
 		{
-			if( i < AlienHQ.GetCurrentDoom() )
+			if( i < CurrentDoom )  // LWS: Updated to use cached local copy of current doom to avoid spamming the CurrentDoom method
 			{
 				if(i >= CachedDoom)
 				{
@@ -244,6 +252,29 @@ simulated function UpdateData()
 		`HQPRES.ScreenStack.MoveToTopOfStack(class'UIAlert');
 		`HQPRES.ScreenStack.ForceStackOrder(`HQPRES.Get2DMovie());
 	}
+}
+
+// LWS Helper function to update doom meter size/position for varying configured max doom amounts
+function UpdateDoomMeterPosition(XComGameState_HeadquartersAlien AlienHQ)
+{
+	local float DoomMeterShift, BGWidth;
+	local int MaxDoom;
+
+	MaxDoom = AlienHQ.GetMaxDoom();
+	if (MaxDoom == 12)
+		return;
+
+	DoomMeterShift = 14.1 * float(MaxDoom - 12) - 6.05;
+	// 28.2 between consecutive blocks
+	MC.ChildSetNum("doomMeter.blockContainer", "_x", -DoomMeterShift); // good for any number of pips
+
+	MC.ChildSetNum("doomMeter.doomBG", "_x", -DoomMeterShift);
+	MC.ChildSetNum("doomMeter.doomShine", "_x", -DoomMeterShift);
+
+	BGWidth = 28.2 * float(MaxDoom) - 8.5 + 2 * 8.0;
+
+	MC.ChildSetNum("doomMeter.doomBG", "_width", BGWidth);
+	MC.ChildSetNum("doomMeter.doomShine", "_width", BGWidth);
 }
 
 simulated function UpdateLoseTimer()

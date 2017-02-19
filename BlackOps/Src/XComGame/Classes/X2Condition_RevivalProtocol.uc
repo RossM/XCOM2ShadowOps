@@ -2,6 +2,7 @@
 //  FILE:    X2Condition_RevivalProtocol.uc
 //  AUTHOR:  Joshua Bouscher
 //           
+//	LWS:	 Fixing bug that prevents targeting of stunned soldiers
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
@@ -18,7 +19,7 @@ event name CallMeetsCondition(XComGameState_BaseObject kTarget)
 	if (!TargetUnit.GetMyTemplate().bCanBeRevived)
 		return 'AA_UnitIsImmune';
 
-	if (TargetUnit.IsPanicked() || TargetUnit.IsUnconscious() || TargetUnit.IsDisoriented())
+	if (TargetUnit.IsPanicked() || TargetUnit.IsUnconscious() || TargetUnit.IsDisoriented() || TargetUnit.IsStunned())
 		return 'AA_Success';
 
 	return 'AA_UnitIsNotImpaired';

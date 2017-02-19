@@ -406,7 +406,12 @@ event AddWorldEffectTickEvents( XComGameState NewGameState, XComGameState_WorldE
 	local TTile Tile;	
 	local XComGameState_EnvironmentDamage DamageEvent;
 	local XComDestructibleActor TileActor;
-	
+
+	// PI Added
+	local array<X2DownloadableContentInfo> DLCInfos;
+	local int i;
+	local bool bAnyOverride;
+
 	//Spread before reducing the intensity
 	GetFireSpreadTiles(OutTiles, TickingWorldEffect);
 	SharedApplyFireToTiles(Class.Name, self, NewGameState, OutTiles, none);
@@ -428,6 +433,19 @@ event AddWorldEffectTickEvents( XComGameState NewGameState, XComGameState_WorldE
 		}
 	}
 
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	for(i = 0; i < DLCInfos.Length; ++i)
+	{
+		if (DLCInfos[i].OverrideWorldFireTickEvent(self, TickingWorldEffect, NewGameState))
+		{
+			bAnyOverride = true;
+		}
+	}
+	if (bAnyOverride)
+	{
+		return;
+	}
+	
 	if (DestroyedTiles.Length > 0)
 	{
 		DamageEvent = XComGameState_EnvironmentDamage( NewGameState.CreateStateObject(class'XComGameState_EnvironmentDamage') );

@@ -16,6 +16,7 @@ function SetProjectFocus(StateObjectReference FocusRef, optional XComGameState N
 	local XComGameStateHistory History;
 	local XComGameState_GameTime TimeState;
 	local XComGameState_Unit UnitState;
+	local XComLWTuple OverrideTuple; // LWS  added
 
 	History = `XCOMHISTORY;
 	ProjectFocus = FocusRef; // Unit
@@ -26,6 +27,19 @@ function SetProjectFocus(StateObjectReference FocusRef, optional XComGameState N
 	UnitState.SetStatus(eStatus_Training);
 	
 	ProjectPointsRemaining = CalculatePointsToRespec();
+
+	OverrideTuple = new class'XComLWTuple';
+	OverrideTuple.Id = 'OverrideRespecTimes';
+	OverrideTuple.Data.Add(2);
+	OverrideTuple.Data[0].kind = XComLWTVInt;
+	OverrideTuple.Data[0].i = UnitState.GetRank();
+	OverrideTuple.Data[1].kind = XComLWTVInt;
+	OverrideTuple.Data[1].i = ProjectPointsRemaining;
+
+	//LW add hook for mods to change outcome of CPTR function
+	`XEVENTMGR.TriggerEvent('SoldierRespecced', OverrideTuple, self, NewGameState);
+
+	ProjectPointsRemaining = OverrideTuple.Data[1].i;
 	InitialProjectPoints = ProjectPointsRemaining;
 
 	UpdateWorkPerHour(NewGameState);

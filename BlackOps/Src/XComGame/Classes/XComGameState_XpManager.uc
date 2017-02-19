@@ -1,3 +1,5 @@
+// LWS:		 Added triggerevent for post-mission DLC/mod alterations
+
 class XComGameState_XpManager extends XComGameState_BaseObject	
 	dependson(X2ExperienceConfig)
 	native(Core);
@@ -105,6 +107,8 @@ function DistributeTacticalGameEndXp(XComGameState NewGameState)
 	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 
 	`log("===" @ GetFuncName() @ "===",,'XComXpMan');
+
+	`XEVENTMGR.TriggerEvent('OnDistributeTacticalGameEndXP', XComHQ, self, NewGameState); // LWS : Added trigger to allow for post-mission modifications
 
 	//  If the full xp system is not enabled, just reset the RankedUp flag.
 	if (!class'X2ExperienceConfig'.default.bUseFullXpSystem)

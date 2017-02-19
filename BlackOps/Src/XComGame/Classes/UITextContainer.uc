@@ -3,6 +3,7 @@
 //  FILE:    UIText.uc
 //  AUTHOR:  Samuel Batista
 //  PURPOSE: UIText to populate and manipulate a text field.
+//  LWS : Added bugfixes for vertical autoscrolling text
 //----------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //----------------------------------------------------------------------------
@@ -54,12 +55,32 @@ simulated function UITextContainer InitTextContainer(optional name InitName, opt
 
 simulated function UITextContainer SetText(string txt)
 {
+	local int textPosOffset;
+
+	//LWS : added code to clear scroll and rest position when setting text in an existing scrolled panel
+	if (bAutoScroll)
+	{
+		text.ClearScroll();
+		textPosOffset = bgPadding * 0.5;
+		text.SetPosition(textPosOffset , textPosOffset );
+	}
+
 	text.SetText(txt);
 	return self;
 }
 
 simulated function UITextContainer SetHTMLText(string txt)
 {
+	local int textPosOffset;
+
+	//LWS : added code to clear scroll and rest position when setting text in an existing scrolled panel
+	if (bAutoScroll)
+	{
+		text.ClearScroll();
+		textPosOffset = bgPadding * 0.5;
+		text.SetPosition(textPosOffset , textPosOffset );
+	}
+
 	text.SetHTMLText(txt);
 	return self;
 }
@@ -84,7 +105,11 @@ simulated function SetHeight(float newHeight)
 	if(height != newHeight)
 	{
 		height = newHeight;
-		text.SetHeight(newHeight);
+
+		if (!bAutoScroll) // LWS : don't set height when autoscrolling, so that text isn't clipped
+		{
+			text.SetHeight(newHeight);
+		}
 
 		if(mask != none && scrollbar != none)
 		{
@@ -124,7 +149,7 @@ simulated function RealizeTextSize()
 
 		if( bAutoScroll )
 		{
-			text.AnimateScroll( text.Height, height);
+			text.AnimateScroll( text.Height + bgpadding, height); // LWS : add bgPadding to avoid clipping of last line
 		}
 		else
 		{

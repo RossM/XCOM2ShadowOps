@@ -8,6 +8,8 @@
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //--------------------------------------------------------------------------------------- 
 
+//LW2: added ini-managed control for bronzeman mode-type use of restart level button
+
 class UIPauseMenu extends UIScreen;
 
 var int       m_iCurrentSelection;
@@ -685,7 +687,23 @@ simulated function BuildMenu()
 		UIListItemString(List.CreateItem()).InitListItem(m_sRestartLevel);
 	}
 	else
-		m_optRestart = -1;  //set options to -1 so they don't interfere with the switch statement on selection
+	{
+		//LW2 stuff
+		if( kMPGRI == none &&
+		XComPresentationLayer(Movie.Pres) != none &&
+		XGBattle_SP(`BATTLE).m_kDesc != None &&
+		!`ONLINEEVENTMGR.bIsChallengeModeGame &&
+		((!m_bIsIronman && class'Helpers_LW'.default.EnableRestartMissionButtonInNonIronman) ||
+		 (m_bIsIronman && class'Helpers_LW'.default.EnableRestartMissionButtonInIronman)) )
+		{
+				m_optRestart = iCurrent++; 
+				UIListItemString(List.CreateItem()).InitListItem(m_sRestartLevel);
+		}
+		else
+		{
+			m_optRestart = -1;  //set options to -1 so they don't interfere with the switch statement on selection
+		}
+	}
 
 	// Only allow changing difficulty if in an active single player game and only at times where saving is permitted
 	if( Movie.Pres.m_eUIMode != eUIMode_Shell && kMPGRI == none && m_bAllowSaving && !`ONLINEEVENTMGR.bIsChallengeModeGame)

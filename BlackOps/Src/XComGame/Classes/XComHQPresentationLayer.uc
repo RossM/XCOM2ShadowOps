@@ -249,6 +249,7 @@ simulated function ExitPostMissionSequence()
 	local XComOnlineEventMgr OnlineEventManager;
 	local array<X2DownloadableContentInfo> DLCInfos;
 	local int i;
+	local int LowSoldierWarningRequirement; // LWS added
 
 	XComHQ = XComGameState_HeadquartersXCom(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 
@@ -288,7 +289,16 @@ simulated function ExitPostMissionSequence()
 	DisplayShakenSoldierPopups();
 
 	// If our force is understrength, warn the player
-	if (!XComHQ.AnyTutorialObjectivesInProgress() && XComHQ.GetNumberOfDeployableSoldiers() < class'X2StrategyGameRulesetDataStructures'.static.GetMaxSoldiersAllowedOnMission())
+	// LWS adding override to allow setting of this value to something else
+	if (class'Helpers_LW'.default.LowStrengthTriggerCount <= 0)
+	{
+		LowSoldierWarningRequirement = class'X2StrategyGameRulesetDataStructures'.static.GetMaxSoldiersAllowedOnMission();
+	}
+	else
+	{
+		LowSoldierWarningRequirement = class'Helpers_LW'.default.LowStrengthTriggerCount;
+	}
+	if (!XComHQ.AnyTutorialObjectivesInProgress() && XComHQ.GetNumberOfDeployableSoldiers() < LowSoldierWarningRequirement)
 	{ 
 		UIForceUnderstrength();
 	}
@@ -559,7 +569,7 @@ private function StrategyMap_FinishTransitionEnter()
 	}
 	else
 	{
-		if (StrategyMap2D.HasLastSelectedMapItem())
+		if (StrategyMap2D.HasLastSelectedMapItem() && `ISCONTROLLERACTIVE)
 		{
 			StrategyMap2D.SelectLastSelectedMapItem();
 		}
@@ -1651,10 +1661,13 @@ simulated function HotlinkToViewDarkEvents(optional bool bShowActiveDarkEvents =
 function UISquadSelect(optional bool bNoCancel=false)
 {
 	local UISquadSelect SquadSelectScreen;
+	local class<UISquadSelect> ClassToBuild;
 
-	if(ScreenStack.IsNotInStack(class'UISquadSelect'))
+	ClassToBuild = class<UISquadSelect>(class'Helpers_LW'.static.LWCheckForRecursiveOverride(class'UISquadSelect'));
+
+	if(ScreenStack.IsNotInStack(ClassToBuild))
 	{
-		SquadSelectScreen = Spawn( class'UISquadSelect', self);
+		SquadSelectScreen = Spawn( ClassToBuild, self);
 		SquadSelectScreen.bNoCancel = bNoCancel;
 		ScreenStack.Push(SquadSelectScreen);
 	}
@@ -1674,13 +1687,17 @@ function UIMissionSummary(TSimCombatSummaryData SummaryData) // for SimCombat on
 
 function UIAfterAction(optional bool bIsSimCombat)
 {
-	if(ScreenStack.IsNotInStack(class'UIAfterAction'))
+	local class<UIAfterAction> ClassToBuild;
+
+	ClassToBuild = class<UIAfterAction>(class'Helpers_LW'.static.LWCheckForRecursiveOverride(class'UIAfterAction'));
+
+	if(ScreenStack.IsNotInStack(ClassToBuild))
 	{
-		ScreenStack.Push( Spawn( class'UIAfterAction', self ) );
+		ScreenStack.Push( Spawn( ClassToBuild, self ) );
 		
 		// TODO @rmcfall: Remove this once intro sequence is fixed for SimCombat
 		if(bIsSimCombat)
-			UIAfterAction(ScreenStack.GetScreen(class'UIAfterAction')).Show();
+			UIAfterAction(ScreenStack.GetScreen(ClassToBuild)).Show();
 
 		`XSTRATEGYSOUNDMGR.PlayAfterActionMusic();
 	}
@@ -1954,6 +1971,10 @@ simulated function OnMissionSelected(XComGameState_MissionSite MissionSite, opti
 	else if( MissionSite.GetMissionSource().bGoldenPath )
 	{
 		GoldenPathCB(eUIAction_Accept, MissionSite.Source, None, bInstant );
+	}
+	else 
+	{
+		`XEVENTMGR.TriggerEvent('OnMissionSelectedUI', MissionSite, MissionSite); // LW added
 	}
 }
 simulated function UIGOpsMission(optional bool bInstant = false)

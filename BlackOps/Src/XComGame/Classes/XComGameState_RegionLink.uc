@@ -27,6 +27,7 @@ var float LinkLocLerp;
 var config int							MinLinksPerRegion;
 var config int							MaxLinksPerRegion;
 var config array<RegionLinkLength>		RegionLinkLengths;
+var config bool 						bAllowCrossContinentStartRegionLinks; // LWS added
 
 var private vector WorldPosA;
 var private vector WorldPosB;
@@ -261,6 +262,16 @@ static function bool IsEligibleStartRegion(XComGameState StartState, XComGameSta
 {
 	local XComGameState_WorldRegion LinkedRegionState;
 	local int idx, Count;
+	local int MinRequiredLinks; // LWS added
+
+	if (default.bAllowCrossContinentStartRegionLinks) 
+	{
+		MinRequiredLinks = default.MinLinksPerRegion;
+	}
+	else
+	{
+		MinRequiredLinks = 2;
+	}
 
 	Count = 0;
 
@@ -268,13 +279,13 @@ static function bool IsEligibleStartRegion(XComGameState StartState, XComGameSta
 	{
 		LinkedRegionState = XComGameState_WorldRegion(StartState.GetGameStateForObjectID(RegionState.LinkedRegions[idx].ObjectID));
 
-		if(LinkedRegionState != none && LinkedRegionState.Continent == RegionState.Continent)
+		if(LinkedRegionState != none && (default.bAllowCrossContinentStartRegionLinks || LinkedRegionState.Continent == RegionState.Continent))
 		{
 			Count++;
 		}
 	}
 
-	return (Count > 1);
+	return (Count >= MinRequiredLinks);
 }
 
 //---------------------------------------------------------------------------------------
@@ -282,6 +293,12 @@ static function RemoveNonContinentLinks(XComGameState StartState, XComGameState_
 {
 	local XComGameState_WorldRegion LinkedRegionState;
 	local int idx;
+
+	// LWS added 
+	if (default.bAllowCrossContinentStartRegionLinks) 
+	{
+		return;
+	}
 
 	for(idx = 0; idx < RegionState.LinkedRegions.Length; idx++)
 	{

@@ -7,6 +7,18 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Modifications
+//
+// tracktwo - Replaced hardcoded check for 'Terror' mission when determining whether or not
+//            to enable the unit radius manager with a function call into Helpers_LW.
+// amineri - Added code to allow dynamic swapping of transition map to allow alternatives to the skyranger interior 
+// tracktwo - Add trigger event to CleanupTacticalMission to allow mods to perform additional cleanup.
+// tracktwo - Fire the 'SquadConcealmentBroken' event immediately on mission start for non-concealment missions. Ensures
+//            hostile civilians start panicked (and in red alert) in these missions so they run instead of walk away from
+//            XCOM.
+// tracktwo - Civilians don't flee aliens on missions where aliens aren't shooting them. We don't want them firing 'yell'
+//            alerts when an alien gets close to them.
 class X2TacticalGameRuleset extends X2GameRuleset 
 	dependson(X2GameRulesetVisibilityManager, X2TacticalGameRulesetDataStructures, XComGameState_BattleData)
 	config(GameCore)
@@ -270,7 +282,7 @@ simulated function BuildLocalStateObjectCache()
 	VisibilityMgr = Spawn(class'X2GameRulesetVisibilityManager', self);
 	VisibilityMgr.RegisterForNewGameStateEvent();
 
-	if (BattleDataState.MapData.ActiveMission.sType == "Terror")
+    if (class'Helpers_LW'.static.ShouldUseRadiusManagerForMission(BattleDataState.MapData.ActiveMission.sType))
 	{
 		UnitRadiusManager = Spawn( class'X2UnitRadiusManager', self );
 	}
@@ -864,6 +876,17 @@ function ApplyStartOfMatchConditions()
 	}
 	else
 	{
+		// LWS Mods: Fire the concealment broken event immediately upon mission start if it's a non-conceal
+		// mission.
+		foreach History.IterateByClassType(class'XComGameState_Player', PlayerState)
+		{
+			if( PlayerState.GetTeam() == eTeam_XCom )
+			{
+				`XEVENTMGR.TriggerEvent('SquadConcealmentBroken', PlayerState, PlayerState, none);
+				break;
+			}
+		}
+
 		BattleDataState = XComGameState_BattleData(History.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
 		if(!BattleDataState.DirectTransferInfo.IsDirectMissionTransfer) // only apply phantom at the start of the first leg of a multi-part mission
 		{
@@ -1220,6 +1243,10 @@ function EventListenerReturn HandleNeutralReactionsOnMovement(Object EventData, 
 			continue;
 		}
 
+        // LWS Mods: Civilians don't flee aliens if they aren't targets.
+        if ( !bAIAttacksCivilians && MoverTeam != eTeam_XCom )
+            continue;
+
 		// Non-rescue behavior is kicked off here.
 		if( class'Helpers'.static.IsTileInRange(CivilianState.TileLocation, MovedToTile, MaxTileDistSq) 
 		   && VisibilityMgr.GetVisibilityInfo(MovedUnit.ObjectID, CivilianState.ObjectID, OutVisInfo)
@@ -1522,6 +1549,7 @@ static function CleanupTacticalMission(optional bool bSimCombat = false)
 	local XComGameState_XpManager XpManager, NewXpManager;
 	local int MissionIndex;
 	local MissionDefinition RefMission;
+	local XComGameState_Effect BleedOutEffect; // LWS added -- bug fix for bleeding out units
 
 	History = `XCOMHISTORY;
 	
@@ -1536,9 +1564,11 @@ static function CleanupTacticalMission(optional bool bSimCombat = false)
 	BattleData = XComGameState_BattleData(NewGameState.CreateStateObject(class'XComGameState_BattleData', BattleData.ObjectID));
 	NewGameState.AddStateObject(BattleData);
 
-	// Sweep objective resolution:
-	// if all tactical mission objectives completed, all bodies and loot are recovered
-	if( BattleData.AllTacticalObjectivesCompleted() )
+    // LWS MOD: Let mods handle any necessary cleanup before we do recovery.
+    `XEVENTMGR.TriggerEvent('CleanupTacticalMission', BattleData, none, NewGameState);
+
+	//LWS : Friendly bodies and timed loot recovered if either triad or tactical objectives
+	if( (HasAnyTriadObjective(BattleData) && BattleData.AllTriadObjectivesCompleted()) ||  BattleData.AllTacticalObjectivesCompleted())
 	{
 		// recover all dead soldiers, remove all other soldiers from play/clear deathly ailments
 		foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
@@ -1571,22 +1601,35 @@ static function CleanupTacticalMission(optional bool bSimCombat = false)
 				BattleData.CarriedOutLootBucket.AddItem(ItemState.GetMyTemplateName());
 			}
 		}
-
+	}
+	//LWS : Corpses and other auto-loot bucket only retrieved on tactical victory
+	if( BattleData.AllTacticalObjectivesCompleted() )
+	{
 		// 7/29/15 Non-explicitly-picked-up loot is now once again only recovered if the sweep objective was completed
 		RolledLoot = BattleData.AutoLootBucket;
 	}
 	else
 	{
-		//It may be the case that the user lost as a result of their remaining units being mind-controlled. Consider them captured (before the mind-control effect gets wiped).
-		foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
+		//LWS: Adding this to prevent capture/bleedout on triad victory
+		if (!HasAnyTriadObjective(BattleData) || !BattleData.AllTriadObjectivesCompleted())
 		{
-			if (XComHQ.IsUnitInSquad(UnitState.GetReference()))
+			//It may be the case that the user lost as a result of their remaining units being mind-controlled. Consider them captured (before the mind-control effect gets wiped).
+			foreach History.IterateByClassType(class'XComGameState_Unit', UnitState)
 			{
-				if (UnitState.IsMindControlled())
+				if (XComHQ.IsUnitInSquad(UnitState.GetReference()))
 				{
-					UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
-					UnitState.bCaptured = true;
-					NewGameState.AddStateObject(UnitState);
+					if (UnitState.IsMindControlled())
+					{
+						UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
+						UnitState.bCaptured = true;
+						NewGameState.AddStateObject(UnitState);
+					}
+				}
+				//LWS : Fix bug the bleeding-out units don't get cleaned up properly
+				if (UnitState.bBleedingOut)
+				{
+					BleedOutEffect = UnitState.GetUnitAffectedByEffectState(class'X2StatusEffects'.default.BleedingOutName);
+					BleedOutEffect.RemoveEffect(NewGameState, NewGameState, false);
 				}
 			}
 		}
@@ -1644,6 +1687,21 @@ static function CleanupTacticalMission(optional bool bSimCombat = false)
 	}
 
 	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+}
+
+static function bool HasAnyTriadObjective(XComGameState_BattleData Battle)
+{
+	local int ObjectiveIndex;
+
+	for( ObjectiveIndex = 0; ObjectiveIndex < Battle.MapData.ActiveMission.MissionObjectives.Length; ++ObjectiveIndex )
+	{
+		if( Battle.MapData.ActiveMission.MissionObjectives[ObjectiveIndex].bIsTriadObjective )
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 static function name GetObjectiveLootTable(MissionObjectiveDefinition MissionObj)
@@ -2078,6 +2136,24 @@ simulated state CreateTacticalGame
 		return false;
 	}
 
+	//LWS: Added for hook to change transition map to allow DLC/mods to dynamically change the pre/post tactical mission loading scene
+	simulated function UpdateTransitionMap()
+	{
+		local array<X2DownloadableContentInfo> DLCInfos;
+		local int i;
+		local string OverrideMapName;
+
+		DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+		for(i = 0; i < DLCInfos.Length; ++i)
+		{
+			DLCInfos[i].LoadingScreenOverrideTransitionMap(OverrideMapName, self);
+		}
+		if (Len(OverrideMapName) > 0)
+		{
+			`MAPS.SetTransitionMap(OverrideMapName);
+		}
+	}
+
 Begin:
 	`SETLOC("Start of Begin Block");
 
@@ -2096,6 +2172,9 @@ Begin:
 	bShowDropshipInteriorWhileGeneratingMap = ShowDropshipInterior();
 	if(bShowDropshipInteriorWhileGeneratingMap)
 	{		
+		//LWS: Add hook to change the transition map here
+		UpdateTransitionMap();
+
 		`MAPS.AddStreamingMap(`MAPS.GetTransitionMap(), DropshipLocation, DropshipRotation, false);
 		while(!`MAPS.IsStreamingComplete())
 		{
@@ -2170,6 +2249,8 @@ Begin:
 
 		`MAPS.ClearPreloadedLevels();
 		`MAPS.RemoveStreamingMapByName(`MAPS.GetTransitionMap(), false);
+		//LWS: Revert the transition map to default here in case previous code had changed it
+		`MAPS.ResetTransitionMap();
 	}
 
 	if( XComTacticalController(WorldInfo.GetALocalPlayerController()).WeatherControl() != none )

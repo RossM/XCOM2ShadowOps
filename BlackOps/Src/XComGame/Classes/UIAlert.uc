@@ -1,5 +1,5 @@
 
-class UIAlert extends UIX2SimpleScreen;
+class UIAlert extends UIX2SimpleScreen config (UI);
 
 enum EAlertType
 {
@@ -519,6 +519,9 @@ var public localized array<String> m_strPowerCoilShieldedList;
 
 var public localized String m_strLaunchMissionWarningHeader;
 var public localized String m_strLaunchMissionWarningTitle;
+
+// LWS Mods: Config vars for some alerts
+var config bool HideIncomeOnBuildOutpost;
 
 var EAlertType eAlert;
 var XComGameState_MissionSite Mission;
@@ -1723,8 +1726,17 @@ simulated function BuildContactMadeAlert()
 	LibraryPanel.MC.QueueString(m_strContactMadeTitle);
 	LibraryPanel.MC.QueueString(class'UIUtilities_Text'.static.CapsCheckForGermanScharfesS(GetRegion().GetMyTemplate().DisplayName));
 	LibraryPanel.MC.QueueString(strContact);
-	LibraryPanel.MC.QueueString(m_strContactMadeIncome);
-	LibraryPanel.MC.QueueString(GetContactIncomeString());
+    // LWS mods: configurable ability to show income
+    if (HideIncomeOnBuildOutpost)
+    {
+        LibraryPanel.MC.QueueString("");
+        LibraryPanel.MC.QueueString("");
+    }
+    else
+    {
+        LibraryPanel.MC.QueueString(m_strContactMadeIncome);
+        LibraryPanel.MC.QueueString(GetContactIncomeString());
+    }
 	LibraryPanel.MC.QueueString(m_strOK);
 	LibraryPanel.MC.QueueString(""); //reward label
 	LibraryPanel.MC.QueueString(""); //reward value
@@ -1765,9 +1777,18 @@ simulated function BuildOutpostBuiltAlert()
 	LibraryPanel.MC.QueueString(m_strOutpostBuiltTitle);
 	LibraryPanel.MC.QueueString(class'UIUtilities_Text'.static.CapsCheckForGermanScharfesS(GetRegion().GetMyTemplate().DisplayName));
 	LibraryPanel.MC.QueueString(strBody);
-	LibraryPanel.MC.QueueString(m_strOutpostBuiltIncome);
-	LibraryPanel.MC.QueueString(GetContactIncomeString());
-	LibraryPanel.MC.QueueString(m_strOK);
+    // LWS Mods: configurable ability to show income.
+    if (HideIncomeOnBuildOutpost)
+    {
+        LibraryPanel.MC.QueueString("");
+        LibraryPanel.MC.QueueString("");
+    }
+    else
+    {
+	    LibraryPanel.MC.QueueString(m_strOutpostBuiltIncome);
+	    LibraryPanel.MC.QueueString(GetContactIncomeString());
+    }
+    LibraryPanel.MC.QueueString(m_strOK);
 	LibraryPanel.MC.EndOp();
 
 	//This panel has only one button, for confirm.
@@ -2445,7 +2466,8 @@ simulated function BuildTrainingCompleteAlert(string TitleLabel)
 	ClassTemplate = UnitState.GetSoldierClassTemplate();
 	ClassName = Caps(ClassTemplate.DisplayName);
 	ClassIcon = ClassTemplate.IconImage;
-	RankName = Caps(class'X2ExperienceConfig'.static.GetRankName(1, ClassTemplate.DataName));
+	//RankName = Caps(class'X2ExperienceConfig'.static.GetRankName(1, ClassTemplate.DataName));
+	RankName = Caps(class'LWUtilities_Ranks'.static.GetRankName(1, ClassTemplate.DataName, UnitState));
 	
 	kTag = XGParamTag(`XEXPANDCONTEXT.FindTag("XGParam"));
 	kTag.StrValue0 = "";
@@ -2508,7 +2530,8 @@ simulated function BuildPsiTrainingCompleteAlert(string TitleLabel)
 	ClassTemplate = UnitState.GetSoldierClassTemplate();
 	ClassName = Caps(ClassTemplate.DisplayName);
 	ClassIcon = ClassTemplate.IconImage;
-	RankName = Caps(class'X2ExperienceConfig'.static.GetRankName(UnitState.GetRank(), ClassTemplate.DataName));
+	//RankName = Caps(class'X2ExperienceConfig'.static.GetRankName(UnitState.GetRank(), ClassTemplate.DataName));
+	RankName = Caps(class'LWUtilities_Ranks'.static.GetRankName(UnitState.GetRank(), ClassTemplate.DataName, UnitState));
 
 	kTag = XGParamTag(`XEXPANDCONTEXT.FindTag("XGParam"));
 	kTag.StrValue0 = "";
@@ -2814,7 +2837,14 @@ simulated function BuildItemAvailableAlert()
 	kInfo.strName = ItemTemplate.GetItemFriendlyName(, false);
 	kInfo.strBody = ItemTemplate.GetItemBriefSummary();
 	kInfo.strConfirm = m_strAccept;
-	kInfo.strImage = ItemTemplate.strImage;
+	if(ItemTemplate.strInventoryImage != "") // LWS : Added conditional to allow displaying of nicer images for weapons
+	{
+		kInfo.strImage = ItemTemplate.strInventoryImage;
+	}
+	else
+	{
+		kInfo.strImage = ItemTemplate.strImage;	
+	}
 	kInfo.eColor = eUIState_Good;
 	kInfo.clrAlert = MakeLinearColor(0.0, 0.75, 0.0, 1);
 
@@ -3812,7 +3842,10 @@ simulated function OnRemoved()
 	if (bRestoreCameraPosition && !bAlertTransitionsToMission)
 	{
 		XComHQPresentationLayer(Movie.Pres).CAMRestoreSavedLocation();
-		`HQPRES.StrategyMap2D.ShowCursor();
+		if (`ISCONTROLLERACTIVE) 
+		{
+			`HQPRES.StrategyMap2D.ShowCursor();
+		}
 	}
 
 	super.OnRemoved();

@@ -6,6 +6,13 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+
+// LWS Modifications
+//
+// tracktwo - BTRunCompletePreExecute: Add configurable flag to enable/disable the civilian 'yell' action.
+//            For LW2 this is disabled - hostile civvies start in red alert in most circumstances or quickly enter
+//            red alert. This yell ability seems incomplete (doesn't appear to work at all and generates a lot of
+//            log spam.
 class XGAIBehavior_Civilian extends XGAIBehavior
 	native(AI);
 
@@ -128,6 +135,11 @@ function BTRunCompletePreExecute()
 	local AvailableAction YellAction;
 	local int TargetIndex;
 	super.BTRunCompletePreExecute();
+    
+    // LWS Add: Configurable disabling of civilian yell
+    if (!class'Helpers_LW'.default.EnableCivilianYellOnPreMove)
+        return;
+
 	if( !m_kPlayer.bCiviliansTargetedByAliens )
 	{
 		// Yell before moving.

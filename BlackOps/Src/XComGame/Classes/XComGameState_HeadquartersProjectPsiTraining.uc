@@ -125,6 +125,8 @@ function OnProjectCompleted()
 	AbilityTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate(AbilityName);
 
 	`HQPRES.UIPsiTrainingComplete(ProjectFocus, AbilityTemplate);
+
+	`XEVENTMGR.TriggerEvent('PostPsiProjectCompleted', self, self);
 }
 
 //---------------------------------------------------------------------------------------

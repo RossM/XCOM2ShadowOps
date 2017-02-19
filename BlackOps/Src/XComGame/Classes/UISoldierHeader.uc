@@ -93,7 +93,8 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 	SoldierClass = Unit.GetSoldierClassTemplate();
 
 	flagIcon  = (Unit.IsSoldier() && !bHideFlag) ? Unit.GetCountryTemplate().FlagImage : "";
-	rankIcon  = Unit.IsSoldier() ? class'UIUtilities_Image'.static.GetRankIcon(iRank, Unit.GetSoldierClassTemplateName()) : "";
+	//rankIcon  = Unit.IsSoldier() ? class'UIUtilities_Image'.static.GetRankIcon(iRank, Unit.GetSoldierClassTemplateName()) : "";
+	rankIcon  = Unit.IsSoldier() ? class'LWUtilities_Ranks'.static.GetRankIcon(iRank, Unit.GetSoldierClassTemplateName(), Unit) : "";
 	classIcon = Unit.IsSoldier() ? SoldierClass.IconImage : Unit.GetMPCharacterTemplate().IconImage;
 
 	if (Unit.IsAlive())
@@ -117,7 +118,8 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 							  string(Unit.GetUnitPointValue()),
 							  "", "",
 							  classIcon, Caps(SoldierClass != None ? SoldierClass.DisplayName : ""),
-							  rankIcon, Caps(Unit.IsSoldier() ? `GET_RANK_STR(Unit.GetRank(), Unit.GetSoldierClassTemplateName()) : ""),
+							  //rankIcon, Caps(Unit.IsSoldier() ? `GET_RANK_STR(Unit.GetRank(), Unit.GetSoldierClassTemplateName()) : ""),
+							  rankIcon, Caps(Unit.IsSoldier() ? class'LWUtilities_Ranks'.static.GetRankName(Unit.GetRank(), Unit.GetSoldierClassTemplateName(), Unit) : ""),
 							  flagIcon, (Unit.ShowPromoteIcon()), DaysValue);
 	}
 	else
@@ -127,7 +129,8 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 							  m_strMissionsLabel, string(Unit.GetNumMissions()),
 							  m_strKillsLabel, string(Unit.GetNumKills()),
 							  classIcon, Caps(SoldierClass != None ? SoldierClass.DisplayName : ""),
-							  rankIcon, Caps(`GET_RANK_STR(Unit.GetRank(), Unit.GetSoldierClassTemplateName())),
+							  //rankIcon, Caps(`GET_RANK_STR(Unit.GetRank(), Unit.GetSoldierClassTemplateName())),
+							  rankIcon, Caps(class'LWUtilities_Ranks'.static.GetRankName(Unit.GetRank(), Unit.GetSoldierClassTemplateName(), Unit)),
 							  flagIcon, (Unit.ShowPromoteIcon()), DaysValue);
 	}
 

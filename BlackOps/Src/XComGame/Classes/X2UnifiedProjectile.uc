@@ -9,6 +9,11 @@
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
+//
+
+// PI Mods
+//
+// tracktwo - Add hooks to override the projectile fire and death AkEvents with a sound cue.
 class X2UnifiedProjectile extends Actor dependson(X2UnifiedProjectileElement) native(Weapon)
 	dependson(XComPrecomputedPath)
 	hidecategories(Movement, Display, Attachment, Actor, Collision, Physics, Debug, Object, Advanced);
@@ -567,6 +572,8 @@ function FireProjectileInstance(int Index)
 
 	//local ParticleSystem AxisSystem;
 	//local ParticleSystemComponent PSComponent;
+	
+	local SoundCue Cue; // PI Added
 
 	ShooterState = XComGameState_Unit( `XCOMHISTORY.GetGameStateForObjectID( SourceAbility.InputContext.SourceObject.ObjectID ) );
 	AbilityState = XComGameState_Ability( `XCOMHISTORY.GetGameStateForObjectID( AbilityContextAbilityRefID ) );
@@ -1012,6 +1019,14 @@ function FireProjectileInstance(int Index)
 		}
 	}
 
+	// PI: Allow mods to override fire sounds: Look up the mapping for this projectile + index and
+	// play it if we find one.
+	Cue = class'Helpers_LW'.static.FindFireSound(string(ObjectArchetype.Name), Index);
+	if (Cue != none)
+	{
+		Projectiles[Index].SourceAttachActor.PlaySound(Cue);
+	}
+	else  /* End PI Mods. Do not add code after this line due to 'else'. */
 	if( Projectiles[Index].ProjectileElement.FireSound != none )
 	{
 		//Play a fire sound if specified
@@ -1661,6 +1676,8 @@ function DoMainImpact(int Index, float fDeltaT, bool bShowImpactEffects)
 	local float BestImpactEventDist;
 	local vector BestImpactEffectPoint;
 
+	local SoundCue Cue; // PI Added
+
 	if (Projectiles[ Index ].AdjustedTravelSpeed == 0)
 	{
 		// when projectile doesn't travel anywhere, we won't have impacted anything
@@ -1787,6 +1804,13 @@ function DoMainImpact(int Index, float fDeltaT, bool bShowImpactEffects)
 		DeathFX.SetScale( AbilityRadiusScalar );
 	}
 
+	// PI: Allow mods to override death sounds.
+	Cue = class'Helpers_LW'.static.FindDeathSound(string(ObjectArchetype.Name), Index);
+	if (Cue != none)
+	{
+		Projectiles[Index].TargetAttachActor.PlaySound(Cue, , , , Projectiles[Index].InitialTargetLocation);
+	}
+	else  /* End PI Mods. Do not add code after this line due to 'else'. */
 	if(Projectiles[Index].ProjectileElement.DeathSound != none)
 	{
 		Projectiles[Index].TargetAttachActor.PlayAkEvent(Projectiles[Index].ProjectileElement.DeathSound, , , , Projectiles[Index].InitialTargetLocation);

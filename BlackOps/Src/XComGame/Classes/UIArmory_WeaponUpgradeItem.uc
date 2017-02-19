@@ -3,6 +3,8 @@
 //  FILE:    UIArmory_WeaponUpgradeItem
 //  AUTHOR:  Sam Batista
 //  PURPOSE: UI that represents an upgrade item, largely based off of UIArmory_LoadoutItem
+
+// LWS:		 Adding capability for a DropItem Button for weapon upgrades, activatable only by mods
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
@@ -25,6 +27,11 @@ var X2WeaponUpgradeTemplate UpgradeTemplate;
 var XComGameState_Item Weapon;
 var int SlotIndex;
 
+// LWS Added
+var UIButton DropItemButton; 
+var int TooltipID;
+var localized string m_strRemoveUpgrade;
+
 simulated function UIArmory_WeaponUpgradeItem InitUpgradeItem(XComGameState_Item InitWeapon, optional X2WeaponUpgradeTemplate InitUpgrade, optional int SlotNum = -1, optional string InitDisabledReason)
 {
 	Weapon = InitWeapon;
@@ -32,6 +39,14 @@ simulated function UIArmory_WeaponUpgradeItem InitUpgradeItem(XComGameState_Item
 	SlotIndex = SlotNum;
 
 	InitPanel();
+
+	// LWS : Adding DropItemButton and tooltip for drop button
+	UpdateDropItemButton();
+	if(!bIsDisabled)
+	{
+		// add a custom text box since the flash component reports back with from the bg subcomponent
+		TooltipID = Movie.Pres.m_kTooltipMgr.AddNewTooltipTextBox(default.m_strRemoveUpgrade, 0, 0, MCPath $ ".DropItemButton.bg");
+	}
 
 	UpdateImage();
 	UpdateCategoryIcons();
@@ -227,11 +242,95 @@ simulated function OnLoseFocus()
 	}
 }
 
+// LWS: Adding functionality for "dropping" weapon upgrades without replacing them with anything else
+simulated function UpdateDropItemButton()
+{
+	local bool bShowClearButton;
+	local UIPanel Container;
+	local UIList OwnerList;
+	local array<X2DownloadableContentInfo> DLCInfos;
+	local int i;
+
+	if(bIsLocked || bIsDisabled || ParentPanel == UIArmory_WeaponUpgrade(Screen).UpgradesList)
+		return;
+
+	Container = ParentPanel;
+	OwnerList = UIList(Container.ParentPanel);
+	if (OwnerList != none && OwnerList == UIArmory_WeaponUpgrade(Screen).UpgradesList)
+		return;
+
+	bShowClearButton = false; 
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	for(i = 0; i < DLCInfos.Length; ++i)
+	{
+		if(DLCInfos[i].CanRemoveWeaponUpgrade(Weapon, UpgradeTemplate, SlotIndex))
+		{
+			bShowClearButton = true; 
+		}
+	}
+
+	MC.SetBool("showClearButton", bShowClearButton);
+	MC.FunctionVoid("realize");
+
+	if(!bShowClearButton)
+		Movie.Pres.m_kTooltipMgr.DeactivateTooltipByID(TooltipID);
+}
+
+function OnDropItemClicked(UIButton kButton)
+{
+	local XComGameState NewGameState;
+	local XComGameState_HeadquartersXCom XComHQ;
+	local XComGameState_Item UpdatedWeapon;
+	local UIArmory_WeaponUpgrade UpgradeScreen;
+	local XComGameState_Item UpgradeItem;
+	local X2WeaponUpgradeTemplate OldUpgradeTemplate;
+
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Drop Upgrade From Weapon");
+	
+	// Remove upgrade frome weapon
+	UpdatedWeapon = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', Weapon.ObjectID));
+	OldUpgradeTemplate = UpdatedWeapon.DeleteWeaponUpgradeTemplate(SlotIndex);
+	NewGameState.AddStateObject(UpdatedWeapon);
+			
+	// Possibly add to HQ inventory
+	XComHQ = class'UIUtilities_Strategy'.static.GetXComHQ();
+	XComHQ = XComGameState_HeadquartersXCom(NewGameState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
+	NewGameState.AddStateObject(XComHQ);
+
+	// If reusing upgrades Continent Bonus is active, create an item for the old upgrade template and add it to the inventory
+	if (XComHQ.bReuseUpgrades && OldUpgradeTemplate != none)
+	{
+		UpgradeItem = OldUpgradeTemplate.CreateInstanceFromTemplate(NewGameState);
+		NewGameState.AddStateObject(UpgradeItem);
+		XComHQ.PutItemInInventory(NewGameState, UpgradeItem);
+	}
+			
+	`XEVENTMGR.TriggerEvent('WeaponUpgradeRemoved', UpdatedWeapon, OldUpgradeTemplate, NewGameState);
+	`GAMERULES.SubmitGameState(NewGameState);
+
+	Weapon = UpdatedWeapon; // refresh the weapon gamestate
+
+	UpgradeScreen = UIArmory_WeaponUpgrade(Screen);
+
+	UpgradeScreen.UpdateSlots();
+	UpgradeScreen.WeaponStats.PopulateData(Weapon);
+
+	`XSTRATEGYSOUNDMGR.PlaySoundEvent("SoundUnreal3DSounds.Unreal3DSounds_SectoidUnequipGrenade");
+}
+
+simulated function OnCommand(string cmd, string arg)
+{
+	if(cmd == "DropItemClicked")
+		OnDropItemClicked(DropItemButton);
+}
+
+// END LWS CHANGES
+
 defaultproperties
 {
 	Width = 342;
 	Height = 145;
 	bAnimateOnInit = false;
-	bProcessesMouseEvents = true;
+	bProcessesMouseEvents = false; // LWS: changed from false to true to enable the DropItem button to function
 	LibID = "LoadoutListItem";
 }

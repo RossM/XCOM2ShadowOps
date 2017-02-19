@@ -2,6 +2,7 @@
  //  FILE:    UITacticalHUD_ShotWings.uc
  //  AUTHOR:  Brit Steiner --  11/2014
  //  PURPOSE: Pop-out wings for the player's current shot stats used in the TacticalHUD. 
+ //  LWS : Fixed bug with vertical autoscrolling in shotwings
  //---------------------------------------------------------------------------------------
  //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
  //---------------------------------------------------------------------------------------
@@ -174,7 +175,9 @@ simulated function Show()
 		RightWingArea.Show();
 
 		HitBodyArea.ClearScroll();
+		HitBodyArea.RealizeLocation(); // LWS : added to reset scroll position
 		CritBodyArea.ClearScroll();
+		CritBodyArea.RealizeLocation(); // LWS : added to reset scroll position
 		HitBodyArea.MC.SetNum("_alpha", 100);
 		CritBodyArea.MC.SetNum("_alpha", 100);
 	
@@ -319,6 +322,27 @@ simulated function RefreshData()
 	}
 	else
 		RightWingArea.Hide();
+
+	ResetScroll(); // LWS : Added to reset scroll position after new data entered
+}
+
+// LWS : new helper function to reset scrolled position when chaning data
+simulated function ResetScroll()
+{
+	local int ScrollHeight;
+
+	HitBodyArea.ClearScroll();
+	HitBodyArea.RealizeLocation();
+
+	CritBodyArea.ClearScroll();
+	CritBodyArea.RealizeLocation();
+	
+	//This will reset the scrolling upon showing this tooltip.
+	ScrollHeight = (HitStatList.height > HitBodyArea.height ) ? HitStatList.height : HitBodyArea.height; 
+	HitBodyArea.AnimateScroll(ScrollHeight, HitBodyArea.height);
+
+	ScrollHeight = (CritStatList.height > CritBodyArea.height ) ? CritStatList.height : CritBodyArea.height; 
+	CritBodyArea.AnimateScroll(ScrollHeight, HitBodyArea.height);
 }
 
 simulated function PopulateDebugData()

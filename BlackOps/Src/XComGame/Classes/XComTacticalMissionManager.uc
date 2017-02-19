@@ -1,6 +1,10 @@
+// LWS:		Removed const tag on most config variables to allow run-time manipulation
+//			Made CacheMissionManagerCards public so it could be invoked by mod code
+//			Added AlternateMissionIntroDefinitions that allow defining by category of missions
+
 class XComTacticalMissionManager extends Object
 	native(Core)
-	dependson(X2StrategyGameRulesetDataStructures)
+	dependson(X2StrategyGameRulesetDataStructures, XComLWTuple)
 	config(Missions);
 
 enum EObjectivePieceType
@@ -75,20 +79,20 @@ struct native AdditionalMissionIntroPackageMapping
 	var string AdditionalIntroMatineePackage; // additional matinee package to load when OriginalIntroMatineePackage is loaded
 };
 
-// config information
-var const config private array<ProxyRewardUnitTemplateMapping> ProxyRewardUnitMappings;
-var const config array<string> arrTMissionTypes;
-var const config array<InclusionExclusionList> InclusionExclusionLists;
-var const config array<ConfigurableEncounter> ConfigurableEncounters;
-var const config array<EncounterBucket> EncounterBuckets;
-var const config array<MissionSchedule> MissionSchedules;
-var const config array<MissionDefinition> arrMissions;
-var const config array<MissionSourceRewardMapping> arrSourceRewardMissionTypes;
-var const config array<ObjectiveSpawnInfo> arrObjectiveSpawnInfo;
-var const config array<PlotLootDefinition> arrPlotLootDefinitions;
-var const config array<string> VIPMissionFamilies;
-var const config MissionIntroDefinition DefaultMissionIntroDefinition;
-var const config array<AdditionalMissionIntroPackageMapping> AdditionalMissionIntroPackages; // for modding, allows packages with intros for new character types to be loaded
+// config information -- LWS making these non-const so that code can modify the results
+var config private array<ProxyRewardUnitTemplateMapping> ProxyRewardUnitMappings;
+var config array<string> arrTMissionTypes;
+var config array<InclusionExclusionList> InclusionExclusionLists;
+var config array<ConfigurableEncounter> ConfigurableEncounters;
+var config array<EncounterBucket> EncounterBuckets;
+var config array<MissionSchedule> MissionSchedules;
+var config array<MissionDefinition> arrMissions;
+var config array<MissionSourceRewardMapping> arrSourceRewardMissionTypes;
+var config array<ObjectiveSpawnInfo> arrObjectiveSpawnInfo;
+var config array<PlotLootDefinition> arrPlotLootDefinitions;
+var config array<string> VIPMissionFamilies;
+var config MissionIntroDefinition DefaultMissionIntroDefinition;
+var config array<AdditionalMissionIntroPackageMapping> AdditionalMissionIntroPackages; // for modding, allows packages with intros for new character types to be loaded
 
 //Used to allow mods to alias themselves to an existing mission type ( baked into shipping maps )
 struct native MissionTypeAliasEntry
@@ -96,7 +100,7 @@ struct native MissionTypeAliasEntry
 	var string KeyMissionType; //New mission type that should alias to a base game type
 	var array<string> AltMissionTypes; //List of base game types that are supported
 };
-var const config array<MissionTypeAliasEntry> arrMissionTypeAliases;
+var config array<MissionTypeAliasEntry> arrMissionTypeAliases;
 
 // runtime data
 var MissionDefinition ForceMission; // Way to force this mission
@@ -121,7 +125,8 @@ function ResetCachedCards()
 	HasCachedCards = false;
 }
 
-private function CacheMissionManagerCards()
+//LWS making this non-private so other functions can cache
+function CacheMissionManagerCards()
 {
 	local X2CardManager CardManager;
 	local MissionDefinition MissionDef;
@@ -214,12 +219,24 @@ private function CacheMissionManagerCards()
 
 function MissionIntroDefinition GetActiveMissionIntroDefinition()
 {
+	local array<X2DownloadableContentInfo> DLCInfos;
+	local MissionIntroDefinition MissionIntro;
+	local int i;
+
 	if(ActiveMission.OverrideDefaultMissionIntro)
 	{
 		return ActiveMission.MissionIntroOverride;
 	}
 	else
 	{
+		DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+		for(i = 0; i < DLCInfos.Length; ++i)
+		{
+			if(DLCInfos[i].UseAlternateMissionIntroDefinition(ActiveMission, MissionIntro))
+			{
+				return MissionIntro;
+			}
+		}
 		return DefaultMissionIntroDefinition;
 	}
 }
@@ -764,6 +781,7 @@ function CreateObjective_Interact(ObjectiveSpawnPossibility Spawn, ObjectiveSpaw
 		if( LootIndex >= 0 )
 		{
 			LootManager.RollForGlobalLootCarrier(LootIndex, InteractiveObject.PendingLoot);
+            InteractiveObject.MakeAvailableLoot(NewGameState);
 		}
 	}
 
@@ -953,10 +971,34 @@ private function array<ObjectiveSpawnPossibility> SelectObjectiveSpawns(Objectiv
 	local ObjectiveSpawnPossibility Spawn;
 	local ObjectiveSpawnPossibility Check;
 	local float MinDistanceBetweenObjectives;
+    local XComGameState_BattleData BattleData;
 	local int NumToSelect;
 	local int AttemptCount;
+	local array<X2DownloadableContentInfo> DLCInfos; // LWS Added
+	local int i; // LWS Added
 
-	NumToSelect = SpawnInfo.iMinObjectives + `SYNC_RAND_TYPED(SpawnInfo.iMaxObjectives - SpawnInfo.iMinObjectives);
+    BattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData'));
+    NumToSelect = -1;
+
+    // If we have battle info with a mission ID, query for the right number of objectives to use by passing this BattleData.
+	// Each mod can return a value, if it wants to override -- the first mod to do so has its override value used
+    if (BattleData != none && BattleData.m_iMissionID > 0)
+    {
+ 		DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+		for(i = 0; i < DLCInfos.Length; ++i)
+		{
+			NumToSelect = DLCInfos[i].GetNumObjectivesToSpawn(BattleData);
+			if (NumToSelect >= 0)
+			{
+				break;
+			}
+		}
+   }
+
+	if (NumToSelect < 0) // Did not get an override: select the number of objectives by the mission type.
+    {
+        NumToSelect = SpawnInfo.iMinObjectives + `SYNC_RAND_TYPED(SpawnInfo.iMaxObjectives - SpawnInfo.iMinObjectives);
+    }
 
 	if(SpawnInfo.iMinTilesBetweenObjectives <= 0)
 	{

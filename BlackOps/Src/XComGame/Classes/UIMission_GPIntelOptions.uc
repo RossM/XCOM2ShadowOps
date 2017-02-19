@@ -88,6 +88,11 @@ simulated function BindLibraryItem()
 		ShadowChamber = Spawn(class'UIPanel', LibraryPanel);
 		ShadowChamber.InitPanel('ShadowChamber');
 
+		if (!CanTakeMission())
+		{
+			IntelPanel.Hide();
+		}
+
 		Navigator.LoopSelection = true;
 		Navigator.LoopOnReceiveFocus = true;
 	}
@@ -164,13 +169,21 @@ simulated function BuildMissionPanel()
 
 simulated function BuildOptionsPanel()
 {
-	LibraryPanel.MC.BeginFunctionOp("UpdateGoldenPathIntelButtonBlade");
-	LibraryPanel.MC.QueueString(IntelOptionsLabel);
-	LibraryPanel.MC.QueueString(m_strLaunchMission);
-	LibraryPanel.MC.QueueString(class'UIUtilities_Text'.default.m_strGenericCancel);
-
-	if (!CanTakeMission())
+	// LWS changes to make GPIntel function properly when it can be locked
+	if (CanTakeMission())
 	{
+		LibraryPanel.MC.BeginFunctionOp("UpdateGoldenPathIntelButtonBlade");
+		LibraryPanel.MC.QueueString(IntelOptionsLabel);
+		LibraryPanel.MC.QueueString(m_strLaunchMission);
+		LibraryPanel.MC.QueueString(class'UIUtilities_Text'.default.m_strGenericCancel);
+	}
+	else
+	{
+		// use the regular centered locked panel when can't take mission
+		LibraryPanel.MC.BeginFunctionOp("UpdateGoldenPathButtonBlade");
+		LibraryPanel.MC.QueueString(IntelOptionsLabel);
+		LibraryPanel.MC.QueueString(m_strLaunchMission);
+		LibraryPanel.MC.QueueString(class'UIUtilities_Text'.default.m_strGenericCancel);
 		LibraryPanel.MC.QueueString(m_strLocked);
 		LibraryPanel.MC.QueueString(m_strLockedHelp);
 		LibraryPanel.MC.QueueString(m_strOK); //OnCancelClicked
@@ -211,18 +224,35 @@ simulated function BuildOptionsPanel()
 
 simulated function RefreshIntelOptionsPanel()
 {
-	LibraryPanel.MC.BeginFunctionOp("UpdateGoldenPathIntel");
-	LibraryPanel.MC.QueueString(IntelAvailableLabel);
-	LibraryPanel.MC.QueueString(String(GetAvailableIntel()));
-	LibraryPanel.MC.QueueString(IntelCostLabel);
-	LibraryPanel.MC.QueueString(IntelTotalLabel);
-	LibraryPanel.MC.QueueString(String(GetTotalIntelCost()));
-	LibraryPanel.MC.EndOp();
+	if (CanTakeMission())
+	{
+		LibraryPanel.MC.BeginFunctionOp("UpdateGoldenPathIntel");
+		LibraryPanel.MC.QueueString(IntelAvailableLabel);
+		LibraryPanel.MC.QueueString(String(GetAvailableIntel()));
+		LibraryPanel.MC.QueueString(IntelCostLabel);
+		LibraryPanel.MC.QueueString(IntelTotalLabel);
+		LibraryPanel.MC.QueueString(String(GetTotalIntelCost()));
+		LibraryPanel.MC.EndOp();
+	}
+	else
+	{
+		//hide the intel options when can't take mission
+		LibraryPanel.MC.BeginFunctionOp("UpdateGoldenPathIntel");
+		LibraryPanel.MC.QueueString("");
+		LibraryPanel.MC.QueueString("");
+		LibraryPanel.MC.QueueString("");
+		LibraryPanel.MC.QueueString("");
+		LibraryPanel.MC.QueueString("");
+		LibraryPanel.MC.EndOp();
+	}
 }
 
 simulated function UpdateData()
 {
-	UpdateDisplay();
+	if (CanTakeMission())
+	{
+		UpdateDisplay();
+	}
 }
 
 simulated function UpdateDisplay()

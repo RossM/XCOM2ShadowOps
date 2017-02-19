@@ -495,7 +495,7 @@ simulated public function OnButtonCancel(UIButton ButtonControl)
 
 simulated function ConfirmTutorialDialogue(UIButton ButtonControl)
 {
-	if(m_iSelectedDifficulty >= eDifficulty_Classic)
+	if(m_iSelectedDifficulty >= eDifficulty_Classic || DLCDisableTutorial())
 	{
 		if(ButtonControl.IsSelected && !m_bIsPlayingGame)
 			ShowSimpleDialog(m_strInvalidTutorialClassicDifficulty);
@@ -581,7 +581,7 @@ simulated public function OnDifficultySelect(UICheckbox CheckboxControl)
 				UIMechaListItem(m_List.GetItem(m_iSelectedDifficulty)).Checkbox.SetChecked(false, false);
 
 				m_iSelectedDifficulty = i;
-				if (m_iSelectedDifficulty >= eDifficulty_Classic)
+				if (m_iSelectedDifficulty >= eDifficulty_Classic || DLCDisableTutorial())
 				{
 					ForceTutorialOff();
 				}
@@ -621,7 +621,7 @@ simulated public function OnDifficultyConfirm(UIButton ButtonControl)
 	EventManager = `ONLINEEVENTMGR;
 
 	//This popup should only be triggered when you are in the shell == not playing the game, and difficulty set to less than classic. 
-	if(!m_bIsPlayingGame && !m_bShowedFirstTimeTutorialNotice && !m_TutorialMechaItem.Checkbox.bChecked && !m_bIronmanFromShell  && m_iSelectedDifficulty < eDifficulty_Classic)
+	if(!m_bIsPlayingGame && !m_bShowedFirstTimeTutorialNotice && !m_TutorialMechaItem.Checkbox.bChecked && !m_bIronmanFromShell  && (m_iSelectedDifficulty < eDifficulty_Classic  && !DLCDisableTutorial()))
 	{
 		if(DevStrategyShell == none || !DevStrategyShell.m_bCheatStart)
 		{
@@ -860,7 +860,7 @@ function ConfirmControlDialogue(UICheckbox CheckboxControl)
 	UpdateStartButtonText();
 
 	// Can't enable any of the tutorial options with classic difficulty selected
-	if(m_iSelectedDifficulty >= eDifficulty_Classic)
+	if(m_iSelectedDifficulty >= eDifficulty_Classic || DLCDisableTutorial())
 	{
 		ForceTutorialOff();
 		return;
@@ -980,7 +980,7 @@ simulated function GrantTutorialReadAccess()
 simulated function UpdateTutorial(UICheckbox CheckboxControl)
 {
 	// Can't enable any of the tutorial options with classic difficulty selected
-	if(m_iSelectedDifficulty >= eDifficulty_Classic)
+	if(m_iSelectedDifficulty >= eDifficulty_Classic || DLCDisableTutorial())
 	{
 		if(CheckboxControl.bChecked && !m_bIsPlayingGame)
 			ShowSimpleDialog(m_strInvalidTutorialClassicDifficulty);
@@ -1031,11 +1031,11 @@ simulated function RefreshDescInfo()
 
 	sDesc = m_arrDifficultyDescStrings[m_iSelectedDifficulty];
 
-	if(m_iSelectedDifficulty >= eDifficulty_Classic)
+	if(m_iSelectedDifficulty >= eDifficulty_Classic || DLCDisableTutorial())
 	{
 		if(m_bIsPlayingGame && Movie.Pres.ISCONTROLLED())
 			sDesc = sDesc @ class'UIUtilities_Text'.static.GetColoredText(m_strTutorialNoChangeToImpossible, eUIState_Warning);
-		else if(Movie.Pres.m_eUIMode == eUIMode_Shell && m_iSelectedDifficulty == eDifficulty_Classic)
+		else if(Movie.Pres.m_eUIMode == eUIMode_Shell && (m_iSelectedDifficulty == eDifficulty_Classic || DLCDisableTutorial()))
 			sDesc = sDesc @ class'UIUtilities_Text'.static.GetColoredText(m_strTutorialOnImpossible, eUIState_Warning);
 	}
 
@@ -1150,6 +1150,27 @@ simulated function OnRemoved()
 event Destroyed()
 {
 	super.Destroyed();
+}
+
+//==============================================================================
+//		LWS Helpers:
+//==============================================================================
+
+// LWS : Adding helper to allow DLC / Mods to disable tutorial
+simulated function bool DLCDisableTutorial()
+{
+	local array<X2DownloadableContentInfo> DLCInfos;
+	local int i;
+
+	DLCInfos = `ONLINEEVENTMGR.GetDLCInfos(false);
+	for(i = 0; i < DLCInfos.Length; ++i)
+	{
+		if(DLCInfos[i].DLCDisableTutorial(self))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 DefaultProperties

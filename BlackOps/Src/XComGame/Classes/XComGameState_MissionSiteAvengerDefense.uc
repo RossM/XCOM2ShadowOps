@@ -4,6 +4,7 @@
 //  PURPOSE: This object represents the instance data for an Avenger Defense mission site 
 //			on the world map
 //          
+// LWS		 Updated to so that units with eStatus_OnMission don't count for losing due to AvengerDefense
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
@@ -60,12 +61,20 @@ function DestinationReached()
 	local XComGameState_HeadquartersXCom XComHQ;
 	local XComGameState NewGameState;
 	local array<XComGameState_Unit> AllSoldiers;
+	local XComGameState_Unit Soldier;  // LWS Added
+	local int AvailableSoldiers;  // LWS Added
 	
 	History = `XCOMHISTORY;
 	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
 	AllSoldiers = XComHQ.GetSoldiers();
 
-	if(AllSoldiers.Length == 0)
+	foreach AllSoldiers(Soldier)  // LWS Added
+	{
+		if (Soldier.GetStatus() != eStatus_OnMission)  // LWS Added
+			AvailableSoldiers++;  // LWS Added
+	}
+
+	if(AvailableSoldiers == 0)  // LWS Added
 	{
 		class'X2StrategyElement_DefaultAlienAI'.static.PlayerLossAction();
 		return;

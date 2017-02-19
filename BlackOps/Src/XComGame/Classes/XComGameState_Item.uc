@@ -725,9 +725,22 @@ simulated function WipeUpgradeTemplates()
 	Ammo = GetClipSize();
 }
 
+// LWS : Modified so that a weapon with only '' null modifications doesn't count as modified
 simulated function bool HasBeenModified()
 {
-	return Nickname != "" || GetMyWeaponUpgradeTemplateNames().Length > 0;
+	local bool bHasBeenModified;
+	local int idx;
+
+	bHasBeenModified =  Nickname != "";
+	for (idx = 0; idx < m_arrWeaponUpgradeNames.Length; idx++)
+	{
+		if (m_arrWeaponUpgradeNames[idx] != '')
+		{
+			bHasBeenModified = true;
+			break;
+		}
+	}
+	return bHasBeenModified;
 }
 
 simulated function bool IsStartingItem()
@@ -785,6 +798,8 @@ simulated function array<WeaponAttachment> GetWeaponAttachments(optional bool bG
 		UpgradeTemplates = GetMyWeaponUpgradeTemplates();
 		for (i = 0; i < UpgradeTemplates.Length; ++i)
 		{
+            if (UpgradeTemplates[i] == none)
+                continue;
 			for (j = 0; j < UpgradeTemplates[i].UpgradeAttachments.Length; ++j)
 			{
 				if (UpgradeTemplates[i].UpgradeAttachments[j].ApplyToWeaponTemplate != WeaponTemplate.DataName)
@@ -879,7 +894,75 @@ simulated function int GetItemSize()
 	return GetMyTemplate().iItemSize;
 }
 
-simulated native function int GetItemRange(const XComGameState_Ability AbilityState);
+simulated function int GetItemRange(const XComGameState_Ability AbilityState)
+{
+	local XComLWTuple OverrideTuple;
+	local X2GrenadeLauncherTemplate GLTemplate;
+	local X2WeaponTemplate WeaponTemplate;
+	local XComGameState_Item SourceAmmo;
+	local int ReturnRange;
+
+	//`LOG("WE ARE GETTING TO GETNUMUTILITYSLOTS");
+	OverrideTuple = new class'XComLWTuple';
+	OverrideTuple.Id = 'GetItemRange';
+	OverrideTuple.Data.Add(3);
+	OverrideTuple.Data[0].kind = XComLWTVBool;
+	OverrideTuple.Data[0].b = false;  // override? (true) or add? (false)
+	OverrideTuple.Data[1].kind = XComLWTVInt;
+	OverrideTuple.Data[1].i = 0;  // override/bonus range
+	OverrideTuple.Data[2].kind = XComLWTVObject;
+	OverrideTuple.Data[2].o = AbilityState;  // optional ability
+
+	`XEVENTMGR.TriggerEvent('OnGetItemRange', OverrideTuple, self);
+
+	if(OverrideTuple.Data[0].b)
+		return OverrideTuple.Data[1].i;
+
+	ReturnRange = OverrideTuple.Data[1].i;
+
+	GetMyTemplate();
+	GLTemplate = X2GrenadeLauncherTemplate(m_ItemTemplate);
+	if(GLTemplate != none)
+	{
+		SourceAmmo = AbilityState.GetSourceAmmo();
+		if(SourceAmmo != none)
+		{
+			WeaponTemplate = X2WeaponTemplate(SourceAmmo.GetMyTemplate());
+			if(WeaponTemplate != none)
+			{
+				return ReturnRange + WeaponTemplate.iRange + GLTemplate.IncreaseGrenadeRange;
+			}
+		}
+	}
+	WeaponTemplate = X2WeaponTemplate(m_ItemTemplate);
+	if(WeaponTemplate != none)
+	{
+		return ReturnRange + WeaponTemplate.iRange;
+	}
+	return -1;
+}
+
+//LW method added to generalize unequipping of items
+simulated function bool ItemCanBeUnequipped()
+{
+	local bool bUnequippable;
+	local XComLWTuple OverrideTuple;
+
+	bUnequippable = !GetMyTemplate().bInfiniteItem || HasBeenModified();
+
+	//set up a Tuple for return value
+	OverrideTuple = new class'XComLWTuple';
+	OverrideTuple.Id = 'OverrideItemCanBeUnequipped';
+	OverrideTuple.Data.Add(1);
+	OverrideTuple.Data[0].kind = XComLWTVBool;
+	OverrideTuple.Data[0].b = bUnequippable;  // whether item is unequippable
+
+	`XEVENTMGR.TriggerEvent('OverrideItemCanBeUnequipped', OverrideTuple, self);
+
+	return OverrideTuple.Data[0].b;
+}
+
+//simulated native function int GetItemRange(const XComGameState_Ability AbilityState);
 simulated native function int GetItemRadius(const XComGameState_Ability AbilityState);
 simulated native function float GetItemCoverage(const XComGameState_Ability AbilityState);
 

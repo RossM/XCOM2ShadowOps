@@ -7,7 +7,12 @@
 //  Copyright (c) 2009-2016 Firaxis Games, Inc. All rights reserved.
 //--------------------------------------------------------------------------------------- 
 
-class UIMissionSummary extends UIScreen;
+// Modified for LWS:
+//  tracktwo -  Add config(UI) & make a configurable list of mission families to show the "civilians saved" result instead
+//              of hardcoded to 'Terror'.
+
+
+class UIMissionSummary extends UIScreen config(UI);
 
 const MISSION_SUCCESS = 0;
 const MISSION_FAILURE = 1;
@@ -49,6 +54,8 @@ var localized string m_strExcellentRating;
 var localized string m_strGoodRating;
 var localized string m_strFairRating;
 var localized string m_strPoorRating;
+
+var config array<String> m_CivilianRescueMissionFamilies;
 
 simulated function InitScreen(XComPlayerController InitController, UIMovie InitMovie, optional name InitName)
 {
@@ -203,7 +210,7 @@ simulated function string GetObjectiveLabel()
 	local GeneratedMissionData GeneratedMission;
 	
 	GeneratedMission = class'UIUtilities_Strategy'.static.GetXComHQ().GetGeneratedMissionData(BattleData.m_iMissionID);
-	if(GeneratedMission.Mission.MissionFamily == "Terror")
+    if (m_CivilianRescueMissionFamilies.Find(GeneratedMission.Mission.MissionFamily) >= 0)
 	{
 		return m_strCiviliansRescuedLabel;
 	}
@@ -214,9 +221,11 @@ simulated function string GetObjectiveLabel()
 simulated function string GetObjectiveValue()
 {
 	local GeneratedMissionData GeneratedMission;
+    local int CiviliansRescuedIndex;
 
 	GeneratedMission = class'UIUtilities_Strategy'.static.GetXComHQ().GetGeneratedMissionData(BattleData.m_iMissionID);
-	if(GeneratedMission.Mission.MissionFamily == "Terror")
+    CiviliansRescuedIndex = m_CivilianRescueMissionFamilies.Find(GeneratedMission.Mission.MissionFamily);
+    if (CiviliansRescuedIndex >= 0)
 	{
 		return GetCiviliansSaved();
 	}

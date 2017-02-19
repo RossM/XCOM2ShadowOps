@@ -100,6 +100,7 @@ static function bool AcquireHackRewards(
 	local array<Name> PossibleHackRewards;
 	local bool AttemptedBestHack;
 	local XComGameState_Unit HackTargetUnit;
+	local XComLWTuple OverrideHackRewardTuple;
 
 	HackWasASuccess = false;
 	UserSelectedReward = 0;
@@ -144,7 +145,21 @@ static function bool AcquireHackRewards(
 	//  Now we have all rewards that were not replaced by something better. Award those.
 	foreach Templates(Template)
 	{
-		Template.OnHackRewardAcquired(Hacker, HackTarget, NewGameState);
+		//set up a Tuple for return value - true means don't award this hack reward (can also be used to avoid negative effects)
+		OverrideHackRewardTuple = new class'XComLWTuple';
+		OverrideHackRewardTuple.Id = 'OverrideHackRewards';
+		OverrideHackRewardTuple.Data.Add(3);
+		OverrideHackRewardTuple.Data[0].kind = XComLWTVBool;
+		OverrideHackRewardTuple.Data[0].b = false;  // whether override is active
+		OverrideHackRewardTuple.Data[1].kind = XComLWTVObject;
+		OverrideHackRewardTuple.Data[1].o = Hacker;  // hacker
+		OverrideHackRewardTuple.Data[2].kind = XComLWTVObject;
+		OverrideHackRewardTuple.Data[2].o = HackTarget;  // hack target
+
+		`XEVENTMGR.TriggerEvent('PreAcquiredHackReward', OverrideHackRewardTuple, Template, NewGameState);
+
+		if(!OverrideHackRewardTuple.Data[0].b)
+			Template.OnHackRewardAcquired(Hacker, HackTarget, NewGameState);
 
 		HackWasASuccess = HackWasASuccess || !Template.bResultsInHackFailure;
 	}

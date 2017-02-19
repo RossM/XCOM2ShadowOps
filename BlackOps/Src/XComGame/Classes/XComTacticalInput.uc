@@ -1,3 +1,4 @@
+// LWS : Added hooks to control camera rotation
 //-----------------------------------------------------------
 //
 //-----------------------------------------------------------
@@ -629,17 +630,33 @@ state InReplayPlayback
 
 	function bool Key_Q( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, true, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return false;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(90.0);
 		return false;
 	}
 	function bool Key_E( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, false, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return false;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(-90.0);
 		return false;
 	}
-
+	
 	function bool DPad_Right( int ActionMask )
 	{
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
@@ -1236,6 +1253,14 @@ state UsingTargetingMethod
 
 	function bool Key_E( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, false, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return true;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_PRESS) != 0)
 		{
 			XComTacticalController(Outer).YawCamera(-90.0);
@@ -1245,6 +1270,14 @@ state UsingTargetingMethod
 
 	function bool Key_Q( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, true, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return true;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_PRESS) != 0)
 		{
 			XComTacticalController(Outer).YawCamera(90.0);
@@ -1469,12 +1502,28 @@ state Multiplayer_Inactive
 
 	function bool Key_E( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, false, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return false;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(-90.0);
 		return false;
 	}
 	function bool Key_Q( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, true, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return false;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(90.0);
 		return false;
@@ -1482,12 +1531,28 @@ state Multiplayer_Inactive
 
 	function bool DPad_Right( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, false, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return false;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(-90.0);
 		return false;
 	}
 	function bool DPad_Left( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, true, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return false;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(90.0);
 		return false;
@@ -2357,12 +2422,28 @@ state ActiveUnit_Moving
 
 	function bool Key_E( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, false, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return false;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(-90.0);
 		return false;
 	}
 	function bool Key_Q( int ActionMask )
 	{
+		//LWS: Adding hook for camera rotation
+		local float Angle;
+		if (GetCameraRotationAngle(Angle, true, ActionMask))
+		{
+			XComTacticalController(Outer).YawCamera(Angle);
+			return false;
+		}
+
 		if (( ActionMask & class'UIUtilities_Input'.const.FXS_ACTION_RELEASE) != 0)
 			XComTacticalController(Outer).YawCamera(90.0);
 		return false;
@@ -3292,6 +3373,37 @@ simulated function OnPauseMenuCancel()
 // Overriden in 'Multiplayer_GameOver' state
 event Cleanup();
 
+//-----------------------------------------------------------
+//---------------- BEGIN LWS CHANGES ------------------------
+//-----------------------------------------------------------
+
+function bool GetCameraRotationAngle(out float Angle, bool bPositive, int ActionMask)
+{
+    local XComLWTuple Tuple;
+
+    Tuple = new class'XComLWTuple';
+    Tuple.Id = 'GetCameraRotationAngle';
+	Tuple.Data.Add(4);
+    Tuple.Data[0].Kind = XComLWTVFloat;
+    Tuple.Data[0].f = 0.0; // the angle, 0.0 means use default value
+    Tuple.Data[1].Kind = XComLWTVBool;
+    Tuple.Data[1].b = false; // whether the default camera action should be skipped
+    Tuple.Data[2].Kind = XComLWTVBool;
+    Tuple.Data[2].b = bPositive; // whether the keypress is for positive or negative rotation
+    Tuple.Data[3].Kind = XComLWTVInt;
+    Tuple.Data[3].i = ActionMask; // keypress actionmask
+
+    `XEVENTMGR.TriggerEvent('GetCameraRotationAngle', Tuple);
+
+	Angle = Tuple.Data[0].f;
+
+	return Tuple.Data[1].b;
+
+}
+
+//-----------------------------------------------------------
+//----------------- END LWS CHANGES -------------------------
+//-----------------------------------------------------------
 
 native function bool IsCurrentMatineeSkippable();
 //-----------------------------------------------------------

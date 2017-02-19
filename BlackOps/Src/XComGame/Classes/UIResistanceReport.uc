@@ -8,6 +8,11 @@
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //--------------------------------------------------------------------------------------- 
 
+// LWS Changes
+//
+// tracktwo - Add optional arguments to GetSuppliesReward calls to fetch the actual supply totals
+//            and not just the expected totals.
+// tracktwo - Add event hook to allow mods to override the dark event supply box on resistance reports.
 
 class UIResistanceReport extends UIX2SimpleScreen;
 
@@ -81,6 +86,7 @@ simulated function UpdateCouncilReportCardRewards()
 {
 	local XComGameState_HeadquartersResistance ResistanceHQ;
 	local bool bIsPositiveMonthly; 
+    local XComLWTuple Tuple;
 
 	ResistanceHQ = RESHQ();
 	bIsPositiveMonthly = (ResistanceHQ.GetSuppliesReward(true) > 0);
@@ -102,16 +108,29 @@ simulated function UpdateCouncilReportCardRewards()
 		MC.QueueString("");
 	}
 
-	// Rural Checkpoints Dark Event
-	if( ResistanceHQ.SavedSupplyDropPercentDecrease > 0 )
+	// LW Mods: Allow mods to replace (or extend) the baseline DE supply value drop
+	Tuple = new class'XComLWTuple';
+	Tuple.Id = 'GetSupplyDropDecreaseStrings';
+	`XEVENTMGR.TriggerEvent('GetSupplyDropDecreaseStrings', Tuple, self, none);
+
+	if (Tuple.Data.Length == 2 && Tuple.Data[0].Kind == XComLWTVString && Tuple.Data[1].Kind == XComLWTVString)
 	{
-		MC.QueueString(m_strDarkEventPenalty);
-		MC.QueueString("-" $ Round(ResistanceHQ.SavedSupplyDropPercentDecrease * 100.0) $ "%");
+		MC.QueueString(Tuple.Data[0].s);
+		MC.QueueString(Tuple.Data[1].s);
 	}
 	else
 	{
-		MC.QueueString("");
-		MC.QueueString("");
+		// Rural Checkpoints Dark Event
+		if( ResistanceHQ.SavedSupplyDropPercentDecrease > 0 )
+		{
+			MC.QueueString(m_strDarkEventPenalty);
+			MC.QueueString("-" $ Round(ResistanceHQ.SavedSupplyDropPercentDecrease * 100.0) $ "%");
+		}
+		else
+		{
+			MC.QueueString("");
+			MC.QueueString("");
+		}
 	}
 
 	MC.EndOp();
@@ -238,6 +257,10 @@ simulated function CloseScreen()
 	ResistanceHQ = XComGameState_HeadquartersResistance(NewGameState.CreateStateObject(class'XComGameState_HeadquartersResistance', RESHQ().ObjectID));
 	NewGameState.AddStateObject(ResistanceHQ);
 	ResistanceHQ.ResetActivities();
+
+    // Allow mods to do end-of-month processing
+    `XEVENTMGR.TriggerEvent('OnClosedMonthlyReportAlert', , , NewGameState);
+
 	`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
 
 	`XANALYTICS.SendCampaign();
@@ -270,7 +293,11 @@ simulated function String GetSupplyRewardString()
 	
 	if(SuppliesReward < 0)
 	{
-		SuppliesReward = 0;
+		//LWS : Modified to allow DLC/Mods to be able to process negative income events
+		if (!RESHQ().ProcessNegativeMonthlyIncome(SuppliesReward, true))
+		{
+			SuppliesReward = 0;
+		}
 	}
 
 	Prefix = (SuppliesReward < 0) ? "-" : "+";

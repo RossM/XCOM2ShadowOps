@@ -7,6 +7,9 @@
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
 
+// PI Changes:
+// tracktwo - Adjust debug draw function to respect the DisableDynamicEncounterZones flag.
+
 class XComAISpawnManager extends Object
 	native dependson(XGGameData);
 
@@ -554,6 +557,12 @@ simulated function DrawDebugLabel(Canvas InCanvas)
 	InCanvas.SetDrawColor(0, 150, 255);
 	InCanvas.DrawText(DebugString);
 
+	// PI: Account for the dynamic encounter zone config: if this flag is on the encounter zones should
+	// be drawn relative to the xcom spawn position not the current xcom position.
+	if (class'Helpers_LW'.static.DynamicEncounterZonesDisabled())
+	{
+		XComLocation = BattleData.MapData.SoldierSpawnLocation;
+	}
 
 	// draw the encounter zones
 	for( CurrentEncounterZoneIndex = 0; CurrentEncounterZoneIndex < EncounterZoneOffsetAlongLOPs.Length; ++CurrentEncounterZoneIndex )

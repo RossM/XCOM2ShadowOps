@@ -3,6 +3,7 @@
 //  AUTHOR:  David Burchanowski  --  11/05/2014
 //  PURPOSE: Spawns a unit from the avenger reserves
 //           
+// LWS		 Updated to prevent units with eStatus_OnMission from being selected
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
@@ -90,6 +91,12 @@ private static function XComGameState_Unit ChooseStrategyUnit(XComGameStateHisto
 
 			// only if not already on the board
 			if(UnitsInPlay.Find('ObjectID', StrategyUnit.ObjectID) != INDEX_NONE)
+			{
+				continue;
+			}
+
+			// LWS: only if unit doesn't have eStatus_OnMission
+			if(StrategyUnit.GetStatus() == eStatus_OnMission)
 			{
 				continue;
 			}

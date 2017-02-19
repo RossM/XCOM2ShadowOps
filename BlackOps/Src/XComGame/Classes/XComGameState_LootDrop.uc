@@ -4,6 +4,7 @@
 //  PURPOSE: This object represents the instance data for a loot drop in the tactical game for
 //           X-Com
 //           
+//			LWS: Modified to fix bug with multiple loot drops
 //---------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Firaxis Games, Inc. All rights reserved.
 //---------------------------------------------------------------------------------------
@@ -73,6 +74,12 @@ function Actor FindOrCreateVisualizer(optional XComGameState Gamestate = none)
 	local XComGameStateHistory History;
 	local Vector WorldLocation;
 
+	//LWS : Added locals
+	local MeshComponent MeshComp;
+	local int i;
+	local MaterialInterface Mat;
+	local MaterialInstanceConstant MIC, NewMIC;
+
 	History = `XCOMHISTORY;
 
 	MyVisualizer = History.GetVisualizer(ObjectID);
@@ -81,6 +88,32 @@ function Actor FindOrCreateVisualizer(optional XComGameState Gamestate = none)
 	{
 		WorldLocation = `XWORLD.GetPositionFromTileCoordinates(TileLocation);
 		MyVisualizer = `XCOMGAME.Spawn(class'XComLootDropActor', , , WorldLocation);
+
+		//LWS : Adding material instance support for XComLootDropActor so that multiple drops can display differently
+		MeshComp = XComLootDropActor(MyVisualizer).LootMarkerMesh;
+		if (MeshComp != none)
+		{
+			for (i = 0; i < MeshComp.GetNumElements(); ++i)
+			{
+				Mat = MeshComp.GetMaterial(i);
+				MIC = MaterialInstanceConstant(Mat);
+
+				// It is possible for there to be MITVs in these slots, so check
+				if (MIC != none)
+				{
+					// If this is not a child MIC, make it one. This is done so that the material updates below don't stomp
+					// on each other between units.
+					if (InStr(MIC.Name, "MaterialInstanceConstant") == INDEX_NONE)
+					{
+						NewMIC = new (self) class'MaterialInstanceConstant';
+						NewMIC.SetParent(MIC);
+						MeshComp.SetMaterial(i, NewMIC);
+						MIC = NewMIC;
+					}
+				}
+			}
+		}
+
 		History.SetVisualizer(ObjectID, MyVisualizer);
 	}
 
@@ -212,6 +245,10 @@ function EventListenerReturn OnLootDropCreated(Object EventData, Object EventSou
 	TargetPos = WorldData.GetPositionFromTileCoordinates(TileLocation);
 
 	LootDropState = XComGameState_LootDrop(EventData);
+
+	if (LootDropState.ObjectID != ObjectID) // LWS Added to prevent triggering on wrong lootable object
+		return ELR_NoInterrupt;
+
 	foreach History.IterateByClassType(class'XComGameState_Unit', Iter)
 	{
 		if( Iter.IsAbleToAct() )
