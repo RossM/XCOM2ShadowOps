@@ -18,10 +18,14 @@ var config float ButcherDamageMultiplier;
 var config int StalkerMobilityBonus, StalkerOffenseBonus;
 var config int LastStandDuration, LastStandCharges;
 var config int SurvivalInstinctDefenseBonus, SurvivalInstinctCritBonus;
-var config int StingShotHitModifier, StingShotPercentDamageModifier, StingShotBasePanicChance;
+var config int DisablingShotHitModifier, DisablingShotPercentDamageModifier;
 var config int ThisOnesMineCritBonus, ThisOnesMineDefenseBonus, ThisOnesMineDuration;
+var config float FearsomeRadius;
+var config int FearsomeBasePanicChance;
 
-var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, StingShotCooldown, ThisOnesMineCooldown;
+var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, DisablingShotCooldown, ThisOnesMineCooldown;
+
+var name ThisOnesMineEffectName;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -53,8 +57,11 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Stalker());
 	Templates.AddItem(LastStand());
 	Templates.AddItem(SurvivalInstinct());
-	Templates.AddItem(StingShot());
+	Templates.AddItem(DisablingShot());
 	Templates.AddItem(ThisOnesMine());
+	Templates.AddItem(WatchfulEye());
+	Templates.AddItem(Hipfire());
+	Templates.AddItem(Fearsome());
 
 	return Templates;
 }
@@ -994,42 +1001,19 @@ static function X2AbilityTemplate SurvivalInstinct()
 	return Passive('ShadowOps_SurvivalInstinct', "img:///UILibrary_SOHunter.UIPerk_survivalinstinct", true, Effect);
 }
 
-static function X2AbilityTemplate StingShot()
+static function X2AbilityTemplate DisablingShot()
 {
-	local X2AbilityTemplate Template, PanicTemplate;
+	local X2AbilityTemplate Template;
 	local XMBEffect_ConditionalBonus BonusEffect;
-	local X2AbilityToHitCalc_StatCheck_UnitVsUnit ToHitCalc;
-	local XMBAbilityTrigger_EventListener EventListener;
 
-	Template = Attack('ShadowOps_StingShot', "img:///UILibrary_SOHunter.UIPerk_stingshot", true, none,, eCost_WeaponConsumeAll);
-	AddCooldown(Template, default.StingShotCooldown);
+	Template = Attack('ShadowOps_DisablingShot', "img:///UILibrary_SOHunter.UIPerk_disablingshot", true, none,, eCost_WeaponConsumeAll);
+	AddCooldown(Template, default.DisablingShotCooldown);
+
+	Template.AddTargetEffect(class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, 100));
 
 	BonusEffect = AddBonusPassive(Template);
-	BonusEffect.AddPercentDamageModifier(default.StingShotPercentDamageModifier);
-	BonusEffect.AddToHitModifier(default.StingShotHitModifier);
-
-	Template.PostActivationEvents.AddItem('StingShot');
-
-	PanicTemplate = TargetedDebuff('ShadowOps_StingShot_Panic', "img:///UILibrary_SOHunter.UIPerk_stingshot", false, class'X2StatusEffects'.static.CreatePanickedStatusEffect(),, eCost_None);
-	PanicTemplate.bSkipFireAction = true;
-	PanicTemplate.SourceMissSpeech = '';
-	PanicTemplate.SourceHitSpeech = '';
-
-	PanicTemplate.AbilityTriggers.Length = 0;
-	EventListener = new class'XMBAbilityTrigger_EventListener';
-	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
-	EventListener.ListenerData.EventID = 'StingShot';
-	EventListener.ListenerData.Filter = eFilter_Unit;
-	EventListener.AbilityTargetConditions.AddItem(default.HitCondition);
-	PanicTemplate.AbilityTriggers.AddItem(EventListener);
-	
-	HidePerkIcon(PanicTemplate);
-	AddSecondaryAbility(Template, PanicTemplate);
-
-	ToHitCalc = new class'X2AbilityToHitCalc_StatCheck_UnitVsUnit';
-	ToHitCalc.AttackerStat = eStat_Offense;
-	ToHitCalc.BaseValue = default.StingShotBasePanicChance;
-	PanicTemplate.AbilityToHitCalc = ToHitCalc;
+	BonusEffect.AddPercentDamageModifier(default.DisablingShotPercentDamageModifier);
+	BonusEffect.AddToHitModifier(default.DisablingShotHitModifier);
 
 	return Template;
 }
@@ -1042,11 +1026,13 @@ static function X2AbilityTemplate ThisOnesMine()
 	local X2Condition_Visibility TargetVisibilityCondition;
 
 	MarkEffect = new class'X2Effect_Persistent';
-	MarkEffect.EffectName = 'ThisOnesMine';
+	MarkEffect.EffectName = default.ThisOnesMineEffectName;
 	MarkEffect.BuildPersistentEffect(default.ThisOnesMineDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	MarkEffect.VisualizationFn = EffectFlyOver_Visualization;
 	Template = TargetedDebuff('ShadowOps_ThisOnesMine', "img:///UILibrary_SOHunter.UIPerk_thisonesmine", true, MarkEffect,, eCost_Free);
 	AddCooldown(Template, default.ThisOnesMineCooldown);
 	Template.ConcealmentRule = eConceal_Always;
+	Template.bSkipFireAction = true;
 
 	TargetVisibilityCondition = new class'X2Condition_Visibility';
 	TargetVisibilityCondition.bRequireGameplayVisible = true;
@@ -1057,11 +1043,131 @@ static function X2AbilityTemplate ThisOnesMine()
 	BonusEffect = new class'X2Effect_ThisOnesMine';
 	BonusEffect.AddToHitModifier(default.ThisOnesMineCritBonus, eHit_Crit);
 	BonusEffect.AddToHitAsTargetModifier(-default.ThisOnesMineDefenseBonus, eHit_Success);
-	BonusEffect.RequiredEffects.AddItem(MarkEffect.EffectName);
+	BonusEffect.RequiredEffects.AddItem(default.ThisOnesMineEffectName);
 
 	PassiveTemplate = Passive('ShadowOps_ThisOnesMine_Passive', "img:///UILibrary_SOHunter.UIPerk_thisonesmine", false, BonusEffect);
 	HidePerkIcon(PassiveTemplate);
 	AddSecondaryAbility(Template, PassiveTemplate);
 
 	return Template;
+}
+
+static function X2AbilityTemplate WatchfulEye()
+{
+	local X2AbilityTemplate Template;
+	local X2AbilityTrigger_Event Trigger;
+	local X2Condition_UnitEffects Condition;
+	local X2Effect_Persistent MarkEffect;
+	local X2AbilityToHitCalc_StandardAim ToHitCalc;
+
+	Template = Attack('ShadowOps_WatchfulEye', "img:///UILibrary_SOHunter.UIPerk_watchfuleye", false,,, eCost_None);
+	HidePerkIcon(Template);
+	AddIconPassive(Template);
+
+	Template.AbilityTriggers.Length = 0;
+
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_MovementObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_AttackObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Template.AbilityTargetConditions.AddItem(class'X2Ability_DefaultAbilitySet'.static.OverwatchTargetEffectsCondition());
+
+	MarkEffect = new class'X2Effect_Persistent';
+	MarkEffect.EffectName = 'WatchfulEye_Cooldown';
+	MarkEffect.BuildPersistentEffect(1, false, false, true, eGameRule_PlayerTurnEnd);
+	MarkEffect.bApplyOnHit = true;
+	MarkEffect.bApplyOnMiss = true;
+	Template.AddTargetEffect(MarkEffect);
+
+	Condition = new class'X2Condition_UnitEffectsWithAbilitySource';
+	Condition.AddRequireEffect(default.ThisOnesMineEffectName, 'AA_Immune');
+	Condition.AddExcludeEffect(MarkEffect.EffectName, 'AA_Immune');
+	Template.AbilityTargetConditions.AddItem(Condition);
+
+	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
+	ToHitCalc.bReactionFire = true;
+	Template.AbilityToHitCalc = ToHitCalc;
+
+	return Template;
+}
+
+static function X2AbilityTemplate Hipfire()
+{
+	local XMBEffect_AbilityCostRefund Effect;
+
+	Effect = new class'XMBEffect_AbilityCostRefund';
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+	Effect.TriggeredEvent = 'Hipfire_LW2';
+
+	return Passive('ShadowOps_Hipfire_LW2', "img:///UILibrary_SOHunter.UIPerk_watchfuleye", false, Effect);
+}
+
+static function X2AbilityTemplate Fearsome()
+{
+	local X2AbilityTemplate Template;
+	local X2AbilityToHitCalc_StatCheck_UnitVsUnit ToHitCalc;
+	local XMBAbilityTrigger_EventListener EventListener;
+	local X2AbilityMultiTarget_Radius Radius;
+	local X2Effect_Persistent Effect;
+	local X2Condition_PanicOnPod PanicCondition;
+	local X2AbilityTarget_Single PrimaryTarget;
+	local X2Condition_UnitProperty TargetCondition;
+
+	Template = TargetedDebuff('ShadowOps_Fearsome', "img:///UILibrary_SOHunter.UIPerk_fearsome", false, none,, eCost_None);
+	Template.bSkipFireAction = true;
+	Template.SourceMissSpeech = '';
+	Template.SourceHitSpeech = '';
+
+	PanicCondition = new class'X2Condition_PanicOnPod';
+	PanicCondition.MaxPanicUnitsPerPod = 2;
+
+	Effect = class'X2StatusEffects'.static.CreatePanickedStatusEffect();
+	Effect.TargetConditions.AddItem(PanicCondition);
+	Template.AddTargetEffect(Effect);
+	Template.AddMultiTargetEffect(Effect);
+
+	Template.AbilityTriggers.Length = 0;
+	EventListener = new class'XMBAbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'AbilityActivated';
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	EventListener.AbilityTargetConditions.AddItem(default.CritCondition);
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	TargetCondition = new class'X2Condition_UnitProperty';
+	TargetCondition.ExcludeDead = false;
+
+	Template.AbilityTargetConditions.Length = 0;
+	Template.AbilityTargetConditions.AddItem(TargetCondition);
+
+	Template.AbilityShooterConditions.Length = 0;
+
+	Template.AbilityMultiTargetConditions.Length = 0;
+	Template.AbilityMultiTargetConditions.AddItem(default.LivingHostileUnitOnlyProperty);
+	
+	Radius = new class'X2AbilityMultiTarget_Radius';
+	Radius.fTargetRadius = default.FearsomeRadius;
+	Radius.bIgnoreBlockingCover = true;
+	Template.AbilityMultiTargetStyle = Radius;
+
+	HidePerkIcon(Template);
+	AddIconPassive(Template);
+
+	ToHitCalc = new class'X2AbilityToHitCalc_StatCheck_UnitVsUnit';
+	ToHitCalc.AttackerStat = eStat_Offense;
+	ToHitCalc.BaseValue = default.FearsomeBasePanicChance;
+	Template.AbilityToHitCalc = ToHitCalc;
+
+	return Template;
+}
+
+defaultproperties
+{
+	ThisOnesMineEffectName = "ThisOnesMine"
 }

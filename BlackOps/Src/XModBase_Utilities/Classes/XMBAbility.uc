@@ -406,8 +406,6 @@ static function X2AbilityTemplate TargetedDebuff(name DataName, string IconImage
 	Template.AbilityTargetConditions.AddItem(default.GameplayVisibilityCondition);
 	Template.AbilityTargetConditions.AddItem(default.LivingHostileTargetProperty);
 
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
-
 	// Don't allow the ability to be used while the unit is disoriented, burning, unconscious, etc.
 	Template.AddShooterEffectExclusions();
 

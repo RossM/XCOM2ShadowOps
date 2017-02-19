@@ -12,6 +12,7 @@ function EventListenerReturn OnEvent(Object EventData, Object EventSource, XComG
 	local X2AbilityTrigger Trigger;
 	local XMBAbilityTrigger_EventListener EventListener;
 	local name AvailableCode;
+	local bool bSuccess;
 
 	History = `XCOMHISTORY;
 
@@ -67,9 +68,12 @@ function EventListenerReturn OnEvent(Object EventData, Object EventSource, XComG
 					if (AvailableCode == 'AA_Success')
 					{
 						if (EventListener.bSelfTarget)
-							SourceAbilityState.AbilityTriggerAgainstSingleTarget(SourceUnit.GetReference(), false);
+							bSuccess = SourceAbilityState.AbilityTriggerAgainstSingleTarget(SourceUnit.GetReference(), false);
 						else
-							SourceAbilityState.AbilityTriggerAgainstSingleTarget(TargetUnit.GetReference(), false);
+							bSuccess = SourceAbilityState.AbilityTriggerAgainstSingleTarget(TargetUnit.GetReference(), false);
+
+						if (!bSuccess)
+							`Log(SourceAbilityState.GetMyTemplate().DataName @ "event" @ EventID @ ": Activation failed!");
 					}
 				}
 

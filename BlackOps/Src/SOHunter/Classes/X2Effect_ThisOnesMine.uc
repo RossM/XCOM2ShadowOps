@@ -13,16 +13,12 @@ function protected name ValidateAttack(XComGameState_Effect EffectState, XComGam
 	else
 		UnitState = Target;
 
-	`Log("X2Effect_ThisOnesMine ValidateAttack()");
-
 	for (i = 0; i < UnitState.AffectedByEffects.Length; i++)
 	{
-		`Log("  EffectName:" @ UnitState.AffectedByEffectNames[i]);
 		if (RequiredEffects.Find(UnitState.AffectedByEffectNames[i]) == INDEX_NONE)
 			continue;
 
 		CheckEffectState = XComGameState_Effect(`XCOMHISTORY.GetGameStateForObjectID(UnitState.AffectedByEffects[i].ObjectID));
-		`Log("  SourceObjectID:" @ CheckEffectState.ApplyEffectParameters.SourceStateObjectRef.ObjectID);
 		if (CheckEffectState.ApplyEffectParameters.SourceStateObjectRef.ObjectID == EffectState.ApplyEffectParameters.SourceStateObjectRef.ObjectID)
 			return 'AA_Success';
 	}
