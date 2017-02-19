@@ -252,10 +252,10 @@ LeftAbilityTreeTitle="Paladin"
 RightAbilityTreeTitle="Ghost"
 
 [ShadowOps_Heavy_LW2 X2SoldierClassTemplate]
-DisplayName="Knight"
+DisplayName="Juggernaut"
 ClassSummary="TODO"
-LeftAbilityTreeTitle="Lancer"
-RightAbilityTreeTitle="Fusilier"
+LeftAbilityTreeTitle="Strike"
+RightAbilityTreeTitle="Siege"
 
 ; === GTS ability templates ===
 
