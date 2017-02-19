@@ -1107,7 +1107,7 @@ static function X2AbilityTemplate Hipfire()
 	Effect.CountValueName = 'Hipfire_Count';
 	Effect.MaxRefundsPerTurn = 1;
 
-	return Passive('ShadowOps_Hipfire_LW2', "img:///UILibrary_SOHunter.UIPerk_watchfuleye", false, Effect);
+	return Passive('ShadowOps_Hipfire_LW2', "img:///UILibrary_SOHunter.UIPerk_hipfire_lw2", false, Effect);
 }
 
 static function X2AbilityTemplate Fearsome()

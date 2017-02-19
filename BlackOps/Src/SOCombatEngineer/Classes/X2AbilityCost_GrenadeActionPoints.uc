@@ -1,4 +1,6 @@
-class X2AbilityCost_GrenadeActionPoints extends X2AbilityCost_ActionPoints;
+class X2AbilityCost_GrenadeActionPoints extends X2AbilityCost_ActionPoints config(GameData_SoldierSkills);
+
+var config array<name> SmokeGrenadeTemplates;
 
 simulated function int GetPointCost(XComGameState_Ability AbilityState, XComGameState_Unit AbilityOwner)
 {
@@ -23,10 +25,7 @@ simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XCo
 		GrenadeTemplate = X2GrenadeTemplate(ItemState.GetMyTemplate());
 		if (GrenadeTemplate != none)
 		{
-			if (GrenadeTemplate.DataName == 'SmokeGrenade' ||
-				GrenadeTemplate.DataName == 'SmokeGrenadeMk2' ||
-				GrenadeTemplate.DataName == 'DenseSmokeGrenade' ||  // For Long War Perk Pack implementation of Dense Smoke
-				GrenadeTemplate.DataName == 'DenseSmokeGrenadeMk2') // For Long War Perk Pack implementation of Dense Smoke
+			if (SmokeGrenadeTemplates.Find(GrenadeTemplate.DataName) != INDEX_NONE)
 			{
 				if (AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors') || AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors_LW2'))
 					return false;

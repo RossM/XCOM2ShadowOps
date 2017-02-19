@@ -25,6 +25,8 @@
     <Folder Include="Src\" />
     <Folder Include="Src\LW_Tuple" />
     <Folder Include="Src\LW_Tuple\Classes" />
+    <Folder Include="Src\ShadowOps_LW2" />
+    <Folder Include="Src\ShadowOps_LW2\Classes" />
     <Folder Include="Src\SmokeAudioFix" />
     <Folder Include="Src\SmokeAudioFix\Classes" />
     <Folder Include="Src\SOInfantry" />
@@ -58,6 +60,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOClasses_LW2\XComLW_InfiltrationSettings.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOClasses_LW2\XComShadowOps.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOCombatEngineer_LW2\XComEngine.ini">
@@ -136,6 +141,15 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\*.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps_LW2\Classes\UIScreenListener_Generic.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps_LW2\Classes\X2DownloadableContentInfo_ShadowOps_LW2.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\ShadowOps_LW2\Classes\XComGameState_SOListenerManager.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\SmokeAudioFix\Classes\*.uc">
