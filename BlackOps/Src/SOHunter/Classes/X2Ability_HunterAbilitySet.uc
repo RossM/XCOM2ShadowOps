@@ -1104,6 +1104,8 @@ static function X2AbilityTemplate Hipfire()
 	Effect = new class'XMBEffect_AbilityCostRefund';
 	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 	Effect.TriggeredEvent = 'Hipfire_LW2';
+	Effect.CountValueName = 'Hipfire_Count';
+	Effect.MaxRefundsPerTurn = 1;
 
 	return Passive('ShadowOps_Hipfire_LW2', "img:///UILibrary_SOHunter.UIPerk_watchfuleye", false, Effect);
 }
