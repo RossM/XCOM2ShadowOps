@@ -149,6 +149,16 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 				}
 			}
 			break;
+
+		case 'Deadeye':
+		case 'PrecisionShot':
+			if (X2WeaponTemplate(WeaponState.GetMyTemplate()).iTypicalActionCost >= 2)
+				IconColor = default.ICON_COLOR_2;
+			else
+				IconColor = default.ICON_COLOR_END;
+			Changed = true;
+			break;
+		
 		default: break;
 	}
 
@@ -211,6 +221,7 @@ function EventListenerReturn OnAbilityActivated (Object EventData, Object EventS
 				}
 			}
 		}
+		break;
 	}
 
 	return ELR_NoInterrupt;

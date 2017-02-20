@@ -2,11 +2,13 @@
 class TemplateEditors extends Object config(GameCore);
 
 var config array<name> SuppressionBlockedAbilities;
+var config array<name> WeaponCostAbilities;
 var config array<name> LWClasses;
 
 static function EditTemplates()
 {
 	AddAllSuppressionConditions();
+	ChangeAllToWeaponActionPoints();
 
 	KillLongWarDead();
 }
@@ -80,3 +82,38 @@ static function AddAllSuppressionConditions()
 	}
 }
 
+static function ChangeToWeaponActionPoints(name AbilityName)
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local X2AbilityCost_ActionPoints			ActionPointCost;
+	local int i;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		for (i = 0; i < Template.AbilityCosts.Length; i++)
+		{
+			if (Template.AbilityCosts[i].IsA('X2AbilityCost_ActionPoints'))
+			{
+				ActionPointCost = new class'X2AbilityCost_ActionPoints'(Template.AbilityCosts[i]);
+				ActionPointCost.iNumPoints = 0;
+				ActionPointCost.bAddWeaponTypicalCost = true;
+				Template.AbilityCosts[i] = ActionPointCost;
+			}
+		}
+	}
+}
+
+static function ChangeAllToWeaponActionPoints()
+{
+	local name DataName;
+
+	foreach default.WeaponCostAbilities(DataName)
+	{
+		`Log("ShadowOps: ChangeToWeaponActionPoints" @ DataName);
+		ChangeToWeaponActionPoints(DataName);
+	}
+}

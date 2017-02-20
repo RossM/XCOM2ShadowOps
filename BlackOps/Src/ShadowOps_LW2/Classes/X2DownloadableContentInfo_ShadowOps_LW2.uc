@@ -24,6 +24,8 @@ static event OnPostTemplatesCreated()
 {
 	SetVariableIconColor('PointBlank');
 	SetVariableIconColor('BothBarrels');
+	SetVariableIconColor('Deadeye');
+	SetVariableIconColor('PrecisionShot');
 }
 
 static function SetVariableIconColor(name AbilityName)
