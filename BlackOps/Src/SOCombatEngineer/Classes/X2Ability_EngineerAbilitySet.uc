@@ -19,6 +19,7 @@ var config float HeatAmmoDamageMultiplier;
 var config WeaponDamageValue BullRushDamage;
 var config int BullRushHitModifier;
 var config int BareKnuckleDamageBonus;
+var config int X4CoresEnvironmentDamageBonus;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -59,6 +60,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(BullRush());
 	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(BareKnuckle());
+	Templates.AddItem(PurePassive('ShadowOps_X4Cores', "img:///UILibrary_SOCombatEngineer.UIPerk_x4cores", false));
 
 	return Templates;
 }

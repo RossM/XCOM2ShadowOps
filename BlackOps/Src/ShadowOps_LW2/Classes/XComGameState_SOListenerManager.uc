@@ -64,6 +64,8 @@ function InitListeners()
 	EventMgr.UnregisterFromAllEvents(ThisObj); // clear all old listeners to clear out old stuff before re-registering
 
 	EventMgr.RegisterForEvent(ThisObj, 'OverrideAbilityIconColor', OnOverrideAbilityIconColor, ELD_Immediate, 40,, true);
+
+	EventMgr.RegisterForEvent(ThisObj, 'AbilityActivated', OnAbilityActivated, ELD_PreStateSubmitted,,, true);
 }
 
 // This takes on a bunch of exceptions to color ability icons
@@ -153,6 +155,62 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 	if (Changed)
 	{
 		OverrideTuple.Data[0].s = IconColor;
+	}
+
+	return ELR_NoInterrupt;
+}
+
+function EventListenerReturn OnAbilityActivated (Object EventData, Object EventSource, XComGameState NewGameState, Name InEventID)
+{
+	local XComGameState_Ability AbilityState;
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameStateHistory History;
+	local XComGameState_EnvironmentDamage DamageEvent;
+	local XComGameState_Unit SourceStateObject;
+	local XComGameState_Item SourceAmmo, SourceWeapon;
+	local name AbilityName;
+
+	History = `XCOMHISTORY;
+
+	AbilityContext = XComGameStateContext_Ability(NewGameState.GetContext());
+
+	AbilityState = XComGameState_Ability(EventData);
+	if (AbilityState == none && AbilityContext != none)
+	{
+		AbilityState = XComGameState_Ability(NewGameState.GetGameStateForObjectID(AbilityContext.InputContext.AbilityRef.ObjectID));
+		if (AbilityState == none)
+			AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(AbilityContext.InputContext.AbilityRef.ObjectID));
+	}
+
+	if (AbilityState == none)
+		return ELR_NoInterrupt;
+
+	AbilityName = AbilityState.GetMyTemplateName();
+	SourceStateObject = XComGameState_Unit(History.GetGameStateForObjectID(AbilityState.OwnerStateObject.ObjectID));
+	SourceAmmo = AbilityState.GetSourceAmmo();
+	SourceWeapon = AbilityState.GetSourceWeapon();
+
+	if (SourceAmmo == none)
+	{
+		if (SourceWeapon != none && SourceWeapon.HasLoadedAmmo())
+			SourceAmmo = XComGameState_Item(History.GetGameStateForObjectID(SourceWeapon.LoadedAmmo.ObjectID));
+	}
+
+	switch (AbilityName)
+	{
+	case 'ThrowGrenade':
+	case 'LaunchGrenade':
+		if (SourceStateObject.HasSoldierAbility('ShadowOps_X4Cores'))
+		{
+			`Log("ShadowOps_X4Cores");
+			foreach NewGameState.IterateByClassType(class'XComGameState_EnvironmentDamage', DamageEvent)
+			{
+				if (SourceAmmo != none && SourceAmmo.GetItemEnvironmentDamage() > 0)
+				{
+					DamageEvent.DamageAmount += class'X2Ability_EngineerAbilitySet'.default.X4CoresEnvironmentDamageBonus;
+				}
+			}
+		}
 	}
 
 	return ELR_NoInterrupt;
