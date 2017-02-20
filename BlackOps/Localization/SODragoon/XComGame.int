@@ -113,8 +113,8 @@ LocPromotionPopupText="<Bullet/> The reduction applies to all damage taken while
 
 [ShadowOps_IronWill X2AbilityTemplate]
 LocFriendlyName="Iron Will"
-LocLongDescription="Increases Will by <Ability:Will>."
-LocHelpText="Increases Will by <Ability:Will>."
+LocLongDescription="Increases Will by <Ability:Will>, and guarantees that you bleed out instead of die outright once per mission."
+LocHelpText="Increases Will by <Ability:Will>, and guarantees that you bleed out instead of die outright once per mission."
 LocFlyOverText="Iron Will"
 LocPromotionPopupText="<Bullet/> Will reduces your chances of being disoriented, stunned, panicked, or knocked unconscious. <br/>"
 

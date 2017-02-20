@@ -844,7 +844,7 @@ static function X2AbilityTemplate IronWill()
 	local X2Effect_PersistentStatChange Effect;
 	local X2AbilityTemplate Template;
 
-	Effect = new class'X2Effect_PersistentStatChange';
+	Effect = new class'X2Effect_IronWill';
 	Effect.AddPersistentStatChange(eStat_Will, default.IronWillBonus);
 
 	Template = Passive('ShadowOps_IronWill', "img:///UILibrary_SODragoon.UIPerk_iron_will", true, Effect);
