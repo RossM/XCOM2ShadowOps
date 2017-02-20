@@ -62,6 +62,9 @@
     <Content Include="Config\SOClasses_LW2\XComLW_InfiltrationSettings.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOClasses_LW2\XComLW_Overhaul.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOClasses_LW2\XComShadowOps.ini">
       <SubType>Content</SubType>
     </Content>
