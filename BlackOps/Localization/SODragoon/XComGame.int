@@ -251,7 +251,7 @@ ClassSummary="TODO"
 LeftAbilityTreeTitle="Paladin"
 RightAbilityTreeTitle="Ghost"
 
-[ShadowOps_Heavy_LW2 X2SoldierClassTemplate]
+[ShadowOps_Juggernaut_LW2 X2SoldierClassTemplate]
 DisplayName="Juggernaut"
 ClassSummary="TODO"
 LeftAbilityTreeTitle="Strike"
