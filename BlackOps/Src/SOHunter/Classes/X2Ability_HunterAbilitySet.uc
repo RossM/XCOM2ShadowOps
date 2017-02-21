@@ -1006,7 +1006,7 @@ static function X2AbilityTemplate DisablingShot()
 	local X2AbilityTemplate Template;
 	local XMBEffect_ConditionalBonus BonusEffect;
 
-	Template = Attack('ShadowOps_DisablingShot', "img:///UILibrary_SOHunter.UIPerk_disablingshot", true, none,, eCost_WeaponConsumeAll);
+	Template = Attack('ShadowOps_DisablingShot', "img:///UILibrary_PerkIcons.UIPerk_disablingshot", true, none,, eCost_WeaponConsumeAll);
 	AddCooldown(Template, default.DisablingShotCooldown);
 
 	Template.AddTargetEffect(class'X2StatusEffects'.static.CreateStunnedStatusEffect(2, 100));
