@@ -211,11 +211,11 @@ LocHelpText="Your melee attacks deal <Ability:+Damage/> damage."
 LocFlyOverText="Bare Knuckle"
 LocPromotionPopupText="<Bullet/> TODO. <br/>"
 
-[ShadowOps_X4Cores X2AbilityTemplate]
-LocFriendlyName="X4 Cores"
-LocLongDescription="Your grenades destroy most cover objects."
-LocHelpText="Your grenades destroy most cover objects."
-LocFlyOverText="X4 Cores"
+[ShadowOps_DemoGrenades X2AbilityTemplate]
+LocFriendlyName="Demo Grenades"
+LocLongDescription="Your explosive grenades destroy most cover objects."
+LocHelpText="Your explosive grenades destroy most cover objects."
+LocFlyOverText="Demo Grenades"
 LocPromotionPopupText="<Bullet/> TODO. <br/>"
 
 ; === Class templates ===

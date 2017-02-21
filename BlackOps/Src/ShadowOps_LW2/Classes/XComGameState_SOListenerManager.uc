@@ -170,6 +170,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 	return ELR_NoInterrupt;
 }
 
+// This function is called on PreGameStateSubmitted and gives us a chance to modify arbitrary game state.
 function EventListenerReturn OnAbilityActivated (Object EventData, Object EventSource, XComGameState NewGameState, Name InEventID)
 {
 	local XComGameState_Ability AbilityState;
@@ -210,14 +211,14 @@ function EventListenerReturn OnAbilityActivated (Object EventData, Object EventS
 	{
 	case 'ThrowGrenade':
 	case 'LaunchGrenade':
-		if (SourceStateObject.HasSoldierAbility('ShadowOps_X4Cores'))
+		if (SourceStateObject.HasSoldierAbility('ShadowOps_DemoGrenades'))
 		{
-			`Log("ShadowOps_X4Cores");
+			//`Log("ShadowOps_DemoGrenades");
 			foreach NewGameState.IterateByClassType(class'XComGameState_EnvironmentDamage', DamageEvent)
 			{
 				if (SourceAmmo != none && SourceAmmo.GetItemEnvironmentDamage() > 0)
 				{
-					DamageEvent.DamageAmount += class'X2Ability_EngineerAbilitySet'.default.X4CoresEnvironmentDamageBonus;
+					DamageEvent.DamageAmount += class'X2Ability_EngineerAbilitySet'.default.DemoGrenadesEnvironmentDamageBonus;
 				}
 			}
 		}
