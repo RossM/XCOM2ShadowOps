@@ -174,8 +174,8 @@ LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
 [ShadowOps_Hipfire_LW2 X2AbilityTemplate]
 LocFriendlyName="Hipfire"
-LocLongDescription="The first time you fire your <Ability:AssociatedWeapon/> each turn doesn't cost an action."
-LocHelpText="The first time you fire your <Ability:AssociatedWeapon/> each turn doesn't cost an action."
+LocLongDescription="The first time you fire your Sawed-Off Shotgun each turn doesn't cost an action."
+LocHelpText="The first time you fire your Sawed-Off Shotgun each turn doesn't cost an action."
 LocFlyOverText="Hipfire"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
