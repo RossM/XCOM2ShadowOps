@@ -18,6 +18,7 @@
     <Folder Include="Config\SOInfantry_LW2" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
+    <Folder Include="Localization\SOClasses_LW2" />
     <Folder Include="Localization\SOCombatEngineer" />
     <Folder Include="Localization\SODragoon" />
     <Folder Include="Localization\SOHunter" />
@@ -123,6 +124,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Content\*.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\SOClasses_LW2\XComGame.int">
       <SubType>Content</SubType>
     </Content>
     <Content Include="ReadMe.txt" />
