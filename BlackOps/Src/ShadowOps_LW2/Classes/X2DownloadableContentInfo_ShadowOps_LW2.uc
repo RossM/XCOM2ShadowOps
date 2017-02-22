@@ -41,3 +41,48 @@ static function SetVariableIconColor(name AbilityName)
 		Template.AbilityIconColor = "Variable";
 	}
 }
+
+
+exec function Respec()
+{
+	local UIArmory Armory;
+	local StateObjectReference UnitRef;
+	local XComGameState_Unit UnitState;
+	local XComGameState NewGameState;
+	local int i;
+	local XComGameStateHistory History;
+
+	History = `XCOMHISTORY;
+
+	Armory = UIArmory(`SCREENSTACK.GetFirstInstanceOf(class'UIArmory'));
+	if (Armory == none)
+		return;
+
+	UnitRef = Armory.GetUnitRef();
+
+	UnitState = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
+	if (UnitState == none)
+		return;
+	
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Respec Soldier");
+
+	// Set the soldier status back to active, and rank them up to their new class
+	UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
+	UnitState.ResetSoldierAbilities(); // First clear all of the current abilities
+	for (i = 0; i < UnitState.GetSoldierClassTemplate().GetAbilityTree(0).Length; ++i) // Then give them their squaddie ability back
+	{
+		UnitState.BuySoldierProgressionAbility(NewGameState, 0, i);
+	}
+	NewGameState.AddStateObject(UnitState);
+
+	if (NewGameState.GetNumGameStateObjects() > 0)
+	{
+		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	}
+	else
+	{
+		History.CleanupPendingGameState(NewGameState);
+	}
+
+	Armory.PopulateData();
+}
