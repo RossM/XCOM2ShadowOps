@@ -1057,6 +1057,7 @@ static function X2AbilityTemplate WatchfulEye()
 	local X2AbilityTemplate Template;
 	local X2AbilityTrigger_Event Trigger;
 	local X2Condition_UnitEffects Condition;
+	local X2Condition_UnitProperty ShooterCondition;
 	local X2Effect_Persistent MarkEffect;
 	local X2AbilityToHitCalc_StandardAim ToHitCalc;
 
@@ -1089,6 +1090,11 @@ static function X2AbilityTemplate WatchfulEye()
 	Condition.AddRequireEffect(default.ThisOnesMineEffectName, 'AA_Immune');
 	Condition.AddExcludeEffect(MarkEffect.EffectName, 'AA_Immune');
 	Template.AbilityTargetConditions.AddItem(Condition);
+
+	// Don't shoot while concealed
+	ShooterCondition = new class'X2Condition_UnitProperty';
+	ShooterCondition.ExcludeConcealed = true;
+	Template.AbilityShooterConditions.AddItem(ShooterCondition);
 
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardAim';
 	ToHitCalc.bReactionFire = true;
