@@ -1119,7 +1119,7 @@ static function X2AbilityTemplate Hipfire()
 static function X2AbilityTemplate Fearsome()
 {
 	local X2AbilityTemplate Template;
-	local X2AbilityToHitCalc_StatCheck_UnitVsUnit ToHitCalc;
+	local X2AbilityToHitCalc_PercentChance ToHitCalc;
 	local XMBAbilityTrigger_EventListener EventListener;
 	local X2AbilityMultiTarget_Radius Radius;
 	local X2Effect_Persistent Effect;
@@ -1167,9 +1167,8 @@ static function X2AbilityTemplate Fearsome()
 	HidePerkIcon(Template);
 	AddIconPassive(Template);
 
-	ToHitCalc = new class'X2AbilityToHitCalc_StatCheck_UnitVsUnit';
-	ToHitCalc.AttackerStat = eStat_Offense;
-	ToHitCalc.BaseValue = default.FearsomeBasePanicChance;
+	ToHitCalc = new class'X2AbilityToHitCalc_PercentChance';
+	ToHitCalc.PercentToHit = default.FearsomeBasePanicChance;
 	Template.AbilityToHitCalc = ToHitCalc;
 
 	return Template;
