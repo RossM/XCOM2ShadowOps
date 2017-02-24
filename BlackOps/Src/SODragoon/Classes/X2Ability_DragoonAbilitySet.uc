@@ -899,6 +899,7 @@ static function X2AbilityTemplate ReverseEngineering()
 	Condition.IncludeAbilityNames.AddItem('ShadowOps_PuppetProtocol');
 
 	AddTriggerTargetCondition(Template, Condition);
+	AddIconPassive(Template);
 
 	return Template;
 }
