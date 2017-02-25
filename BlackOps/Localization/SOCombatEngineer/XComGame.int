@@ -195,28 +195,28 @@ LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.
 LocFriendlyName="Bull Rush"
 LocLongDescription="Make a special melee attack against any enemy within movement range that deals little damage but stuns the target for 1 turn."
 LocHelpText="Make a special melee attack against any enemy within movement range that deals little damage but stuns the target for 1 turn."
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> Robotic enemies can't be stunned, but still take the damage.<br/>"
 
 [ShadowOps_SmokeAndMirrors_LW2 X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
 LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocHelpText="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocFlyOverText="Smoke and Mirrors"
-LocPromotionPopupText="<Bullet/> TODO. <br/>"
+LocPromotionPopupText="<Bullet/> Smoke and Mirrors also slightly reduces the soldier's infiltration time. <br/>"
 
 [ShadowOps_BareKnuckle X2AbilityTemplate]
 LocFriendlyName="Bare Knuckle"
 LocLongDescription="Your melee attacks deal <Ability:+Damage/> damage."
 LocHelpText="Your melee attacks deal <Ability:+Damage/> damage."
 LocFlyOverText="Bare Knuckle"
-LocPromotionPopupText="<Bullet/> TODO. <br/>"
+LocPromotionPopupText="<Bullet/> Melee attacks include Bull Rush and knife attacks. <br/>"
 
 [ShadowOps_DemoGrenades X2AbilityTemplate]
 LocFriendlyName="Demo Grenades"
 LocLongDescription="Your explosive grenades destroy most cover objects."
 LocHelpText="Your explosive grenades destroy most cover objects."
 LocFlyOverText="Demo Grenades"
-LocPromotionPopupText="<Bullet/> TODO. <br/>"
+LocPromotionPopupText="<Bullet/> Demo Grenades will always destroy fragile cover such as fences, and may destroy sturdier cover. <br/>"
 
 ; === Class templates ===
 

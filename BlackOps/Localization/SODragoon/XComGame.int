@@ -165,21 +165,21 @@ LocFriendlyName="Eat This!"
 LocLongDescription="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range."
 LocHelpText="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range."
 LocFlyOverText="Eat This!"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> The Aim bonus from Eat This! cancels the Aim penalty from using a cannon at close range.<br/>"
 
 [ShadowOps_Inspiration X2AbilityTemplate]
 LocFriendlyName="Inspiration"
 LocLongDescription="Allies within 10 tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
 LocHelpText="Allies within 10 tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
 LocFlyOverText="Inspiration"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> You also benefit from the bonuses.<br/>"
 
 [ShadowOps_DigitalWarfare X2AbilityTemplate]
 LocFriendlyName="Digital Warfare"
 LocLongDescription="Gain a second PCS slot."
 LocHelpText="Gain a second PCS slot."
 LocFlyOverText="Digital Warfare"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> You cannot equip two PCSes of the same type.<br/>"
 
 ; === Class templates ===
 

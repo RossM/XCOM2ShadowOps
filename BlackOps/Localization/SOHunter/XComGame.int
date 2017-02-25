@@ -163,28 +163,28 @@ LocFriendlyName="This One's Mine"
 LocLongDescription="Mark a target, giving you <Ability:+Crit:ShadowOps_ThisOnesMine_Passive/> Crit chance and <Ability:+Defense:ShadowOps_ThisOnesMine_Passive/> Defense against it for 3 turns. This ability doesn't cost an action. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Mark a target, giving you <Ability:+Crit:ShadowOps_ThisOnesMine_Passive/> Crit chance and <Ability:+Defense:ShadowOps_ThisOnesMine_Passive/> Defense against it for 3 turns."
 LocFlyOverText="This One's Mine"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> Only you get the bonuses.<br/>"
 
 [ShadowOps_WatchfulEye X2AbilityTemplate]
 LocFriendlyName="Watchful Eye"
 LocLongDescription="Once per turn, you get a free overwatch shot when your This One's Mine target moves or attacks."
 LocHelpText="Once per turn, you get a free overwatch shot when your This One's Mine target moves or attacks."
 LocFlyOverText="Watchful Eye"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> The free overwatch shot happens even if your This One's Mine target is only visible through squadsight.<br/>"
 
 [ShadowOps_Hipfire_LW2 X2AbilityTemplate]
 LocFriendlyName="Hipfire"
 LocLongDescription="The first time you fire your Sawed-Off Shotgun each turn doesn't cost an action."
 LocHelpText="The first time you fire your Sawed-Off Shotgun each turn doesn't cost an action."
 LocFlyOverText="Hipfire"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> You can't fire the Sawed-Off Shotgun when out of actions.<br/>"
 
 [ShadowOps_Fearsome X2AbilityTemplate]
 LocFriendlyName="Fearsome"
 LocLongDescription="When you get a critical hit, your target and other enemies within 6 tiles have a chance to panic."
 LocHelpText="When you get a critical hit, your target and other enemies within 6 tiles have a chance to panic."
 LocFlyOverText="Fearsome"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> Perks like This One's Mine and Deadshot can help you get critical hits.<br/><Bullet/> Critical hits with any of your weapons can trigger Fearsome.<br/>"
 
 ; === Class templates ===
 
