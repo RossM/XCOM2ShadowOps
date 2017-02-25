@@ -15,24 +15,21 @@ simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XCo
 	local XComGameState_Item ItemState;
 	local X2GrenadeTemplate GrenadeTemplate;
 	local int i;
+	local bool bHasSmokeAndMirrors;
 
 	ItemState = AbilityState.GetSourceAmmo();
 	if (ItemState == none)
 		ItemState = AbilityState.GetSourceWeapon();
 
+	bHasSmokeAndMirrors = AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors') || AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors_LW2');
+
 	if (ItemState != none)
 	{
-		GrenadeTemplate = X2GrenadeTemplate(ItemState.GetMyTemplate());
-		if (GrenadeTemplate != none)
-		{
-			if (SmokeGrenadeTemplates.Find(GrenadeTemplate.DataName) != INDEX_NONE)
-			{
-				if (AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors') || AbilityOwner.HasSoldierAbility('ShadowOps_SmokeAndMirrors_LW2'))
-					return false;
-			}
-		}
-
+		if (default.SmokeGrenadeTemplates.Find(ItemState.GetMyTemplateName()) != INDEX_NONE && bHasSmokeAndMirrors)
+			return false;
 	}
+	else
+		`RedScreen("No ItemState for" @ AbilityState.GetMyTemplateName());
 
 	if (bConsumeAllPoints)
 	{
