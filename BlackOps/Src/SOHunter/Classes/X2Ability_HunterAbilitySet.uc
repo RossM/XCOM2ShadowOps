@@ -1120,6 +1120,9 @@ static function X2AbilityTemplate ThisOnesMine()
 	Template.AbilityTargetConditions.RemoveItem(default.GameplayVisibilityCondition);
 	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
 
+	Template.AbilityTargetConditions.RemoveItem(default.LivingHostileTargetProperty);
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileUnitOnlyProperty);
+
 	BonusEffect = new class'X2Effect_ThisOnesMine';
 	BonusEffect.AddToHitModifier(default.ThisOnesMineCritBonus, eHit_Crit);
 	BonusEffect.AddToHitAsTargetModifier(-default.ThisOnesMineDefenseBonus, eHit_Success);
