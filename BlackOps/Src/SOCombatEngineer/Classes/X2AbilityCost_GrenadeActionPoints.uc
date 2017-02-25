@@ -13,7 +13,6 @@ simulated function int GetPointCost(XComGameState_Ability AbilityState, XComGame
 simulated function bool ConsumeAllPoints(XComGameState_Ability AbilityState, XComGameState_Unit AbilityOwner)
 {
 	local XComGameState_Item ItemState;
-	local X2GrenadeTemplate GrenadeTemplate;
 	local int i;
 	local bool bHasSmokeAndMirrors;
 
