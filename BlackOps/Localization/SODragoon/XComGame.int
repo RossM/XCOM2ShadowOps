@@ -247,13 +247,13 @@ RandomNickNames_Female[0]="Siren"
 
 [ShadowOps_Dragoon_LW2 X2SoldierClassTemplate]
 DisplayName="Dragoon"
-ClassSummary="TODO"
+ClassSummary="The Dragoon is a versatile class that can bring heavy weapons and armor to the front lines, or run fast and light for infiltration missions. They excel at protecting and supporting the rest of the squad."
 LeftAbilityTreeTitle="Paladin"
 RightAbilityTreeTitle="Ghost"
 
 [ShadowOps_Juggernaut_LW2 X2SoldierClassTemplate]
 DisplayName="Juggernaut"
-ClassSummary="TODO"
+ClassSummary="Just like the name suggests, Juggernauts carry our heaviest weapons and armor. What they lack in stealth they make up for in raw firepower."
 LeftAbilityTreeTitle="Strike"
 RightAbilityTreeTitle="Siege"
 

@@ -290,7 +290,7 @@ RightAbilityTreeTitle="Sapper"
 
 [ShadowOps_Scrapper_LW2 X2SoldierClassTemplate]
 DisplayName="Scrapper"
-ClassSummary="TODO"
+ClassSummary="Scrappers are intensively trained in unarmed and knife fighting in addition to firearms. In close quarters combat they're second to none."
 LeftAbilityTreeTitle="Thug"
 RightAbilityTreeTitle="Brawler"
 

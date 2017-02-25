@@ -260,13 +260,13 @@ RandomNickNames_Male[3]="Sandman"
 
 [ShadowOps_Hunter_LW2 X2SoldierClassTemplate]
 DisplayName="Hunter"
-ClassSummary="TODO"
+ClassSummary="The Hunter class is equally at home taking down enemies at long range with the sniper rifle or right up close with the sword. Our enemies will never know what hit them."
 LeftAbilityTreeTitle="Marksman"
 RightAbilityTreeTitle="Tracker"
 
 [ShadowOps_Survivalist_LW2 X2SoldierClassTemplate]
 DisplayName="Survivalist"
-ClassSummary="TODO"
+ClassSummary="Survivalists are dedicated snipers who can quickly neutralize multiple targets. They also pack a sawed-off shotgun for close quarters engagements."
 LeftAbilityTreeTitle="Sentry"
 RightAbilityTreeTitle="Raider"
 

@@ -265,13 +265,13 @@ RandomNickNames_Male[2]="Snowman"
 
 [ShadowOps_Infantry_LW2 X2SoldierClassTemplate]
 DisplayName="Infantry"
-ClassSummary="TODO"
+ClassSummary="Our Infantry bring to bear sustained firepower at short and medium ranges. They're a key member of any squad."
 LeftAbilityTreeTitle="Rifleman"
 RightAbilityTreeTitle="Support"
 
 [ShadowOps_Recon_LW2 X2SoldierClassTemplate]
 DisplayName="Recon"
-ClassSummary="TODO"
+ClassSummary="The Recon is our primary scouting class, trained to remain concealed and assist other squad members using the holotargeter. Their high mobility also makes them well suited for flanking maneuvers."
 LeftAbilityTreeTitle="Vanguard"
 RightAbilityTreeTitle="Spotter"
 
