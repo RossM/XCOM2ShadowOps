@@ -1,58 +1,45 @@
-﻿Shadow Ops LW is a gameplay overhaul that replaces the Long War Perk Pack classes with four new classes and rebalances early-game items for more strategic choices. Requires Long War Perk Pack to play.
-
-[h1]Balance[/h1]
-Shadow Ops LW is balanced to be more difficult than the Long War Perk Pack, and requires different strategy and tactics. It is intended for experienced players who enjoy a challenge.
-
-[h1]Included Mods[/h1]
-This pack includes all of the following mods, as well as some other balance changes. Note that the pack is not compatible with the individual mods. Use one or the other.
-
-[url=http://steamcommunity.com/sharedfiles/filedetails/?id=795292464]LW Combat Engineer[/url]
-[url=http://steamcommunity.com/sharedfiles/filedetails/?id=794399943]LW Dragoon[/url]
-[url=http://steamcommunity.com/sharedfiles/filedetails/?id=795788370]LW Hunter[/url]
-[url=http://steamcommunity.com/sharedfiles/filedetails/?id=796592388]LW Infantry[/url]
-[url=http://steamcommunity.com/sharedfiles/filedetails/?id=797658630]Item Pack[/url]
-[url=http://steamcommunity.com/sharedfiles/filedetails/?id=702851783]Crit Chance Change[/url]
+﻿Shadow Ops LW2 is a gameplay overhaul that replaces the Long War 2 classes with eight new classes. Requires Long War 2 to play.
 
 [h1]Classes[/h1]
 Each class in Shadow Ops LW has two main paths with distinctly defined battlefield roles and strong synergies between perks. That doesn't mean that you can only build soldiers along those paths, though - every ability is useful in the right situation.
 
 [b]Combat Engineer[/b]
-The Combat Engineer carries a shotgun and a grenade launcher for maximum destructive potential. Go down the Pioneer path to blow away cover with Breach and deal devastating criticals with Fracture and Aggression, or take the Sapper path and launch grenades rapid-fire with Fastball and demolish enemy mechanical units with HEAT Ammo.
+The Combat Engineer carries a shotgun and a grenade launcher for maximum destructive potential. Go down the Pioneer path to blow away cover with Breach and deal devastating criticals with Precision Shot and Aggression, or take the Sapper path and clear obstacles with Demo Grenades and protect allies with Dense Smoke.
 
 [b]Dragoon[/b]
-The primary defensive class, the Dragoon's signature GREMLIN ability Shield Protocol grants allies damage-absorbing energy shields. Build a Paladin to stand in the front lines absorbing damage with Tank and blowing away cover with a cannon Barrage, or create a Ghost to infiltrate stealthily with Lightfoot and cloak allies with Stealth Protocol.
+The primary defensive class, the Dragoon's signature GREMLIN ability Shield Protocol grants allies damage-absorbing energy shields. Build a Paladin to stand in the front lines absorbing damage with Tank and blowing away cover with a cannon Barrage, or create a Ghost to go undetected with Covert and cloak allies with Stealth Protocol.
 
 [b]Hunter[/b]
-The Hunter's unorthodox combination of sniper rifle and sword makes them deadly at any range. The Marksman path can execute devastating ambushes with First Strike and then vanish with Fade, while the Tracker can fight on the run with Snap Shot and Sprint while detecting enemies beyond line of sight with Tracking.
+The Hunter's unorthodox combination of sniper rifle and sword makes them deadly at any range. The Marksman path can execute devastating ambushes with First Strike and then vanish with Fade, while the Tracker can fight on the run with Snap Shot and Double Time while detecting enemies beyond line of sight with Tracking.
 
 [b]Infantry[/b]
-The Infantry's job is simple: shoot enemies. Bring a Rifleman to rain bullets with Light 'Em Up and take precision pistol shots with Magnum and Flush, or take a Support to provide constant overwatch with Ready for Anything and extra healing with First Aid.
+The Infantry's job is simple: shoot enemies. Bring a Rifleman to rain bullets with Light 'Em Up and take precision arc thrower shots with Stun Gunner and Electroshock, or take a Support to provide constant overwatch with Ready for Anything and extra healing with Field Medic.
 
-[h1]GTS Abilities[/h1]
-Every class in Shadow Ops LW has two GTS abilities. The first, unlocked at Captain, grants a powerful bonus to all soldiers of that class. The second is unlocked by getting a soldier to Brigadier and grants a bonus to [i]all[/i] your soldiers. Try to get the GTS unlocks quickly - they can make the difference between victory and defeat.
+[b]Juggernaut[/b]
+The main problem with the Juggernaut is deciding how to kill the enemies: with a cannon plus the gauntlet's rocket launcher and flamethrower, there are a lot of options. Go Strike for close-range flamethrower and cannon destruction with Quickburn and Eat This!, or Siege to fire rockets and bullets at enemies beyond visual range with Fire In The Hole and Squadsight.
 
-[h1]Items[/h1]
-Shadow Ops LW includes four new ammo types and one new vest type that give your soldiers additional equipment choices in the early game. It also makes several existing items free, because you're going to need that money.
+[b]Recon[/b]
+A dedicated scout class, the Recon is well suited for either small-team stealth missions or supporting larger squads. The Vanguard excels in flanking with Hunter's Instincts and Shadowstep, while the Spotter stays hidden with Covert and paints enemies with the holotargeter with HiDef Holo.
+
+[b]Scrapper[/b]
+The Scrapper is a close-quarters combat specialist. Its signature ability, Bull Rush, can stun an enemy unit from anywhere in dash range. The Thug follows up with powerful shotgun attacks with Close and Personal and Hit and Run, while the Brawler prefers to finish foes off with the combat knife with Bare Knuckle.
+
+[b]Survivalist[/b]
+The Survivalist is a defensive sniper, able to neutralize multiple enemies each turn. Its backup sawed-off shotgun makes it quite capable at short-range combat, too. The Sentry can take overwatch shots even after firing or moving with Watchful Eye, while the Raider strikes panic into enemies' hearts with Fearsome.
 
 [h1]Special Thanks[/h1]
-DerBK, for design review of the LW version.
-robojumper, for help with animation.
+DerBK and TheProfessional, for design review of the LW2 version.
+robojumper, for help with animation and graphics.
 Varyar1g, for playtesting the LW version.
 MantLemon, for the simplified Chinese translation.
 Everyone who played the Shadow Ops Class Pack for great feedback.
 
 [h1]FAQ[/h1]
 [b]Q. Is Shadow Ops LW compatible with my existing mods?[/b]
-A. Yes, Shadow Ops LW is compatible with almost all mods. It is not compatible with the non-LW Shadow Ops Class Pack. I recommend not using the Ammo and Vest Slots mod for balance reasons.
+A. Yes, Shadow Ops LW is compatible with almost all mods. It is not compatible with other Shadow Ops mods.
 
-[b]Q. Can I switch my existing campaign from the Shadow Ops Class Pack to this mod?[/b]
-A. No, sorry. You'll have to start a new campaign to use this mod if you're currently using the Shadow Ops Class Pack.
-
-[b]Q. Help! I'm getting overwhelmed by too many enemies![/b]
-A. The Shadow Ops LW classes are meant to be more defensive and less offensive than the Long War Perk Pack classes. Use your defensive abilities to protect your soldiers rather than just trying to kill every enemy before they act.
-
-[b]Q. What's this "Hit Chance" modifier to Crit?[/b]
-A. Shots with a hit chance below 85% get a penalty to critical hit chance equal to half the difference. This fixes the problem of low-percentage shots always being crits if they hit without reducing the power of crit-boosting abilities such as Aggression.
+[b]Q. Can I use this without replacing the Long War 2 classes?[/b]
+A. Yes. Remove all lines starting with "+LWClasses" from XComGameCore.ini in the mod's Config directory.
 
 [b]Q. Can I make a remix of this, or reuse your code and art in my own mod?[/b]
 A. Yes! I love seeing what other people can make from my stuff. All I ask is for appropriate credit.
