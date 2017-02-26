@@ -51,10 +51,28 @@
     <Folder Include="Src\XModBase_Utilities\Classes" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\SOClasses_LW2\XComAI.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOClasses_LW2\XComClassData.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\SOClasses_LW2\XComEditor.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOClasses_LW2\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOClasses_LW2\XComGame.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOClasses_LW2\XComGameCore.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Config\SOClasses_LW2\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\SOClasses_LW2\XComGameData_SoldierSkills.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOClasses_LW2\XComLW_AWCPack.ini">
@@ -118,9 +136,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\SOInfantry_LW2\XComStrategyTuning.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\*.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Content\*.upk">
