@@ -910,6 +910,7 @@ static function X2AbilityTemplate Scout()
 
 	Effect = new class'XMBEffect_AddUtilityItem';
 	Effect.DataName = 'BattleScanner';
+	Effect.SkipAbilities.AddItem('SmallItemWeight');
 
 	return Passive('ShadowOps_Scout', "img:///UILibrary_SODragoon.UIPerk_scout", true, Effect);
 }

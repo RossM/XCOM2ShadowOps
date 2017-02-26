@@ -1256,6 +1256,7 @@ static function X2AbilityTemplate FirstAid()
 	Effect.DataName = 'medikit';
 	Effect.BaseCharges = 1;
 	Effect.BonusCharges = 1;
+	Effect.SkipAbilities.AddItem('SmallItemWeight');
 
 	return Passive('ShadowOps_FirstAid', "img:///UILibrary_SOInfantry.UIPerk_firstaid", true, Effect);
 }

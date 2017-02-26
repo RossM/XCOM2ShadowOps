@@ -72,6 +72,7 @@ static function X2AbilityTemplate SmokeAndMirrors()
 	Effect = new class'XMBEffect_AddUtilityItem';
 	Effect.DataName = 'SmokeGrenade';
 	Effect.BaseCharges = 1;
+	Effect.SkipAbilities.AddItem('SmallItemWeight');
 
 	return Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, Effect);
 }
@@ -665,6 +666,7 @@ static function X2AbilityTemplate Pyromaniac()
 	ItemEffect = new class 'XMBEffect_AddUtilityItem';
 	ItemEffect.DataName = 'Firebomb';
 	Template.AddTargetEffect(ItemEffect);
+	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
 
 	return Template;
 }
@@ -885,6 +887,7 @@ static function X2AbilityTemplate ExtraMunitions()
 	ItemEffect = new class 'XMBEffect_AddUtilityItem';
 	ItemEffect.DataName = 'FragGrenade';
 	Template.AddTargetEffect(ItemEffect);
+	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
 
 	return Template;
 }
