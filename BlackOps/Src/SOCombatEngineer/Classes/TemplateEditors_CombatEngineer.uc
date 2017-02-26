@@ -7,6 +7,8 @@ static function EditTemplates()
 {
 	local name DataName;
 
+	`Log("TemplateEditors_CombatEngineer.EditTemplates");
+
 	// Smoke and Mirrors, Fastball
 	foreach default.GrenadeAbilities(DataName)
 	{

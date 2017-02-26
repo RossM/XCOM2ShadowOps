@@ -2,6 +2,8 @@ class TemplateEditors_Hunter extends Object config(GameCore);
 
 static function EditTemplates()
 {
+	`Log("TemplateEditors_Hunter.EditTemplates");
+
 	AddAllDisabledConditions();
 }
 

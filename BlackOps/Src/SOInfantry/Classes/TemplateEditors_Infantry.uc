@@ -6,6 +6,8 @@ static function EditTemplates()
 {
 	local name DataName;
 
+	`Log("TemplateEditors_Infantry.EditTemplates");
+
 	// Bullet Swarm
 	`Log("SOInfantry: Editing" @ 'StandardShot');
 	AddDoNotConsumeAllAbility('StandardShot', 'ShadowOps_BulletSwarm');
