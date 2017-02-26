@@ -22,6 +22,8 @@ static event OnPostMission()
 
 static event OnPostTemplatesCreated()
 {
+	`Log("X2DownloadableContentInfo_ShadowOps_LW2.OnPostTemplatesCreated");
+
 	SetVariableIconColor('PointBlank');
 	SetVariableIconColor('BothBarrels');
 	SetVariableIconColor('Deadeye');
