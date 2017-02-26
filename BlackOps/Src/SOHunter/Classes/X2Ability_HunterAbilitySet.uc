@@ -1207,7 +1207,7 @@ static function X2AbilityTemplate Fearsome()
 	local X2AbilityMultiTarget_Radius Radius;
 	local X2Effect_Persistent Effect;
 	local X2Condition_PanicOnPod PanicCondition;
-	local X2AbilityTarget_Single PrimaryTarget;
+	//local X2AbilityTarget_Single PrimaryTarget;
 	local X2Condition_UnitProperty TargetCondition;
 
 	Template = TargetedDebuff('ShadowOps_Fearsome', "img:///UILibrary_SOHunter.UIPerk_fearsome", false, none,, eCost_None);
