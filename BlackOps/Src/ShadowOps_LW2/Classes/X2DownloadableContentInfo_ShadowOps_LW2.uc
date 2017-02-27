@@ -28,6 +28,16 @@ static event OnPostTemplatesCreated()
 	SetVariableIconColor('BothBarrels');
 	SetVariableIconColor('Deadeye');
 	SetVariableIconColor('PrecisionShot');
+
+	// Hack - call the class template editors (sometimes their DLCContentInfos fail to run OnPostTemplatesCreated, no idea why)
+	class'TemplateEditors_CombatEngineer'.static.EditTemplates();
+	class'TemplateEditors_Hunter'.static.EditTemplates();
+	class'TemplateEditors_Infantry'.static.EditTemplates();
+
+	// Super-hack -- force loading stuff
+	// DO NOT REMOVE THIS LINE! We must have a reference to class'X2Ability_InfantryAbilitySet' somewhere or it may get dropped,
+	// causing the game to not load the abilities! (Apparently. I am super confused about this.)
+	`Log("X2Ability_InfantryAbilitySet:" @ class'X2Ability_InfantryAbilitySet');
 }
 
 static function SetVariableIconColor(name AbilityName)

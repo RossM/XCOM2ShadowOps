@@ -54,5 +54,19 @@ static function CreateInitialUpgradeInfo(XComGameState StartState)
 /// </summary>
 static event OnPostTemplatesCreated()
 {
+	local array<object> DefaultObjects;
+	local object Obj;
+
 	class'TemplateEditors'.static.EditTemplates();
+
+	DefaultObjects = class'XComEngine'.static.GetClassDefaultObjects(class'X2DownloadableContentInfo');
+	foreach DefaultObjects(Obj)
+	{
+		`Log("Found X2DownloadableContentInfo" @ Obj.class);
+	}
+	DefaultObjects = class'XComEngine'.static.GetClassDefaultObjects(class'X2DataSet');
+	foreach DefaultObjects(Obj)
+	{
+		`Log("Found X2DataSet" @ Obj.class);
+	}
 }
