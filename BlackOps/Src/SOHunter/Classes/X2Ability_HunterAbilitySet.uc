@@ -873,18 +873,44 @@ static function RattledVisualization(XComGameState VisualizeGameState, out Visua
 
 static function X2AbilityTemplate FirstStrike()
 {
-	local XMBEffect_ConditionalBonus Effect;
-	local X2Condition_FirstStrike Condition;
+	local X2AbilityTemplate Template;
+	local XMBEffect_ConditionalBonus BonusEffect;
+	local X2Effect_PointBlank PointBlankEffect;
+	local X2Condition_FirstStrike FirstStrikeCondition;
+	local X2Condition_UnitProperty MinRangeCondition;
 
-	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddDamageModifier(default.FirstStrikeDamageBonus);
-	Effect.bIgnoreSquadSightPenalty = true;
-	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+	FirstStrikeCondition = new class'X2Condition_FirstStrike';
 
-	Condition = new class'X2Condition_FirstStrike';
-	Effect.AbilityTargetConditions.AddItem(Condition);
+	BonusEffect = new class'XMBEffect_ConditionalBonus';
+	BonusEffect.AddDamageModifier(default.FirstStrikeDamageBonus);
+	BonusEffect.bIgnoreSquadSightPenalty = true;
+	BonusEffect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+	BonusEffect.AbilityTargetConditions.AddItem(FirstStrikeCondition);
 
-	return Passive('ShadowOps_FirstStrike', "img:///UILibrary_SOHunter.UIPerk_firststrike", true, Effect);
+	Template = Passive('ShadowOps_FirstStrike', "img:///UILibrary_SOHunter.UIPerk_firststrike", true, BonusEffect);
+
+	MinRangeCondition = new class'X2Condition_UnitProperty';
+	MinRangeCondition.RequireWithinMinRange = true;
+	// WithinRange is measured in Unreal units, so we need to convert tiles to units.
+	MinRangeCondition.WithinMinRange = `TILESTOUNITS(20);
+	MinRangeCondition.ExcludeDead = false;
+	MinRangeCondition.ExcludeFriendlyToSource = false;
+	MinRangeCondition.ExcludeCosmetic = false;
+	MinRangeCondition.ExcludeInStasis = false;
+
+	// LW2 uses a weapon range modifier for the squadsight penalty, so negate that
+	PointBlankEffect = new class'X2Effect_PointBlank';
+	PointBlankEffect.RangePenaltyMultiplier = -1.0;
+	PointBlankEffect.BaseRange = 18;
+	PointBlankEffect.bLongRange = true;
+	PointBlankEffect.bShowNamedModifier = true;
+	PointBlankEffect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+	PointBlankEffect.AbilityTargetConditions.AddItem(FirstStrikeCondition);
+	PointBlankEffect.AbilityTargetConditions.AddItem(MinRangeCondition);
+	AddSecondaryEffect(Template, PointBlankEffect);
+	PointBlankEffect.bDisplayInUI = false; // Already covered by primary effect
+
+	return Template;
 }
 
 static function X2AbilityTemplate DamnGoodGround()
@@ -911,6 +937,9 @@ static function X2AbilityTemplate PointBlank()
 
 	Effect = new class'X2Effect_PointBlank';
 	Effect.RangePenaltyMultiplier = default.PointBlankMultiplier;
+	Effect.BaseRange = 18;
+	Effect.bShortRange = true;
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
 
 	return Passive('ShadowOps_PointBlank', "img:///UILibrary_SOHunter.UIPerk_point_blank", false, Effect);
 }
