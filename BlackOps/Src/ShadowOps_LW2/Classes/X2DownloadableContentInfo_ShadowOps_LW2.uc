@@ -3,21 +3,25 @@ class X2DownloadableContentInfo_ShadowOps_LW2 extends X2DownloadableContentInfo 
 static event OnLoadedSavedGame()
 {
 	class'XComGameState_SOListenerManager'.static.CreateListenerManager();
+	class'XComGameState_KillTracker'.static.GetKillTracker().InitListeners();
 }
 
 static event InstallNewCampaign(XComGameState StartState)
 {
 	class'XComGameState_SOListenerManager'.static.CreateListenerManager(StartState);
+	class'XComGameState_KillTracker'.static.InitializeWithGameState(StartState).InitListeners();
 }
 
 static event OnLoadedSavedGameToStrategy()
 {
 	class'XComGameState_SOListenerManager'.static.RefreshListeners();
+	class'XComGameState_KillTracker'.static.RefreshListeners();
 }
 
 static event OnPostMission()
 {
 	class'XComGameState_SOListenerManager'.static.RefreshListeners();
+	class'XComGameState_KillTracker'.static.RefreshListeners();
 }
 
 static event OnPostTemplatesCreated()
