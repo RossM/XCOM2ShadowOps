@@ -10,7 +10,7 @@ event OnInit(UIScreen Screen)
 	if (MainMenuScreen == none)
 		return;
 
-	AddKillsButton(MainMenuScreen);
+	AddKillsButton();
 }
 
 event OnReceiveFocus(UIScreen Screen)
@@ -19,10 +19,10 @@ event OnReceiveFocus(UIScreen Screen)
 	if (MainMenuScreen == none)
 		return;
 
-	AddKillsButton(MainMenuScreen);
+	AddKillsButton();
 }
 
-function AddKillsButton(UIArmory_MainMenu MainMenuScreen)
+function AddKillsButton()
 {
 	local UIListItemString KillsButton;
 
