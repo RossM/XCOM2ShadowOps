@@ -1,4 +1,4 @@
-class X2Value_Anatomist extends XMBValue;
+class X2Value_Anatomist extends XMBValue dependson(XComGameState_KillTracker);
 
 function float GetValue(XComGameState_Effect EffectState, XComGameState_Unit UnitState, XComGameState_Unit TargetState, XComGameState_Ability AbilityState)
 {
@@ -6,16 +6,26 @@ function float GetValue(XComGameState_Effect EffectState, XComGameState_Unit Uni
 	local array<StateObjectReference> Kills;
 	local StateObjectReference KillRef;
 	local XComGameState_Unit KilledUnit;
-	local int KilledEnemies;
+	local XComGameState_KillTracker Tracker;
+	local int KilledEnemies, KillerIndex;
+	local KillListItem KLI;
+	local X2CharacterTemplateManager CharMgr;
+	local X2CharacterTemplate CharTemplate;
 
 	History = `XCOMHISTORY;
+	CharMgr = class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager();
 
-	Kills = UnitState.GetKills();
-	foreach Kills(KillRef)
+	Tracker = class'XComGameState_KillTracker'.static.GetKillTracker();
+
+	KillerIndex = Tracker.KillInfos.Find('ObjectID', UnitState.ObjectID);
+	if (KillerIndex == 0)
+		return 0;
+
+	foreach Tracker.KillInfos[KillerIndex].KillList(KLI)
 	{
-		KilledUnit = XComGameState_Unit(History.GetGameStateForObjectID(KillRef.ObjectID));
-		if (KilledUnit.GetMyTemplate().CharacterGroupName == TargetState.GetMyTemplate().CharacterGroupName)
-			KilledEnemies++;
+		CharTemplate = CharMgr.FindCharacterTemplate(KLI.TemplateName);
+		if (CharTemplate.CharacterGroupName == TargetState.GetMyTemplate().CharacterGroupName)
+			KilledEnemies += KLI.Count;
 	}
 
 	return KilledEnemies;
