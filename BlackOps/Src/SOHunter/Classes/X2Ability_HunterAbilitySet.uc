@@ -25,6 +25,7 @@ var config float FearsomeRadius;
 var config int FearsomeBasePanicChance;
 
 var config int HunterMarkCooldown, SprintCooldown, FadeCooldown, SliceAndDiceCooldown, BullseyeCooldown, DisablingShotCooldown, ThisOnesMineCooldown;
+var config int CoverMeCooldown;
 
 var name ThisOnesMineEffectName, DisabledName;
 
@@ -63,6 +64,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(WatchfulEye());
 	Templates.AddItem(Hipfire());
 	Templates.AddItem(Fearsome());
+	Templates.AddItem(CoverMe());
 
 	return Templates;
 }
@@ -1282,6 +1284,29 @@ static function X2AbilityTemplate Fearsome()
 	ToHitCalc = new class'X2AbilityToHitCalc_PercentChance';
 	ToHitCalc.PercentToHit = default.FearsomeBasePanicChance;
 	Template.AbilityToHitCalc = ToHitCalc;
+
+	return Template;
+}
+
+static function X2AbilityTemplate CoverMe()
+{
+	local X2AbilityTemplate Template;
+	local X2Effect_ModifyReactionFire CoolUnderPressureEffect;
+	local X2Effect_GrantReserveActionPoint ActionPointEffect;
+
+	CoolUnderPressureEffect = new class'X2Effect_ModifyReactionFire';
+	CoolUnderPressureEffect.bAllowCrit = true;
+	CoolUnderPressureEffect.ReactionModifier = class'X2Ability_SpecialistAbilitySet'.default.UNDER_PRESSURE_BONUS;
+	CoolUnderPressureEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
+	CoolUnderPressureEffect.VisualizationFn = EffectFlyOver_Visualization;
+
+	Template = TargetedBuff('ShadowOps_CoverMe', "img:///UILibrary_SOHunter.UIPerk_coverme", true, CoolUnderPressureEffect,, eCost_SingleConsumeAll);
+
+	ActionPointEffect = new class'X2Effect_GrantReserveActionPoint';
+	ActionPointEffect.ImmediateActionPoint = class'X2CharacterTemplateManager'.default.OverwatchReserveActionPoint;
+	Template.AddTargetEffect(ActionPointEffect);
+
+	AddCooldown(Template, default.CoverMeCooldown);
 
 	return Template;
 }

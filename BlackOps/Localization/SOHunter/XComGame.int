@@ -186,6 +186,13 @@ LocHelpText="When you get a critical hit, your target and other enemies within 6
 LocFlyOverText="Fearsome"
 LocPromotionPopupText="<Bullet/> Perks like This One's Mine and Deadshot can help you get critical hits.<br/><Bullet/> Critical hits with any of your weapons can trigger Fearsome.<br/>"
 
+[ShadowOps_CoverMe X2AbilityTemplate]
+LocFriendlyName="Cover Me"
+LocLongDescription="Grant an ally a bonus overwatch shot and the Cool Under Pressure ability."
+LocHelpText="Grant an ally a bonus overwatch shot and the Cool Under Pressure ability."
+LocFlyOverText=""Cover Me"
+LocPromotionPopupText="<Bullet/> The overwatch shot and Cool Under Pressure last until the start of your next turn.<br/><Bullet/> Cool Under Pressure grants +<Ability:COOLUNDERPRESSUREBONUS/> Aim on Overwatch and other reaction shots, and they can critically hit.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Hunter X2SoldierClassTemplate]
