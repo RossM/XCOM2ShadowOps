@@ -1138,7 +1138,7 @@ static function X2AbilityTemplate ThisOnesMine()
 
 	MarkEffect = new class'X2Effect_Persistent';
 	MarkEffect.EffectName = default.ThisOnesMineEffectName;
-	MarkEffect.BuildPersistentEffect(default.ThisOnesMineDuration, false, true, false, eGameRule_PlayerTurnBegin);
+	MarkEffect.BuildPersistentEffect(default.ThisOnesMineDuration, false, true, false, eGameRule_PlayerTurnEnd);
 	MarkEffect.VisualizationFn = EffectFlyOver_Visualization;
 	Template = TargetedDebuff('ShadowOps_ThisOnesMine', "img:///UILibrary_SOHunter.UIPerk_thisonesmine", true, MarkEffect,, eCost_Free);
 	AddCooldown(Template, default.ThisOnesMineCooldown);
