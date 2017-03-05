@@ -188,7 +188,7 @@ LocPromotionPopupText="<Bullet/> Perks like This One's Mine and Deadshot can hel
 
 [ShadowOps_CoverMe X2AbilityTemplate]
 LocFriendlyName="Cover Me"
-LocLongDescription="Grant an ally a bonus overwatch shot and the Cool Under Pressure ability."
+LocLongDescription="Grant an ally a bonus overwatch shot and the Cool Under Pressure ability. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Grant an ally a bonus overwatch shot and the Cool Under Pressure ability."
 LocFlyOverText=""Cover Me"
 LocPromotionPopupText="<Bullet/> The overwatch shot and Cool Under Pressure last until the start of your next turn.<br/><Bullet/> Cool Under Pressure grants +<Ability:COOLUNDERPRESSUREBONUS/> Aim on Overwatch and other reaction shots, and they can critically hit.<br/>"
