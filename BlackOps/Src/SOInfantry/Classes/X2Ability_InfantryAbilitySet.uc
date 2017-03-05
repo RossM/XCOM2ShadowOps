@@ -1567,7 +1567,7 @@ static function X2AbilityTemplate Airstrike()
 	Template.BuildVisualizationFn = Airstrike_BuildVisualization;	
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 	// Template.bSkipFireAction = true;
-	Template.CustomFireAnim = 'HL_CallReinforcementsA';
+	Template.CustomFireAnim = 'FF_Fire';
 	Template.bSkipExitCoverWhenFiring = true;
 
 	Template.bCrossClassEligible = false;
