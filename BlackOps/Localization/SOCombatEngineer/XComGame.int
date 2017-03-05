@@ -78,8 +78,8 @@ LocPromotionPopupText="<Bullet/> With the proper setup, you can trigger Slam Fir
 
 [ShadowOps_DangerZone X2AbilityTemplate]
 LocFriendlyName="Devastation"
-LocLongDescription="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
-LocHelpText="The radius of all your grenades is increased by 2, and the radius of your Breach ability is increased by 1."
+LocLongDescription="The radius of your grenades and rockets is increased by 2, and the radius of your Breach ability is increased by 1."
+LocHelpText="The radius of your grenades and rockets is increased by 2, and the radius of your Breach ability is increased by 1."
 LocFlyOverText="Devastation"
 LocPromotionPopupText="<Bullet/> Devastation provides a massive increase to grenade radius that makes it easy to hit multiple units and remove their cover, not to mention all other cover nearby. <br/>"
 

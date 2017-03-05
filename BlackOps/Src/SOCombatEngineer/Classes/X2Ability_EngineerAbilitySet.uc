@@ -4,7 +4,8 @@ class X2Ability_EngineerAbilitySet extends XMBAbility
 var config int AggressionCritModifier, AggressionMaxCritModifier, AggressionGrenadeCritDamage;
 var config int BreachEnvironmentalDamage;
 var config float BreachRange, BreachRadius;
-var config float DangerZoneBonusRadius, DangerZoneBreachBonusRadius;
+var config array<name> DangerZoneAbilityName;
+var config array<int> DangerZoneAbilityBonusRadius;
 var config int MovingTargetDefenseBonus, MovingTargetDodgeBonus;
 var config int EntrenchDefense, EntrenchDodge;
 var config int FocusedDefenseDefense, FocusedDefenseDodge;
@@ -531,9 +532,9 @@ static function X2AbilityTemplate DangerZone()
 	local X2Effect_DangerZone Effect;
 
 	Effect = new class'X2Effect_DangerZone';
-	Effect.EffectName = 'DangerZone';
-	Effect.fBonusRadius = default.DangerZoneBonusRadius;
-	Effect.fBreachBonusRadius = default.DangerZoneBreachBonusRadius;
+	Effect.BonusAbilityName = 'ShadowOps_DangerZone';
+	Effect.AbilityNames = default.DangerZoneAbilityName;
+	Effect.BonusRadius = default.DangerZoneAbilityBonusRadius;
 
 	return Passive('ShadowOps_DangerZone', "img:///UILibrary_SOCombatEngineer.UIPerk_dangerzone", true, Effect);
 }
