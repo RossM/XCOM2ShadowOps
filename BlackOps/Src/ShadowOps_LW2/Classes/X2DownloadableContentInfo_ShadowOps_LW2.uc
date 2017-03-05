@@ -33,6 +33,8 @@ static event OnPostTemplatesCreated()
 	SetVariableIconColor('Deadeye');
 	SetVariableIconColor('PrecisionShot');
 
+	UpdateFleche();
+
 	// Hack - call the class template editors (sometimes their DLCContentInfos fail to run OnPostTemplatesCreated, no idea why)
 	class'TemplateEditors_CombatEngineer'.static.EditTemplates();
 	class'TemplateEditors_Hunter'.static.EditTemplates();
@@ -55,6 +57,33 @@ static function SetVariableIconColor(name AbilityName)
 	foreach TemplateAllDifficulties(Template)
 	{
 		Template.AbilityIconColor = "Variable";
+	}
+}
+
+static function UpdateFleche()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local X2Effect								Effect;
+	local X2Effect_FlecheBonusDamage			FlecheEffect;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('Fleche', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		foreach Template.AbilityTargetEffects(Effect)
+		{
+			FlecheEffect = X2Effect_FlecheBonusDamage(Effect);
+			if (FlecheEffect != none)
+				break;
+		}
+
+		if (FlecheEffect != none)
+		{
+			if (FlecheEffect.AbilityNames.Find('ShadowOps_SliceAndDice') == INDEX_NONE)
+				FlecheEffect.AbilityNames.AddItem('ShadowOps_SliceAndDice');
+		}
 	}
 }
 
