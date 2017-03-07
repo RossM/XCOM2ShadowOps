@@ -36,10 +36,13 @@ Everyone who played the Shadow Ops Class Pack for great feedback.
 
 [h1]FAQ[/h1]
 [b]Q. Is Shadow Ops LW compatible with my existing mods?[/b]
-A. Yes, Shadow Ops LW is compatible with almost all mods. It is not compatible with other Shadow Ops mods.
+A. Yes, Shadow Ops LW is compatible with almost all mods. It is not compatible with other Shadow Ops mods. There is a known incompatibility with the Reliable Smoke mod.
 
 [b]Q. Can I use this without replacing the Long War 2 classes?[/b]
 A. Yes. Remove all lines starting with "+LWClasses" from XComGameCore.ini in the mod's Config directory.
+
+[b]Q. You did a balance update that changed perks. How do I fix my soldiers to have the right perks?[/b]
+A. First, enable console commands if you haven't already. Open the soldier view for the soldier you want to change perks on in the armory, then open the console with "\" and enter "respec". This will reset all the soldier's perks and allow you to select new ones.
 
 [b]Q. Can I make a remix of this, or reuse your code and art in my own mod?[/b]
 A. Yes! I love seeing what other people can make from my stuff. All I ask is for appropriate credit.
