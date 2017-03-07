@@ -131,8 +131,8 @@ LocPromotionPopupText="<Bullet/> Allies includes yourself.<br/><Bullet/> Explosi
 
 [ShadowOps_Pyromaniac X2AbilityTemplate]
 LocFriendlyName="Pyromaniac"
-LocLongDescription="You get a free incendiary grenade on each mission."
-LocHelpText="You get a free incendiary grenade on each mission."
+LocLongDescription="Grants 1 free incendiary grenade item to your inventory."
+LocHelpText="Grants 1 free incendiary grenade item to your inventory."
 LocFlyOverText="Pyromaniac"
 LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.<br/>"
 
@@ -186,8 +186,8 @@ LocPromotionPopupText="<Bullet/> You get bonus damage for each enemy of the same
 
 [ShadowOps_ExtraMunitions X2AbilityTemplate]
 LocFriendlyName="Extra Munitions"
-LocLongDescription="You get a free frag grenade or plasma grenade on each mission."
-LocHelpText="You get a free frag grenade or plasma grenade on each mission."
+LocLongDescription="Grants 1 free explosive grenade item to your inventory."
+LocHelpText="Grants 1 free explosive grenade item to your inventory."
 LocFlyOverText="Extra Munitions"
 LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.<br/>"
 
@@ -199,7 +199,7 @@ LocPromotionPopupText="<Bullet/> Robotic enemies can't be stunned, but still tak
 
 [ShadowOps_SmokeAndMirrors_LW2 X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
-LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn."
+LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn. Also slightly reduces this soldier's infiltration time while on missions."
 LocHelpText="Launching or throwing a smoke grenade as your first action does not end your turn."
 LocFlyOverText="Smoke and Mirrors"
 LocPromotionPopupText="<Bullet/> Smoke and Mirrors also slightly reduces the soldier's infiltration time. <br/>"
