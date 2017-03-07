@@ -80,11 +80,17 @@ simulated function bool CanEquipImplant(StateObjectReference ImplantRef)
 	local XComGameState_Unit Unit;
 	local XComGameState_Item Implant, OtherImplant;
 	local array<XComGameState_Item> EquippedImplants;
+	local UIArmory Armory;
 	local int SlotIndex, i;
 	
+	Armory = UIArmory(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory'));
+
 	Implant = XComGameState_Item(History.GetGameStateForObjectID(ImplantRef.ObjectID));
-	Unit = UIArmory_Implants(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory_Implants')).GetUnit();
-	SlotIndex = UIArmory_Implants(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory_Implants')).List.SelectedIndex;
+	Unit = Armory.GetUnit();
+	if (UIArmory_Implants(Armory) != none)
+		SlotIndex = UIArmory_Implants(Armory).List.SelectedIndex;
+	else
+		SlotIndex = 0;
 	EquippedImplants = Unit.GetAllItemsInSlot(eInvSlot_CombatSim);
 
 	for (i = 0; i < EquippedImplants.Length; i++)
@@ -102,12 +108,13 @@ simulated function bool CanEquipImplant(StateObjectReference ImplantRef)
 		}
 		else
 		{
-			if(X2EquipmentTemplate(Implant.GetMyTemplate()).Abilities.length == 0 &&
+			if (X2EquipmentTemplate(Implant.GetMyTemplate()).Abilities.length == 0 &&
 				class'UIUtilities_Strategy'.static.GetStatBoost(Implant).StatType == 
 				class'UIUtilities_Strategy'.static.GetStatBoost(OtherImplant).StatType)
 				return false;
-			if(X2EquipmentTemplate(Implant.GetMyTemplate()).Abilities.length > 0 &&
-				X2EquipmentTemplate(OtherImplant.GetMyTemplate()).Abilities.length > 0)
+			if (X2EquipmentTemplate(Implant.GetMyTemplate()).Abilities.length > 0 &&
+				X2EquipmentTemplate(OtherImplant.GetMyTemplate()).Abilities.length > 0 &&
+				X2EquipmentTemplate(Implant.GetMyTemplate()).Abilities[0] == X2EquipmentTemplate(OtherImplant.GetMyTemplate()).Abilities[0])
 				return false;
 		}
 	}
