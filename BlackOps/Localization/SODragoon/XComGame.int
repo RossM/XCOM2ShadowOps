@@ -51,8 +51,8 @@ LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powe
 
 [ShadowOps_ECM X2AbilityTemplate]
 LocFriendlyName="ECM"
-LocLongDescription="All squad members are 20% more difficult for enemies to detect while concealed."
-LocHelpText="All squad members are 20% more difficult for enemies to detect while concealed."
+LocLongDescription="All squad members are 10% more difficult for enemies to detect while concealed."
+LocHelpText="All squad members are 10% more difficult for enemies to detect while concealed."
 LocFlyOverText="ECM"
 LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or evacs.<br/>"
 
