@@ -394,16 +394,8 @@ static function X2AbilityTemplate Sprint()
 static function X2AbilityTemplate Assassin()
 {
 	local X2AbilityTemplate						Template;
-	local XMBEffect_AbilityTriggered						Effect;
 
-	Effect = new class'XMBEffect_AbilityTriggered';
-	Effect.EffectName = 'Assassin';
-	Effect.TriggeredEvent = 'Assassin';
-	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
-	Effect.AbilityTargetConditions.AddItem(default.DeadCondition);
-	Effect.AbilityTargetConditions.AddItem(default.NoCoverCondition);
-
-	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_SOHunter.UIPerk_assassin", true, Effect);
+	Template = Passive('ShadowOps_Assassin', "img:///UILibrary_SOHunter.UIPerk_assassin", true);
 	Template.AdditionalAbilities.AddItem('ShadowOps_AssassinTrigger');
 
 	return Template;
@@ -419,7 +411,12 @@ static function X2AbilityTemplate AssassinTrigger()
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
 	StealthEffect.bRemoveWhenTargetConcealmentBroken = true;
 
-	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_SOHunter.UIPerk_assassin", false, StealthEffect, 'Assassin');
+	Template = SelfTargetTrigger('ShadowOps_AssassinTrigger', "img:///UILibrary_SOHunter.UIPerk_assassin", false, StealthEffect, 'AbilityActivated');
+	AddTriggerTargetCondition(Template, default.MatchingWeaponCondition);
+	AddTriggerTargetCondition(Template, default.DeadCondition);
+	AddTriggerTargetCondition(Template, default.NoCoverCondition);
+	// Lower priority so that the concealment-break effect from the shot happens before the enter-concealment effect
+	XMBAbilityTrigger_EventListener(Template.AbilityTriggers[0]).ListenerData.Priority = 0;
 
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
 
