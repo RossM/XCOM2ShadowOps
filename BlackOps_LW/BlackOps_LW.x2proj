@@ -135,7 +135,10 @@
     <Content Include="Src\SOItems\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Core_1_2_1\Classes\*.uc">
+	  <Content Include="Src\XComGame\Classes\*.uc">
+		  <SubType>Content</SubType>
+	  </Content>
+	  <Content Include="Src\XModBase_Core_1_2_1\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\*.uc">
