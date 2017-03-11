@@ -2,7 +2,7 @@ class X2DownloadableContentInfo_SOCombatEngineer extends X2DownloadableContentIn
 
 static event OnLoadedSavedGame()
 {
-	class'XComGameState_KillTracker'.static.GetKillTracker();
+	class'XComGameState_KillTracker'.static.RefreshListeners();
 }
 
 static event InstallNewCampaign(XComGameState StartState)

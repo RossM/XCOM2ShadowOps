@@ -21,6 +21,14 @@ static function XComGameState_KillTracker InitializeWithGameState(XComGameState 
 	local XComGameState_KillTracker Tracker;
 	local XComGameState_Unit UnitState;
 
+	// Check for an existing kill tracker
+	foreach `XCOMHISTORY.IterateByClassType(class'XComGameState_KillTracker', Tracker)
+	{
+		break;
+	}
+	if (Tracker != none)
+		return Tracker;
+
 	Tracker = XComGameState_KillTracker(NewGameState.CreateStateObject(class'XComGameState_KillTracker'));
 	NewGameState.AddStateObject(Tracker);
 
