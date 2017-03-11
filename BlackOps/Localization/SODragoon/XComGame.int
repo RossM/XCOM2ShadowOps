@@ -51,8 +51,8 @@ LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powe
 
 [ShadowOps_ECM X2AbilityTemplate]
 LocFriendlyName="ECM"
-LocLongDescription="Enemies have 10% smaller detection range against all squad members. Also slightly reduces squad infiltration time while on missions."
-LocHelpText="Enemies have 10% smaller detection range against all squad members."
+LocLongDescription="Enemies have <Ability:ECMDetectionModifier/>% smaller detection range against all squad members. Also slightly reduces squad infiltration time while on missions."
+LocHelpText="Enemies have <Ability:ECMDetectionModifier/>% smaller detection range against all squad members."
 LocFlyOverText="ECM"
 LocPromotionPopupText="<Bullet/> The effect is removed if the Dragoon dies or evacs.<br/>"
 
