@@ -10,7 +10,7 @@ simulated function InitScreen(XComPlayerController InitController, UIMovie InitM
 
 	if (`HQPRES.ScreenStack.IsNotInStack(class'UIArmory_Implants_BO'))
 	{
-		Unit = UIArmory_MainMenu(Movie.Pres.ScreenStack.GetScreen(class'UIArmory_MainMenu')).GetUnit();
+		Unit = UIArmory(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory')).GetUnit();
 
 		if (Unit.GetCurrentStat(eStat_CombatSims) > 1 || Unit.HasSoldierAbility('ShadowOps_DigitalWarfare'))
 		{
@@ -29,7 +29,7 @@ simulated function OnReceiveFocus()
 
 	if (`HQPRES.ScreenStack.IsNotInStack(class'UIArmory_Implants_BO'))
 	{
-		Unit = UIArmory_MainMenu(Movie.Pres.ScreenStack.GetScreen(class'UIArmory_MainMenu')).GetUnit();
+		Unit = UIArmory(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory')).GetUnit();
 
 		if (Unit.GetCurrentStat(eStat_CombatSims) > 1 || Unit.HasSoldierAbility('ShadowOps_DigitalWarfare'))
 		{
