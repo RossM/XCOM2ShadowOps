@@ -24,7 +24,9 @@
     <Folder Include="Localization\SOHunter" />
     <Folder Include="Localization\SOInfantry" />
     <Folder Include="Src\" />
-    <Folder Include="Src\LW_Tuple" />
+	  <Folder Include="Src\GremlinStealthFix" />
+	  <Folder Include="Src\GremlinStealthFix\Classes" />
+	  <Folder Include="Src\LW_Tuple" />
     <Folder Include="Src\LW_Tuple\Classes" />
     <Folder Include="Src\ShadowOps_LW2" />
     <Folder Include="Src\ShadowOps_LW2\Classes" />
@@ -159,7 +161,10 @@
     <Content Include="ShadowOps.XComMod">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\LW_Tuple\Classes\*.uc">
+	  <Content Include="Src\GremlinStealthFix\Classes\*.uc">
+		  <SubType>Content</SubType>
+	  </Content>
+	  <Content Include="Src\LW_Tuple\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\*.uc">
