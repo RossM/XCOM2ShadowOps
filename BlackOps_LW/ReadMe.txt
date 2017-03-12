@@ -1,4 +1,8 @@
-﻿Shadow Ops LW is a gameplay overhaul that replaces the Long War Perk Pack classes with four new classes and rebalances early-game items for more strategic choices. Requires Long War Perk Pack to play.
+﻿[b]If you're using Long War 2, [url=http://steamcommunity.com/sharedfiles/filedetails/?id=872274632]get the LW2 version[/url]! Requires starting a new campaign.[/b]
+
+Shadow Ops LW is a gameplay overhaul that replaces the Long War Perk Pack classes with four new classes and rebalances early-game items for more strategic choices. Requires Long War Perk Pack to play.
+
+[b]Note: If you are using Long War 2, I recommend installing the individual class mods linked below, rather than this pack. The crit chance change and item changes are unnecessary and unbalanced with LW2.[/b]
 
 [h1]Balance[/h1]
 Shadow Ops LW is balanced to be more difficult than the Long War Perk Pack, and requires different strategy and tactics. It is intended for experienced players who enjoy a challenge.
