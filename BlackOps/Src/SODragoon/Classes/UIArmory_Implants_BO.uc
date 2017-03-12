@@ -26,7 +26,10 @@ simulated function PopulateData()
 		Item = UIArmory_ImplantSlot(List.GetItem(i));
 		
 		if(Item == none)
+		{
 			Item = UIArmory_ImplantSlot(List.CreateItem(class'UIArmory_ImplantSlot')).InitImplantSlot(i);
+			Item.Button.DisableNavigation();
+		}
 
 		if(i < AvailableSlots && i < EquippedImplants.Length)
 			Item.SetAvailable(EquippedImplants[i]);
@@ -35,6 +38,27 @@ simulated function PopulateData()
 		else
 			Item.SetLocked(Unit);
 	}
+
+	Navigator.SetSelected(ListContainer);
+	ListContainer.Navigator.SetSelected(List);
+	if (List.SelectedIndex == INDEX_NONE)
+		List.SetSelectedIndex(0);
+}
+
+// called by UIArmory
+simulated function OnAccept()
+{
+	if (List.SelectedIndex != INDEX_NONE)
+	{
+		if (UIArmory_ImplantSlot(List.GetSelectedItem()).bIsLocked)
+		{
+			`HQPRES.PlayUISound(eSUISound_MenuClickNegative);
+		}
+		else
+		{
+			`HQPRES.UIInventory_Implants();
+		}
+    }
 }
 
 defaultproperties

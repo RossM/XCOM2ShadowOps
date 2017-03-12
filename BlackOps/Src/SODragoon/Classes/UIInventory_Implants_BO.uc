@@ -241,7 +241,7 @@ simulated function InstallImplant()
 
 	Armory = UIArmory_Implants(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory_Implants'));
 	if (Armory == none)
-		Armory = UIArmory_MainMenu(Movie.Pres.ScreenStack.GetScreen(class'UIArmory_MainMenu'));
+		Armory = UIArmory(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory'));
 	
 	UnitRef = Armory.GetUnit().GetReference();
 	UpdatedHQ = XComGameState_HeadquartersXCom(UpdatedState.CreateStateObject(class'XComGameState_HeadquartersXCom', XComHQ.ObjectID));
