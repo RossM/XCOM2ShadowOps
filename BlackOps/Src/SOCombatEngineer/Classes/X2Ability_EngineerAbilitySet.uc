@@ -751,7 +751,7 @@ static function X2AbilityTemplate LineEmUp()
 	Effect.AbilityTargetConditions.AddItem(new class'X2Condition_ClosestVisibleEnemy');
 
 	// TODO: icon
-	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_SOCombatEngineer.UIPerk_AWC", true, Effect);
+	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_SOCombatEngineer.UIPerk_lineemup", true, Effect);
 }
 
 static function X2AbilityTemplate ControlledDetonation()
