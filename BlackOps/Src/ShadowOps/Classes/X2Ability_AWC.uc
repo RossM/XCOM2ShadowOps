@@ -68,7 +68,7 @@ static function X2AbilityTemplate Scrounger()
 {
 	local X2AbilityTemplate						Template;
 	
-	Template = PurePassive('ShadowOps_Scrounger', "img:///UILibrary_BlackOps.UIPerk_AWC", true);
+	Template = PurePassive('ShadowOps_Scrounger', "img:///UILibrary_BlackOps.UIPerk_scrounger", true);
 	Template.AdditionalAbilities.AddItem('ShadowOps_ScroungerTrigger');
 
 	return Template;
@@ -81,7 +81,7 @@ static function X2AbilityTemplate ScroungerTrigger()
 
 	// Icon Properties
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ScroungerTrigger');
-	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_AWC";
+	Template.IconImage = "img:///UILibrary_BlackOps.UIPerk_scrounger";
 
 	Template.AbilitySourceName = 'eAbilitySource_Perk';
 	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
@@ -137,7 +137,7 @@ static function X2AbilityTemplate SnakeBlood()
 	Effect = new class'X2Effect_PersistentStatChange';
 	Effect.AddPersistentStatChange(eStat_Dodge, default.SnakeBloodDodgeBonus);
 
-	Template = Passive('ShadowOps_SnakeBlood', "img:///UILibrary_BlackOps.UIPerk_AWC", true, Effect);
+	Template = Passive('ShadowOps_SnakeBlood', "img:///UILibrary_PerkIcons.UIPerk_viper_getoverhere", true, Effect);
 
 	ImmunityEffect = new class'X2Effect_DamageImmunity';
 	ImmunityEffect.ImmuneTypes.AddItem('poison');
