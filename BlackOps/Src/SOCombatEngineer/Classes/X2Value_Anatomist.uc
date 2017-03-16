@@ -8,6 +8,9 @@ function float GetValue(XComGameState_Effect EffectState, XComGameState_Unit Uni
 	local X2CharacterTemplateManager CharMgr;
 	local X2CharacterTemplate CharTemplate;
 
+	if (TargetState == none)
+		return 0;
+
 	CharMgr = class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager();
 
 	Tracker = class'XComGameState_KillTracker'.static.GetKillTracker();
