@@ -14,7 +14,6 @@ simulated function AddX2ActionsForVisualization(XComGameState VisualizeGameState
 	super.AddX2ActionsForVisualization_Tick(VisualizeGameState, BuildTrack, 0, none);
 }
 
-
 function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState_Effect kNewEffectState, XComGameState NewGameState, bool FirstApplication)
 {
 	local XComGameState_Unit OldTargetState, NewTargetState;
@@ -26,6 +25,7 @@ function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out
 	local XComGameStateHistory History;
 	local XComGameState_Item ItemState;
 	local X2GremlinTemplate GremlinTemplate;
+	local name ModifiedHealthRegeneratedName;
 	
 	History = `XCOMHISTORY;
 	Ability = XComGameState_Ability(NewGameState.GetGameStateForObjectID(ApplyEffectParameters.AbilityStateObjectRef.ObjectID));
@@ -61,12 +61,15 @@ function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out
 
 	if (HealthRegeneratedName != '' && MaxHealAmount > 0)
 	{
-		OldTargetState.GetUnitValue(HealthRegeneratedName, HealthRegenerated);
+		ModifiedHealthRegeneratedName = name(HealthRegeneratedName $ kNewEffectState.ObjectID);
+
+		OldTargetState.GetUnitValue(ModifiedHealthRegeneratedName, HealthRegenerated);
 
 		// If the unit has already been healed the maximum number of times, do not regen
 		if (HealthRegenerated.fValue >= ModifiedMaxHealAmount)
 		{
-			return false;
+			// Remove effect
+			return true;
 		}
 		else
 		{
@@ -96,7 +99,7 @@ function bool RegenerationTicked(X2Effect_Persistent PersistentEffect, const out
 		Healed = NewTargetState.GetCurrentStat(eStat_HP) - OldTargetState.GetCurrentStat(eStat_HP);
 		if (Healed > 0)
 		{
-			NewTargetState.SetUnitFloatValue(HealthRegeneratedName, HealthRegenerated.fValue + Healed, eCleanup_BeginTactical);
+			NewTargetState.SetUnitFloatValue(ModifiedHealthRegeneratedName, HealthRegenerated.fValue + Healed, eCleanup_BeginTactical);
 		}
 	}
 

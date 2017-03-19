@@ -629,6 +629,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	Template.AbilityTargetConditions.AddItem(new class'X2Condition_RestorationProtocol');
 
 	RestorationEffect = new class'X2Effect_RestorationProtocol';
+	RestorationEffect.DuplicateResponse = eDupe_Ignore;
 	RestorationEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnBegin);
 	RestorationEffect.HealAmount = default.RestorationHealAmount;
 	RestorationEffect.MaxHealAmount = default.RestorationMaxHealAmount;
