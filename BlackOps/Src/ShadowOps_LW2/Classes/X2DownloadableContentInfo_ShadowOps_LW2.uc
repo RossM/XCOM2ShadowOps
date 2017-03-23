@@ -131,3 +131,29 @@ exec function Respec()
 
 	Armory.PopulateData();
 }
+
+exec function DumpXPInfo()
+{
+	local XComGameStateHistory History;
+	local XComGameState_Unit UnitState;
+	local XComGameState_HeadquartersXCom XComHQ;
+	local array<XComGameState_Unit> Soldiers;
+	local UnitValue Value;
+
+	History = `XCOMHISTORY;
+	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class' XComGameState_HeadquartersXCom'));
+	Soldiers = XComHQ.GetSoldiers();
+
+	foreach Soldiers(UnitState)
+	{
+		UnitState.GetUnitValue('MissionExperience', Value);
+		
+		`Log("CSV," $
+			UnitState.GetName(eNameType_FullNick) $ "," $ 
+			UnitState.GetSoldierClassTemplateName() $ "," $ 
+			UnitState.GetNumMissions() $ "," $ 
+			UnitState.GetNumKills() $ "," $
+			UnitState.GetKillAssists().Length $ "," $ 
+			Value.fValue);
+	}
+}
