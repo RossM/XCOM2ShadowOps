@@ -11,189 +11,62 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Config\" />
-    <Folder Include="Config\SOClasses_LW2" />
-    <Folder Include="Config\SOCombatEngineer_LW2" />
-    <Folder Include="Config\SODragoon_LW2" />
-    <Folder Include="Config\SOHunter_LW2" />
-    <Folder Include="Config\SOInfantry_LW2" />
+    <Folder Include="Config\SOClasses_LW2\" />
+    <Folder Include="Config\SOCombatEngineer_LW2\" />
+    <Folder Include="Config\SODragoon_LW2\" />
+    <Folder Include="Config\SOHunter_LW2\" />
+    <Folder Include="Config\SOInfantry_LW2\" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
     <Folder Include="Localization\CritChanceChange\" />
-    <Folder Include="Localization\SOClasses_LW2" />
-    <Folder Include="Localization\SOCombatEngineer" />
-    <Folder Include="Localization\SODragoon" />
-    <Folder Include="Localization\SOHunter" />
-    <Folder Include="Localization\SOInfantry" />
+    <Folder Include="Localization\SOClasses_LW2\" />
+    <Folder Include="Localization\SOCombatEngineer\" />
+    <Folder Include="Localization\SODragoon\" />
+    <Folder Include="Localization\SOHunter\" />
+    <Folder Include="Localization\SOInfantry\" />
     <Folder Include="Localization\SOItems\" />
     <Folder Include="Src\" />
-    <Folder Include="Src\GremlinStealthFix" />
-    <Folder Include="Src\GremlinStealthFix\Classes" />
-    <Folder Include="Src\LW_Tuple" />
-    <Folder Include="Src\LW_Tuple\Classes" />
-    <Folder Include="Src\ShadowOps_LW2" />
-    <Folder Include="Src\ShadowOps_LW2\Classes" />
-    <Folder Include="Src\SmokeAudioFix" />
-    <Folder Include="Src\SmokeAudioFix\Classes" />
-    <Folder Include="Src\SOInfantry" />
-    <Folder Include="Src\SOHunter" />
-    <Folder Include="Src\SODragoon" />
-    <Folder Include="Src\SOCombatEngineer" />
-    <Folder Include="Src\SOCombatEngineer\Classes" />
-    <Folder Include="Src\SODragoon\Classes" />
-    <Folder Include="Src\SOHunter\Classes" />
-    <Folder Include="Src\SOInfantry\Classes" />
-    <Folder Include="Src\XModBase_Core_1_2_1" />
-    <Folder Include="Src\XModBase_Core_1_2_1\Classes" />
-    <Folder Include="Src\XModBase_Interfaces" />
-    <Folder Include="Src\XModBase_Interfaces\Classes" />
-    <Folder Include="Src\XModBase_Utilities" />
+    <Folder Include="Src\GremlinStealthFix\" />
+    <Folder Include="Src\GremlinStealthFix\Classes\" />
+    <Folder Include="Src\LW_Tuple\" />
+    <Folder Include="Src\LW_Tuple\Classes\" />
+    <Folder Include="Src\ShadowOps\" />
     <Folder Include="Src\ShadowOps\Classes\" />
-    <Folder Include="Src\XComGame\" />
-    <Folder Include="Src\XComGame\Classes\" />
-    <Folder Include="Src\ShadowOps" />
-    <Folder Include="Src\ShadowOps\Classes" />
-    <Folder Include="Src\XModBase_Utilities\Classes" />
+    <Folder Include="Src\ShadowOps_LW2\" />
+    <Folder Include="Src\ShadowOps_LW2\Classes\" />
+    <Folder Include="Src\SmokeAudioFix\" />
+    <Folder Include="Src\SmokeAudioFix\Classes\" />
+    <Folder Include="Src\SOCombatEngineer\" />
+    <Folder Include="Src\SOCombatEngineer\Classes\" />
+    <Folder Include="Src\SODragoon\" />
+    <Folder Include="Src\SODragoon\Classes\" />
+    <Folder Include="Src\SOHunter\" />
+    <Folder Include="Src\SOHunter\Classes\" />
+    <Folder Include="Src\SOInfantry\" />
+    <Folder Include="Src\SOInfantry\Classes\" />
+    <Folder Include="Src\XModBase_Core_1_2_1\" />
+    <Folder Include="Src\XModBase_Core_1_2_1\Classes\" />
+    <Folder Include="Src\XModBase_Interfaces\" />
+    <Folder Include="Src\XModBase_Interfaces\Classes\" />
+    <Folder Include="Src\XModBase_Utilities\" />
+    <Folder Include="Src\XModBase_Utilities\Classes\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\SOClasses_LW2\XComAI.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComClassData.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComEditor.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComEngine.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComGame.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComGameCore.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComGameData.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComGameData_SoldierSkills.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComLW_AWCPack.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComLW_InfiltrationSettings.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComLW_Overhaul.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOClasses_LW2\XComShadowOps.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOCombatEngineer_LW2\XComEngine.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOCombatEngineer_LW2\XComGameCore.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOCombatEngineer_LW2\XComGameData_SoldierSkills.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOCombatEngineer_LW2\XComStrategyTuning.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SODragoon_LW2\XComEngine.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SODragoon_LW2\XComGameCore.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SODragoon_LW2\XComGameData_SoldierSkills.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SODragoon_LW2\XComStrategyTuning.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOHunter_LW2\XComEngine.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOHunter_LW2\XComGameCore.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOHunter_LW2\XComGameData_SoldierSkills.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOHunter_LW2\XComStrategyTuning.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOInfantry_LW2\XComAI.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOInfantry_LW2\XComEngine.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOInfantry_LW2\XComGameCore.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOInfantry_LW2\XComGameData_SoldierSkills.ini">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Config\SOInfantry_LW2\XComStrategyTuning.ini">
+    <Content Include="Config\**\*.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Content\*.upk">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\**\Classes\*.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="ReadMe.txt" />
-    <Content Include="ModPreview.jpg" />
     <Content Include="Localization\**\*.int" />
     <Content Include="Localization\**\*.chn" />
     <Content Include="Localization\**\*.rus" />
+    <Content Include="ModPreview.jpg" />
     <Content Include="ShadowOps.XComMod">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\GremlinStealthFix\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\LW_Tuple\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps_LW2\Classes\UIScreenListener_Generic.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps_LW2\Classes\X2DownloadableContentInfo_ShadowOps_LW2.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\ShadowOps_LW2\Classes\XComGameState_SOListenerManager.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\SmokeAudioFix\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\SOCombatEngineer\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\SODragoon\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\SOHunter\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\SOInfantry\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <None Include="Src\XComGame\Classes\*.uc" />
-    <Content Include="Src\XModBase_Core_1_2_1\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\XModBase_Interfaces\Classes\*.uc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Src\XModBase_Utilities\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
@@ -205,7 +78,12 @@
     <RemoveDir Directories="Localization\" />
   </Target>
   <Target Name="CreateSymlinks" BeforeTargets="Build">
-    <Exec Command="mklink /j Config ..\Config" />
+    <MakeDir Directories="Config\" />
+    <Exec Command="mklink /j Config\SOClasses_LW2 ..\Config\SOClasses_LW2" />
+    <Exec Command="mklink /j Config\SOCombatEngineer_LW2 ..\Config\SOCombatEngineer_LW2" />
+    <Exec Command="mklink /j Config\SODragoon_LW2 ..\Config\SODragoon_LW2" />
+    <Exec Command="mklink /j Config\SOHunter_LW2 ..\Config\SOHunter_LW2" />
+    <Exec Command="mklink /j Config\SOInfantry_LW2 ..\Config\SOInfantry_LW2" />
     <Exec Command="mklink /j Content ..\Content" />
     <Exec Command="mklink /j Localization ..\Localization" />
     <MakeDir Directories="Src\" />
