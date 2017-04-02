@@ -32,6 +32,7 @@ DerBK and TheProfessional, for design review of the LW2 version.
 robojumper, for help with animation and graphics.
 Varyar1g, for playtesting the LW version.
 MantLemon, for the simplified Chinese translation.
+Вecё/\b|й Kpo\/иk, for the Russian translation.
 Everyone who played the Shadow Ops Class Pack for great feedback.
 
 [h1]FAQ[/h1]

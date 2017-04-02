@@ -18,15 +18,17 @@
     <Folder Include="Config\SOInfantry_LW2" />
     <Folder Include="Content\" />
     <Folder Include="Localization\" />
+    <Folder Include="Localization\CritChanceChange\" />
     <Folder Include="Localization\SOClasses_LW2" />
     <Folder Include="Localization\SOCombatEngineer" />
     <Folder Include="Localization\SODragoon" />
     <Folder Include="Localization\SOHunter" />
     <Folder Include="Localization\SOInfantry" />
+    <Folder Include="Localization\SOItems\" />
     <Folder Include="Src\" />
-	  <Folder Include="Src\GremlinStealthFix" />
-	  <Folder Include="Src\GremlinStealthFix\Classes" />
-	  <Folder Include="Src\LW_Tuple" />
+    <Folder Include="Src\GremlinStealthFix" />
+    <Folder Include="Src\GremlinStealthFix\Classes" />
+    <Folder Include="Src\LW_Tuple" />
     <Folder Include="Src\LW_Tuple\Classes" />
     <Folder Include="Src\ShadowOps_LW2" />
     <Folder Include="Src\ShadowOps_LW2\Classes" />
@@ -143,28 +145,18 @@
     <Content Include="Content\*.upk">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Localization\SOClasses_LW2\XComGame.int">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="ReadMe.txt" />
     <Content Include="ModPreview.jpg" />
-    <Content Include="Localization\*.int" />
-    <Content Include="Localization\SODragoon\*.int" />
-    <Content Include="Localization\SOHunter\*.int" />
-    <Content Include="Localization\SOInfantry\*.int" />
-    <Content Include="Localization\SOCombatEngineer\*.int" />
-    <Content Include="Localization\*.chn" />
-    <Content Include="Localization\SODragoon\*.chn" />
-    <Content Include="Localization\SOHunter\*.chn" />
-    <Content Include="Localization\SOInfantry\*.chn" />
-    <Content Include="Localization\SOCombatEngineer\*.chn" />
+    <Content Include="Localization\**\*.int" />
+    <Content Include="Localization\**\*.chn" />
+    <Content Include="Localization\**\*.rus" />
     <Content Include="ShadowOps.XComMod">
       <SubType>Content</SubType>
     </Content>
-	  <Content Include="Src\GremlinStealthFix\Classes\*.uc">
-		  <SubType>Content</SubType>
-	  </Content>
-	  <Content Include="Src\LW_Tuple\Classes\*.uc">
+    <Content Include="Src\GremlinStealthFix\Classes\*.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\LW_Tuple\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\ShadowOps\Classes\*.uc">
@@ -206,31 +198,31 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
-	<Target Name="RemoveDirectories" BeforeTargets="CreateSymlinks">
-		<RemoveDir Directories="Src\"/>
-		<RemoveDir Directories="Config\"/>
-		<RemoveDir Directories="Content\"/>
-		<RemoveDir Directories="Localization\"/>
-	</Target>
-	<Target Name="CreateSymlinks" BeforeTargets="Build">
-		<Exec Command="mklink /j Config ..\Config"/>
-		<Exec Command="mklink /j Content ..\Content"/>
-		<Exec Command="mklink /j Localization ..\Localization"/>
-		<MakeDir Directories="Src\"/>
-		<Exec Command="mklink /j Src\GremlinStealthFix ..\Src\GremlinStealthFix"/>
-		<Exec Command="mklink /j Src\LW_Tuple ..\Src\LW_Tuple"/>
-		<Exec Command="mklink /j Src\ShadowOps_LW2 ..\Src\ShadowOps_LW2"/>
-		<Exec Command="mklink /j Src\SmokeAudioFix ..\Src\SmokeAudioFix"/>
-		<Exec Command="mklink /j Src\SOInfantry ..\Src\SOInfantry"/>
-		<Exec Command="mklink /j Src\SOHunter ..\Src\SOHunter"/>
-		<Exec Command="mklink /j Src\SODragoon ..\Src\SODragoon"/>
-		<Exec Command="mklink /j Src\SOCombatEngineer ..\Src\SOCombatEngineer"/>
-		<Exec Command="mklink /j Src\XModBase_Core_1_2_1 ..\Src\XModBase_Core_1_2_1"/>
-		<Exec Command="mklink /j Src\XModBase_Interfaces ..\Src\XModBase_Interfaces"/>
-		<Exec Command="mklink /j Src\XModBase_Utilities ..\Src\XModBase_Utilities"/>
-		<Exec Command="mklink /j Src\ShadowOps ..\Src\ShadowOps"/>
-	</Target>
-	<Target Name="ReplaceModInfo" AfterTargets="Build">
+  <Target Name="RemoveDirectories" BeforeTargets="CreateSymlinks">
+    <RemoveDir Directories="Src\" />
+    <RemoveDir Directories="Config\" />
+    <RemoveDir Directories="Content\" />
+    <RemoveDir Directories="Localization\" />
+  </Target>
+  <Target Name="CreateSymlinks" BeforeTargets="Build">
+    <Exec Command="mklink /j Config ..\Config" />
+    <Exec Command="mklink /j Content ..\Content" />
+    <Exec Command="mklink /j Localization ..\Localization" />
+    <MakeDir Directories="Src\" />
+    <Exec Command="mklink /j Src\GremlinStealthFix ..\Src\GremlinStealthFix" />
+    <Exec Command="mklink /j Src\LW_Tuple ..\Src\LW_Tuple" />
+    <Exec Command="mklink /j Src\ShadowOps_LW2 ..\Src\ShadowOps_LW2" />
+    <Exec Command="mklink /j Src\SmokeAudioFix ..\Src\SmokeAudioFix" />
+    <Exec Command="mklink /j Src\SOInfantry ..\Src\SOInfantry" />
+    <Exec Command="mklink /j Src\SOHunter ..\Src\SOHunter" />
+    <Exec Command="mklink /j Src\SODragoon ..\Src\SODragoon" />
+    <Exec Command="mklink /j Src\SOCombatEngineer ..\Src\SOCombatEngineer" />
+    <Exec Command="mklink /j Src\XModBase_Core_1_2_1 ..\Src\XModBase_Core_1_2_1" />
+    <Exec Command="mklink /j Src\XModBase_Interfaces ..\Src\XModBase_Interfaces" />
+    <Exec Command="mklink /j Src\XModBase_Utilities ..\Src\XModBase_Utilities" />
+    <Exec Command="mklink /j Src\ShadowOps ..\Src\ShadowOps" />
+  </Target>
+  <Target Name="ReplaceModInfo" AfterTargets="Build">
     <ItemGroup>
       <ModInfoFiles Include="@(Content)" Condition="'%(Extension)' == '.XComMod'">
         <TargetDir>$(OutputDir)</TargetDir>
