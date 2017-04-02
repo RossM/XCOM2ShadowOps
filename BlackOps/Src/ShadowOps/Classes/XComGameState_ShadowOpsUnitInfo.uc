@@ -1,4 +1,0 @@
-class XComGameState_ShadowOpsUnitInfo extends XComGameState_BaseObject;
-
-var bool bFreeRespecAllowed;
-var int iFreeRespecMaxRank;
