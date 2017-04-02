@@ -149,7 +149,32 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
-  <Target Name="ReplaceModInfo" AfterTargets="Build">
+	<Target Name="RemoveDirectories" BeforeTargets="CreateSymlinks">
+		<RemoveDir Directories="Src\"/>
+		<RemoveDir Directories="Config\"/>
+		<RemoveDir Directories="Content\"/>
+		<RemoveDir Directories="Localization\"/>
+	</Target>
+	<Target Name="CreateSymlinks" BeforeTargets="Build">
+		<Exec Command="mklink /j Config ..\Config"/>
+		<Exec Command="mklink /j Content ..\Content"/>
+		<Exec Command="mklink /j Localization ..\Localization"/>
+		<MakeDir Directories="Src\"/>
+		<Exec Command="mklink /j Src\CritChanceChange ..\Src\CritChanceChange"/>
+		<Exec Command="mklink /j Src\GremlinStealthFix ..\Src\GremlinStealthFix"/>
+		<Exec Command="mklink /j Src\LW_Tuple ..\Src\LW_Tuple"/>
+		<Exec Command="mklink /j Src\SmokeAudioFix ..\Src\SmokeAudioFix"/>
+		<Exec Command="mklink /j Src\SOInfantry ..\Src\SOInfantry"/>
+		<Exec Command="mklink /j Src\SOHunter ..\Src\SOHunter"/>
+		<Exec Command="mklink /j Src\SODragoon ..\Src\SODragoon"/>
+		<Exec Command="mklink /j Src\SOCombatEngineer ..\Src\SOCombatEngineer"/>
+		<Exec Command="mklink /j Src\SOItems ..\Src\SOItems"/>
+		<Exec Command="mklink /j Src\XModBase_Core_1_2_1 ..\Src\XModBase_Core_1_2_1"/>
+		<Exec Command="mklink /j Src\XModBase_Interfaces ..\Src\XModBase_Interfaces"/>
+		<Exec Command="mklink /j Src\XModBase_Utilities ..\Src\XModBase_Utilities"/>
+		<Exec Command="mklink /j Src\ShadowOps ..\Src\ShadowOps"/>
+	</Target>
+	<Target Name="ReplaceModInfo" AfterTargets="Build">
     <ItemGroup>
       <ModInfoFiles Include="@(Content)" Condition="'%(Extension)' == '.XComMod'">
         <TargetDir>$(OutputDir)</TargetDir>

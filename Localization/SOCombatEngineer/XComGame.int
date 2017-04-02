@@ -1,0 +1,365 @@
+; === Engineer abilities ===
+
+[ShadowOps_DenseSmoke X2AbilityTemplate]
+LocFriendlyName="Dense Smoke"
+LocLongDescription="Your smoke grenades provide an additional +20 Defense."
+LocHelpText="Your smoke grenades provide an additional +20 Defense."
+LocFlyOverText="Dense Smoke"
+LocPromotionPopupText="<Bullet/> Smoke grenades with Dense Smoke provide the same defensive bonus as full cover, but you are still vulnerable to critical hits if you get flanked. <br/><Bullet/> The total bonus from a Dense Smoke grenade is +40 defense. The added defense will also reduce your chance of being critically hit by 20. <br/>"
+
+[ShadowOps_SmokeAndMirrors X2AbilityTemplate]
+LocFriendlyName="Smoke and Mirrors"
+LocLongDescription="You have one free smoke grenade use on every mission. Launching or throwing a smoke grenade as your first action does not end your turn."
+LocHelpText="You have one free smoke grenade use on every mission. Launching or throwing a smoke grenade as your first action does not end your turn."
+LocFlyOverText="Smoke and Mirrors"
+LocPromotionPopupText="<Bullet/> Smoke grenades provide a +20 Defense bonus to all units in an area that lasts for 2 turns. Each grenade has 2 charges. <br/><Bullet/> Get your Combat Engineer into a good position before starting a fight, so they can use their first action to protect your other soldiers with smoke. <br/><Bullet/> Smoke grenades can be equipped even if you're carrying other grenades. <br/>"
+
+[ShadowOps_Breach X2AbilityTemplate]
+LocFriendlyName="Breach"
+LocLongDescription="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits. Shotgun only. Uses <Ability:SelfAmmoCost/> ammo. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Fire a shot that destroys cover and shreds <Ability:Shred/> armor in a small area, but deals reduced damage and can't get critical hits."
+LocFlyOverText="Breach"
+LocPromotionPopupText="<Bullet/> More advanced weapons will deal more damage and shred more armor.<br/><Bullet/> Breach is excellent for destroying cover, but deals less damage and has a smaller radius than a launched grenade.<br/><Bullet/> Guaranteed damage makes Breach good for finishing off low-hp enemies.<br/><Bullet/> Breach cannot crit. <br/><Bullet/> Breach requires <Ability:SelfAmmoCost/> ammo points and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_Fastball X2AbilityTemplate]
+LocFriendlyName="Fastball"
+LocLongDescription="The next grenade you throw or launch this turn doesn't cost an action. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="The next grenade you throw or launch this turn doesn't cost an action."
+LocFlyOverText="Fastball"
+LocPromotionPopupText="<Bullet/> It's usually best to use Fastball whenever you get a chance. If you save it until you really need it, you'll run out of grenades before you find that perfect chance.<br/><Bullet/> Throwing or launching a grenade with Fastball does not end the turn. <br/><Bullet/> Fastball has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_Fracture X2AbilityTemplate]
+LocFriendlyName="Fracture"
+LocLongDescription="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocFlyOverText="Fracture"
+LocPromotionPopupText="<Bullet/> Fracture works best with shotguns, due to their higher critical hit chance and crit damage bonus.<br/><Bullet/> Fracture has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_FractureDamage X2AbilityTemplate]
+LocFriendlyName="Fracture"
+LocLongDescription="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocHelpText="Make an attack that has <Ability:+Crit:ShadowOps_FractureDamage/> Crit chance and deals double bonus damage on critical hits."
+LocFlyOverText="Fracture"
+
+[ShadowOps_Packmaster X2AbilityTemplate]
+LocFriendlyName="Packmaster"
+LocLongDescription="Limited-use items in utility slots gain a bonus use. This does not include grenades in the grenade-only slot."
+LocHelpText="Limited-use items in utility slots gain a bonus use. This does not include grenades in the grenade-only slot."
+LocFlyOverText="Packmaster"
+LocPromotionPopupText="<Bullet/> This includes non-grenade items such as medikits and mimic beacons.<br/>"
+
+[ShadowOps_Entrench X2AbilityTemplate]
+LocFriendlyName="Entrench"
+LocLongDescription="Increase Defense by <Ability:Defense/> and Dodge by <Ability:Dodge/> until you move. Only works in cover."
+LocHelpText="Increase Defense by <Ability:Defense/> and Dodge by <Ability:Dodge/> until you move. Only works in cover."
+LocFlyOverText="Entrench"
+LocPromotionPopupText="<Bullet/> It's often better to stay in worse cover and Entrench before firing rather than moving to better cover. <br/>"
+
+[ShadowOps_Aggression X2AbilityTemplate]
+LocFriendlyName="Aggression"
+LocLongDescription="All of your attacks get <Ability:+Crit/> Crit chance for each enemy you can see, to a max of <Ability:+MaxCrit/>."
+LocHelpText="All of your attacks get <Ability:+Crit/> Crit chance for each enemy you can see, to a max of <Ability:+MaxCrit/>."
+LocFlyOverText="Aggression"
+LocPromotionPopupText="<Bullet/> Aggression even affects attacks that can't normally crit, such as grenades and Breach. <br/>"
+
+[ShadowOps_CombatDrugs X2AbilityTemplate]
+LocFriendlyName="Combat Drugs"
+LocLongDescription="Units in your smoke grenade cloud get +10 Aim and +20 Crit chance."
+LocHelpText="Units in your smoke grenade cloud get +10 Aim and +20 Crit chance."
+LocFlyOverText="Combat Drugs"
+LocPromotionPopupText="<Bullet/> The bonus affects all units in the cloud, so group your soldiers together to give more of them the bonus. Watch out for enemy grenades if you group too tightly, though. <br/><Bullet/> Beware of Stun Lancers and other melee units that might move into your smoke cloud and gain its benefits. <br/>"
+
+[ShadowOps_SlamFire X2AbilityTemplate]
+LocFriendlyName="Slam Fire"
+LocLongDescription="For the rest of the turn, whenever you get a critical hit with your <Ability:WeaponName/>, your actions are refunded. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="For the rest of the turn, whenever you get a critical hit with your <Ability:WeaponName/>, your actions are refunded."
+LocFlyOverText="Slam Fire"
+LocPromotionPopupText="<Bullet/> With the proper setup, you can trigger Slam Fire many times in a turn. Try using Fastball to remove enemies' cover, or dropping a smoke grenade with Combat Drugs to boost your critical hit chance. <br/><Bullet/> If you activate Slam Fire at the beginning of the turn you can move or reload between shots (once). <br/><Bullet/> Equip your weapon with a Laser Sight and an Expanded Magazine or Autoloader to maximize Slam Fire's potential. <br/>"
+
+[ShadowOps_DangerZone X2AbilityTemplate]
+LocFriendlyName="Devastation"
+LocLongDescription="The radius of your grenades and rockets is increased by 2, and the radius of your Breach ability is increased by 1."
+LocHelpText="The radius of your grenades and rockets is increased by 2, and the radius of your Breach ability is increased by 1."
+LocFlyOverText="Devastation"
+LocPromotionPopupText="<Bullet/> Devastation provides a massive increase to grenade radius that makes it easy to hit multiple units and remove their cover, not to mention all other cover nearby. <br/>"
+
+[ShadowOps_ChainReaction X2AbilityTemplate]
+LocFriendlyName="Chain Reaction"
+LocLongDescription="When you kill an enemy with explosion damage, any explosives the enemy was carrying detonate."
+LocHelpText="When you kill an enemy with explosion damage, any explosives the enemy was carrying detonate."
+LocFlyOverText="Chain Reaction"
+LocPromotionPopupText="<Bullet/> Chain Reaction can deal huge amounts of damage to tightly-packed enemies. <br/><Bullet/> Be careful when using explosives near teammates, as the secondary detonations might hit units you're not expecting it to. <br/><Bullet/> Only units killed directly by you cause secondary explosions. The secondary explosions won't detonate further enemies. <br/>"
+
+[ShadowOps_ChainReactionFuse X2AbilityTemplate]
+LocFriendlyName="Chain Reaction"
+LocFlyOverText="Chain Reaction"
+
+[ShadowOps_HeatAmmo X2AbilityTemplate]
+LocFriendlyName="HEAT Ammo"
+LocLongDescription="Confers +50% damage against robotic enemies."
+LocHelpText="Confers +50% damage against robotic enemies."
+LocFlyOverText="HEAT Ammo"
+LocPromotionPopupText="<Bullet/> HEAT Ammo provides a substantial damage increase against robotic enemies such as MECs and Sectopods. <br/><Bullet/> The damage increase happens before damage is reduced by Armor. <br/><Bullet/> Combining HEAT Ammo with Bluescreen Rounds will deal devastating damage to any robotic enemy. <br/><Bullet/> HEAT Ammo affects all damage sources, including explosives. <br/>"
+
+[ShadowOps_MovingTarget X2AbilityTemplate]
+LocFriendlyName="Moving Target"
+LocLongDescription="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against reaction fire."
+LocHelpText="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against reaction fire."
+LocFlyOverText="Moving Target"
+LocPromotionPopupText="<Bullet/> If you need to run an overwatch, a unit with Moving Target is a good choice. <br/>"
+
+[ShadowOps_FocusedDefense X2AbilityTemplate]
+LocFriendlyName="Focused Defense"
+LocLongDescription="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
+LocHelpText="You get an additional <Ability:+Defense/> Defense and <Ability:+Dodge/> Dodge against attacks by the closest visible enemy while not flanked."
+LocFlyOverText="Focused Defense"
+LocPromotionPopupText="<Bullet/> The bonus doesn't apply against melee attacks.<br/><Bullet/> If multiple enemies are equally distant, you get the bonus against all of them.<br/>"
+
+[ShadowOps_LineEmUp X2AbilityTemplate]
+LocFriendlyName="Priority Target"
+LocLongDescription="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on attacks against the closest visible enemy."
+LocHelpText="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on attacks against the closest visible enemy."
+LocFlyOverText="Priority Target"
+LocPromotionPopupText="<Bullet/> If multiple enemies are equally distant, you get the bonus against all of them.<br/>"
+
+[ShadowOps_ControlledDetonation X2AbilityTemplate]
+LocFriendlyName="Controlled Detonation"
+LocLongDescription="Your explosives deal <Ability:DamageReductionPercent/> less damage to allies."
+LocHelpText="Your explosives deal <Ability:DamageReductionPercent/> less damage to allies."
+LocFlyOverText="Controlled Detonation"
+LocPromotionPopupText="<Bullet/> Allies includes yourself.<br/><Bullet/> Explosives may still cause effects such as burning.<br/>"
+
+[ShadowOps_Pyromaniac X2AbilityTemplate]
+LocFriendlyName="Pyromaniac"
+LocLongDescription="Grants 1 free incendiary grenade item to your inventory."
+LocHelpText="Grants 1 free incendiary grenade item to your inventory."
+LocFlyOverText="Pyromaniac"
+LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.<br/>"
+
+[ShadowOps_HitAndRun X2AbilityTemplate]
+LocFriendlyName="Skirmisher"
+LocLongDescription="Move after taking a single action that would normally end your turn as your first action."
+LocHelpText="Move after taking a single action that would normally end your turn as your first action."
+LocFlyOverText="Skirmisher"
+LocPromotionPopupText="<Bullet/> This doesn't affect abilities that require two action points to use.<br/><Bullet/> You can only take a standard move, not use other actions such as reloading your weapon.<br/>"
+
+[ShadowOps_SurvivalInstinct X2AbilityTemplate]
+LocFriendlyName="Survival Instinct"
+LocLongDescription="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
+LocHelpText="Gain <Ability:+Defense/> Defense and <Ability:+Crit/> Crit chance while injured."
+LocFlyOverText="Survival Instinct"
+LocPromotionPopupText="<Bullet/> The bonuses are lost if you are healed back to full health.<br/>"
+
+[ShadowOps_DevilsLuck X2AbilityTemplate]
+LocFriendlyName="Devil's Luck"
+LocLongDescription="You are immune to the first shot that hits you each mission."
+LocHelpText="You are immune to the first shot that hits you each mission."
+LocFlyOverText="Devil's Luck"
+LocPromotionPopupText="<Bullet/> Hits include crits and grazes.<br/>"
+
+[ShadowOps_Mayhem X2AbilityTemplate]
+LocFriendlyName="Mayhem"
+LocLongDescription="Your grenades and special attacks deal <Ability:+Damage> damage."
+LocHelpText="Your grenades and special attacks deal <Ability:+Damage> damage."
+LocFlyOverText="Mayhem"
+LocPromotionPopupText="<Bullet/> Special attacks include Breach, Fracture, and heavy weapons."
+
+[ShadowOps_Mayhem_LW2 X2AbilityTemplate]
+LocFriendlyName="Mayhem"
+LocLongDescription="All your attacks deal <Ability:+Damage> damage."
+LocHelpText="All your attacks deal <Ability:+Damage> damage."
+LocFlyOverText="Mayhem"
+LocPromotionPopupText="<Bullet/> Mayhem also increases the damage from burning, poison, or acid caused by your attacks.<br/>"
+
+[ShadowOps_Saboteur X2AbilityTemplate]
+LocFriendlyName="Saboteur"
+LocLongDescription="Your standard <Ability:WeaponName/> attacks deal <Ability:Damage>% more damage to inanimate objects such as relays and gas tanks."
+LocHelpText="Your standard <Ability:WeaponName/> attacks deal <Ability:Damage>% more damage to inanimate objects such as relays and gas tanks."
+LocFlyOverText="Saboteur"
+LocPromotionPopupText="<Bullet/> Saboteur doesn't affect grenades or special attacks.<br/>"
+
+[ShadowOps_Anatomist X2AbilityTemplate]
+LocFriendlyName="Anatomist"
+LocLongDescription="You deal <Ability:+CritDamage> damage on critical hits for each enemy of the same type you have killed, to a max of <Ability:+MaxCritDamage>."
+LocHelpText="You deal <Ability:+CritDamage> damage on critical hits for each enemy of the same type you have killed, to a max of <Ability:+MaxCritDamage>."
+LocPromotionPopupText="<Bullet/> You get bonus damage for each enemy of the same general type you have killed. For example, ADVENT Troopers and Advanced Troopers are the same general type.<br/><Bullet/> This counts kills by the same soldier, across all missions.<br/>"
+
+[ShadowOps_ExtraMunitions X2AbilityTemplate]
+LocFriendlyName="Extra Munitions"
+LocLongDescription="Grants 1 free explosive grenade item to your inventory."
+LocHelpText="Grants 1 free explosive grenade item to your inventory."
+LocFlyOverText="Extra Munitions"
+LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.<br/>"
+
+[ShadowOps_BullRush X2AbilityTemplate]
+LocFriendlyName="Bull Rush"
+LocLongDescription="Make a special melee attack against any enemy within movement range that deals little damage but stuns the target for 1 turn."
+LocHelpText="Make a special melee attack against any enemy within movement range that deals little damage but stuns the target for 1 turn."
+LocPromotionPopupText="<Bullet/> Robotic enemies can't be stunned, but still take the damage.<br/>"
+
+[ShadowOps_SmokeAndMirrors_LW2 X2AbilityTemplate]
+LocFriendlyName="Smoke and Mirrors"
+LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn. Also slightly reduces this soldier's infiltration time while on missions."
+LocHelpText="Launching or throwing a smoke grenade as your first action does not end your turn."
+LocFlyOverText="Smoke and Mirrors"
+LocPromotionPopupText="<Bullet/> Smoke and Mirrors also slightly reduces the soldier's infiltration time. <br/>"
+
+[ShadowOps_BareKnuckle X2AbilityTemplate]
+LocFriendlyName="Bare Knuckle"
+LocLongDescription="Your melee attacks deal <Ability:+Damage/> damage."
+LocHelpText="Your melee attacks deal <Ability:+Damage/> damage."
+LocFlyOverText="Bare Knuckle"
+LocPromotionPopupText="<Bullet/> Melee attacks include Bull Rush and knife attacks. <br/>"
+
+[ShadowOps_DemoGrenades X2AbilityTemplate]
+LocFriendlyName="Demo Grenades"
+LocLongDescription="Your explosive grenades destroy most cover objects."
+LocHelpText="Your explosive grenades destroy most cover objects."
+LocFlyOverText="Demo Grenades"
+LocPromotionPopupText="<Bullet/> Demo Grenades will always destroy fragile cover such as fences, and may destroy sturdier cover. <br/>"
+
+; === Class templates ===
+
+[ShadowOps_CombatEngineer X2SoldierClassTemplate]
+DisplayName="Combat Engineer"
+ClassSummary="Combat Engineers are experts at using grenades both offensively and defensively. If you want something blown up, torn down, or hidden in smoke, bring a Combat Engineer."
+LeftAbilityTreeTitle="Pioneer"
+RightAbilityTreeTitle="Sapper"
+RandomNickNames[0]="Amp It Up"
+RandomNickNames[1]="Bolt"
+RandomNickNames[2]="Boomer"
+RandomNickNames[3]="Bubblegum"
+RandomNickNames[4]="Cable"
+RandomNickNames[5]="Charcoal"
+RandomNickNames[6]="Cooked Meat"
+RandomNickNames[7]="Dr. Boom"
+RandomNickNames[8]="Drive"
+RandomNickNames[9]="Gears"
+RandomNickNames[10]="Goggles"
+RandomNickNames[11]="Grip"
+RandomNickNames[12]="Gyro"
+RandomNickNames[13]="High Voltage"
+RandomNickNames[14]="Jigsaw"
+RandomNickNames[15]="Murphy"
+RandomNickNames[16]="No Hands"
+RandomNickNames[17]="Powder"
+RandomNickNames[18]="Pump"
+RandomNickNames[19]="Ratchet"
+RandomNickNames[20]="Smoke"
+RandomNickNames[21]="System"
+RandomNickNames[22]="Thunder"
+RandomNickNames[23]="Torque"
+RandomNickNames[24]="Wrench"
+
+[ShadowOps_CombatEngineer_LW X2SoldierClassTemplate]
+DisplayName="Combat Engineer"
+ClassSummary="Combat Engineers are experts at using grenades both offensively and defensively. If you want something blown up, torn down, or hidden in smoke, bring a Combat Engineer."
+LeftAbilityTreeTitle="Pioneer"
+RightAbilityTreeTitle="Sapper"
+RandomNickNames[0]="Amp It Up"
+RandomNickNames[1]="Bolt"
+RandomNickNames[2]="Boomer"
+RandomNickNames[3]="Bubblegum"
+RandomNickNames[4]="Cable"
+RandomNickNames[5]="Charcoal"
+RandomNickNames[6]="Cooked Meat"
+RandomNickNames[7]="Dr. Boom"
+RandomNickNames[8]="Drive"
+RandomNickNames[9]="Gears"
+RandomNickNames[10]="Goggles"
+RandomNickNames[11]="Grip"
+RandomNickNames[12]="Gyro"
+RandomNickNames[13]="High Voltage"
+RandomNickNames[14]="Jigsaw"
+RandomNickNames[15]="Murphy"
+RandomNickNames[16]="No Hands"
+RandomNickNames[17]="Powder"
+RandomNickNames[18]="Pump"
+RandomNickNames[19]="Ratchet"
+RandomNickNames[20]="Smoke"
+RandomNickNames[21]="System"
+RandomNickNames[22]="Thunder"
+RandomNickNames[23]="Torque"
+RandomNickNames[24]="Wrench"
+
+[ShadowOps_CombatEngineer_LW2 X2SoldierClassTemplate]
+DisplayName="Combat Engineer"
+ClassSummary="Combat Engineers are experts at using grenades both offensively and defensively. If you want something blown up, torn down, or hidden in smoke, bring a Combat Engineer."
+LeftAbilityTreeTitle="Pioneer"
+RightAbilityTreeTitle="Sapper"
+RandomNickNames[0]="Amp It Up"
+RandomNickNames[1]="Bolt"
+RandomNickNames[2]="Boomer"
+RandomNickNames[3]="Bubblegum"
+RandomNickNames[4]="Cable"
+RandomNickNames[5]="Charcoal"
+RandomNickNames[6]="Cooked Meat"
+RandomNickNames[7]="Dr. Boom"
+RandomNickNames[8]="Drive"
+RandomNickNames[9]="Gears"
+RandomNickNames[10]="Goggles"
+RandomNickNames[11]="Grip"
+RandomNickNames[12]="Gyro"
+RandomNickNames[13]="High Voltage"
+RandomNickNames[14]="Jigsaw"
+RandomNickNames[15]="Murphy"
+RandomNickNames[16]="No Hands"
+RandomNickNames[17]="Powder"
+RandomNickNames[18]="Pump"
+RandomNickNames[19]="Ratchet"
+RandomNickNames[20]="Smoke"
+RandomNickNames[21]="System"
+RandomNickNames[22]="Thunder"
+RandomNickNames[23]="Torque"
+RandomNickNames[24]="Wrench"
+
+[ShadowOps_Scrapper_LW2 X2SoldierClassTemplate]
+DisplayName="Scrapper"
+ClassSummary="Scrappers are intensively trained in unarmed and knife fighting in addition to firearms. In close quarters combat they're second to none."
+LeftAbilityTreeTitle="Thug"
+RightAbilityTreeTitle="Brawler"
+RandomNicknames[0]="Bison"
+RandomNicknames[1]="Broken Glass"
+RandomNicknames[2]="Christmas"
+RandomNicknames[3]="Claws"
+RandomNicknames[4]="Cudgel"
+RandomNicknames[5]="Dino"
+RandomNicknames[6]="Dump Truck"
+RandomNicknames[7]="Edge"
+RandomNicknames[8]="Feet"
+RandomNicknames[9]="Fruit"
+RandomNicknames[10]="Jellybean"
+RandomNicknames[11]="Junior"
+RandomNicknames[12]="Knuckles"
+RandomNicknames[13]="Little"
+RandomNicknames[14]="Nosey"
+RandomNicknames[15]="One Way"
+RandomNicknames[16]="Ox"
+RandomNicknames[17]="Peanut"
+RandomNicknames[18]="Scar"
+RandomNicknames[19]="Skin"
+RandomNicknames[20]="Stiletto"
+RandomNicknames[21]="Teeth"
+RandomNicknames[22]="The Brute"
+RandomNicknames[23]="Thirteen"
+RandomNickNames_Male[0]="Mr. Mean"
+RandomNickNames_Male[1]="Mutt"
+RandomNickNames_Male[2]="Old Man"
+RandomNickNames_Female[0]="Cat"
+RandomNickNames_Female[1]="Mrs. Mean"
+RandomNickNames_Female[3]="Old Woman"
+
+; === GTS ability templates ===
+
+[PackmasterUnlock X2SoldierAbilityUnlockTemplate]
+DisplayName="Combat Engineer: Packmaster"
+Summary="Limited-use items in utility slots gain a bonus use."
+
+[PackmasterUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Combat Engineer: Packmaster"
+Summary="Limited-use items in utility slots gain a bonus use."
+
+[ExtraMunitionsUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Extra Munitions"
+Summary="All soldiers gain a free standard grenade on each mission."
+

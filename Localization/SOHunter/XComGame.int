@@ -1,0 +1,355 @@
+; === Hunter abilities ===
+
+[ShadowOps_SnapShot X2AbilityTemplate]
+LocFriendlyName="Snap Shot"
+LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a <Ability:ToHit:ShadowOps_SnapShotShot/> Aim penalty."
+LocHelpText="Fire your <Ability:WeaponName/> as a single action with a small Aim penalty."
+LocFlyOverText="Snap Shot"
+LocPromotionPopupText="<Bullet/> Snap Shot is most useful on Hunters that move with the rest of the squad rather than staying in a single place.<br/><Bullet/> Your sniper rifle has an aim penalty at close range. A sword attack will usually be more effective than a close-range flank shot.<br/>"
+
+[ShadowOps_SnapShotShot X2AbilityTemplate]
+LocFriendlyName="Snap Shot"
+LocLongDescription="You can fire or overwatch with your <Ability:WeaponName/> as a single action with a <Ability:ToHit/> Aim penalty."
+LocHelpText="Fire your <Ability:WeaponName/> as a single action with a small Aim penalty."
+LocFlyOverText="Snap Shot"
+
+[ShadowOps_SnapShotOverwatch X2AbilityTemplate]
+LocFriendlyName="Overwatch"
+LocFriendlyNameWhenConcealed="Overwatch (Concealed)"
+LocLongDescription="Overwatch with your <Ability:WeaponName/> as a single action with a <Ability:ToHit:ShadowOps_SnapShotShot/> Aim penalty."
+LocHelpText="Fire on the first enemy that moves within your line of sight, with a penalty to aim."
+LocLongDescriptionWhenConcealed="Fire on the first enemy that moves within your line of sight, but only if revealed."
+LocFlyOverText="Overwatch: Snap Shot"
+
+[ShadowOps_HunterMark X2AbilityTemplate]
+LocFriendlyName="Mark"
+LocLongDescription="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it. The bonus never expires, but you can only have one target Marked at a time. Using this ability will not break concealment. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Mark a target, giving all friendly units <Ability:+ToHit/> Aim on shots against it."
+LocFlyOverText="Mark"
+LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns where you have to move or reload your sniper rifle.<br/><Bullet/> Use Mark on dangerous enemies before triggering an ambush.<br/><Bullet/> Mark followed by Snap Shot is more accurage than a standard sniper rifle shot, and also helps the rest of the squad.<br/><Bullet/> Mark can target using squadsight.<br/><Bullet/> Marking does not break concealment.<br/><Bullet/> The effect is removed if the Hunter dies, evacs, or marks another target.<br/><Bullet/> Mark has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_VitalPoint X2AbilityTemplate]
+LocFriendlyName="Keen Edge"
+LocLongDescription="Your sword attacks shred <Ability:Shred/> armor and deal <Ability:+Damage/> damage."
+LocHelpText="Your sword attacks shred <Ability:Shred/> armor and deal <Ability:+Damage/> damage."
+LocFlyOverText="Keen Edge"
+LocPromotionPopupText="<Bullet/> More advanced swords will shred more armor and deal extra bonus damage.<br/><Bullet/> Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet/> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
+
+[ShadowOps_Precision X2AbilityTemplate]
+LocFriendlyName="Precision"
+LocLongDescription="You get <Ability:+ToHit/> Aim against targets in full cover."
+LocHelpText="You get <Ability:+ToHit/> Aim against targets in full cover."
+LocFlyOverText="Precision"
+LocPromotionPopupText="<Bullet/> Precision only works with ranged attacks.<br/>"
+
+[ShadowOps_LowProfile X2AbilityTemplate]
+LocFriendlyName="Low Profile"
+LocLongDescription="You get <Ability:+Defense/> Defense while in half cover."
+LocHelpText="You get <Ability:+Defense/> Defense while in half cover."
+LocFlyOverText="Low Profile"
+LocPromotionPopupText="<Bullet/> The bonus is lost if the attacker is flanking you.<br/>"
+
+[ShadowOps_Sprint X2AbilityTemplate]
+LocFriendlyName="Double Time"
+LocLongDescription="Gain a bonus move action this turn. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Gain a bonus move action this turn."
+LocFlyOverText="Double Time"
+LocPromotionPopupText="<Bullet/> Double Time can be used to move very long distances in a single turn, or to move and then take a normal sniper rifle shot.<br/><Bullet/> The extra move action from Double Time is wasted if you use an ability that ends your turn, like firing your weapon, before taking the move.<br/><Bullet/> Double Time has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_Assassin X2AbilityTemplate]
+LocFriendlyName="Assassin"
+LocLongDescription="When you kill a flanked or uncovered enemy with your <Ability:WeaponName/>, you gain concealment."
+LocHelpText="When you kill a flanked or uncovered enemy with your <Ability:WeaponName/>, you gain concealment."
+LocFlyOverText="Assassin"
+LocPromotionPopupText="<Bullet/> You must have cover from all enemies that can see you in order to gain the concealment.<br/>"
+
+[ShadowOps_Fade X2AbilityTemplate]
+LocFriendlyName="Fade"
+LocLongDescription="Gain concealment that is broken if you move. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Gain concealment that is broken if you move."
+LocFlyOverText="Fade"
+LocPromotionPopupText="<Bullet/> Fade will let you use your First Strike bonus multiple times during a battle.<br/><Bullet/> Concealment granted by Fade can also be broken normally.<br/><Bullet/> Fade consumes an action and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_SliceAndDice X2AbilityTemplate]
+LocFriendlyName="Slice and Dice"
+LocLongDescription="Attack any enemy within movement range with your sword. If you hit, make a free second sword attack. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Attack any enemy within movement range with your sword. If you hit, make a free second sword attack."
+LocFlyOverText="Slice and Dice"
+LocPromotionPopupText="<Bullet/> Slice and Dice has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
+[ShadowOps_Tracking X2AbilityTemplate]
+LocFriendlyName="Tracking"
+LocLongDescription="You detect nearby units even without line of sight."
+LocHelpText="You detect nearby units even without line of sight."
+LocFlyOverText="Tracking"
+LocPromotionPopupText="<Bullet/> Soldiers with Tracking make excellent scouts, especially if you give them concealment with Stealth Protocol.<br/><Bullet/> Tracking detects enemies slightly, but only slightly, outside normal visual range.<br/><Bullet/> Tracking will reveal concealed and burrowed enemies. <br/>"
+
+[ShadowOps_TrackingTrigger X2AbilityTemplate]
+LocFriendlyName="Tracking"
+LocFlyOverText="Tracking"
+
+[ShadowOps_Bullseye X2AbilityTemplate]
+LocFriendlyName="Bullseye"
+LocLongDescription="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Fire a shot that deals critical damage and gives the target penalties to Aim, Defense, and Will."
+LocFlyOverText="Bullseye"
+LocPromotionPopupText="<Bullet/> Bullseye is good for weakening tough enemies while also dealing extra damage.<br/><Bullet/> Bullseye applies -20 penalties to Aim, Defense, and Will that last until the end of the battle. <br/><Bullet/> Bullseye has a <Ability:SelfCooldown/> turn cooldown. <br/>"
+
+[ShadowOps_FirstStrike X2AbilityTemplate]
+LocFriendlyName="First Strike"
+LocLongDescription="While concealed or flanking your target, you deal <Ability:+Damage/> damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocHelpText="While concealed or flanking your target, you deal <Ability:+Damage/> damage with your <Ability:WeaponName/> and take no penalties from using Squadsight."
+LocFlyOverText="First Strike"
+LocPromotionPopupText="<Bullet/> First Strike can provide a decisive advantage in an ambush by taking out a tough enemy in one shot.<br/><Bullet/> The soldier with First Strike must initiate the ambush to get the bonus. It doesn't affect concealed overwatch."
+
+[ShadowOps_DamnGoodGround X2AbilityTemplate]
+LocFriendlyName="Damn Good Ground"
+LocLongDescription="You get an additional <Ability:+ToHit/> Aim and <Ability:+Defense/> Defense against targets at lower elevation."
+LocHelpText="You get an additional <Ability:+ToHit/> Aim and <Ability:+Defense/> Defense against targets at lower elevation."
+LocFlyOverText="Damn Good Ground"
+LocPromotionPopupText="<Bullet/> The bonus stacks with the normal Aim bonus for higher elevation.<br/>"
+
+[ShadowOps_PointBlank X2AbilityTemplate]
+LocFriendlyName="Point Blank"
+LocLongDescription="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
+LocHelpText="Reduces the Aim penalty for short-range sniper rifle shots by 67%."
+LocFlyOverText="Point Blank"
+LocPromotionPopupText="<Bullet/> Point Blank reduces the maximum range penalty for a short-range sniper rifle shot from -30 to -10.<br/><Bullet/> Point Blank does not affect the aim penalty from Snap Shot.<br/>"
+
+[ShadowOps_Butcher X2AbilityTemplate]
+LocFriendlyName="Butcher"
+LocLongDescription="Increases damage against organic targets by 30%."
+LocHelpText="Increases damage against organic targets by 30%."
+LocFlyOverText="Butcher"
+LocPromotionPopupText="<Bullet/> Organic targets means all non-mechanical units.<br/>"
+
+[ShadowOps_Reposition X2AbilityTemplate]
+LocFriendlyName="Reposition"
+LocLongDescription="You can take a standard move action after firing your <Ability:WeaponName/>."
+LocHelpText="Fire your <Ability:WeaponName/> at a target, then move."
+LocFlyOverText="Reposition"
+LocPromotionPopupText="<Bullet/> Reposition only allows standard moves, not other abilities such as reloading your weapon.<br/>"
+
+[ShadowOps_Evasive X2AbilityTemplate]
+LocFriendlyName="Sixth Sense"
+LocLongDescription="You are immune to multi-target and area attacks."
+LocHelpText="You are immune to multi-target and area attacks."
+LocFlyOverText="Sixth Sense"
+LocPromotionPopupText="<Bullet/> Area attacks include grenades and other explosives.<br/>"
+
+[ShadowOps_Stalker X2AbilityTemplate]
+LocFriendlyName="Stalker"
+LocLongDescription="Gain <Ability:+Mobility/> Mobility and <Ability:+ToHit/> Aim while concealed."
+LocHelpText="Gain <Ability:+Mobility/> Mobility and <Ability:+ToHit/> Aim while concealed."
+LocFlyOverText="Stalker"
+LocPromotionPopupText="<Bullet/> The bonuses are lost immediately when you lose concealment.<br/>"
+
+[ShadowOps_LastStand X2AbilityTemplate]
+LocFriendlyName="Last Stand"
+LocLongDescription="Once per mission, become immune to death and incapacitation until the end of your next turn."
+LocHelpText="Become immune to death and incapacitation until the end of your next turn."
+LocFlyOverText="Last Stand"
+LocPromotionPopupText="<Bullet/> You can still take damage, but it will never reduce you below 1 hp.<br/><Bullet/> You can't be knocked unconscious, disoriented, or otherwise incapacitated.<br/>"
+
+[ShadowOps_DisablingShot X2AbilityTemplate]
+LocFriendlyName="Disabling Shot"
+LocLongDescription="Make a special shot with a <Ability:+ToHit:ShadowOps_DisablingShot_Bonuses/> Aim modifier that deals half damage and disables the target for one turn. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Make a special shot that deals half damage and disables the target for one turn."
+LocFlyOverText="Disabling Shot"
+LocPromotionPopupText="<Bullet/> Disabled units can only move, reload, hunker, and make melee attacks.<br/>"
+
+[ShadowOps_ThisOnesMine X2AbilityTemplate]
+LocFriendlyName="This One's Mine"
+LocLongDescription="Mark a target, giving you <Ability:+Crit:ShadowOps_ThisOnesMine_Passive/> Crit chance and <Ability:+Defense:ShadowOps_ThisOnesMine_Passive/> Defense against it for 3 turns. This ability doesn't cost an action. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Mark a target, giving you <Ability:+Crit:ShadowOps_ThisOnesMine_Passive/> Crit chance and <Ability:+Defense:ShadowOps_ThisOnesMine_Passive/> Defense against it for 3 turns."
+LocFlyOverText="This One's Mine"
+LocPromotionPopupText="<Bullet/> Only you get the bonuses.<br/>"
+
+[ShadowOps_WatchfulEye X2AbilityTemplate]
+LocFriendlyName="Watchful Eye"
+LocLongDescription="Once per turn, you get a free overwatch shot when your This One's Mine target moves or attacks."
+LocHelpText="Once per turn, you get a free overwatch shot when your This One's Mine target moves or attacks."
+LocFlyOverText="Watchful Eye"
+LocPromotionPopupText="<Bullet/> The free overwatch shot happens even if your This One's Mine target is only visible through squadsight.<br/>"
+
+[ShadowOps_Hipfire_LW2 X2AbilityTemplate]
+LocFriendlyName="Hipfire"
+LocLongDescription="The first time you fire your Sawed-Off Shotgun each turn doesn't cost an action."
+LocHelpText="The first time you fire your Sawed-Off Shotgun each turn doesn't cost an action."
+LocFlyOverText="Hipfire"
+LocPromotionPopupText="<Bullet/> You can't fire the Sawed-Off Shotgun when out of actions.<br/>"
+
+[ShadowOps_Fearsome X2AbilityTemplate]
+LocFriendlyName="Fearsome"
+LocLongDescription="When you get a critical hit, your target and other enemies within 6 tiles have a chance to panic."
+LocHelpText="When you get a critical hit, your target and other enemies within 6 tiles have a chance to panic."
+LocFlyOverText="Fearsome"
+LocPromotionPopupText="<Bullet/> Perks like This One's Mine and Deadshot can help you get critical hits.<br/><Bullet/> Critical hits with any of your weapons can trigger Fearsome.<br/>"
+
+[ShadowOps_CoverMe X2AbilityTemplate]
+LocFriendlyName="Cover Me"
+LocLongDescription="Grant an ally a bonus overwatch shot and the Cool Under Pressure ability. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Grant an ally a bonus overwatch shot and the Cool Under Pressure ability."
+LocFlyOverText=""Cover Me"
+LocPromotionPopupText="<Bullet/> The overwatch shot and Cool Under Pressure last until the start of your next turn.<br/><Bullet/> Cool Under Pressure grants +<Ability:COOLUNDERPRESSUREBONUS/> Aim on Overwatch and other reaction shots, and they can critically hit.<br/>"
+
+; === Class templates ===
+
+[ShadowOps_Hunter X2SoldierClassTemplate]
+DisplayName="Hunter"
+ClassSummary="The Hunter class is equally at home taking down enemies at long range with the sniper rifle or right up close with the sword. Our enemies will never know what hit them."
+LeftAbilityTreeTitle="Marksman"
+RightAbilityTreeTitle="Tracker"
+RandomNickNames[0]="Archer"
+RandomNickNames[1]="Bear"
+RandomNickNames[2]="Cheetah"
+RandomNickNames[3]="Chimera"
+RandomNickNames[4]="Coyote"
+RandomNickNames[5]="Double Edge"
+RandomNickNames[6]="Hyena"
+RandomNickNames[7]="Jackrabbit"
+RandomNickNames[8]="Icepick"
+RandomNickNames[9]="Leopard"
+RandomNickNames[10]="Lightning"
+RandomNickNames[11]="Raptor"
+RandomNickNames[12]="Raven"
+RandomNickNames[13]="Sleepy"
+RandomNickNames[14]="The Mountain"
+RandomNickNames[15]="Tiger"
+RandomNickNames[16]="Two Birds"
+RandomNickNames[17]="Voodoo"
+RandomNickNames[18]="Weasel"
+RandomNickNames[19]="Wolf"
+RandomNickNames[20]="Wolverine"
+RandomNickNames[21]="Yeti"
+RandomNickNames_Female[0]="Black Widow"
+RandomNickNames_Female[1]="Dryad"
+RandomNickNames_Female[2]="Lioness"
+RandomNickNames_Male[0]="Cougar"
+RandomNickNames_Male[1]="Green Man"
+RandomNickNames_Male[2]="Lion"
+RandomNickNames_Male[3]="Sandman"
+
+[ShadowOps_Hunter_LW X2SoldierClassTemplate]
+DisplayName="Hunter"
+ClassSummary="The Hunter class is equally at home taking down enemies at long range with the sniper rifle or right up close with the sword. Our enemies will never know what hit them."
+LeftAbilityTreeTitle="Marksman"
+RightAbilityTreeTitle="Tracker"
+RandomNickNames[0]="Archer"
+RandomNickNames[1]="Bear"
+RandomNickNames[2]="Cheetah"
+RandomNickNames[3]="Chimera"
+RandomNickNames[4]="Coyote"
+RandomNickNames[5]="Double Edge"
+RandomNickNames[6]="Hyena"
+RandomNickNames[7]="Jackrabbit"
+RandomNickNames[8]="Icepick"
+RandomNickNames[9]="Leopard"
+RandomNickNames[10]="Lightning"
+RandomNickNames[11]="Raptor"
+RandomNickNames[12]="Raven"
+RandomNickNames[13]="Sleepy"
+RandomNickNames[14]="The Mountain"
+RandomNickNames[15]="Tiger"
+RandomNickNames[16]="Two Birds"
+RandomNickNames[17]="Voodoo"
+RandomNickNames[18]="Weasel"
+RandomNickNames[19]="Wolf"
+RandomNickNames[20]="Wolverine"
+RandomNickNames[21]="Yeti"
+RandomNickNames_Female[0]="Black Widow"
+RandomNickNames_Female[1]="Dryad"
+RandomNickNames_Female[2]="Lioness"
+RandomNickNames_Male[0]="Cougar"
+RandomNickNames_Male[1]="Green Man"
+RandomNickNames_Male[2]="Lion"
+RandomNickNames_Male[3]="Sandman"
+
+[ShadowOps_Hunter_LW2 X2SoldierClassTemplate]
+DisplayName="Hunter"
+ClassSummary="The Hunter class is equally at home taking down enemies at long range with the sniper rifle or right up close with the sword. Our enemies will never know what hit them."
+LeftAbilityTreeTitle="Marksman"
+RightAbilityTreeTitle="Tracker"
+RandomNickNames[0]="Archer"
+RandomNickNames[1]="Bear"
+RandomNickNames[2]="Cheetah"
+RandomNickNames[3]="Chimera"
+RandomNickNames[4]="Coyote"
+RandomNickNames[5]="Double Edge"
+RandomNickNames[6]="Hyena"
+RandomNickNames[7]="Jackrabbit"
+RandomNickNames[8]="Icepick"
+RandomNickNames[9]="Leopard"
+RandomNickNames[10]="Lightning"
+RandomNickNames[11]="Raptor"
+RandomNickNames[12]="Raven"
+RandomNickNames[13]="Sleepy"
+RandomNickNames[14]="The Mountain"
+RandomNickNames[15]="Tiger"
+RandomNickNames[16]="Two Birds"
+RandomNickNames[17]="Voodoo"
+RandomNickNames[18]="Weasel"
+RandomNickNames[19]="Wolf"
+RandomNickNames[20]="Wolverine"
+RandomNickNames[21]="Yeti"
+RandomNickNames_Female[0]="Black Widow"
+RandomNickNames_Female[1]="Dryad"
+RandomNickNames_Female[2]="Lioness"
+RandomNickNames_Male[0]="Cougar"
+RandomNickNames_Male[1]="Green Man"
+RandomNickNames_Male[2]="Lion"
+RandomNickNames_Male[3]="Sandman"
+
+[ShadowOps_Survivalist_LW2 X2SoldierClassTemplate]
+DisplayName="Survivalist"
+ClassSummary="Survivalists are dedicated snipers who can quickly neutralize multiple targets. They also pack a sawed-off shotgun for close quarters engagements."
+LeftAbilityTreeTitle="Sentry"
+RightAbilityTreeTitle="Raider"
+RandomNicknames[0]="Aspen"
+RandomNicknames[1]="Birch"
+RandomNicknames[2]="Cedar"
+RandomNicknames[3]="Chupacabra"
+RandomNicknames[4]="Dark"
+RandomNicknames[5]="Flint"
+RandomNicknames[6]="Garbage"
+RandomNicknames[7]="Kudzu"
+RandomNicknames[8]="Long"
+RandomNicknames[9]="Meat"
+RandomNicknames[10]="Mossy"
+RandomNicknames[11]="Muskrat"
+RandomNicknames[12]="Pine"
+RandomNicknames[13]="Pond"
+RandomNicknames[14]="Powder"
+RandomNicknames[15]="Ring"
+RandomNicknames[16]="Robber"
+RandomNicknames[17]="Sandwich"
+RandomNicknames[18]="Sasquach"
+RandomNicknames[19]="Slate"
+RandomNicknames[20]="Snare"
+RandomNicknames[21]="Steak"
+RandomNicknames[22]="Stinky"
+RandomNicknames[23]="Tanner"
+RandomNicknames[24]="Tire"
+RandomNicknames[25]="Walker"
+RandomNicknames[26]="Werewolf"
+RandomNicknames[27]="Whiskey"
+RandomNicknames[28]="Yeti"
+RandomNickNames_Male[0]="Buffalo Bill"
+RandomNickNames_Male[1]="Dusk"
+RandomNickNames_Female[0]="Dawn"
+RandomNickNames_Female[1]="Pearl"
+
+; === GTS ability templates ===
+
+[DamnGoodGroundUnlock X2SoldierAbilityUnlockTemplate]
+DisplayName="Hunter: Damn Good Ground"
+Summary="+10 Aim and Defense against targets at lower elevation."
+
+[StalkerUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Hunter: Stalker"
+Summary="Gain +3 Mobility and +10 Aim while concealed."
+
+[SurvivalInstinctUnlock_LW X2SoldierAbilityUnlockTemplate]
+DisplayName="Survival Instinct"
+Summary="Injured soldiers gain +20 Defense and +10 Crit chance."
+

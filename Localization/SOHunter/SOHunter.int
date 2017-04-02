@@ -1,0 +1,10 @@
+[X2Ability_HunterAbilitySet]
+FadePenaltyText="This unit's concealment will be broken if it moves."
+SnapShotPenaltyText="This unit has an aim penalty for overwatching with a single action."
+BullseyePenaltyName="Rattled"
+BullseyePenaltyText="This unit has -20 penalties to Aim, Defense and Will."
+DisabledFriendlyName="Disabled"
+DisabledFriendlyDesc="Unable to use most abilities."
+DisabledEffectAcquiredString="<XGParam:StrValue0/!UnitName/> is disabled."
+DisabledEffectTickedString="<XGParam:StrValue0/!UnitName/> is still disabled."
+DisabledEffectLostString="<XGParam:StrValue0/!UnitName/> is no longer disabled."

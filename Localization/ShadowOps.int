@@ -1,0 +1,11 @@
+; === Upgrade info ===
+
+[X2DownloadableContentInfo_BlackOps]
+ModUpgradeLabel="Shadow Ops Class Pack beta v0.7"
+ModUpgradeSummary="Shadow Ops Class Pack has been updated to beta version 0.7. Important changes: <br/><br/><Bullet/> The Combat Engineer and Infantry ability trees have been revamped, and the Hunter ability tree has had smaller changes. <br/><Bullet/> All soldiers converted from previous mod versions get a free respec. Go to the Armory to use it.<br/><Bullet/> The Infantry-Support has two new abilities focused on using Medikits.<br/><Bullet/> Moving Target, Entrench, Fracture, Packmaster, First Strike, and Flush have had large changes made.<br/><Bullet/> Four more new AWC-only abilities are available in the AWC. You may need to start a new game for them to appear. <br/><br/>For more complete change notes, see readme.txt."
+ModUpgradeAcceptLabel="Got it"
+
+[UIScreenListener_UIArmory_Promotion]
+LocFreeRespec="Free Respec"
+RespecWarning="Your soldiers have been granted free respecs due to changes in the Shadow Ops Class Pack class ability trees. If you rank up a soldier before using their free respec, you will lose that free respec permanently."
+RespecWarningTitle="Free Respec Expiration"

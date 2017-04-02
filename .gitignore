@@ -49,6 +49,10 @@ Temporary Items
 BlackOps.v12.XCOM_suo
 ~$Perk icon table.xlsx
 ~$Ability coding notes.xlsx
+BlackOps/Config/
+BlackOps/Content/
+BlackOps/Localization/
+BlackOps/Src/
 BlackOps_LW/Config/
 BlackOps_LW/Content/
 BlackOps_LW/Localization/
