@@ -30,7 +30,7 @@ The Survivalist is a defensive sniper, able to neutralize multiple enemies each 
 [h1]Special Thanks[/h1]
 DerBK and TheProfessional, for design review of the LW2 version.
 robojumper, for help with animation and graphics.
-.vhs, for help with perk icons.
+.vhs, for beautiful perk icons.
 Varyar1g, for playtesting the LW version.
 MantLemon, for the simplified Chinese translation.
 Вecё/\b|й Kpo\/иk, for the Russian translation.
