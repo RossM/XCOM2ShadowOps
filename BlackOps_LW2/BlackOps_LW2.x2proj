@@ -44,6 +44,8 @@
     <Folder Include="Src\SOHunter\Classes\" />
     <Folder Include="Src\SOInfantry\" />
     <Folder Include="Src\SOInfantry\Classes\" />
+    <Folder Include="Src\XComGame\" />
+    <Folder Include="Src\XComGame\Classes\" />
     <Folder Include="Src\XModBase_Core_1_2_1\" />
     <Folder Include="Src\XModBase_Core_1_2_1\Classes\" />
     <Folder Include="Src\XModBase_Interfaces\" />
@@ -58,9 +60,11 @@
     <Content Include="Content\*.upk">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\**\Classes\*.uc">
+    <Content Include="Src\**\Classes\*.uc" Exclude="Src\XComGame\Classes\*.uc">
       <SubType>Content</SubType>
     </Content>
+    <None Include="Src\XComGame\Classes\*.uc">
+    </None>
     <Content Include="ReadMe.txt" />
     <Content Include="Localization\**\*.int" />
     <Content Include="Localization\**\*.chn" />
@@ -73,6 +77,7 @@
   <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
   <Target Name="RemoveDirectories" BeforeTargets="CreateSymlinks">
     <RemoveDir Directories="Src\" />
+    <RemoveDir Directories="SrcOrig\" />
     <RemoveDir Directories="Config\" />
     <RemoveDir Directories="Content\" />
     <RemoveDir Directories="Localization\" />
@@ -99,6 +104,8 @@
     <Exec Command="mklink /j Src\XModBase_Interfaces ..\Src\XModBase_Interfaces" />
     <Exec Command="mklink /j Src\XModBase_Utilities ..\Src\XModBase_Utilities" />
     <Exec Command="mklink /j Src\ShadowOps ..\Src\ShadowOps" />
+    <Exec Command="mklink /j Src\XComGame &quot;C:\Program Files (x86)\Steam\SteamApps\common\XCOM 2 SDK\Development\SrcOrig\XComGame&quot;" />
+    <Exec Command="attrib +r Src\XComGame\Classes\*.uc" />
   </Target>
   <Target Name="ReplaceModInfo" AfterTargets="Build">
     <ItemGroup>
