@@ -21,6 +21,7 @@ var config WeaponDamageValue BullRushDamage;
 var config int BullRushHitModifier;
 var config int BareKnuckleDamageBonus;
 var config int DemoGrenadesEnvironmentDamageBonus;
+var config int ElusiveDodge, ElusiveRange;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -62,6 +63,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(BareKnuckle());
 	Templates.AddItem(PurePassive('ShadowOps_DemoGrenades', "img:///UILibrary_SOCombatEngineer.UIPerk_demogrenades", false));
+	Templates.AddItem(Elusive());
 
 	return Templates;
 }
@@ -944,4 +946,22 @@ static function X2AbilityTemplate BareKnuckle()
 	Effect.AbilityTargetConditions.AddItem(Condition);
 
 	return Passive('ShadowOps_BareKnuckle', "img:///UILibrary_SOCombatEngineer.UIPerk_bareknuckle", false, Effect);
+}
+
+static function X2AbilityTemplate Elusive()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBValue_Visibility Value;
+	
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddToHitAsTargetModifier(default.ElusiveDodge, eHit_Graze);
+
+	Value = new class'XMBValue_Visibility';
+	Value.RequiredConditions.AddItem(class'X2TacticalVisibilityHelpers'.default.GameplayVisibilityCondition);
+	Value.RequiredConditions.AddItem(class'X2TacticalVisibilityHelpers'.default.AliveUnitPropertyCondition);
+	Value.RequiredConditions.AddItem(TargetWithinTiles(default.ElusiveRange));
+	Value.bCountEnemies = true;
+	Effect.ScaleValue = Value;
+
+	return Passive('ShadowOps_Elusive', "img:///UILibrary_SOCombatEngineer.UIPerk_elusive", true, Effect);
 }

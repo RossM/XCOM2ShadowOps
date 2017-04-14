@@ -218,6 +218,13 @@ LocHelpText="Your explosive grenades destroy most cover objects."
 LocFlyOverText="Demo Grenades"
 LocPromotionPopupText="<Bullet/> Demo Grenades will always destroy fragile cover such as fences, and may destroy sturdier cover. <br/>"
 
+[ShadowOps_Elusive X2AbilityTemplate]
+LocFriendlyName="Elusive"
+LocLongDescription="Gain <Ability:Dodge/> Dodge for each visible enemy within 4 tiles."
+LocHelpText="Gain <Ability:Dodge/> Dodge for each visible enemy within 4 tiles."
+LocFlyOverText="Elusive"
+LocPromotionPopupText="<Bullet/> TODO. <br/>"
+
 ; === Class templates ===
 
 [ShadowOps_CombatEngineer X2SoldierClassTemplate]
