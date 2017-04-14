@@ -225,6 +225,13 @@ LocHelpText="Gain <Ability:Dodge/> Dodge for each visible enemy within 4 tiles."
 LocFlyOverText="Elusive"
 LocPromotionPopupText="<Bullet/> TODO. <br/>"
 
+[ShadowOps_MadBomber X2AbilityTemplate]
+LocFriendlyName="MadBomber"
+LocLongDescription="Grants 1 random free grenade to your inventory."
+LocHelpText="Grants 1 random free grenade to your inventory."
+LocFlyOverText="MadBomber"
+LocPromotionPopupText="<Bullet/> TODO. <br/>"
+
 ; === Class templates ===
 
 [ShadowOps_CombatEngineer X2SoldierClassTemplate]

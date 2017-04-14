@@ -22,6 +22,7 @@ var config int BullRushHitModifier;
 var config int BareKnuckleDamageBonus;
 var config int DemoGrenadesEnvironmentDamageBonus;
 var config int ElusiveDodge, ElusiveRange;
+var config array<name> MadBomberGrenades;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -64,6 +65,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(BareKnuckle());
 	Templates.AddItem(PurePassive('ShadowOps_DemoGrenades', "img:///UILibrary_SOCombatEngineer.UIPerk_demogrenades", false));
 	Templates.AddItem(Elusive());
+	Templates.AddItem(MadBomber());
 
 	return Templates;
 }
@@ -964,4 +966,14 @@ static function X2AbilityTemplate Elusive()
 	Effect.ScaleValue = Value;
 
 	return Passive('ShadowOps_Elusive', "img:///UILibrary_SOCombatEngineer.UIPerk_elusive", true, Effect);
+}
+
+static function X2AbilityTemplate MadBomber()
+{
+	local X2Effect_MadBomber Effect;
+
+	Effect = new class'X2Effect_MadBomber';
+	Effect.RandomGrenades = default.MadBomberGrenades;
+
+	return Passive('ShadowOps_MadBomber', "img:///UILibrary_SOCombatEngineer.UIPerk_madbomber", true, Effect);
 }
