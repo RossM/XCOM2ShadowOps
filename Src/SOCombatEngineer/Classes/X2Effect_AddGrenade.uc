@@ -1,4 +1,13 @@
-class X2Effect_MadBomber extends XMBEffect_AddUtilityItem;
+class X2Effect_AddGrenade extends XMBEffect_AddUtilityItem config(GameData_SoldierSkills);
+
+struct LongWarUpgradeInfo
+{
+	var name ResearchName;
+	var name BaseItemName;
+	var name ItemName;
+};
+
+var config array<LongWarUpgradeInfo> LongWarUpgrades;
 
 var array<name> RandomGrenades;
 
@@ -8,6 +17,10 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	local X2ItemTemplateManager ItemTemplateMgr;
 	local XComGameState_Unit NewUnit;
 	local name TemplateName;
+	local LongWarUpgradeInfo Upgrade;
+	local XComGameState_HeadquartersXCom XComHQ;
+
+	XComHQ = `XCOMHQ;
 
 	NewUnit = XComGameState_Unit(kNewTargetState);
 	if (NewUnit == none)
@@ -18,12 +31,25 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 
 	ItemTemplateMgr = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 
-	TemplateName = RandomGrenades[`SYNC_RAND(RandomGrenades.Length)];
+	if (RandomGrenades.Length > 0)
+		TemplateName = RandomGrenades[`SYNC_RAND(RandomGrenades.Length)];
+	else
+		TemplateName = DataName;
+
+	foreach LongWarUpgrades(Upgrade)
+	{
+		if (Upgrade.BaseItemName == TemplateName && XComHQ.IsTechResearched(Upgrade.ResearchName))
+		{
+			TemplateName = Upgrade.ItemName;
+			break;
+		}
+	}
+
 	ItemTemplate = ItemTemplateMgr.FindItemTemplate(TemplateName);
 	
 	// Use the highest upgraded available version of the item
 	if (bUseHighestAvailableUpgrade)
-		`XCOMHQ.UpdateItemTemplateToHighestAvailableUpgrade(ItemTemplate);
+		XComHQ.UpdateItemTemplateToHighestAvailableUpgrade(ItemTemplate);
 
 	AddUtilityItem(NewUnit, ItemTemplate, NewGameState, NewEffectState);
 }

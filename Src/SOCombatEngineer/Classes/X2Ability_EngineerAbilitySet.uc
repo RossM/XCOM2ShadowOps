@@ -72,9 +72,9 @@ static function array<X2DataTemplate> CreateTemplates()
 
 static function X2AbilityTemplate SmokeAndMirrors()
 {
-	local XMBEffect_AddUtilityItem Effect;
+	local X2Effect_AddGrenade Effect;
 
-	Effect = new class'XMBEffect_AddUtilityItem';
+	Effect = new class'X2Effect_AddGrenade';
 	Effect.DataName = 'SmokeGrenade';
 	Effect.BaseCharges = 1;
 	Effect.SkipAbilities.AddItem('SmallItemWeight');
@@ -663,12 +663,12 @@ static function Entrench_EffectAdded(X2Effect_Persistent PersistentEffect, const
 static function X2AbilityTemplate Pyromaniac()
 {
 	local X2AbilityTemplate Template;
-	local XMBEffect_AddUtilityItem ItemEffect;
+	local X2Effect_AddGrenade ItemEffect;
 
 	// TODO: icon
 	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_SOCombatEngineer.UIPerk_pyromaniac", true);
 
-	ItemEffect = new class 'XMBEffect_AddUtilityItem';
+	ItemEffect = new class 'X2Effect_AddGrenade';
 	ItemEffect.DataName = 'Firebomb';
 	Template.AddTargetEffect(ItemEffect);
 	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
@@ -885,11 +885,11 @@ static function X2AbilityTemplate Anatomist()
 static function X2AbilityTemplate ExtraMunitions()
 {
 	local X2AbilityTemplate Template;
-	local XMBEffect_AddUtilityItem ItemEffect;
+	local X2Effect_AddGrenade ItemEffect;
 
 	Template = Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true);
 
-	ItemEffect = new class 'XMBEffect_AddUtilityItem';
+	ItemEffect = new class 'X2Effect_AddGrenade';
 	ItemEffect.DataName = 'FragGrenade';
 	Template.AddTargetEffect(ItemEffect);
 	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
@@ -970,9 +970,9 @@ static function X2AbilityTemplate Elusive()
 
 static function X2AbilityTemplate MadBomber()
 {
-	local X2Effect_MadBomber Effect;
+	local X2Effect_AddGrenade Effect;
 
-	Effect = new class'X2Effect_MadBomber';
+	Effect = new class'X2Effect_AddGrenade';
 	Effect.RandomGrenades = default.MadBomberGrenades;
 
 	return Passive('ShadowOps_MadBomber', "img:///UILibrary_SOCombatEngineer.UIPerk_madbomber", true, Effect);
