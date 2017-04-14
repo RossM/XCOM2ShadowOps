@@ -23,6 +23,7 @@ var config array<int> ReverseEngineeringHackBonus;
 var config array<name> RocketeerAbilityNames;
 var config int EatThisAimBonus, EatThisCritBonus, EatThisMaxTiles;
 var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
+var config int ShieldSurgeArmor;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges;
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
@@ -58,6 +59,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(EatThis());
 	Templates.AddItem(PurePassive('ShadowOps_DigitalWarfare', "img:///UILibrary_SODragoon.UIPerk_digitalwarfare", false));
 	Templates.AddItem(Inspiration());
+	Templates.AddItem(PurePassive('ShadowOps_ShieldSurge', "img:///UILibrary_SODragoon.UIPerk_shieldsurge", false));
 
 	return Templates;
 }
@@ -107,6 +109,7 @@ static function X2AbilityTemplate ShieldProtocol(optional name TemplateName = 'S
 	Template.AbilityTargetConditions.AddItem(EffectsCondition);
 
 	Template.AddTargetEffect(ShieldProtocolEffect(Template.LocFriendlyName, Template.LocLongDescription));
+	Template.AddTargetEffect(ShieldSurgeEffect());
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
@@ -148,6 +151,26 @@ static function X2Effect ShieldProtocolEffect(string FriendlyName, string LongDe
 	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", true);
 
 	return ShieldedEffect;
+}
+
+static function X2Effect ShieldSurgeEffect()
+{
+	local X2Effect_PersistentStatChange ArmorEffect;
+	local X2AbilityTemplate ShieldSurgeTemplate;
+	local X2Condition_SourceAbilities Condition;
+
+	`CREATE_X2ABILITY_TEMPLATE(ShieldSurgeTemplate, 'ShadowOps_ShieldSurge');
+
+	ArmorEffect = new class'X2Effect_PersistentStatChange';
+	ArmorEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
+	ArmorEffect.AddPersistentStatChange(eStat_ArmorMitigation, default.ShieldSurgeArmor);
+	ArmorEffect.SetDisplayInfo(ePerkBuff_Bonus, ShieldSurgeTemplate.LocFriendlyName, ShieldSurgeTemplate.LocLongDescription, "img:///UILibrary_SODragoon.UIPerk_shieldsurge", true);
+
+	Condition = new class'X2Condition_SourceAbilities';
+	Condition.AddRequireAbility('ShadowOps_ShieldSurge', 'AA_AbilityUnavailable');
+	ArmorEffect.TargetConditions.AddItem(Condition);
+
+	return ArmorEffect;
 }
 
 static function X2AbilityTemplate HeavyArmor()
