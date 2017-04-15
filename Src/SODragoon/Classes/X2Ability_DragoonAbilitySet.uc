@@ -26,6 +26,9 @@ var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
 var config int ShieldSurgeArmor;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges;
+var config int StealthProtocolConventionalCharges, StealthProtocolMagneticCharges, StealthProtocolBeamCharges;
+var config int RestorationProtocolConventionalCharges, RestorationProtocolMagneticCharges, RestorationProtocolBeamCharges;
+
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
 var config int BurstFireAmmo;
 
@@ -353,7 +356,7 @@ static function X2AbilityTemplate StealthProtocol()
 	local X2AbilityTemplate                     Template;
 	local X2Condition_UnitProperty              TargetProperty;
 	local X2Condition_UnitEffects               EffectsCondition;
-	local X2AbilityCharges                      Charges;
+	local X2AbilityCharges_GremlinTech          Charges;
 	local X2AbilityCost_Charges                 ChargeCost;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_StealthProtocol');
@@ -370,8 +373,10 @@ static function X2AbilityTemplate StealthProtocol()
 
 	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
-	Charges = new class 'X2AbilityCharges_RevivalProtocol';
-	Charges.InitialCharges = default.StealthProtocolCharges;
+	Charges = new class 'X2AbilityCharges_GremlinTech';
+	Charges.ConventionalCharges = default.StealthProtocolConventionalCharges;
+	Charges.MagneticCharges = default.StealthProtocolMagneticCharges;
+	Charges.BeamCharges = default.StealthProtocolBeamCharges;
 	Template.AbilityCharges = Charges;
 
 	ChargeCost = new class'X2AbilityCost_Charges';
@@ -605,7 +610,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	local X2AbilityTemplate                     Template;
 	local X2Condition_UnitProperty              TargetProperty;
 	local X2Condition_UnitStatCheck             UnitStatCheckCondition;
-	local X2AbilityCharges                      Charges;
+	local X2AbilityCharges_GremlinTech          Charges;
 	local X2AbilityCost_Charges                 ChargeCost;
 	local X2Effect_RestorationProtocol			RestorationEffect;			
 	local X2Effect_RemoveEffects				RemoveEffects;
@@ -626,8 +631,10 @@ static function X2AbilityTemplate RestorationProtocol()
 
 	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
-	Charges = new class 'X2AbilityCharges_RevivalProtocol';
-	Charges.InitialCharges = default.RestoratonProtocolCharges;
+	Charges = new class 'X2AbilityCharges_GremlinTech';
+	Charges.ConventionalCharges = default.RestorationProtocolConventionalCharges;
+	Charges.MagneticCharges = default.RestorationProtocolMagneticCharges;
+	Charges.BeamCharges = default.RestorationProtocolBeamCharges;
 	Template.AbilityCharges = Charges;
 
 	ChargeCost = new class'X2AbilityCost_Charges';
