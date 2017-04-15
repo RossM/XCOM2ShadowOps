@@ -11,6 +11,9 @@ static function bool AbilityTagExpandHandler(string InString, out string OutStri
 	case "ecmdetectionmodifier":
 		OutString = string(int(class'X2Ability_DragoonAbilitySet'.default.ECMDetectionModifier * 100));
 		return true;
+	case "eatthismaxtiles":
+		OutString = string(class'X2Ability_DragoonAbilitySet'.default.EatThisMaxTiles);
+		return true;
 	}
 	return false;
 }
