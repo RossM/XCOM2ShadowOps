@@ -226,10 +226,10 @@ LocFlyOverText="Elusive"
 LocPromotionPopupText="<Bullet/> TODO. <br/>"
 
 [ShadowOps_MadBomber X2AbilityTemplate]
-LocFriendlyName="MadBomber"
+LocFriendlyName="Mad Bomber"
 LocLongDescription="Grants 1 random free grenade item to your inventory."
 LocHelpText="Grants 1 random free grenade item to your inventory."
-LocFlyOverText="MadBomber"
+LocFlyOverText="Mad Bomber"
 LocPromotionPopupText="<Bullet/> TODO. <br/>"
 
 ; === Class templates ===
