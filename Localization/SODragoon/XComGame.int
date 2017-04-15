@@ -188,6 +188,13 @@ LocHelpText="Shield Protocol now also grants the target <Ability:ArmorMitigation
 LocFlyOverText="Shield Surge"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
+[ShadowOps_PhalanxProtocol X2AbilityTemplate]
+LocFriendlyName="Phalanx Protocol"
+LocLongDescription="Your GREMLIN moves to every ally, granting all of them a Defense bonus until the start of your next turn." 
+LocHelpText="Send your GREMLIN to each ally to grant them +<Ability:AidProtocolDefenseBonus/> Defense for a turn." 
+LocFlyOverText="Phalanx Protocol"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Dragoon X2SoldierClassTemplate]

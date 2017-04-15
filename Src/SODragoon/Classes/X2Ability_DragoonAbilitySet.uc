@@ -25,7 +25,7 @@ var config int EatThisAimBonus, EatThisCritBonus, EatThisMaxTiles;
 var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
 var config int ShieldSurgeArmor;
 
-var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges;
+var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges, PhalanxProtocolCharges;
 var config int StealthProtocolConventionalCharges, StealthProtocolMagneticCharges, StealthProtocolBeamCharges;
 var config int RestorationProtocolConventionalCharges, RestorationProtocolMagneticCharges, RestorationProtocolBeamCharges;
 
@@ -63,6 +63,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('ShadowOps_DigitalWarfare', "img:///UILibrary_SODragoon.UIPerk_digitalwarfare", false));
 	Templates.AddItem(Inspiration());
 	Templates.AddItem(PurePassive('ShadowOps_ShieldSurge', "img:///UILibrary_SODragoon.UIPerk_shieldsurge", false));
+	Templates.AddItem(PhalanxProtocol());
 
 	return Templates;
 }
@@ -1016,3 +1017,30 @@ static function X2AbilityTemplate Inspiration()
 	return SquadPassive('ShadowOps_Inspiration', "img:///UILibrary_SODragoon.UIPerk_inspiration", false, Effect);
 }
 
+static function X2AbilityTemplate PhalanxProtocol()
+{
+	local X2Effect Effect;
+	local X2AbilityTemplate Template;
+	local X2AbilityMultiTarget_AllAllies MultiTargetingStyle;
+	local X2Condition_UnitProperty TargetCondition;
+
+	Template = SelfTargetActivated('ShadowOps_PhalanxProtocol', "img:///UILibrary_SODragoon.UIPerk_phalanxprotocol", false, none);
+
+	Effect = class'X2Ability_SpecialistAbilitySet'.static.AidProtocolEffect();
+	Template.AddMultiTargetEffect(Effect);
+
+	MultiTargetingStyle = new class'X2AbilityMultiTarget_AllAllies';
+	MultiTargetingStyle.bAllowSameTarget = true;
+	MultiTargetingStyle.NumTargetsRequired = 1; //At least someone must need healing
+	Template.AbilityMultiTargetStyle = MultiTargetingStyle;
+
+	TargetCondition = new class'X2Condition_UnitProperty';
+	TargetCondition.ExcludeHostileToSource = true;
+	TargetCondition.ExcludeFriendlyToSource = false;
+	TargetCondition.RequireSquadmates = true;
+	Template.AbilityMultiTargetConditions.AddItem(TargetCondition);
+
+	AddCharges(Template, default.PhalanxProtocolCharges);
+
+	return Template;
+}
