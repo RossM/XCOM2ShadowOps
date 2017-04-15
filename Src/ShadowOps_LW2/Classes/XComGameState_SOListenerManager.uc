@@ -1,16 +1,5 @@
 class XComGameState_SOListenerManager extends XComGameState_BaseObject config(ShadowOps);
 
-var config string ICON_COLOR_OBJECTIVE;
-var config string ICON_COLOR_PSIONIC_2;
-var config string ICON_COLOR_PSIONIC_END;
-var config string ICON_COLOR_PSIONIC_1;
-var config string ICON_COLOR_PSIONIC_FREE;
-var config string ICON_COLOR_COMMANDER_ALL;
-var config string ICON_COLOR_2;
-var config string ICON_COLOR_END;
-var config string ICON_COLOR_1;
-var config string ICON_COLOR_FREE;
-
 // This class copied and modified from XComGameState_LWListenerManager in Long War 2
 
 static function XComGameState_SOListenerManager GetListenerManager(optional bool AllowNULL = false)
@@ -117,7 +106,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 		case 'LaunchGrenade':
 			if (UnitState.AffectedByEffectNames.Find('Fastball') != INDEX_NONE)
 			{
-				IconColor = default.ICON_COLOR_FREE;
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
 				Changed = true;
 			}
 			else
@@ -128,15 +117,16 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 					if (ActionPoints != none)
 					{
 						if (ActionPoints.ConsumeAllPoints(AbilityState, UnitState))
-							IconColor = default.ICON_COLOR_END;
+							IconColor = class'LWTemplateMods'.default.ICON_COLOR_END;
 						else
-							IconColor = default.ICON_COLOR_1;
+							IconColor = class'LWTemplateMods'.default.ICON_COLOR_1;
 						Changed = true;
 						break;
 					}
 				}
 			}
 			break;
+
 		case 'PointBlank':
 		case 'BothBarrels':
 			if (UnitState.HasSoldierAbility('ShadowOps_Hipfire_LW2', true))
@@ -144,7 +134,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 				UnitState.GetUnitValue('Hipfire_Count', Value);
 				if (Value.fValue < 1)
 				{
-					IconColor = default.ICON_COLOR_FREE;
+					IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
 					Changed = true;
 				}
 			}
@@ -153,9 +143,9 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 		case 'Deadeye':
 		case 'PrecisionShot':
 			if (X2WeaponTemplate(WeaponState.GetMyTemplate()).iTypicalActionCost >= 2)
-				IconColor = default.ICON_COLOR_2;
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_2;
 			else
-				IconColor = default.ICON_COLOR_END;
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_END;
 			Changed = true;
 			break;
 		
