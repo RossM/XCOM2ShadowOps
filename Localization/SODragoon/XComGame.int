@@ -2,15 +2,15 @@
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
 LocFriendlyName="Shield Protocol"
-LocLongDescription="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. The shield lasts until the end of the mission or until it is destroyed, and also grants poison immunity."
-LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage."
+LocLongDescription="Grant a friendly unit <Ability:Shield/> bonus ablative hit points. The shield also grants poison immunity until all ablative hit points are lost."
+LocHelpText="Grant a friendly unit <Ability:Shield/> bonus ablative hit points."
 LocFlyOverText="Shield Protocol""
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
 [ShadowOps_AdvancedShieldProtocol X2AbilityTemplate]
 LocFriendlyName="Rapid Shielding"
 LocLongDescription="Shield Protocol no longer costs an action to use."
-LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. This ability doesn't cost an action."
+LocHelpText="Grant a friendly unit <Ability:Shield/> bonus ablative hit points.. This ability doesn't cost an action."
 LocFlyOverText="Rapid Shielding"
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
@@ -44,8 +44,8 @@ LocPromotionPopupText="<Bullet/> Barrage has a 70% chance to damage units and a 
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
 LocFriendlyName="Shields Up"
-LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
-LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
+LocLongDescription="All squad members gain <Ability:Shield/> bonus ablative HP."
+LocHelpText="All squad members gain <Ability:Shield/> bonus ablative HP."
 LocFlyOverText="Shields Up"
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
 
