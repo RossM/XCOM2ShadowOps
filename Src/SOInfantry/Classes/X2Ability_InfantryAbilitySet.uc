@@ -1769,8 +1769,7 @@ static function X2AbilityTemplate ThrowSonicBeacon()
 	
 	ActionPointCost = new class'X2AbilityCost_ActionPoints';
 	ActionPointCost.iNumPoints = 1;
-	ActionPointCost.bConsumeAllPoints = false;
-	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('Salvo');
+	ActionPointCost.bConsumeAllPoints = true;
 	Template.AbilityCosts.AddItem(ActionPointCost);
 	
 	Template.AbilityToHitCalc = default.DeadEye;
