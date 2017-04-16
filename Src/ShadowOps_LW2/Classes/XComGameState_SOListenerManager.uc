@@ -149,6 +149,14 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 			Changed = true;
 			break;
 		
+		case 'HaywireProtocol':
+			if (UnitState.HasSoldierAbility('ShadowOps_Puppeteer', true))
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_1;
+			else
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_END;
+			Changed = true;
+			break;
+
 		default: break;
 	}
 

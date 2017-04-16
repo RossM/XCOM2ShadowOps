@@ -195,6 +195,13 @@ LocHelpText="Send your GREMLIN to each ally to grant them +<Ability:AidProtocolD
 LocFlyOverText="Phalanx Protocol"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
+[ShadowOps_Puppeteer X2AbilityTemplate]
+LocFriendlyName="Puppeteer"
+LocLongDescription="Haywire Protocol no longer has a cooldown, and doesn't end the turn when used as the first action." 
+LocHelpText="Haywire Protocol no longer has a cooldown, and doesn't end the turn when used as the first action." 
+LocFlyOverText="Puppeteer"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Dragoon X2SoldierClassTemplate]

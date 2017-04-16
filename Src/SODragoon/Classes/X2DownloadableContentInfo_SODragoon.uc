@@ -17,3 +17,11 @@ static function bool AbilityTagExpandHandler(string InString, out string OutStri
 	}
 	return false;
 }
+
+/// <summary>
+/// Called after the Templates have been created (but before they are validated) while this DLC / Mod is installed.
+/// </summary>
+static event OnPostTemplatesCreated()
+{
+	class'TemplateEditors_Dragoon'.static.EditTemplates();
+}

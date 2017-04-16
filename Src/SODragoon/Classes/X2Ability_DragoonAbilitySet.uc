@@ -24,6 +24,7 @@ var config array<name> RocketeerAbilityNames;
 var config int EatThisAimBonus, EatThisCritBonus, EatThisMaxTiles;
 var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
 var config int ShieldSurgeArmor;
+var config array<name> PuppeteerAbilityNames;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges, PhalanxProtocolCharges;
 var config int StealthProtocolConventionalCharges, StealthProtocolMagneticCharges, StealthProtocolBeamCharges;
@@ -64,6 +65,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Inspiration());
 	Templates.AddItem(PurePassive('ShadowOps_ShieldSurge', "img:///UILibrary_SODragoon.UIPerk_shieldsurge", false));
 	Templates.AddItem(PhalanxProtocol());
+	Templates.AddItem(Puppeteer());
 
 	return Templates;
 }
@@ -1043,4 +1045,14 @@ static function X2AbilityTemplate PhalanxProtocol()
 	AddCharges(Template, default.PhalanxProtocolCharges);
 
 	return Template;
+}
+
+static function X2AbilityTemplate Puppeteer()
+{
+	local XMBEffect_DoNotConsumeAllPoints Effect;
+
+	Effect = new class'XMBEffect_DoNotConsumeAllPoints';
+	Effect.AbilityNames = default.PuppeteerAbilityNames;
+
+	return Passive('ShadowOps_Puppeteer', "img:///UILibrary_SODragoon.UIPerk_puppetprotocol", false, Effect);
 }

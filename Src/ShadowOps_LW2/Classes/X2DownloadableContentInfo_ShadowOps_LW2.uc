@@ -32,6 +32,7 @@ static event OnPostTemplatesCreated()
 	SetVariableIconColor('BothBarrels');
 	SetVariableIconColor('Deadeye');
 	SetVariableIconColor('PrecisionShot');
+	SetVariableIconColor('HaywireProtocol');
 
 	UpdateFleche();
 
