@@ -15,6 +15,7 @@ var config WeaponDamageValue AirstrikeDamage;
 var config int AirstrikeCharges;
 var config int AgainstTheOddsAimBonus, AgainstTheOddsMax;
 var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
+var config int SonicBeaconCharges;
 
 var config name FreeAmmoForPocket;
 
@@ -56,6 +57,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Airstrike());
 	Templates.AddItem(AgainstTheOdds());
 	Templates.AddItem(Paragon());
+	Templates.AddItem(SonicBeacon());
+	Templates.AddItem(ThrowSonicBeacon());
 
 	return Templates;
 }
@@ -1724,6 +1727,92 @@ static function X2AbilityTemplate Paragon()
 	return Template;
 }
 
+static function X2AbilityTemplate SonicBeacon()
+{
+	local XMBEffect_AddUtilityItem Effect;
+
+	Effect = new class'XMBEffect_AddUtilityItem';
+	Effect.DataName = 'SonicBeacon';
+	Effect.BaseCharges = default.SonicBeaconCharges;
+
+	return Passive('ShadowOps_SonicBeacon', "img:///UILibrary_SOInfantry.UIPerk_sonicbeacon", true, Effect);
+}
+
+static function X2AbilityTemplate ThrowSonicBeacon()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2AbilityTarget_Cursor            CursorTarget;
+	local X2AbilityMultiTarget_Radius       RadiusMultiTarget;
+	local X2Condition_UnitProperty          UnitPropertyCondition;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ThrowSonicBeacon');	
+	
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.Hostility = eHostility_Defensive;
+	Template.ConcealmentRule = eConceal_Always;
+	Template.bSilentAbility = true; // The map alert will be added by the effect below
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WeaponIncompatible');
+	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_sonicbeacon";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
+	Template.bUseAmmoAsChargesForHUD = true;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+	Template.bDontDisplayInAbilitySummary = true;
+
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+	
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = false;
+	ActionPointCost.DoNotConsumeAllSoldierAbilities.AddItem('Salvo');
+	Template.AbilityCosts.AddItem(ActionPointCost);
+	
+	Template.AbilityToHitCalc = default.DeadEye;
+	
+	Template.bHideWeaponDuringFire = true;
+	
+	CursorTarget = new class'X2AbilityTarget_Cursor';
+	CursorTarget.bRestrictToWeaponRange = true;
+	Template.AbilityTargetStyle = CursorTarget;
+
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
+	RadiusMultiTarget.bUseWeaponRadius = true;
+	RadiusMultiTarget.bIgnoreBlockingCover = true;
+	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
+
+	UnitPropertyCondition = new class'X2Condition_UnitProperty';
+	UnitPropertyCondition.ExcludeDead = true;
+	UnitPropertyCondition.IsConcealed = true;
+	Template.AbilityShooterConditions.AddItem(UnitPropertyCondition);
+
+	UnitPropertyCondition = new class'X2Condition_UnitProperty';
+	UnitPropertyCondition.ExcludeDead = false;
+	UnitPropertyCondition.ExcludeFriendlyToSource = true;
+	UnitPropertyCondition.ExcludeHostileToSource = false;
+	Template.AbilityMultiTargetConditions.AddItem(UnitPropertyCondition);
+
+	Template.AddShooterEffectExclusions();
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.AddMultiTargetEffect(new class'X2Effect_MapAlert');
+		
+	Template.bShowActivation = true;
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.TargetingMethod = class'X2TargetingMethod_Grenade';
+	Template.CinescriptCameraType = "StandardGrenadeFiring";
+
+	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
+
+	return Template;	
+}
 
 DefaultProperties
 {
