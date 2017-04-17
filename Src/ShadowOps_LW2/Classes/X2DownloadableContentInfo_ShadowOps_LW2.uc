@@ -159,3 +159,8 @@ exec function DumpXPInfo()
 			Value.fValue);
 	}
 }
+
+exec function ClearListeners()
+{
+	class'X2EventManager'.static.GetEventManager().Clear();
+}
