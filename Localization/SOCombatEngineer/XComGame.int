@@ -124,10 +124,10 @@ LocPromotionPopupText="<Bullet/> If multiple enemies are equally distant, you ge
 
 [ShadowOps_ControlledDetonation X2AbilityTemplate]
 LocFriendlyName="Controlled Detonation"
-LocLongDescription="Your explosives deal <Ability:DamageReductionPercent/> less damage to allies."
-LocHelpText="Your explosives deal <Ability:DamageReductionPercent/> less damage to allies."
+LocLongDescription="Your damaging grenades don't affect allies."
+LocHelpText="Your damaging grenades don't affect allies."
 LocFlyOverText="Controlled Detonation"
-LocPromotionPopupText="<Bullet/> Allies includes yourself.<br/><Bullet/> Explosives may still cause effects such as burning.<br/>"
+LocPromotionPopupText="<Bullet/> Allies includes yourself.<br/><Bullet/> Fire, poison, or acid left by your grenades will hurt your allies if they move through it.<br/>"
 
 [ShadowOps_Pyromaniac X2AbilityTemplate]
 LocFriendlyName="Pyromaniac"

@@ -11,7 +11,6 @@ var config int EntrenchDefense, EntrenchDodge;
 var config int FocusedDefenseDefense, FocusedDefenseDodge;
 var config int FractureCritModifier;
 var config int LineEmUpOffense, LineEmUpCrit;
-var config float ControlledDetonationDamageReduction;
 var config int MayhemDamageBonus, MayhemLW2DamageBonus;
 var config array<name> MayhemExcludeAbilities, MayhemLW2ExcludeAbilities;
 var config int SaboteurDamageBonus;
@@ -763,9 +762,6 @@ static function X2AbilityTemplate ControlledDetonation()
 	local X2Effect_ControlledDetonation Effect;
 
 	Effect = new class'X2Effect_ControlledDetonation';
-	Effect.ReductionAmount = default.ControlledDetonationDamageReduction;
-
-	Effect.AbilityTargetConditions.AddItem(default.LivingFriendlyTargetProperty);
 
 	// TODO: icon
 	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_SOCombatEngineer.UIPerk_controlleddetonation", true, Effect);
