@@ -1,13 +1,6 @@
-class X2Effect_Evasive extends X2Effect_Persistent implements(XMBEffectInterface);
+class X2Effect_Evasive extends XMBEffect_Extended;
 
-var bool HandledOnPostTemplatesCreated;
-
-// From XMBEffectInterface
-function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
-function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, optional ShotBreakdown ShotBreakdown, optional out array<ShotModifierInfo> ShotModifiers) { return false; }
-
-// From XMBEffectInterface
-function bool GetExtValue(LWTuple Tuple)
+function OnPostTemplatesCreated()
 {
 	local array<name> AbilityNames;
 	local name Ability;
@@ -15,12 +8,6 @@ function bool GetExtValue(LWTuple Tuple)
 	local X2AbilityTemplateManager AbilityMgr;
 	local X2Condition Condition;
 	local X2Condition_UnitEffects EffectsCondition;
-
-	if (Tuple.id != 'OnPostTemplatesCreated')
-		return false;
-
-	if (HandledOnPostTemplatesCreated)
-		return false;
 
 	AbilityMgr = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 	AbilityMgr.GetTemplateNames(AbilityNames);
@@ -80,9 +67,6 @@ function bool GetExtValue(LWTuple Tuple)
 			}
 		}
 	}
-
-	HandledOnPostTemplatesCreated = true;
-	return true;
 }
 
 defaultproperties

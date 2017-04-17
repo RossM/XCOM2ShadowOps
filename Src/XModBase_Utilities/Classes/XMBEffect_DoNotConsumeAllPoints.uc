@@ -20,7 +20,7 @@
 //
 //  Core
 //---------------------------------------------------------------------------------------
-class XMBEffect_DoNotConsumeAllPoints extends X2Effect_Persistent implements(XMBEffectInterface);
+class XMBEffect_DoNotConsumeAllPoints extends XMBEffect_Extended;
 
 //////////////////////
 // Bonus properties //
@@ -33,26 +33,13 @@ var array<name> AbilityNames;		// The abilities which will not end the turn as f
 // Implementation //
 ////////////////////
 
-var bool HandledOnPostTemplatesCreated;
-
-// From XMBEffectInterface
-function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
-function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, optional ShotBreakdown ShotBreakdown, optional out array<ShotModifierInfo> ShotModifiers) { return false; }
-
-// From XMBEffectInterface
-function bool GetExtValue(LWTuple Tuple)
+function OnPostTemplatesCreated()
 {
 	local name Ability;
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityTemplateManager AbilityMgr;
 	local X2AbilityCost_ActionPoints ActionPointCost;
 	local int i;
-
-	if (Tuple.id != 'OnPostTemplatesCreated')
-		return false;
-
-	if (HandledOnPostTemplatesCreated)
-		return false;
 
 	AbilityMgr = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
@@ -79,7 +66,4 @@ function bool GetExtValue(LWTuple Tuple)
 			}
 		}
 	}
-
-	HandledOnPostTemplatesCreated = true;
-	return true;
 }
