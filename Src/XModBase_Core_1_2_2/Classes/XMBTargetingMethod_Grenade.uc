@@ -30,6 +30,43 @@ function Update(float DeltaTime)
 	super.Update(DeltaTime);	
 }
 
+function bool VerifyTargetableFromIndividualMethod(delegate<ConfirmAbilityCallback> fnCallback)
+{
+	local StateObjectReference EffectRef;
+	local XComGameState_Effect EffectState;
+	local X2Effect EffectTemplate;
+	local XMBEffectInterface XMBEffect;
+	local LWTuple Tuple;
+
+	if (bFriendlyFireAgainstUnits)
+	{
+		`Log("XMBTargetingMethod_Grenade: Checking for friendly fire");
+		foreach UnitState.AffectedByEffects(EffectRef)
+		{
+			EffectState = XComGameState_Effect(`XCOMHISTORY.GetGameStateForObjectID(EffectRef.ObjectID));
+			EffectTemplate = EffectState.GetX2Effect();
+			XMBEffect = XMBEffectInterface(EffectTemplate);
+		
+			if (XMBEffect == none)
+				continue;
+
+			Tuple = new class'LWTuple';
+			Tuple.Id = 'IgnoreFriendlyFire';
+			Tuple.Data.Length = 1;
+			Tuple.Data[0].o = Ability;
+			Tuple.Data[0].Kind = LWTVObject;
+
+			if (XMBEffect.GetExtValue(Tuple))
+			{
+				bFriendlyFireAgainstUnits = !Tuple.Data[0].b;
+				break;
+			}
+		}
+	}
+
+	return super.VerifyTargetableFromIndividualMethod(fnCallback);
+}
+
 // XMBOverrideInterace
 
 function class GetOverrideBaseClass() 
@@ -52,5 +89,5 @@ defaultproperties
 {
 	MajorVersion = 1
 	MinorVersion = 2
-	PatchVersion = 1
+	PatchVersion = 2
 }

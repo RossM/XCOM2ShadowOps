@@ -1,29 +1,36 @@
-class X2Effect_ControlledDetonation extends X2Effect_Persistent implements(XMBEffectInterface);
+class X2Effect_ControlledDetonation extends XMBEffect_Extended;
 
-var bool HandledOnPostTemplatesCreated;
-
-// From XMBEffectInterface
-function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
-function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, optional ShotBreakdown ShotBreakdown, optional out array<ShotModifierInfo> ShotModifiers) { return false; }
-
-// From XMBEffectInterface
-function bool GetExtValue(LWTuple Tuple)
+function OnPostTemplatesCreated()
 {
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityTemplateManager AbilityMgr;
-
-	if (Tuple.id != 'OnPostTemplatesCreated')
-		return false;
-
-	if (HandledOnPostTemplatesCreated)
-		return false;
 
 	AbilityMgr = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 	AbilityTemplate = AbilityMgr.FindAbilityTemplate('ThrowGrenade');
 	AbilityTemplate.AbilityMultiTargetConditions.AddItem(new class'X2Condition_ControlledDetonation');
 	AbilityTemplate = AbilityMgr.FindAbilityTemplate('LaunchGrenade');
 	AbilityTemplate.AbilityMultiTargetConditions.AddItem(new class'X2Condition_ControlledDetonation');
+}
 
-	HandledOnPostTemplatesCreated = true;
-	return true;
+function bool GetExtValue(LWTuple Data) 
+{
+	local XComGameState_Ability AbilityState;
+
+	if (Data.Id == 'IgnoreFriendlyFire')
+	{
+		AbilityState = XComGameState_Ability(Data.Data[0].o);
+
+		`Log("X2Effect_ControlledDetonation: Checking for friendly fire on" @ AbilityState.GetMyTemplateName());
+
+		if (AbilityState.GetMyTemplateName() == 'ThrowGrenade' || AbilityState.GetMyTemplateName() == 'LaunchGrenade')
+		{
+			Data.Data[0].Kind = LWTVBool;
+			Data.Data[0].b = true;
+			return true;
+		}
+		else
+			return false;
+	}
+
+	return super.GetExtValue(Data); 
 }
