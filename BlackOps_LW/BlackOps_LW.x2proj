@@ -48,8 +48,8 @@
     <Folder Include="Src\SOInfantry\Classes\" />
     <Folder Include="Src\SOItems\" />
     <Folder Include="Src\SOItems\Classes\" />
-    <Folder Include="Src\XModBase_Core_1_2_1\" />
-    <Folder Include="Src\XModBase_Core_1_2_1\Classes\" />
+    <Folder Include="Src\XModBase_Core_1_2_2\" />
+    <Folder Include="Src\XModBase_Core_1_2_2\Classes\" />
     <Folder Include="Src\XModBase_Interfaces\" />
     <Folder Include="Src\XModBase_Interfaces\Classes\" />
     <Folder Include="Src\XModBase_Utilities\" />
@@ -102,7 +102,7 @@
     <Exec Command="mklink /j Src\SODragoon ..\Src\SODragoon" />
     <Exec Command="mklink /j Src\SOCombatEngineer ..\Src\SOCombatEngineer" />
     <Exec Command="mklink /j Src\SOItems ..\Src\SOItems" />
-    <Exec Command="mklink /j Src\XModBase_Core_1_2_1 ..\Src\XModBase_Core_1_2_1" />
+    <Exec Command="mklink /j Src\XModBase_Core_1_2_2 ..\Src\XModBase_Core_1_2_2" />
     <Exec Command="mklink /j Src\XModBase_Interfaces ..\Src\XModBase_Interfaces" />
     <Exec Command="mklink /j Src\XModBase_Utilities ..\Src\XModBase_Utilities" />
     <Exec Command="mklink /j Src\ShadowOps ..\Src\ShadowOps" />
