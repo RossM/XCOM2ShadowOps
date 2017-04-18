@@ -232,6 +232,13 @@ LocHelpText="Grants 1 random free grenade item to your inventory."
 LocFlyOverText="Mad Bomber"
 LocPromotionPopupText="<Bullet/> TODO. <br/>"
 
+[ShadowOps_Fracture_LW2 X2AbilityTemplate]
+LocFriendlyName="Fracture"
+LocLongDescription="Your <Ability:WeaponName/> attacks against mechanical units have <Ability:+ToHit/> Aim and shred <Ability:Shred/> armor."
+LocHelpText="Your <Ability:WeaponName/> attacks against mechanical units have <Ability:+ToHit/> Aim and shred <Ability:Shred/> armor."
+LocFlyOverText="Fracture"
+LocPromotionPopupText="<Bullet/> TODO. <br/>"
+
 ; === Class templates ===
 
 [ShadowOps_CombatEngineer X2SoldierClassTemplate]

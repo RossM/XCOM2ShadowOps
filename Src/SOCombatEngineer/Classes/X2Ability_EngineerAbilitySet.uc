@@ -22,6 +22,7 @@ var config int BareKnuckleDamageBonus;
 var config int DemoGrenadesEnvironmentDamageBonus;
 var config int ElusiveDodge, ElusiveRange;
 var config array<name> MadBomberGrenades;
+var config array<ExtShotModifierInfo> FractureLW2Modifiers;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -65,6 +66,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('ShadowOps_DemoGrenades', "img:///UILibrary_SOCombatEngineer.UIPerk_demogrenades", false));
 	Templates.AddItem(Elusive());
 	Templates.AddItem(MadBomber());
+	Templates.AddItem(Fracture_LW2());
 
 	return Templates;
 }
@@ -973,3 +975,21 @@ static function X2AbilityTemplate MadBomber()
 
 	return Passive('ShadowOps_MadBomber', "img:///UILibrary_SOCombatEngineer.UIPerk_madbomber", true, Effect);
 }
+
+static function X2AbilityTemplate Fracture_LW2()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local X2Condition_UnitProperty Condition;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.Modifiers = default.FractureLW2Modifiers;
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+
+	Condition = new class'X2Condition_UnitProperty';
+	Condition.ExcludeOrganic = true;
+	Condition.IncludeWeakAgainstTechLikeRobot = true;
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	return Passive('ShadowOps_Fracture_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_fracture", false, Effect);
+}
+
