@@ -183,8 +183,8 @@ LocPromotionPopupText="<Bullet/> You cannot equip two PCSes of the same type.<br
 
 [ShadowOps_ShieldSurge X2AbilityTemplate]
 LocFriendlyName="Shield Surge"
-LocLongDescription="Shield Protocol now also grants the target <Ability:ArmorMitigation/> Armor for one turn."
-LocHelpText="Shield Protocol now also grants the target <Ability:ArmorMitigation/> Armor for one turn."
+LocLongDescription="Shield Protocol now also grants the target <Ability:ArmorMitigation:ShadowOps_ShieldProtocol/> Armor for one turn."
+LocHelpText="Shield Protocol now also grants the target <Ability:ArmorMitigation:ShadowOps_ShieldProtocol/> Armor for one turn."
 LocFlyOverText="Shield Surge"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
