@@ -202,6 +202,13 @@ LocHelpText="Haywire Protocol no longer has a cooldown, and doesn't end the turn
 LocFlyOverText="Puppeteer"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
+[ShadowOps_ShieldBattery X2AbilityTemplate]
+LocFriendlyName="Shield Battery"
+LocLongDescription="Grants <Ability:ShieldBatteryBonusCharges/> additional Shield Protocol charges." 
+LocHelpText="Grants <Ability:ShieldBatteryBonusCharges/> additional Shield Protocol charges." 
+LocFlyOverText="Shield Battery"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Dragoon X2SoldierClassTemplate]

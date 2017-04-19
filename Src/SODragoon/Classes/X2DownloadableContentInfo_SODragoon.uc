@@ -14,6 +14,9 @@ static function bool AbilityTagExpandHandler(string InString, out string OutStri
 	case "eatthismaxtiles":
 		OutString = string(class'X2Ability_DragoonAbilitySet'.default.EatThisMaxTiles);
 		return true;
+	case "shieldbatterybonuscharges":
+		OutString = string(class'X2Ability_DragoonAbilitySet'.default.ShieldBatteryBonusCharges);
+		return true;
 	}
 	return false;
 }

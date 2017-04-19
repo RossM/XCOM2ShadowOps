@@ -25,6 +25,7 @@ var config int EatThisAimBonus, EatThisCritBonus, EatThisMaxTiles;
 var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
 var config int ShieldSurgeArmor;
 var config array<name> PuppeteerAbilityNames;
+var config int ShieldBatteryBonusCharges;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges, PhalanxProtocolCharges;
 var config int StealthProtocolConventionalCharges, StealthProtocolMagneticCharges, StealthProtocolBeamCharges;
@@ -66,6 +67,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('ShadowOps_ShieldSurge', "img:///UILibrary_SODragoon.UIPerk_shieldsurge", false));
 	Templates.AddItem(PhalanxProtocol());
 	Templates.AddItem(Puppeteer());
+	Templates.AddItem(ShieldBattery());
 
 	return Templates;
 }
@@ -1055,4 +1057,16 @@ static function X2AbilityTemplate Puppeteer()
 	Effect.AbilityNames = default.PuppeteerAbilityNames;
 
 	return Passive('ShadowOps_Puppeteer', "img:///UILibrary_SODragoon.UIPerk_puppetprotocol", false, Effect);
+}
+
+static function X2AbilityTemplate ShieldBattery()
+{
+	local XMBEffect_AddAbilityCharges Effect;
+
+	Effect = new class'XMBEffect_AddAbilityCharges';
+	Effect.AbilityNames.AddItem('ShadowOps_ShieldProtocol');
+	Effect.AbilityNames.AddItem('ShadowOps_AdvancedShieldProtocol');
+	Effect.BonusCharges = default.ShieldBatteryBonusCharges;
+
+	return Passive('ShadowOps_ShieldBattery', "img:///UILibrary_SODragoon.UIPerk_shieldbattery", false, Effect);
 }
