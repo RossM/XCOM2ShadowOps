@@ -26,6 +26,7 @@ var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
 var config int ShieldSurgeArmor;
 var config array<name> PuppeteerAbilityNames;
 var config int ShieldBatteryBonusCharges;
+var config int OverkillBonusDamage;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges, PhalanxProtocolCharges;
 var config int StealthProtocolConventionalCharges, StealthProtocolMagneticCharges, StealthProtocolBeamCharges;
@@ -68,6 +69,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PhalanxProtocol());
 	Templates.AddItem(Puppeteer());
 	Templates.AddItem(ShieldBattery());
+	Templates.AddItem(Overkill());
 
 	return Templates;
 }
@@ -1064,4 +1066,14 @@ static function X2AbilityTemplate ShieldBattery()
 	Effect.BonusCharges = default.ShieldBatteryBonusCharges;
 
 	return Passive('ShadowOps_ShieldBattery', "img:///UILibrary_SODragoon.UIPerk_shieldbattery", false, Effect);
+}
+
+static function X2AbilityTemplate Overkill()
+{
+	local X2Effect_Overkill Effect;
+
+	Effect = new class'X2Effect_Overkill';
+	Effect.BonusDamage = default.OverkillBonusDamage;
+
+	return Passive('ShadowOps_Overkill', "img:///UILibrary_SODragoon.UIPerk_overkill", true, Effect);
 }

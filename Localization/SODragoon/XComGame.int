@@ -209,6 +209,13 @@ LocHelpText="Grants <Ability:ShieldBatteryBonusCharges/> additional Shield Proto
 LocFlyOverText="Shield Battery"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
+[ShadowOps_Overkill X2AbilityTemplate]
+LocFriendlyName="Overkill"
+LocLongDescription="Your attacks deal <Ability:+Damage/> damage to enemies at half or less of their original hit points." 
+LocHelpText="Your attacks deal <Ability:+Damage/> damage to enemies at half or less of their original hit points." 
+LocFlyOverText="Overkill"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Dragoon X2SoldierClassTemplate]
