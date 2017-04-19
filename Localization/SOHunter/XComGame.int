@@ -65,8 +65,8 @@ LocPromotionPopupText="<Bullet/> You must have cover from all enemies that can s
 
 [ShadowOps_Fade X2AbilityTemplate]
 LocFriendlyName="Fade"
-LocLongDescription="Gain concealment that is broken if you move. <Ability:SelfCooldown/> turn cooldown."
-LocHelpText="Gain concealment that is broken if you move."
+LocLongDescription="Gain concealment that is broken if you move. Only works in full cover. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Gain concealment that is broken if you move. Only works in full cover."
 LocFlyOverText="Fade"
 LocPromotionPopupText="<Bullet/> Fade will let you use your First Strike bonus multiple times during a battle.<br/><Bullet/> Concealment granted by Fade can also be broken normally.<br/><Bullet/> Fade consumes an action and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 

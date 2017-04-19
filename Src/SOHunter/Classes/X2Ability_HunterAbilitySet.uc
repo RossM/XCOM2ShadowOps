@@ -431,6 +431,7 @@ static function X2AbilityTemplate Fade()
 {
 	local X2AbilityTemplate						Template;
 	local X2Effect_RangerStealth				StealthEffect;
+	local XMBCondition_CoverType					CoverCondition;
 
 	StealthEffect = new class'X2Effect_RangerStealth';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
@@ -438,12 +439,18 @@ static function X2AbilityTemplate Fade()
 	StealthEffect.EffectAddedFn = Fade_EffectAdded;
 	StealthEffect.EffectRemovedFn = Fade_EffectRemoved;
 
-	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_SOHunter.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, eCost_Single);
+	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_SOHunter.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, eCost_Free);
 	AddCooldown(Template, default.FadeCooldown);
 
 	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
 
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
+
+	CoverCondition = new class'XMBCondition_CoverType';
+	CoverCondition.AllowedCoverTypes.AddItem(CT_Standing);
+	CoverCondition.bCheckRelativeToSource = false;
+	Template.AbilityShooterConditions.AddItem(CoverCondition);
+
 	Template.AddShooterEffectExclusions();
 	Template.AddTargetEffect(class'X2Effect_Spotted'.static.CreateUnspottedEffect());
 	Template.ActivationSpeech = 'ActivateConcealment';
