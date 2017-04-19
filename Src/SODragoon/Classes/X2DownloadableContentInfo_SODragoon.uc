@@ -17,6 +17,9 @@ static function bool AbilityTagExpandHandler(string InString, out string OutStri
 	case "shieldbatterybonuscharges":
 		OutString = string(class'X2Ability_DragoonAbilitySet'.default.ShieldBatteryBonusCharges);
 		return true;
+	case "inspirationmaxtiles":
+		OutString = string(class'X2Ability_DragoonAbilitySet'.default.InspirationMaxTiles);
+		return true;
 	}
 	return false;
 }

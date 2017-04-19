@@ -169,10 +169,10 @@ LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
 [ShadowOps_Inspiration X2AbilityTemplate]
 LocFriendlyName="Inspiration"
-LocLongDescription="Allies within 10 tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
-LocHelpText="Allies within 10 tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
+LocLongDescription="You and all allies within <Ability:InspirationMaxTiles/> tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
+LocHelpText="You and all allies within <Ability:InspirationMaxTiles/> tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
 LocFlyOverText="Inspiration"
-LocPromotionPopupText="<Bullet/> You also benefit from the bonuses.<br/>"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
 [ShadowOps_DigitalWarfare X2AbilityTemplate]
 LocFriendlyName="Digital Warfare"
