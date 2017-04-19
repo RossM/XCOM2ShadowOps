@@ -663,18 +663,13 @@ static function Entrench_EffectAdded(X2Effect_Persistent PersistentEffect, const
 
 static function X2AbilityTemplate Pyromaniac()
 {
-	local X2AbilityTemplate Template;
 	local X2Effect_AddGrenade ItemEffect;
-
-	// TODO: icon
-	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_SOCombatEngineer.UIPerk_pyromaniac", true);
 
 	ItemEffect = new class 'X2Effect_AddGrenade';
 	ItemEffect.DataName = 'Firebomb';
-	Template.AddTargetEffect(ItemEffect);
 	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
 
-	return Template;
+	return Passive('ShadowOps_Pyromaniac', "img:///UILibrary_SOCombatEngineer.UIPerk_pyromaniac", true, ItemEffect);
 }
 
 // Perk name:		Hit and Run
@@ -882,17 +877,13 @@ static function X2AbilityTemplate Anatomist()
 
 static function X2AbilityTemplate ExtraMunitions()
 {
-	local X2AbilityTemplate Template;
 	local X2Effect_AddGrenade ItemEffect;
-
-	Template = Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true);
 
 	ItemEffect = new class 'X2Effect_AddGrenade';
 	ItemEffect.DataName = 'FragGrenade';
-	Template.AddTargetEffect(ItemEffect);
 	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
 
-	return Template;
+	return Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true, ItemEffect);
 }
 
 // Perk name:		Bull Rush

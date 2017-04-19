@@ -905,16 +905,11 @@ static function X2AbilityTemplate SensorOverlays()
 static function X2AbilityTemplate Supercharge()
 {
 	local X2Effect_Supercharge Effect;
-	local X2AbilityTemplate Template;
 
 	Effect = new class'X2Effect_Supercharge';
 	Effect.BonusCharges = default.SuperchargeChargeBonus;
 
-	Template = Passive('ShadowOps_Supercharge', "img:///UILibrary_SODragoon.UIPerk_supercharge", false);
-
-	Template.AddTargetEffect(Effect);
-
-	return Template;
+	return Passive('ShadowOps_Supercharge', "img:///UILibrary_SODragoon.UIPerk_supercharge", false, Effect);
 }
 
 static function X2AbilityTemplate ReverseEngineering()
