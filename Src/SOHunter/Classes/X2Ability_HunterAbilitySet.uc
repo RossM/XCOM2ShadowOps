@@ -968,6 +968,7 @@ static function X2AbilityTemplate Reposition()
 	Template = Attack('ShadowOps_Reposition', "img:///UILibrary_SOHunter.UIPerk_reposition", false,, class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY, eCost_WeaponConsumeAll);
 	Template.PostActivationEvents.AddItem('RepositionActivated');
 	Template.OverrideAbilities.AddItem('SniperStandardFire');
+	Template.OverrideAbilities.AddItem('StandardShot');
 
 	Effect = new class'X2Effect_GrantActionPoints';
 	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
