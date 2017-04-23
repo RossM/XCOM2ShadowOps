@@ -153,7 +153,7 @@ LocPromotionPopupText="<Bullet/> You can still take damage, but it will never re
 
 [ShadowOps_DisablingShot X2AbilityTemplate]
 LocFriendlyName="Disabling Shot"
-LocLongDescription="Make a special shot with a <Ability:+ToHit:ShadowOps_DisablingShot_Bonuses/> Aim modifier that deals half damage and disables the target for one turn. <Ability:SelfCooldown/> turn cooldown."
+LocLongDescription="Make a special shot that deals half damage and disables the target for one turn. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Make a special shot that deals half damage and disables the target for one turn."
 LocFlyOverText="Disabling Shot"
 LocPromotionPopupText="<Bullet/> Disabled units can only move, reload, hunker, and make melee attacks.<br/>"
