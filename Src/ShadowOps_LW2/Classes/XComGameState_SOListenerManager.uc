@@ -96,8 +96,6 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 		return ELR_NoInterrupt;
 	}
 
-	`Log("ShadowOps_LW2 OnOverrideAbilityIconColor :" @ AbilityName);
-
 	switch (AbilityName)
 	{
 		case 'ThrowGrenade':
@@ -169,10 +167,10 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 
 		case 'Deadeye':
 		case 'PrecisionShot':
-			if (X2WeaponTemplate(WeaponState.GetMyTemplate()).iTypicalActionCost >= 2)
-				IconColor = class'LWTemplateMods'.default.ICON_COLOR_2;
-			else
-				IconColor = class'LWTemplateMods'.default.ICON_COLOR_END;
+		case 'Flush':
+		case 'ShadowOps_Bullseye':
+		case 'ShadowOps_DisablingShot':
+			IconColor = GetIconColorByActionPointCost(AbilityTemplate, AbilityState, UnitState);
 			Changed = true;
 			break;
 		
@@ -197,15 +195,27 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 
 function string GetIconColorByActionPointCost(X2AbilityTemplate AbilityTemplate, XComGameState_Ability AbilityState, XComGameState_Unit UnitState)
 {
-	local int k;
+	local int k, cost;
 	local X2AbilityCost_ActionPoints ActionPoints;
+	local XComGameState_Item SourceWeapon;
+	local X2WeaponTemplate SourceWeaponTemplate;
+
+	SourceWeapon = AbilityState.GetSourceWeapon();
+	if (SourceWeapon != none)
+		SourceWeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
 
 	for (k = 0; k < AbilityTemplate.AbilityCosts.Length; k++)
 	{
 		ActionPoints = X2AbilityCost_ActionPoints(AbilityTemplate.AbilityCosts[k]);
 		if (ActionPoints != none)
 		{
-			if (ActionPoints.ConsumeAllPoints(AbilityState, UnitState))
+			cost = ActionPoints.iNumPoints;
+			if (ActionPoints.bAddWeaponTypicalCost && SourceWeaponTemplate != none)
+				cost += SourceWeaponTemplate.iTypicalActionCost;
+
+			if (cost >= 2)
+				return class'LWTemplateMods'.default.ICON_COLOR_2;
+			else if (ActionPoints.ConsumeAllPoints(AbilityState, UnitState))
 				return class'LWTemplateMods'.default.ICON_COLOR_END;
 			else
 				return class'LWTemplateMods'.default.ICON_COLOR_1;

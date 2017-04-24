@@ -30,10 +30,13 @@ static event OnPostTemplatesCreated()
 
 	SetVariableIconColor('PointBlank');
 	SetVariableIconColor('BothBarrels');
-	SetVariableIconColor('Deadeye');
-	SetVariableIconColor('PrecisionShot');
 	SetVariableIconColor('HaywireProtocol');
 	SetVariableIconColor('ShadowOps_ThrowSonicBeacon');
+	SetVariableIconColor('Deadeye');
+	SetVariableIconColor('PrecisionShot');
+	SetVariableIconColor('Flush');
+	SetVariableIconColor('ShadowOps_Bullseye');
+	SetVariableIconColor('ShadowOps_DisablingShot');
 
 	UpdateFleche();
 
