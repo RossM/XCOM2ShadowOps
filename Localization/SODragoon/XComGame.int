@@ -197,8 +197,8 @@ LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
 [ShadowOps_Puppeteer X2AbilityTemplate]
 LocFriendlyName="Puppeteer"
-LocLongDescription="Haywire Protocol no longer has a cooldown, and doesn't end the turn when used as the first action." 
-LocHelpText="Haywire Protocol no longer has a cooldown, and doesn't end the turn when used as the first action." 
+LocLongDescription="Haywire Protocol no longer has a cooldown and doesn't end the turn." 
+LocHelpText="Haywire Protocol no longer has a cooldown and doesn't end the turn." 
 LocFlyOverText="Puppeteer"
 LocPromotionPopupText="<Bullet/> TODO.<br/>"
 

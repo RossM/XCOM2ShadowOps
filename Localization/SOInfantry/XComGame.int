@@ -2,8 +2,8 @@
 
 [ShadowOps_BulletSwarm X2AbilityTemplate]
 LocFriendlyName="Bullet Swarm"
-LocLongDescription="Firing your <Ability:WeaponName/> with your first action no longer ends your turn."
-LocHelpText="Fire your <Ability:WeaponName/> at a target. This does not end your turn if used as your first action."
+LocLongDescription="Firing your <Ability:WeaponName/> no longer ends your turn."
+LocHelpText="Fire your <Ability:WeaponName/> at a target. This does not end your turn."
 LocFlyOverText="Bullet Swarm"
 LocPromotionPopupText="<Bullet/> Bullet Swarm can deal a lot of damage, but it chews through ammo fast. Consider using a weapon with an expanded magazine or auto-loader.<br/><Bullet/>Good positioning will help you get the most of both shots each turn.<br/><Bullet/> Firing your pistol still ends your turn.<br/>"
 

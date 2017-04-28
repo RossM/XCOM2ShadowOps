@@ -9,8 +9,8 @@ LocPromotionPopupText="<Bullet/> Smoke grenades with Dense Smoke provide the sam
 
 [ShadowOps_SmokeAndMirrors X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
-LocLongDescription="You have one free smoke grenade use on every mission. Launching or throwing a smoke grenade as your first action does not end your turn."
-LocHelpText="You have one free smoke grenade use on every mission. Launching or throwing a smoke grenade as your first action does not end your turn."
+LocLongDescription="You have one free smoke grenade use on every mission. Launching or throwing a smoke grenade does not end your turn."
+LocHelpText="You have one free smoke grenade use on every mission. Launching or throwing a smoke grenade does not end your turn."
 LocFlyOverText="Smoke and Mirrors"
 LocPromotionPopupText="<Bullet/> Smoke grenades provide a +20 Defense bonus to all units in an area that lasts for 2 turns. Each grenade has 2 charges. <br/><Bullet/> Get your Combat Engineer into a good position before starting a fight, so they can use their first action to protect your other soldiers with smoke. <br/><Bullet/> Smoke grenades can be equipped even if you're carrying other grenades. <br/>"
 
@@ -138,8 +138,8 @@ LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.
 
 [ShadowOps_HitAndRun X2AbilityTemplate]
 LocFriendlyName="Skirmisher"
-LocLongDescription="Move after taking a single action that would normally end your turn as your first action."
-LocHelpText="Move after taking a single action that would normally end your turn as your first action."
+LocLongDescription="When you use a turn-ending ability with your first action, you may move afterwards."
+LocHelpText="When you use a turn-ending ability with your first action, you may move afterwards."
 LocFlyOverText="Skirmisher"
 LocPromotionPopupText="<Bullet/> This doesn't affect abilities that require two action points to use.<br/><Bullet/> You can only take a standard move, not use other actions such as reloading your weapon.<br/>"
 
@@ -199,8 +199,8 @@ LocPromotionPopupText="<Bullet/> Robotic enemies can't be stunned, but still tak
 
 [ShadowOps_SmokeAndMirrors_LW2 X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
-LocLongDescription="Launching or throwing a smoke grenade as your first action does not end your turn. Also slightly reduces this soldier's infiltration time while on missions."
-LocHelpText="Launching or throwing a smoke grenade as your first action does not end your turn."
+LocLongDescription="Launching or throwing a smoke grenade does not end your turn. Also slightly reduces this soldier's infiltration time while on missions."
+LocHelpText="Launching or throwing a smoke grenade does not end your turn."
 LocFlyOverText="Smoke and Mirrors"
 LocPromotionPopupText="<Bullet/> Smoke and Mirrors also slightly reduces the soldier's infiltration time. <br/>"
 
