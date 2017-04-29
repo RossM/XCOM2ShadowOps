@@ -1006,6 +1006,7 @@ static function X2AbilityTemplate EatThis()
 
 static function X2AbilityTemplate Inspiration()
 {
+	local X2AbilityTemplate Template;
 	local XMBEffect_ConditionalStatChange Effect;
 
 	Effect = new class'XMBEffect_ConditionalStatChange';
@@ -1015,7 +1016,11 @@ static function X2AbilityTemplate Inspiration()
 	Effect.AddPersistentStatChange(eStat_Will, default.InspirationWillBonus);
 	Effect.Conditions.AddItem(TargetWithinTiles(default.InspirationMaxTiles));
 
-	return SquadPassive('ShadowOps_Inspiration', "img:///UILibrary_SODragoon.UIPerk_inspiration", false, Effect);
+	Template = SquadPassive('ShadowOps_Inspiration', "img:///UILibrary_SODragoon.UIPerk_inspiration", false, Effect);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.DodgeLabel, eStat_Dodge, default.InspirationDodgeBonus);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.PsiOffenseLabel, eStat_Will, default.InspirationWillBonus);
+
+	return Template;
 }
 
 static function X2AbilityTemplate PhalanxProtocol()
