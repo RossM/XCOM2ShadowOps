@@ -997,8 +997,8 @@ static function X2AbilityTemplate EatThis()
 	Effect.AddToHitModifier(default.EatThisCritBonus, eHit_Crit);
 
 	Effect.ScaleValue = new class'XMBValue_Distance';
-	Effect.ScaleMultiplier = -1.0 / default.EatThisMaxTiles + 0.0001; // Add a constant to counter round-off error
-	Effect.ScaleBase = 1.0 - Effect.ScaleMultiplier;
+	Effect.ScaleMultiplier = -1.0 / default.EatThisMaxTiles;
+	Effect.ScaleBase = 1.0 - Effect.ScaleMultiplier + 0.5 / max(default.EatThisAimBonus, default.EatThisCritBonus); // Add a constant for rounding
 	Effect.ScaleMax = 1.0;
 
 	return Passive('ShadowOps_EatThis', "img:///UILibrary_SODragoon.UIPerk_eatthis", false, Effect);
