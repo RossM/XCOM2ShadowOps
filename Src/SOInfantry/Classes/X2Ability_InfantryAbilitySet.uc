@@ -1278,33 +1278,31 @@ static function X2AbilityTemplate SecondWindTrigger()
 {
 	local X2AbilityTemplate					Template;
 	local X2Effect_GrantActionPoints		Effect;
-	local X2AbilityTrigger_EventListener	Trigger;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SecondWindTrigger');
-
-	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_secondwind";
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SimpleSingleTarget;
-
-	Trigger = new class'X2AbilityTrigger_EventListener';
-	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
-	Trigger.ListenerData.EventID = 'MedikitUsed';
-	Trigger.ListenerData.Filter = eFilter_Unit;
-	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.RapidFireListener;
-	Template.AbilityTriggers.AddItem(Trigger);
+	local XMBCondition_AbilityName			Condition;
+	local XMBAbilityTrigger_EventListener	EventListener;
 
 	Effect = new class'X2Effect_GrantActionPoints';
 	Effect.NumActionPoints = 1;
 	Effect.PointType = class'X2CharacterTemplateManager'.default.StandardActionPoint;
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template = TargetedBuff('ShadowOps_SecondWindTrigger', "img:///UILibrary_SOInfantry.UIPerk_secondwind", false, Effect,, eCost_None);
+	Template.AbilityTriggers.Length = 0;
+	
+	EventListener = new class'XMBAbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'AbilityActivated';
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	EventListener.bSelfTarget = false;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.IncludeAbilityNames = class'TemplateEditors_Infantry'.default.MedikitAbilities;
+	AddTriggerTargetCondition(Template, Condition);
+
 	Template.BuildVisualizationFn = SecondWind_BuildVisualization;
 	Template.bSkipFireAction = true;
+
+	HidePerkIcon(Template);
 
 	return Template;
 }
