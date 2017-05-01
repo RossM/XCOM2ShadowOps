@@ -189,7 +189,7 @@ LocFriendlyName="Sonic Beacon"
 LocLongDescription="Grants a special beacon which will attract the attention of enemies that have not yet sighted XCOM."
 LocHelpText="Grants a special beacon which will attract the attention of enemies that have not yet sighted XCOM."
 LocFlyOverText="Sonic Beacon"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> The beacon can be thrown up to 18 tiles away, and is audible to enemies up to 16 tiles from the beacon.<br/><Bullet/> Hearing the Sonic Beacon will put enemies into yellow alert.<br/><Bullet/> This ability can only be used while concealed. <br/>"
 
 [ShadowOps_ThrowSonicBeacon X2AbilityTemplate]
 LocFriendlyName="Throw Sonic Beacon"

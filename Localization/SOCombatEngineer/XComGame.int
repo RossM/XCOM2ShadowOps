@@ -223,21 +223,21 @@ LocFriendlyName="Elusive"
 LocLongDescription="Gain <Ability:Dodge/> Dodge for each visible enemy within 4 tiles."
 LocHelpText="Gain <Ability:Dodge/> Dodge for each visible enemy within 4 tiles."
 LocFlyOverText="Elusive"
-LocPromotionPopupText="<Bullet/> TODO. <br/>"
+LocPromotionPopupText="<Bullet/> The Dodge applies against all attacks. <br/>"
 
 [ShadowOps_MadBomber X2AbilityTemplate]
 LocFriendlyName="Mad Bomber"
 LocLongDescription="Grants 1 random free grenade item to your inventory."
 LocHelpText="Grants 1 random free grenade item to your inventory."
 LocFlyOverText="Mad Bomber"
-LocPromotionPopupText="<Bullet/> TODO. <br/>"
+LocPromotionPopupText="<Bullet/> The free grenade is chosen randomly at the start of each mission. <br/>"
 
 [ShadowOps_Fracture_LW2 X2AbilityTemplate]
 LocFriendlyName="Fracture"
 LocLongDescription="Your <Ability:WeaponName/> attacks against mechanical units have <Ability:+ToHit/> Aim and shred <Ability:Shred/> armor."
 LocHelpText="Your <Ability:WeaponName/> attacks against mechanical units have <Ability:+ToHit/> Aim and shred <Ability:Shred/> armor."
 LocFlyOverText="Fracture"
-LocPromotionPopupText="<Bullet/> TODO. <br/>"
+LocPromotionPopupText="<Bullet/> Has no effect on attacks against non-mechanical units. <br/>"
 
 ; === Class templates ===
 
