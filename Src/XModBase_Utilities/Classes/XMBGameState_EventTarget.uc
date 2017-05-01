@@ -73,7 +73,7 @@ function EventListenerReturn OnEvent(Object EventData, Object EventSource, XComG
 							bSuccess = SourceAbilityState.AbilityTriggerAgainstSingleTarget(TargetUnit.GetReference(), false);
 
 						if (!bSuccess)
-							`Log(SourceAbilityState.GetMyTemplate().DataName @ "event" @ EventID @ ": Activation failed!");
+							`Log(SourceAbilityState.GetMyTemplate().DataName @ "event" @ EventID @ ": Activation failed! (" $ SourceAbilityState.CanActivateAbility(SourceUnit) $ ")");
 					}
 				}
 

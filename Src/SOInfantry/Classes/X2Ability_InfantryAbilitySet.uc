@@ -1287,6 +1287,9 @@ static function X2AbilityTemplate SecondWindTrigger()
 
 	Template = TargetedBuff('ShadowOps_SecondWindTrigger', "img:///UILibrary_SOInfantry.UIPerk_secondwind", false, Effect,, eCost_None);
 	Template.AbilityTriggers.Length = 0;
+	Template.AbilityTargetConditions.Length = 0;
+	Template.AbilityShooterConditions.Length = 0;
+	Template.AbilityTargetStyle = default.SingleTargetWithSelf;
 	
 	EventListener = new class'XMBAbilityTrigger_EventListener';
 	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
