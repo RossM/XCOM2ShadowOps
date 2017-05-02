@@ -1787,10 +1787,7 @@ static function X2AbilityTemplate ThrowSonicBeacon()
 	RadiusMultiTarget.bIgnoreBlockingCover = true;
 	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
 
-	UnitPropertyCondition = new class'X2Condition_UnitProperty';
-	UnitPropertyCondition.ExcludeDead = true;
-	UnitPropertyCondition.IsConcealed = true;
-	Template.AbilityShooterConditions.AddItem(UnitPropertyCondition);
+	Template.AbilityShooterConditions.AddItem(new class'XMBCondition_Concealed');
 
 	UnitPropertyCondition = new class'X2Condition_UnitProperty';
 	UnitPropertyCondition.ExcludeDead = false;
