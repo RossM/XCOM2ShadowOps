@@ -42,7 +42,7 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	{
 		NewAIUnitDataState = XComGameState_AIUnitData(NewGameState.CreateStateObject(AIUnitDataState.Class, AIUnitDataState.ObjectID));
 
-		if( NewAIUnitDataState.AddAlertData(NewAIUnitDataState.m_iUnitObjectID, eAC_DetectedSound, AlertInfo, NewGameState) )
+		if( NewAIUnitDataState.AddAlertData(NewAIUnitDataState.m_iUnitObjectID, eAC_MapwideAlert_Peaceful, AlertInfo, NewGameState) )
 		{
 			NewGameState.AddStateObject(NewAIUnitDataState);
 		}

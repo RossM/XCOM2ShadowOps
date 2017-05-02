@@ -15,7 +15,7 @@ var config WeaponDamageValue AirstrikeDamage;
 var config int AirstrikeCharges;
 var config int AgainstTheOddsAimBonus, AgainstTheOddsMax;
 var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
-var config int SonicBeaconCharges;
+var config int SonicBeaconCharges, SonicBeaconMoveTurns;
 
 var config name FreeAmmoForPocket;
 
@@ -1747,6 +1747,7 @@ static function X2AbilityTemplate ThrowSonicBeacon()
 	local X2AbilityTarget_Cursor            CursorTarget;
 	local X2AbilityMultiTarget_Radius       RadiusMultiTarget;
 	local X2Condition_UnitProperty          UnitPropertyCondition;
+	local X2Effect_Persistent				SeekBeaconEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ThrowSonicBeacon');	
 	
@@ -1802,6 +1803,12 @@ static function X2AbilityTemplate ThrowSonicBeacon()
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
 	Template.AddMultiTargetEffect(new class'X2Effect_MapAlert');
+
+	// This triggers the AI to move towards the sonic beacon for a set number of turns
+	SeekBeaconEffect = new class'X2Effect_Persistent';
+	SeekBeaconEffect.EffectName = 'SeekSonicBeacon';
+	SeekBeaconEffect.BuildPersistentEffect(default.SonicBeaconMoveTurns, false, false, false, eGameRule_PlayerTurnEnd);
+	Template.AddMultiTargetEffect(SeekBeaconEffect);
 		
 	Template.bShowActivation = true;
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
