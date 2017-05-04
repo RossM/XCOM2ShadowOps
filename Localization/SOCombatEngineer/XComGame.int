@@ -227,8 +227,8 @@ LocPromotionPopupText="<Bullet/> The Dodge applies against all attacks. <br/>"
 
 [ShadowOps_MadBomber X2AbilityTemplate]
 LocFriendlyName="Mad Bomber"
-LocLongDescription="Grants 1 random free grenade item to your inventory."
-LocHelpText="Grants 1 random free grenade item to your inventory."
+LocLongDescription="Grants 2 random free grenade items to your inventory."
+LocHelpText="Grants 2 random free grenade items to your inventory."
 LocFlyOverText="Mad Bomber"
 LocPromotionPopupText="<Bullet/> The free grenade is chosen randomly at the start of each mission. <br/>"
 

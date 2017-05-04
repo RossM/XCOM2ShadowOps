@@ -960,11 +960,15 @@ static function X2AbilityTemplate Elusive()
 static function X2AbilityTemplate MadBomber()
 {
 	local X2Effect_AddGrenade Effect;
+	local X2AbilityTemplate Template;
 
 	Effect = new class'X2Effect_AddGrenade';
 	Effect.RandomGrenades = default.MadBomberGrenades;
 
-	return Passive('ShadowOps_MadBomber', "img:///UILibrary_SOCombatEngineer.UIPerk_madbomber", true, Effect);
+	Template = Passive('ShadowOps_MadBomber', "img:///UILibrary_SOCombatEngineer.UIPerk_madbomber", true, Effect);
+	AddSecondaryEffect(Template, Effect); // Grant a second grenade
+
+	return Template;
 }
 
 static function X2AbilityTemplate Fracture_LW2()
