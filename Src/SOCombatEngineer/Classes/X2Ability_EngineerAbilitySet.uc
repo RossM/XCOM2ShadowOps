@@ -832,7 +832,7 @@ static function X2AbilityTemplate Mayhem_LW2()
 	Effect.BonusDamageOverTime = default.MayhemLW2DamageOverTimeBonus;
 
 	// TODO: icon
-	return Passive('ShadowOps_Mayhem_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_mayhem", true, Effect);
+	return Passive('ShadowOps_Mayhem_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_heavyhitter", true, Effect);
 }
 
 static function X2AbilityTemplate Saboteur()
