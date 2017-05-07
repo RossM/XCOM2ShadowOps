@@ -165,11 +165,11 @@ LocFlyOverText="Mayhem"
 LocPromotionPopupText="<Bullet/> Special attacks include Breach, Fracture, and heavy weapons."
 
 [ShadowOps_Mayhem_LW2 X2AbilityTemplate]
-LocFriendlyName="Mayhem"
+LocFriendlyName="Heavy Hitter"
 LocLongDescription="All your attacks deal <Ability:+Damage> damage."
 LocHelpText="All your attacks deal <Ability:+Damage> damage."
 LocFlyOverText="Mayhem"
-LocPromotionPopupText="<Bullet/> Mayhem also increases the damage from burning, poison, or acid caused by your attacks.<br/>"
+LocPromotionPopupText="<Bullet/> Heavy Hitter also increases the damage from burning, poison, or acid caused by your attacks.<br/>"
 
 [ShadowOps_Saboteur X2AbilityTemplate]
 LocFriendlyName="Saboteur"
