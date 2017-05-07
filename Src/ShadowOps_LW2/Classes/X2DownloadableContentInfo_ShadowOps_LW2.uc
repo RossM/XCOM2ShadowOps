@@ -240,3 +240,357 @@ exec function ClearListeners()
 {
 	class'X2EventManager'.static.GetEventManager().Clear();
 }
+
+exec function RerollAWCAbilities(optional name ForceAbility, optional bool bUseExternalRoller)
+{
+	local UIArmory Armory;
+	local StateObjectReference UnitRef;
+	local XComGameStateHistory History;
+	local XComGameState NewGameState;
+	local XComGameState_Unit Unit;
+	local XComGameState_Unit_AWC_LW AWCState;
+	local int Retries;
+
+	History = `XCOMHISTORY;
+
+	Armory = UIArmory(`SCREENSTACK.GetFirstInstanceOf(class'UIArmory'));
+	if (Armory == none)
+		return;
+
+	UnitRef = Armory.GetUnitRef();
+
+	Unit = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
+	if (Unit == none)
+		return;
+
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Force AWC Reroll (" $ Unit.GetFullName() $ ")");
+
+	if(Unit.GetRank() > 0) // can't do this for rookies, since they have no class tree for AWC restrictions
+	{
+		AWCState = class'LWAWCUtilities'.static.GetAWCComponent(Unit);
+		if(AWCState == none)
+		{
+			//create and link it
+			Unit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', Unit.ObjectID));
+			NewGameState.AddStateObject(Unit);
+			AWCState = XComGameState_Unit_AWC_LW(NewGameState.CreateStateObject(class'XComGameState_Unit_AWC_LW'));
+			NewGameState.AddStateObject(AWCState);
+			Unit.AddComponentObject(AWCState);
+		}
+		else
+		{
+			//UpdatedUnit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', Unit.ObjectID));
+			//NewGameState.AddStateObject(UpdatedUnit);
+			AWCState = XComGameState_Unit_AWC_LW(NewGameState.CreateStateObject(class'XComGameState_Unit_AWC_LW', AWCState.ObjectID));
+			NewGameState.AddStateObject(AWCState);
+		}
+
+		if (bUseExternalRoller)
+			ChooseSoldierAWCoptions(AWCState, Unit, true);
+		else
+			AWCState.ChooseSoldierAWCOptions(Unit, true);
+
+		while (ForceAbility != '' && Retries < 100 && !AWCState.HasAWCAbility(Unit, ForceAbility))
+		{
+			if (bUseExternalRoller)
+				ChooseSoldierAWCoptions(AWCState, Unit, true);
+			else
+				AWCState.ChooseSoldierAWCOptions(Unit, true);
+			Retries++;
+		}
+	}
+	
+	if (NewGameState.GetNumGameStateObjects() > 0)
+	{
+		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	}
+	else
+	{
+		History.CleanupPendingGameState(NewGameState);
+	}
+
+	Armory.PopulateData();
+}
+
+exec function ValidAWCAbilities(const AWCTrainingType Option, const int idx, optional bool bCreateGameState = false, optional bool bCreateAWCState = false)
+{
+	local UIArmory Armory;
+	local StateObjectReference UnitRef;
+	local XComGameState_Unit UnitState;
+	local XComGameStateHistory History;
+	local XComGameState_Unit_AWC_LW AWCState;
+	local array<ClassAgnosticAbility> PossibleAbilities;
+	local ClassAgnosticAbility Ability;
+	local string output;
+	local XComGameState NewGameState;
+
+	`Log("ValidAWCAbilities" @ Option @ idx @ bCreateGameState @ bCreateAWCState);
+
+	History = `XCOMHISTORY;
+
+	Armory = UIArmory(`SCREENSTACK.GetFirstInstanceOf(class'UIArmory'));
+	if (Armory == none)
+		return;
+
+	UnitRef = Armory.GetUnitRef();
+
+	UnitState = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
+	if (UnitState == none)
+		return;
+
+	AWCState = class'LWAWCUtilities'.static.GetAWCComponent(UnitState);
+
+	if (bCreateGameState || AWCState == none)
+	{
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Force AWC Rerolls");
+		if (bCreateAWCState || AWCState == none)
+		{
+			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
+			NewGameState.AddStateObject(UnitState);
+			AWCState = XComGameState_Unit_AWC_LW(NewGameState.CreateStateObject(class'XComGameState_Unit_AWC_LW'));
+			NewGameState.AddStateObject(AWCState);
+			UnitState.AddComponentObject(AWCState);
+		}
+		else
+		{
+			AWCState = XComGameState_Unit_AWC_LW(NewGameState.CreateStateObject(class'XComGameState_Unit_AWC_LW', AWCState.ObjectID));
+			NewGameState.AddStateObject(AWCState);
+		}
+
+		AWCState.OffenseAbilities.Length = 0;
+		AWCState.DefenseAbilities.Length = 0;
+		AWCState.PistolAbilities.Length = 0;
+	}
+
+	switch (Option)
+	{
+		case AWCTT_Offense:
+			PossibleAbilities = AWCState.GetValidAWCAbilities(class'LWAWCUtilities'.default.AWCAbilityTree_Offense, idx + 1);
+			break;
+		case AWCTT_Defense:
+			PossibleAbilities = AWCState.GetValidAWCAbilities(class'LWAWCUtilities'.default.AWCAbilityTree_Defense, idx + 1);
+			break;
+		case AWCTT_Pistol:
+			PossibleAbilities = AWCState.WeightedSort(class'LWAWCUtilities'.default.AWCAbilityTree_Pistol);
+			break;
+		default:
+			break;
+	}
+
+	foreach PossibleAbilities(Ability)
+	{
+		output $= "\n";
+		output $= Ability.AbilityType.AbilityName;
+	}
+
+	`Log(output);
+
+	if (bCreateGameState)
+	{
+		`XCOMHISTORY.CleanupPendingGameState(NewGameState);
+	}
+}
+
+//This uses the config data in LWAWCUtilities to select a set of AWC abilities for a soldier
+function ChooseSoldierAWCOptions(XComGameState_Unit_AWC_LW AWCState, XComGameState_Unit UnitState, optional bool bForce=false)
+{
+	local int idx;
+	local array<ClassAgnosticAbility> PossibleAbilities;
+	local int NumPistolAbilities;
+
+	if(bForce)
+	{
+		AWCState.OffenseAbilities.Length = 0;
+		AWCState.DefenseAbilities.Length = 0;
+		AWCState.PistolAbilities.Length = 0;
+	}
+	else
+	{
+		if(AWCState.OffenseAbilities.Length > 0 || AWCState.DefenseAbilities.Length > 0 || AWCState.PistolAbilities.Length > 0)
+			return;
+	}
+
+	//Fill out with randomized abilities
+	for(idx = 0; idx < class'LWAWCUtilities'.default.NUM_OFFENSE_ABILITIES; idx++)
+	{
+		AWCState.OffenseAbilities[idx] = ChooseSoldierAWCOption(AWCState, UnitState, idx, AWCTT_Offense);
+	}
+
+	for(idx = 0; idx < class'LWAWCUtilities'.default.NUM_DEFENSE_ABILITIES; idx++)
+	{
+		AWCState.DefenseAbilities[idx] = ChooseSoldierAWCOption(AWCState, UnitState, idx, AWCTT_Defense);
+	}
+
+	PossibleAbilities = AWCState.WeightedSort(class'LWAWCUtilities'.default.AWCAbilityTree_Pistol);
+	NumPistolAbilities = Min(class'LWAWCUtilities'.default.AWCAbilityTree_Pistol.Length, class'LWAWCUtilities'.default.NUM_PISTOL_ABILITIES);
+	for(idx = 0; idx < NumPistolAbilities; idx++)
+	{
+		AWCState.PistolAbilities[idx] = PossibleAbilities[idx];
+	}
+}
+
+function ClassAgnosticAbility ChooseSoldierAWCOption(XComGameState_Unit_AWC_LW AWCState, XComGameState_Unit UnitState, const int idx, const AWCTrainingType Option)
+{
+	local ClassAgnosticAbility EmptyAbility, NewAbility, Ability;
+	local array<ClassAgnosticAbility> PossibleAbilities;
+	local string output;
+
+	//`Log("ChooseSoldierAWCOption" @ Option @ idx);
+	//`Log(AWCState.GetUnit() @ AWCState.GetUnit().GetSoldierClassTemplateName());
+
+	switch (Option)
+	{
+		case AWCTT_Offense:
+			PossibleAbilities = GetValidAWCAbilities(AWCState, class'LWAWCUtilities'.default.AWCAbilityTree_Offense, idx + 1);
+			NewAbility = PossibleAbilities[`SYNC_RAND(PossibleAbilities.Length)];
+			break;
+		case AWCTT_Defense:
+			PossibleAbilities = GetValidAWCAbilities(AWCState, class'LWAWCUtilities'.default.AWCAbilityTree_Defense, idx + 1);
+			NewAbility = PossibleAbilities[`SYNC_RAND(PossibleAbilities.Length)];
+			break;
+		case AWCTT_Pistol:
+			PossibleAbilities = AWCState.WeightedSort(class'LWAWCUtilities'.default.AWCAbilityTree_Pistol);
+			NewAbility = PossibleAbilities[Min(idx, PossibleAbilities.Length)];
+			break;
+		default:
+			NewAbility = EmptyAbility;
+			break;
+	}
+
+	foreach PossibleAbilities(Ability)
+	{
+		output $= "\n";
+		output $= Ability.AbilityType.AbilityName;
+	}
+	//`Log(output);
+
+	return NewAbility;
+}
+
+function array<ClassAgnosticAbility> GetValidAWCAbilities(XComGameState_Unit_AWC_LW AWCState, array<AWCAbilityConfig> SourceAbilities, int AWCLevel)
+{
+    return GetValidAWCAbilitiesForUnit(AWCState.GetUnit(), SourceAbilities, AWCLevel, AWCState);
+}
+
+function static array<ClassAgnosticAbility> GetValidAWCAbilitiesForUnit(XComGameState_Unit UnitState, array<AWCAbilityConfig> SourceAbilities, int AWCLevel, optional XComGameState_Unit_AWC_LW AWCComponent)
+{
+	local array<ClassAgnosticAbility> Abilities;
+	local ClassAgnosticAbility NewAbility;
+	local AWCAbilityConfig PossibleAbility;
+    local X2AbilityTemplateManager AbilityTemplateManager;
+	local X2AbilityTemplate AbilityTemplate;
+	local string Reason;
+    
+	if (AWCComponent == none)
+	{
+		AWCComponent = class'LWAWCUtilities'.static.GetAWCComponent(UnitState); // retrieve from history if it wasn't passed
+	}
+
+	`Log(AWCComponent.OffenseAbilities.Length @ AWCComponent.DefenseAbilities.Length @ AWCComponent.PistolAbilities.Length);
+
+	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+
+	foreach SourceAbilities(PossibleAbility)
+	{
+		AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate(PossibleAbility.AbilityName);
+		if (AbilityTemplate == none)
+			continue;
+
+		if(PossibleAbility.Level != AWCLevel)
+			continue;
+
+		if(RestrictedAbility(UnitState, AWCComponent, PossibleAbility.AbilityName, Reason))
+		{
+			//`Log(PossibleAbility.AbilityName @ ": Restricted (" $ Reason $ ")");
+			continue;
+		}
+
+		if(class'LWAWCUtilities'.static.HasClassAbility(UnitState, PossibleAbility.AbilityName))
+		{
+			//`Log(PossibleAbility.AbilityName @ ": Class");
+			continue;
+		}
+
+        if (class'LWAWCUtilities'.static.HasEarnedAbility(UnitState, PossibleAbility.AbilityName))
+		{
+			//`Log(PossibleAbility.AbilityName @ ": Earned");
+			continue;
+		}
+
+		if(AWCComponent != none && AWCComponent.HasAWCAbility(UnitState, PossibleAbility.AbilityName))
+		{
+			//`Log(PossibleAbility.AbilityName @ ": AWC");
+			continue;
+		}
+
+		NewAbility.iRank = PossibleAbility.Level;
+		NewAbility.bUnlocked = false;
+		NewAbility.AbilityType.AbilityName = PossibleAbility.AbilityName;
+		NewAbility.AbilityType.ApplyToWeaponSlot = PossibleAbility.ApplyToWeaponSlot;
+		NewAbility.AbilityType.UtilityCat = PossibleAbility.UtilityCat;
+		Abilities.AddItem(NewAbility);
+	}
+	return Abilities;
+} 
+
+function static bool RestrictedAbility(XComGameState_Unit Unit, XComGameState_Unit_AWC_LW AWCComponent, name AbilityName, out string Reason)
+{
+	local AWCAbilityRestriction Restriction;
+	local X2SoldierClassTemplate SoldierClassTemplate;
+
+	SoldierClassTemplate = Unit.GetSoldierClassTemplate();
+
+	foreach class'LWAWCUtilities'.default.AWCRestrictions(Restriction)
+	{
+		if(Restriction.AWCAbility != AbilityName)
+			continue;
+
+		if(Restriction.RestrictedClass == Unit.GetSoldierClassTemplateName())
+		{
+			Reason = "RestrictedClass/" $ Restriction.RestrictedClass;
+			return true;
+		}
+
+		if (Restriction.RestrictedAbility != '')
+		{
+			if(AWCComponent != none && AWCComponent.HasAWCAbility(Unit, Restriction.RestrictedAbility))
+			{
+				Reason = "RestrictedAbility/AWC/" $ Restriction.RestrictedAbility;
+				return true;
+			}
+			if(class'LWAWCUtilities'.static.HasClassAbility(Unit, Restriction.RestrictedAbility))
+			{
+				Reason = "RestrictedAbility/Class/" $ Restriction.RestrictedAbility;
+				return true;
+			}
+			if(class'LWAWCUtilities'.static.HasEarnedAbility(Unit, Restriction.RestrictedAbility))
+			{
+				Reason = "RestrictedAbility/Earned/" $ Restriction.RestrictedAbility;
+				return true;
+			}
+		}
+
+		if (Restriction.AllowedWeapons.Length > 0)
+		{
+			if (SoldierClassTemplate == none)
+			{
+				Reason = "AllowedWeapons/none";
+				return true;
+			}
+
+			if (!class'LWAWCUtilities'.static.HasAllowedWeapon(SoldierClassTemplate, Restriction.AllowedWeapons))
+			{
+				Reason = "AllowedWeapons/" $ SoldierClassTemplate.DataName;
+				return true;
+			}
+		}
+		
+		if (Restriction.RequiredAbility != '' && !class'LWAWCUtilities'.static.HasClassAbility(Unit, Restriction.RequiredAbility))
+		{
+			Reason = "RequiredAbility/" $ Restriction.RequiredAbility;
+			return true;
+		}
+	}
+
+	return false;
+}
