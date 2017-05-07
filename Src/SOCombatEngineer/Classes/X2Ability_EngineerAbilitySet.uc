@@ -11,8 +11,8 @@ var config int EntrenchDefense, EntrenchDodge;
 var config int FocusedDefenseDefense, FocusedDefenseDodge;
 var config int FractureCritModifier;
 var config int LineEmUpOffense, LineEmUpCrit;
-var config int MayhemDamageBonus, MayhemLW2DamageBonus;
-var config array<name> MayhemExcludeAbilities, MayhemLW2ExcludeAbilities;
+var config int MayhemDamageBonus, MayhemLW2DamageBonus, MayhemLW2DamageOverTimeBonus;
+var config array<name> MayhemExcludeAbilities;
 var config int SaboteurDamageBonus;
 var config int AnatomistDamageBonus, AnatomistMaxKills;
 var config float HeatAmmoDamageMultiplier;
@@ -825,15 +825,11 @@ static function X2AbilityTemplate Mayhem()
 
 static function X2AbilityTemplate Mayhem_LW2()
 {
-	local XMBEffect_ConditionalBonus Effect;
-	local XMBCondition_AbilityName Condition;
+	local X2Effect_HeavyHitter Effect;
 
-	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddDamageModifier(default.MayhemLW2DamageBonus);
-
-	Condition = new class'XMBCondition_AbilityName';
-	Condition.ExcludeAbilityNames = default.MayhemLW2ExcludeAbilities;
-	Effect.AbilityTargetConditions.AddItem(Condition);
+	Effect = new class'X2Effect_HeavyHitter';
+	Effect.BonusDamage = default.MayhemLW2DamageBonus;
+	Effect.BonusDamageOverTime = default.MayhemLW2DamageOverTimeBonus;
 
 	// TODO: icon
 	return Passive('ShadowOps_Mayhem_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_mayhem", true, Effect);

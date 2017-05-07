@@ -168,8 +168,8 @@ LocPromotionPopupText="<Bullet/> Special attacks include Breach, Fracture, and h
 LocFriendlyName="Heavy Hitter"
 LocLongDescription="All your attacks deal <Ability:+Damage> damage."
 LocHelpText="All your attacks deal <Ability:+Damage> damage."
-LocFlyOverText="Mayhem"
-LocPromotionPopupText="<Bullet/> Heavy Hitter also increases the damage from burning, poison, or acid caused by your attacks.<br/>"
+LocFlyOverText="Heavy Hitter"
+LocPromotionPopupText="<Bullet/> Heavy Hitter also increases the damage from burning, poison, or acid caused by your attacks by <Ability:+DamageOverTime>.<br/>"
 
 [ShadowOps_Saboteur X2AbilityTemplate]
 LocFriendlyName="Saboteur"
