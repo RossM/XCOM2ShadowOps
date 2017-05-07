@@ -36,6 +36,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZoneOfControl());
 	Templates.AddItem(ZoneOfControlShot());
 	Templates.AddItem(ZoneOfControlPistolShot());
+	Templates.AddItem(ZoneOfControlPistolShot_LW());
 	Templates.AddItem(ZeroIn());
 	Templates.AddItem(Flush());
 	Templates.AddItem(FlushShot());
@@ -505,6 +506,7 @@ static function X2AbilityTemplate ZoneOfControl()
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlShot');
 	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlPistolShot');
+	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlPistolShot_LW');
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
@@ -532,6 +534,7 @@ static function X2AbilityTemplate ZoneOfControlShot()
 	local X2Effect_Persistent               ZoneOfControlEffect;
 	local X2Condition_UnitEffectsWithAbilitySource  ZoneOfControlCondition;
 	local X2Condition_Visibility            TargetVisibilityCondition;
+	local X2Condition_UnitProperty			ShooterCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ZoneOfControlShot');
 
@@ -567,7 +570,10 @@ static function X2AbilityTemplate ZoneOfControlShot()
 	ZoneOfControlEffect.SetupEffectOnShotContextResult(true, true);      //  mark them regardless of whether the shot hit or missed
 	Template.AddTargetEffect(ZoneOfControlEffect);
 
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	ShooterCondition = new class'X2Condition_UnitProperty';
+	ShooterCondition.ExcludeConcealed = true;
+	Template.AbilityShooterConditions.AddItem(ShooterCondition);
+
 	Template.AddShooterEffectExclusions();
 
 	SingleTarget = new class'X2AbilityTarget_Single';
@@ -616,6 +622,7 @@ static function X2AbilityTemplate ZoneOfControlPistolShot()
 	local X2Condition_UnitEffectsWithAbilitySource  ZoneOfControlCondition;
 	local X2Condition_Visibility            TargetVisibilityCondition;
 	local X2Condition_UnitInventory			HasPistolCondition;
+	local X2Condition_UnitProperty			ShooterCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_ZoneOfControlPistolShot');
 	Template = new class'X2AbilityTemplate_BO'(BaseTemplate);
@@ -656,7 +663,103 @@ static function X2AbilityTemplate ZoneOfControlPistolShot()
 	ZoneOfControlEffect.SetupEffectOnShotContextResult(true, true);      //  mark them regardless of whether the shot hit or missed
 	Template.AddTargetEffect(ZoneOfControlEffect);
 
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	ShooterCondition = new class'X2Condition_UnitProperty';
+	ShooterCondition.ExcludeConcealed = true;
+	Template.AbilityShooterConditions.AddItem(ShooterCondition);
+
+	Template.AddShooterEffectExclusions();
+
+	SingleTarget = new class'X2AbilityTarget_Single';
+	SingleTarget.OnlyIncludeTargetsInsideWeaponRange = true;
+	Template.AbilityTargetStyle = SingleTarget;
+
+	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+
+	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
+
+	//Trigger on movement - interrupt the move
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_MovementObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_AttackObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_overwatch";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;
+}
+
+static function X2AbilityTemplate ZoneOfControlPistolShot_LW()
+{
+	local X2AbilityTemplate					BaseTemplate;
+	local X2AbilityTemplate_BO              Template;
+	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
+	local X2AbilityToHitCalc_StandardAim    StandardAim;
+	local X2AbilityTarget_Single            SingleTarget;
+	local X2AbilityTrigger_Event	        Trigger;
+	local X2Effect_Persistent               ZoneOfControlEffect;
+	local X2Condition_UnitEffectsWithAbilitySource  ZoneOfControlCondition;
+	local X2Condition_Visibility            TargetVisibilityCondition;
+	local X2Condition_UnitInventory			HasPistolCondition;
+	local X2Condition_UnitProperty			ShooterCondition;
+
+	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_ZoneOfControlPistolShot_LW');
+	Template = new class'X2AbilityTemplate_BO'(BaseTemplate);
+
+	// This ability applies to the pistol, if one is equipped.
+	Template.ApplyToWeaponCat = 'pistol';
+
+	ReserveActionPointCost = new class'X2AbilityCost_ReserveActionPoints';
+	ReserveActionPointCost.iNumPoints = 1;
+	ReserveActionPointCost.bFreeCost = true;
+	ReserveActionPointCost.AllowedTypes.AddItem('ZoneOfControl');
+	Template.AbilityCosts.AddItem(ReserveActionPointCost);
+
+	HasPistolCondition = new class'X2Condition_UnitInventory';
+	HasPistolCondition.RelevantSlot = eInvSlot_Utility;
+	HasPistolCondition.RequireWeaponCategory = 'pistol';
+	Template.AbilityShooterConditions.AddItem(HasPistolCondition);
+
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bReactionFire = true;
+	Template.AbilityToHitCalc = StandardAim;
+
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileUnitDisallowMindControlProperty);
+	TargetVisibilityCondition = new class'X2Condition_Visibility';
+	TargetVisibilityCondition.bRequireGameplayVisible = true;
+	TargetVisibilityCondition.bDisablePeeksOnMovement = true;
+	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
+	Template.AbilityTargetConditions.AddItem(class'X2Ability_DefaultAbilitySet'.static.OverwatchTargetEffectsCondition());
+
+	//  Do not shoot targets that were already hit by this unit this turn with this ability
+	ZoneOfControlCondition = new class'X2Condition_UnitEffectsWithAbilitySource';
+	ZoneOfControlCondition.AddExcludeEffect('ZoneOfControlTarget', 'AA_UnitIsImmune');
+	Template.AbilityTargetConditions.AddItem(ZoneOfControlCondition);
+	//  Mark the target as shot by this unit so it cannot be shot again this turn
+	ZoneOfControlEffect = new class'X2Effect_Persistent';
+	ZoneOfControlEffect.EffectName = 'ZoneOfControlTarget';
+	ZoneOfControlEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
+	ZoneOfControlEffect.SetupEffectOnShotContextResult(true, true);      //  mark them regardless of whether the shot hit or missed
+	Template.AddTargetEffect(ZoneOfControlEffect);
+
+	ShooterCondition = new class'X2Condition_UnitProperty';
+	ShooterCondition.ExcludeConcealed = true;
+	Template.AbilityShooterConditions.AddItem(ShooterCondition);
+
 	Template.AddShooterEffectExclusions();
 
 	SingleTarget = new class'X2AbilityTarget_Single';
