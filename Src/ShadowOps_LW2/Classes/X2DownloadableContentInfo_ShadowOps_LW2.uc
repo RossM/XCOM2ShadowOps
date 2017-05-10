@@ -166,6 +166,29 @@ static function int FindShotHUDPriority(name AbilityName)
 	}
 }
 
+static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out array<AbilitySetupData> SetupData, optional XComGameState StartState, optional XComGameState_Player PlayerState, optional bool bMultiplayerDisplay)
+{
+	local XComGameStateHistory History;
+	local XComGameState_Item Item;
+	local int i;
+
+	History = `XCOMHISTORY;
+
+	for (i = SetupData.Length - 1; i >= 0; --i)
+	{
+		// Remove the weight from items in the ammo or grenade slots
+		if (SetupData[i].TemplateName == 'SmallItemWeight' && SetupData[i].SourceWeaponRef.ObjectID != 0)
+		{
+			Item = XComGameState_Item(History.GetGameStateForObjectID(SetupData[i].SourceWeaponRef.ObjectID));
+			if (Item.InventorySlot == eInvSlot_GrenadePocket || Item.InventorySlot == eInvSlot_AmmoPocket)
+			{
+				`Log("Removing SmallItemWeight from" @ Item.GetMyTemplateName() @ "in" @ Item.InventorySlot);
+				SetupData.Remove(i, 1);
+			}
+		}
+	}
+}
+
 exec function Respec()
 {
 	local UIArmory Armory;
