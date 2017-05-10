@@ -9,9 +9,19 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 	local XComGameState_Item TmpItem;
 	local XComGameStateHistory History;
 	local string StatusValue, StatusLabel, StatusDesc, StatusTimeLabel, StatusTimeValue, DaysValue;
+	local UIArmory_Loadout LoadoutScreen;
+	local EInventorySlot EquipmentSlot;
 
 	History = `XCOMHISTORY;
 	CheckGameState = NewCheckGameState;
+
+	LoadoutScreen = UIArmory_Loadout(Screen);
+	// Ignore mobility change on grenade/ammo slot items (we remove their weight penalty)
+	if (LoadoutScreen != none)
+	{
+		EquipmentSlot = UIArmory_LoadoutItem(LoadoutScreen.EquippedList.GetSelectedItem()).EquipmentSlot;
+	}
+
 
 	if(Unit == none)
 	{
@@ -108,7 +118,8 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 			WillBonus += GetUIStatFromItem(Unit, eStat_Will, TmpItem);
 			AimBonus += GetUIStatFromItem(Unit, eStat_Offense, TmpItem);
 			HealthBonus += GetUIStatFromItem(Unit, eStat_HP, TmpItem);
-			MobilityBonus += GetUIStatFromItem(Unit, eStat_Mobility, TmpItem);
+			if (EquipmentSlot != eInvSlot_GrenadePocket && EquipmentSlot != eInvSlot_AmmoPocket)
+				MobilityBonus += GetUIStatFromItem(Unit, eStat_Mobility, TmpItem);
 			TechBonus += GetUIStatFromItem(Unit, eStat_Hacking, TmpItem);
 			ArmorBonus += GetUIStatFromItem(Unit, eStat_ArmorMitigation, TmpItem);
 			DodgeBonus += GetUIStatFromItem(Unit, eStat_Dodge, TmpItem);
@@ -133,7 +144,8 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 			WillBonus -= GetUIStatFromItem(Unit, eStat_Will, TmpItem);
 			AimBonus -= GetUIStatFromItem(Unit, eStat_Offense, TmpItem);
 			HealthBonus -= GetUIStatFromItem(Unit, eStat_HP, TmpItem);
-			MobilityBonus -= GetUIStatFromItem(Unit, eStat_Mobility, TmpItem);
+			if (EquipmentSlot != eInvSlot_GrenadePocket && EquipmentSlot != eInvSlot_AmmoPocket)
+				MobilityBonus -= GetUIStatFromItem(Unit, eStat_Mobility, TmpItem);
 			TechBonus -= GetUIStatFromItem(Unit, eStat_Hacking, TmpItem);
 			ArmorBonus -= GetUIStatFromItem(Unit, eStat_ArmorMitigation, TmpItem);
 			DodgeBonus -= GetUIStatFromItem(Unit, eStat_Dodge, TmpItem);

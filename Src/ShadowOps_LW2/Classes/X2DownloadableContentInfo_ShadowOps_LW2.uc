@@ -42,6 +42,8 @@ static event OnPostTemplatesCreated()
 
 	SetShotHUDPriorities();
 
+	EditSmallItemWeight();
+
 	// Hack - call the class template editors (sometimes their DLCContentInfos fail to run OnPostTemplatesCreated, no idea why)
 	class'TemplateEditors_CombatEngineer'.static.EditTemplates();
 	class'TemplateEditors_Hunter'.static.EditTemplates();
@@ -163,6 +165,39 @@ static function int FindShotHUDPriority(name AbilityName)
 	case 5:		return class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
 	case 6:		return class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
 	default:	return 300 + 10 * HighestLevel;
+	}
+}
+
+// Remove mobility UI stat display on small items in the grenade/ammo slot
+static function EditSmallItemWeight()
+{
+	local X2ItemTemplateManager					ItemManager;
+	local array<X2DataTemplate>					TemplateAllDifficulties;
+	local X2DataTemplate						Template;
+	local X2ItemTemplate						NewTemplate;
+	local array<name>							TemplateNames;
+	local name									ItemName;
+	local int									ShotHUDPriority;
+
+	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	ItemManager.GetTemplateNames(TemplateNames);
+
+	foreach TemplateNames(ItemName)
+	{
+		ItemManager.FindDataTemplateAllDifficulties(ItemName, TemplateAllDifficulties);
+		foreach TemplateAllDifficulties(Template)
+		{
+			if (Template.IsA('X2GrenadeTemplate'))
+			{
+				NewTemplate = new class'X2GrenadeTemplate_ShadowOps'(Template);
+				ItemManager.AddItemTemplate(NewTemplate, true);
+			}
+			else if (Template.IsA('X2AmmoTemplate'))
+			{
+				NewTemplate = new class'X2AmmoTemplate_ShadowOps'(Template);
+				ItemManager.AddItemTemplate(NewTemplate, true);
+			}
+		}
 	}
 }
 
