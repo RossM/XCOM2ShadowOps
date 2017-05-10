@@ -48,6 +48,7 @@ simulated function PopulateData()
 	super(UIInventory).PopulateData();
 
 	Implants = XComHQ.GetAllCombatSimsInInventory();
+	Implants.Sort(SortImplantsName_LW); // PI Added: Only necessary when PCS with distinct names can have the same tier and stat (e.g. perk pcs)
 	Implants.Sort(SortImplants);
 	Implants.Sort(SortImplantsStatType);
 	Implants.Sort(SortItemsTier);
@@ -73,6 +74,20 @@ simulated function PopulateData()
 	}
 
 	List.SetSelectedIndex(0);
+}
+
+// PI Added: Also sort the implants by name (first, so it affects the order the least)
+// so they aren't randomly arranged in the list.
+simulated function int SortImplantsName_LW(XComGameState_Item A, XComGameState_Item B)
+{
+	local String NameA, NameB;
+
+	NameA = Caps(A.GetMyTemplate().GetItemFriendlyName(A.ObjectID));
+	NameB = Caps(B.GetMyTemplate().GetItemFriendlyName(B.ObjectID));
+
+	if(NameA < NameB) return 1;
+	else if( NameA > NameB) return -1;
+	return 0;
 }
 
 simulated function bool CanEquipImplant(StateObjectReference ImplantRef)
