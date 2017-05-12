@@ -1,17 +1,10 @@
-class X2Effect_DangerZone extends X2Effect_Persistent implements(XMBEffectInterface);
+class X2Effect_DangerZone extends XMBEffect_Extended;
 
 var name BonusAbilityName;
 var array<name> AbilityNames;
 var array<int> BonusRadius;
 
-var bool HandledOnPostTemplatesCreated;
-
-// From XMBEffectInterface
-function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out string TagValue) { return false; }
-function bool GetExtModifiers(name Type, XComGameState_Effect EffectState, XComGameState_Unit Attacker, XComGameState_Unit Target, XComGameState_Ability AbilityState, class<X2AbilityToHitCalc> ToHitType, bool bMelee, bool bFlanking, bool bIndirectFire, optional ShotBreakdown ShotBreakdown, optional out array<ShotModifierInfo> ShotModifiers) { return false; }
-
-// From XMBEffectInterface
-function bool GetExtValue(LWTuple Tuple)
+function OnPostTemplatesCreated()
 {
 	local name Ability;
 	local array<X2AbilityTemplate> TemplateAllDifficulties;
@@ -19,12 +12,6 @@ function bool GetExtValue(LWTuple Tuple)
 	local X2AbilityTemplateManager AbilityMgr;
 	local X2AbilityMultiTarget_Radius RadiusTarget;
 	local int i;
-
-	if (Tuple.id != 'OnPostTemplatesCreated')
-		return false;
-
-	if (HandledOnPostTemplatesCreated)
-		return false;
 
 	AbilityMgr = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
@@ -58,7 +45,4 @@ function bool GetExtValue(LWTuple Tuple)
 				RadiusTarget.AddAbilityBonusRadius(BonusAbilityName, BonusRadius[i]);
 		}
 	}
-
-	HandledOnPostTemplatesCreated = true;
-	return true;
 }

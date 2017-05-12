@@ -431,6 +431,7 @@ static function X2AbilityTemplate Fade()
 {
 	local X2AbilityTemplate						Template;
 	local X2Effect_RangerStealth				StealthEffect;
+	local XMBCondition_CoverType					CoverCondition;
 
 	StealthEffect = new class'X2Effect_RangerStealth';
 	StealthEffect.BuildPersistentEffect(1, true, true, false, eGameRule_PlayerTurnEnd);
@@ -438,12 +439,18 @@ static function X2AbilityTemplate Fade()
 	StealthEffect.EffectAddedFn = Fade_EffectAdded;
 	StealthEffect.EffectRemovedFn = Fade_EffectRemoved;
 
-	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_SOHunter.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, eCost_Single);
+	Template = SelfTargetActivated('ShadowOps_Fade', "img:///UILibrary_SOHunter.UIPerk_fade", true, StealthEffect, class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY, eCost_Free);
 	AddCooldown(Template, default.FadeCooldown);
 
 	StealthEffect.SetDisplayInfo(ePerkBuff_Penalty, Template.LocFriendlyName, default.FadePenaltyText, Template.IconImage, true);
 
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_Stealth');
+
+	CoverCondition = new class'XMBCondition_CoverType';
+	CoverCondition.AllowedCoverTypes.AddItem(CT_Standing);
+	CoverCondition.bCheckRelativeToSource = false;
+	Template.AbilityShooterConditions.AddItem(CoverCondition);
+
 	Template.AddShooterEffectExclusions();
 	Template.AddTargetEffect(class'X2Effect_Spotted'.static.CreateUnspottedEffect());
 	Template.ActivationSpeech = 'ActivateConcealment';
@@ -961,6 +968,7 @@ static function X2AbilityTemplate Reposition()
 	Template = Attack('ShadowOps_Reposition', "img:///UILibrary_SOHunter.UIPerk_reposition", false,, class'UIUtilities_Tactical'.const.STANDARD_SHOT_PRIORITY, eCost_WeaponConsumeAll);
 	Template.PostActivationEvents.AddItem('RepositionActivated');
 	Template.OverrideAbilities.AddItem('SniperStandardFire');
+	Template.OverrideAbilities.AddItem('StandardShot');
 
 	Effect = new class'X2Effect_GrantActionPoints';
 	Effect.PointType = class'X2CharacterTemplateManager'.default.MoveActionPoint;
@@ -1287,7 +1295,7 @@ static function X2AbilityTemplate Fearsome()
 
 static function X2AbilityTemplate CoverMe()
 {
-	local X2AbilityTemplate Template;
+	local X2AbilityTemplate Template, CoolUnderPressureTemplate;
 	local X2Effect_ModifyReactionFire CoolUnderPressureEffect;
 	local X2Effect_GrantReserveActionPoint ActionPointEffect;
 
@@ -1304,6 +1312,15 @@ static function X2AbilityTemplate CoverMe()
 	Template.AddTargetEffect(ActionPointEffect);
 
 	AddCooldown(Template, default.CoverMeCooldown);
+
+	// Set the Cool Under Pressure effect to display as that perk
+	CoolUnderPressureTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('CoolUnderPressure');
+	if (CoolUnderPressureTemplate != none)
+	{
+		CoolUnderPressureEffect.FriendlyName = CoolUnderPressureTemplate.LocFriendlyName;
+		CoolUnderPressureEffect.FriendlyDescription = CoolUnderPressureTemplate.LocHelpText;
+		CoolUnderPressureEffect.IconImage =  CoolUnderPressureTemplate.IconImage;
+	}
 
 	return Template;
 }

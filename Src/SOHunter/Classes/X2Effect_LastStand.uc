@@ -1,7 +1,5 @@
 class X2Effect_LastStand extends XMBEffect_Extended;
 
-var bool HandledOnPostTemplatesCreated;
-
 function bool PreDeathCheck(XComGameState NewGameState, XComGameState_Unit UnitState, XComGameState_Effect EffectState)
 {
 	UnitState.SetCurrentStat(eStat_HP, 1);
@@ -13,20 +11,13 @@ function bool PreBleedoutCheck(XComGameState NewGameState, XComGameState_Unit Un
 	return PreDeathCheck(NewGameState, UnitState, EffectState);
 }
 
-// From XMBEffectInterface
-function bool GetExtValue(LWTuple Tuple)
+function OnPostTemplatesCreated()
 {
 	local array<name> AbilityNames;
 	local name Ability;
 	local X2AbilityTemplate AbilityTemplate;
 	local X2AbilityTemplateManager AbilityMgr;
 	local X2Effect Effect;
-
-	if (Tuple.id != 'OnPostTemplatesCreated')
-		return false;
-
-	if (HandledOnPostTemplatesCreated)
-		return false;
 
 	AbilityMgr = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 	AbilityMgr.GetTemplateNames(AbilityNames);
@@ -35,7 +26,6 @@ function bool GetExtValue(LWTuple Tuple)
 	{
 		AbilityTemplate = AbilityMgr.FindAbilityTemplate(Ability);
 
-		
 		foreach AbilityTemplate.AbilityShooterEffects(Effect)
 		{
 			ModifyEffect(Effect);
@@ -52,9 +42,6 @@ function bool GetExtValue(LWTuple Tuple)
 		}
 
 	}
-
-	HandledOnPostTemplatesCreated = true;
-	return true;
 }
 
 function ModifyEffect(X2Effect Effect)

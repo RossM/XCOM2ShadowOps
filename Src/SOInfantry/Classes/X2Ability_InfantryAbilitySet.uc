@@ -15,6 +15,7 @@ var config WeaponDamageValue AirstrikeDamage;
 var config int AirstrikeCharges;
 var config int AgainstTheOddsAimBonus, AgainstTheOddsMax;
 var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
+var config int SonicBeaconCharges, SonicBeaconMoveTurns;
 
 var config name FreeAmmoForPocket;
 
@@ -35,6 +36,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZoneOfControl());
 	Templates.AddItem(ZoneOfControlShot());
 	Templates.AddItem(ZoneOfControlPistolShot());
+	Templates.AddItem(ZoneOfControlPistolShot_LW());
 	Templates.AddItem(ZeroIn());
 	Templates.AddItem(Flush());
 	Templates.AddItem(FlushShot());
@@ -56,6 +58,8 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Airstrike());
 	Templates.AddItem(AgainstTheOdds());
 	Templates.AddItem(Paragon());
+	Templates.AddItem(SonicBeacon());
+	Templates.AddItem(ThrowSonicBeacon());
 
 	return Templates;
 }
@@ -502,6 +506,7 @@ static function X2AbilityTemplate ZoneOfControl()
 
 	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlShot');
 	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlPistolShot');
+	Template.AdditionalAbilities.AddItem('ShadowOps_ZoneOfControlPistolShot_LW');
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
@@ -529,6 +534,7 @@ static function X2AbilityTemplate ZoneOfControlShot()
 	local X2Effect_Persistent               ZoneOfControlEffect;
 	local X2Condition_UnitEffectsWithAbilitySource  ZoneOfControlCondition;
 	local X2Condition_Visibility            TargetVisibilityCondition;
+	local X2Condition_UnitProperty			ShooterCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ZoneOfControlShot');
 
@@ -564,7 +570,10 @@ static function X2AbilityTemplate ZoneOfControlShot()
 	ZoneOfControlEffect.SetupEffectOnShotContextResult(true, true);      //  mark them regardless of whether the shot hit or missed
 	Template.AddTargetEffect(ZoneOfControlEffect);
 
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	ShooterCondition = new class'X2Condition_UnitProperty';
+	ShooterCondition.ExcludeConcealed = true;
+	Template.AbilityShooterConditions.AddItem(ShooterCondition);
+
 	Template.AddShooterEffectExclusions();
 
 	SingleTarget = new class'X2AbilityTarget_Single';
@@ -613,6 +622,7 @@ static function X2AbilityTemplate ZoneOfControlPistolShot()
 	local X2Condition_UnitEffectsWithAbilitySource  ZoneOfControlCondition;
 	local X2Condition_Visibility            TargetVisibilityCondition;
 	local X2Condition_UnitInventory			HasPistolCondition;
+	local X2Condition_UnitProperty			ShooterCondition;
 
 	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_ZoneOfControlPistolShot');
 	Template = new class'X2AbilityTemplate_BO'(BaseTemplate);
@@ -653,7 +663,103 @@ static function X2AbilityTemplate ZoneOfControlPistolShot()
 	ZoneOfControlEffect.SetupEffectOnShotContextResult(true, true);      //  mark them regardless of whether the shot hit or missed
 	Template.AddTargetEffect(ZoneOfControlEffect);
 
-	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+	ShooterCondition = new class'X2Condition_UnitProperty';
+	ShooterCondition.ExcludeConcealed = true;
+	Template.AbilityShooterConditions.AddItem(ShooterCondition);
+
+	Template.AddShooterEffectExclusions();
+
+	SingleTarget = new class'X2AbilityTarget_Single';
+	SingleTarget.OnlyIncludeTargetsInsideWeaponRange = true;
+	Template.AbilityTargetStyle = SingleTarget;
+
+	//  Put holo target effect first because if the target dies from this shot, it will be too late to notify the effect.
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.HoloTargetEffect());
+	Template.AddTargetEffect(class'X2Ability_GrenadierAbilitySet'.static.ShredderDamageEffect());
+
+	Template.bAllowAmmoEffects = true;
+	Template.bAllowBonusWeaponEffects = true;
+
+	//Trigger on movement - interrupt the move
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_MovementObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+	Trigger = new class'X2AbilityTrigger_Event';
+	Trigger.EventObserverClass = class'X2TacticalGameRuleset_AttackObserver';
+	Trigger.MethodName = 'InterruptGameState';
+	Template.AbilityTriggers.AddItem(Trigger);
+
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_overwatch";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+
+	return Template;
+}
+
+static function X2AbilityTemplate ZoneOfControlPistolShot_LW()
+{
+	local X2AbilityTemplate					BaseTemplate;
+	local X2AbilityTemplate_BO              Template;
+	local X2AbilityCost_ReserveActionPoints ReserveActionPointCost;
+	local X2AbilityToHitCalc_StandardAim    StandardAim;
+	local X2AbilityTarget_Single            SingleTarget;
+	local X2AbilityTrigger_Event	        Trigger;
+	local X2Effect_Persistent               ZoneOfControlEffect;
+	local X2Condition_UnitEffectsWithAbilitySource  ZoneOfControlCondition;
+	local X2Condition_Visibility            TargetVisibilityCondition;
+	local X2Condition_UnitInventory			HasPistolCondition;
+	local X2Condition_UnitProperty			ShooterCondition;
+
+	`CREATE_X2ABILITY_TEMPLATE(BaseTemplate, 'ShadowOps_ZoneOfControlPistolShot_LW');
+	Template = new class'X2AbilityTemplate_BO'(BaseTemplate);
+
+	// This ability applies to the pistol, if one is equipped.
+	Template.ApplyToWeaponCat = 'pistol';
+
+	ReserveActionPointCost = new class'X2AbilityCost_ReserveActionPoints';
+	ReserveActionPointCost.iNumPoints = 1;
+	ReserveActionPointCost.bFreeCost = true;
+	ReserveActionPointCost.AllowedTypes.AddItem('ZoneOfControl');
+	Template.AbilityCosts.AddItem(ReserveActionPointCost);
+
+	HasPistolCondition = new class'X2Condition_UnitInventory';
+	HasPistolCondition.RelevantSlot = eInvSlot_Utility;
+	HasPistolCondition.RequireWeaponCategory = 'pistol';
+	Template.AbilityShooterConditions.AddItem(HasPistolCondition);
+
+	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
+	StandardAim.bReactionFire = true;
+	Template.AbilityToHitCalc = StandardAim;
+
+	Template.AbilityTargetConditions.AddItem(default.LivingHostileUnitDisallowMindControlProperty);
+	TargetVisibilityCondition = new class'X2Condition_Visibility';
+	TargetVisibilityCondition.bRequireGameplayVisible = true;
+	TargetVisibilityCondition.bDisablePeeksOnMovement = true;
+	Template.AbilityTargetConditions.AddItem(TargetVisibilityCondition);
+	Template.AbilityTargetConditions.AddItem(class'X2Ability_DefaultAbilitySet'.static.OverwatchTargetEffectsCondition());
+
+	//  Do not shoot targets that were already hit by this unit this turn with this ability
+	ZoneOfControlCondition = new class'X2Condition_UnitEffectsWithAbilitySource';
+	ZoneOfControlCondition.AddExcludeEffect('ZoneOfControlTarget', 'AA_UnitIsImmune');
+	Template.AbilityTargetConditions.AddItem(ZoneOfControlCondition);
+	//  Mark the target as shot by this unit so it cannot be shot again this turn
+	ZoneOfControlEffect = new class'X2Effect_Persistent';
+	ZoneOfControlEffect.EffectName = 'ZoneOfControlTarget';
+	ZoneOfControlEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
+	ZoneOfControlEffect.SetupEffectOnShotContextResult(true, true);      //  mark them regardless of whether the shot hit or missed
+	Template.AddTargetEffect(ZoneOfControlEffect);
+
+	ShooterCondition = new class'X2Condition_UnitProperty';
+	ShooterCondition.ExcludeConcealed = true;
+	Template.AbilityShooterConditions.AddItem(ShooterCondition);
+
 	Template.AddShooterEffectExclusions();
 
 	SingleTarget = new class'X2AbilityTarget_Single';
@@ -1275,33 +1381,34 @@ static function X2AbilityTemplate SecondWindTrigger()
 {
 	local X2AbilityTemplate					Template;
 	local X2Effect_GrantActionPoints		Effect;
-	local X2AbilityTrigger_EventListener	Trigger;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_SecondWindTrigger');
-
-	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_secondwind";
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-	Template.Hostility = eHostility_Neutral;
-
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTargetStyle = default.SimpleSingleTarget;
-
-	Trigger = new class'X2AbilityTrigger_EventListener';
-	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
-	Trigger.ListenerData.EventID = 'MedikitUsed';
-	Trigger.ListenerData.Filter = eFilter_Unit;
-	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.RapidFireListener;
-	Template.AbilityTriggers.AddItem(Trigger);
+	local XMBCondition_AbilityName			Condition;
+	local XMBAbilityTrigger_EventListener	EventListener;
 
 	Effect = new class'X2Effect_GrantActionPoints';
 	Effect.NumActionPoints = 1;
 	Effect.PointType = class'X2CharacterTemplateManager'.default.StandardActionPoint;
-	Template.AddTargetEffect(Effect);
 
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template = TargetedBuff('ShadowOps_SecondWindTrigger', "img:///UILibrary_SOInfantry.UIPerk_secondwind", false, Effect,, eCost_None);
+	Template.AbilityTriggers.Length = 0;
+	Template.AbilityTargetConditions.Length = 0;
+	Template.AbilityShooterConditions.Length = 0;
+	Template.AbilityTargetStyle = default.SingleTargetWithSelf;
+	
+	EventListener = new class'XMBAbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'AbilityActivated';
+	EventListener.ListenerData.Filter = eFilter_Unit;
+	EventListener.bSelfTarget = false;
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.IncludeAbilityNames = class'TemplateEditors_Infantry'.default.MedikitAbilities;
+	AddTriggerTargetCondition(Template, Condition);
+
 	Template.BuildVisualizationFn = SecondWind_BuildVisualization;
 	Template.bSkipFireAction = true;
+
+	HidePerkIcon(Template);
 
 	return Template;
 }
@@ -1724,6 +1831,95 @@ static function X2AbilityTemplate Paragon()
 	return Template;
 }
 
+static function X2AbilityTemplate SonicBeacon()
+{
+	local XMBEffect_AddUtilityItem Effect;
+
+	Effect = new class'XMBEffect_AddUtilityItem';
+	Effect.DataName = 'SonicBeacon';
+	Effect.BaseCharges = default.SonicBeaconCharges;
+
+	return Passive('ShadowOps_SonicBeacon', "img:///UILibrary_SOInfantry.UIPerk_sonicbeacon", true, Effect);
+}
+
+static function X2AbilityTemplate ThrowSonicBeacon()
+{
+	local X2AbilityTemplate                 Template;	
+	local X2AbilityCost_Ammo                AmmoCost;
+	local X2AbilityCost_ActionPoints        ActionPointCost;
+	local X2AbilityTarget_Cursor            CursorTarget;
+	local X2AbilityMultiTarget_Radius       RadiusMultiTarget;
+	local X2Condition_UnitProperty          UnitPropertyCondition;
+	local X2Effect_Persistent				SeekBeaconEffect;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_ThrowSonicBeacon');	
+	
+	Template.AbilitySourceName = 'eAbilitySource_Perk';
+	Template.Hostility = eHostility_Defensive;
+	Template.ConcealmentRule = eConceal_Always;
+	Template.bSilentAbility = true; // The map alert will be added by the effect below
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_WeaponIncompatible');
+	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
+	Template.IconImage = "img:///UILibrary_SOInfantry.UIPerk_sonicbeacon";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
+	Template.bUseAmmoAsChargesForHUD = true;
+	Template.bDisplayInUITooltip = false;
+	Template.bDisplayInUITacticalText = false;
+	Template.bDontDisplayInAbilitySummary = true;
+
+	AmmoCost = new class'X2AbilityCost_Ammo';
+	AmmoCost.iAmmo = 1;
+	Template.AbilityCosts.AddItem(AmmoCost);
+	
+	ActionPointCost = new class'X2AbilityCost_ActionPoints';
+	ActionPointCost.iNumPoints = 1;
+	ActionPointCost.bConsumeAllPoints = true;
+	Template.AbilityCosts.AddItem(ActionPointCost);
+	
+	Template.AbilityToHitCalc = default.DeadEye;
+	
+	Template.bHideWeaponDuringFire = true;
+	
+	CursorTarget = new class'X2AbilityTarget_Cursor';
+	CursorTarget.bRestrictToWeaponRange = true;
+	Template.AbilityTargetStyle = CursorTarget;
+
+	RadiusMultiTarget = new class'X2AbilityMultiTarget_Radius';
+	RadiusMultiTarget.bUseWeaponRadius = true;
+	RadiusMultiTarget.bIgnoreBlockingCover = true;
+	Template.AbilityMultiTargetStyle = RadiusMultiTarget;
+
+	Template.AbilityShooterConditions.AddItem(new class'XMBCondition_Concealed');
+
+	UnitPropertyCondition = new class'X2Condition_UnitProperty';
+	UnitPropertyCondition.ExcludeDead = false;
+	UnitPropertyCondition.ExcludeFriendlyToSource = true;
+	UnitPropertyCondition.ExcludeHostileToSource = false;
+	Template.AbilityMultiTargetConditions.AddItem(UnitPropertyCondition);
+
+	Template.AddShooterEffectExclusions();
+
+	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+
+	Template.AddMultiTargetEffect(new class'X2Effect_MapAlert');
+
+	// This triggers the AI to move towards the sonic beacon for a set number of turns
+	SeekBeaconEffect = new class'X2Effect_Persistent';
+	SeekBeaconEffect.EffectName = 'SeekSonicBeacon';
+	SeekBeaconEffect.BuildPersistentEffect(default.SonicBeaconMoveTurns, false, false, false, eGameRule_PlayerTurnEnd);
+	Template.AddMultiTargetEffect(SeekBeaconEffect);
+		
+	Template.bShowActivation = true;
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.TargetingMethod = class'X2TargetingMethod_Grenade';
+	Template.CinescriptCameraType = "StandardGrenadeFiring";
+
+	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
+
+	return Template;	
+}
 
 DefaultProperties
 {

@@ -65,8 +65,8 @@ LocPromotionPopupText="<Bullet/> You must have cover from all enemies that can s
 
 [ShadowOps_Fade X2AbilityTemplate]
 LocFriendlyName="Fade"
-LocLongDescription="Gain concealment that is broken if you move. <Ability:SelfCooldown/> turn cooldown."
-LocHelpText="Gain concealment that is broken if you move."
+LocLongDescription="Gain concealment that is broken if you move. Only works in full cover. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Gain concealment that is broken if you move. Only works in full cover."
 LocFlyOverText="Fade"
 LocPromotionPopupText="<Bullet/> Fade will let you use your First Strike bonus multiple times during a battle.<br/><Bullet/> Concealment granted by Fade can also be broken normally.<br/><Bullet/> Fade consumes an action and has a <Ability:SelfCooldown/> turn cooldown.<br/>"
 
@@ -153,7 +153,7 @@ LocPromotionPopupText="<Bullet/> You can still take damage, but it will never re
 
 [ShadowOps_DisablingShot X2AbilityTemplate]
 LocFriendlyName="Disabling Shot"
-LocLongDescription="Make a special shot with a <Ability:+ToHit:ShadowOps_DisablingShot_Bonuses/> Aim modifier that deals half damage and disables the target for one turn. <Ability:SelfCooldown/> turn cooldown."
+LocLongDescription="Make a special shot that deals half damage and disables the target for one turn. <Ability:SelfCooldown/> turn cooldown."
 LocHelpText="Make a special shot that deals half damage and disables the target for one turn."
 LocFlyOverText="Disabling Shot"
 LocPromotionPopupText="<Bullet/> Disabled units can only move, reload, hunker, and make melee attacks.<br/>"

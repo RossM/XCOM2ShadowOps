@@ -42,10 +42,31 @@ var array<name> SkipAbilities;				// List of abilities to not add
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
 	local X2ItemTemplate ItemTemplate;
-	local X2EquipmentTemplate EquipmentTemplate;
-	local X2WeaponTemplate WeaponTemplate;
 	local X2ItemTemplateManager ItemTemplateMgr;
 	local XComGameState_Unit NewUnit;
+
+	NewUnit = XComGameState_Unit(kNewTargetState);
+	if (NewUnit == none)
+		return;
+
+	if (class'XMBEffectUtilities'.static.SkipForDirectMissionTransfer(ApplyEffectParameters))
+		return;
+
+	ItemTemplateMgr = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+
+	ItemTemplate = ItemTemplateMgr.FindItemTemplate(DataName);
+	
+	// Use the highest upgraded available version of the item
+	if (bUseHighestAvailableUpgrade)
+		`XCOMHQ.UpdateItemTemplateToHighestAvailableUpgrade(ItemTemplate);
+
+	AddUtilityItem(NewUnit, ItemTemplate, NewGameState, NewEffectState);
+}
+
+simulated function AddUtilityItem(XComGameState_Unit NewUnit, X2ItemTemplate ItemTemplate, XComGameState NewGameState, XComGameState_Effect NewEffectState)
+{
+	local X2EquipmentTemplate EquipmentTemplate;
+	local X2WeaponTemplate WeaponTemplate;
 	local XComGameState_Item ItemState;
 	local X2AbilityTemplateManager AbilityTemplateMan;
 	local X2AbilityTemplate AbilityTemplate;
@@ -55,23 +76,9 @@ simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffe
 	local XGUnit UnitVisualizer;
 	local int idx;
 
-	NewUnit = XComGameState_Unit(kNewTargetState);
-	if (NewUnit == none)
-		return;
-
 	History = `XCOMHISTORY;
 
-	if (class'XMBEffectUtilities'.static.SkipForDirectMissionTransfer(ApplyEffectParameters))
-		return;
-
-	ItemTemplateMgr = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 	AbilityTemplateMan = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
-
-	ItemTemplate = ItemTemplateMgr.FindItemTemplate(DataName);
-	
-	// Use the highest upgraded available version of the item
-	if (bUseHighestAvailableUpgrade)
-		`XCOMHQ.UpdateItemTemplateToHighestAvailableUpgrade(ItemTemplate);
 
 	EquipmentTemplate = X2EquipmentTemplate(ItemTemplate);
 	if (EquipmentTemplate == none)

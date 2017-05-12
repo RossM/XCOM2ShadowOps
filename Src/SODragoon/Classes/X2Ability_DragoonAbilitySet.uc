@@ -23,8 +23,15 @@ var config array<int> ReverseEngineeringHackBonus;
 var config array<name> RocketeerAbilityNames;
 var config int EatThisAimBonus, EatThisCritBonus, EatThisMaxTiles;
 var config int InspirationDodgeBonus, InspirationWillBonus, InspirationMaxTiles;
+var config int ShieldSurgeArmor;
+var config array<name> PuppeteerAbilityNames;
+var config int ShieldBatteryBonusCharges;
+var config int OverkillBonusDamage;
 
-var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges;
+var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges, PhalanxProtocolCharges;
+var config int StealthProtocolConventionalCharges, StealthProtocolMagneticCharges, StealthProtocolBeamCharges;
+var config int RestorationProtocolConventionalCharges, RestorationProtocolMagneticCharges, RestorationProtocolBeamCharges;
+
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
 var config int BurstFireAmmo;
 
@@ -58,6 +65,11 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(EatThis());
 	Templates.AddItem(PurePassive('ShadowOps_DigitalWarfare', "img:///UILibrary_SODragoon.UIPerk_digitalwarfare", false));
 	Templates.AddItem(Inspiration());
+	Templates.AddItem(PurePassive('ShadowOps_ShieldSurge', "img:///UILibrary_SODragoon.UIPerk_shieldsurge", false));
+	Templates.AddItem(PhalanxProtocol());
+	Templates.AddItem(Puppeteer());
+	Templates.AddItem(ShieldBattery());
+	Templates.AddItem(Overkill());
 
 	return Templates;
 }
@@ -107,6 +119,7 @@ static function X2AbilityTemplate ShieldProtocol(optional name TemplateName = 'S
 	Template.AbilityTargetConditions.AddItem(EffectsCondition);
 
 	Template.AddTargetEffect(ShieldProtocolEffect(Template.LocFriendlyName, Template.LocLongDescription));
+	Template.AddTargetEffect(ShieldSurgeEffect());
 
 	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
 
@@ -148,6 +161,26 @@ static function X2Effect ShieldProtocolEffect(string FriendlyName, string LongDe
 	ShieldedEffect.SetDisplayInfo(ePerkBuff_Bonus, FriendlyName, LongDescription, "img:///UILibrary_PerkIcons.UIPerk_adventshieldbearer_energyshield", true);
 
 	return ShieldedEffect;
+}
+
+static function X2Effect ShieldSurgeEffect()
+{
+	local X2Effect_PersistentStatChange ArmorEffect;
+	local X2AbilityTemplate ShieldSurgeTemplate;
+	local X2Condition_SourceAbilities Condition;
+
+	`CREATE_X2ABILITY_TEMPLATE(ShieldSurgeTemplate, 'ShadowOps_ShieldSurge');
+
+	ArmorEffect = new class'X2Effect_PersistentStatChange';
+	ArmorEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
+	ArmorEffect.AddPersistentStatChange(eStat_ArmorMitigation, default.ShieldSurgeArmor);
+	ArmorEffect.SetDisplayInfo(ePerkBuff_Bonus, ShieldSurgeTemplate.LocFriendlyName, ShieldSurgeTemplate.LocLongDescription, "img:///UILibrary_SODragoon.UIPerk_shieldsurge", true);
+
+	Condition = new class'X2Condition_SourceAbilities';
+	Condition.AddRequireAbility('ShadowOps_ShieldSurge', 'AA_AbilityUnavailable');
+	ArmorEffect.TargetConditions.AddItem(Condition);
+
+	return ArmorEffect;
 }
 
 static function X2AbilityTemplate HeavyArmor()
@@ -330,7 +363,7 @@ static function X2AbilityTemplate StealthProtocol()
 	local X2AbilityTemplate                     Template;
 	local X2Condition_UnitProperty              TargetProperty;
 	local X2Condition_UnitEffects               EffectsCondition;
-	local X2AbilityCharges                      Charges;
+	local X2AbilityCharges_GremlinTech          Charges;
 	local X2AbilityCost_Charges                 ChargeCost;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_StealthProtocol');
@@ -347,8 +380,10 @@ static function X2AbilityTemplate StealthProtocol()
 
 	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
-	Charges = new class 'X2AbilityCharges_RevivalProtocol';
-	Charges.InitialCharges = default.StealthProtocolCharges;
+	Charges = new class 'X2AbilityCharges_GremlinTech';
+	Charges.ConventionalCharges = default.StealthProtocolConventionalCharges;
+	Charges.MagneticCharges = default.StealthProtocolMagneticCharges;
+	Charges.BeamCharges = default.StealthProtocolBeamCharges;
 	Template.AbilityCharges = Charges;
 
 	ChargeCost = new class'X2AbilityCost_Charges';
@@ -582,7 +617,7 @@ static function X2AbilityTemplate RestorationProtocol()
 	local X2AbilityTemplate                     Template;
 	local X2Condition_UnitProperty              TargetProperty;
 	local X2Condition_UnitStatCheck             UnitStatCheckCondition;
-	local X2AbilityCharges                      Charges;
+	local X2AbilityCharges_GremlinTech          Charges;
 	local X2AbilityCost_Charges                 ChargeCost;
 	local X2Effect_RestorationProtocol			RestorationEffect;			
 	local X2Effect_RemoveEffects				RemoveEffects;
@@ -603,8 +638,10 @@ static function X2AbilityTemplate RestorationProtocol()
 
 	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
-	Charges = new class 'X2AbilityCharges_RevivalProtocol';
-	Charges.InitialCharges = default.RestoratonProtocolCharges;
+	Charges = new class 'X2AbilityCharges_GremlinTech';
+	Charges.ConventionalCharges = default.RestorationProtocolConventionalCharges;
+	Charges.MagneticCharges = default.RestorationProtocolMagneticCharges;
+	Charges.BeamCharges = default.RestorationProtocolBeamCharges;
 	Template.AbilityCharges = Charges;
 
 	ChargeCost = new class'X2AbilityCost_Charges';
@@ -870,16 +907,11 @@ static function X2AbilityTemplate SensorOverlays()
 static function X2AbilityTemplate Supercharge()
 {
 	local X2Effect_Supercharge Effect;
-	local X2AbilityTemplate Template;
 
 	Effect = new class'X2Effect_Supercharge';
 	Effect.BonusCharges = default.SuperchargeChargeBonus;
 
-	Template = Passive('ShadowOps_Supercharge', "img:///UILibrary_SODragoon.UIPerk_supercharge", false);
-
-	Template.AddTargetEffect(Effect);
-
-	return Template;
+	return Passive('ShadowOps_Supercharge', "img:///UILibrary_SODragoon.UIPerk_supercharge", false, Effect);
 }
 
 static function X2AbilityTemplate ReverseEngineering()
@@ -966,7 +998,7 @@ static function X2AbilityTemplate EatThis()
 
 	Effect.ScaleValue = new class'XMBValue_Distance';
 	Effect.ScaleMultiplier = -1.0 / default.EatThisMaxTiles;
-	Effect.ScaleBase = 1.0 - Effect.ScaleMultiplier;
+	Effect.ScaleBase = 1.0 - Effect.ScaleMultiplier + 0.5 / max(default.EatThisAimBonus, default.EatThisCritBonus); // Add a constant for rounding
 	Effect.ScaleMax = 1.0;
 
 	return Passive('ShadowOps_EatThis', "img:///UILibrary_SODragoon.UIPerk_eatthis", false, Effect);
@@ -974,6 +1006,7 @@ static function X2AbilityTemplate EatThis()
 
 static function X2AbilityTemplate Inspiration()
 {
+	local X2AbilityTemplate Template;
 	local XMBEffect_ConditionalStatChange Effect;
 
 	Effect = new class'XMBEffect_ConditionalStatChange';
@@ -983,6 +1016,69 @@ static function X2AbilityTemplate Inspiration()
 	Effect.AddPersistentStatChange(eStat_Will, default.InspirationWillBonus);
 	Effect.Conditions.AddItem(TargetWithinTiles(default.InspirationMaxTiles));
 
-	return SquadPassive('ShadowOps_Inspiration', "img:///UILibrary_SODragoon.UIPerk_inspiration", false, Effect);
+	Template = SquadPassive('ShadowOps_Inspiration', "img:///UILibrary_SODragoon.UIPerk_inspiration", false, Effect);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.DodgeLabel, eStat_Dodge, default.InspirationDodgeBonus);
+	Template.SetUIStatMarkup(class'XLocalizedData'.default.PsiOffenseLabel, eStat_Will, default.InspirationWillBonus);
+
+	return Template;
 }
 
+static function X2AbilityTemplate PhalanxProtocol()
+{
+	local X2Effect Effect;
+	local X2AbilityTemplate Template;
+	local X2AbilityMultiTarget_AllAllies MultiTargetingStyle;
+	local X2Condition_UnitProperty TargetCondition;
+
+	Template = SelfTargetActivated('ShadowOps_PhalanxProtocol', "img:///UILibrary_SODragoon.UIPerk_phalanxprotocol", false, none);
+
+	Effect = class'X2Ability_SpecialistAbilitySet'.static.AidProtocolEffect();
+	Template.AddMultiTargetEffect(Effect);
+
+	MultiTargetingStyle = new class'X2AbilityMultiTarget_AllAllies';
+	MultiTargetingStyle.bAllowSameTarget = true;
+	MultiTargetingStyle.NumTargetsRequired = 1; //At least someone must need healing
+	Template.AbilityMultiTargetStyle = MultiTargetingStyle;
+
+	TargetCondition = new class'X2Condition_UnitProperty';
+	TargetCondition.ExcludeHostileToSource = true;
+	TargetCondition.ExcludeFriendlyToSource = false;
+	TargetCondition.RequireSquadmates = true;
+	Template.AbilityMultiTargetConditions.AddItem(TargetCondition);
+
+	AddCharges(Template, default.PhalanxProtocolCharges);
+
+	return Template;
+}
+
+static function X2AbilityTemplate Puppeteer()
+{
+	local XMBEffect_DoNotConsumeAllPoints Effect;
+
+	Effect = new class'XMBEffect_DoNotConsumeAllPoints';
+	Effect.AbilityNames = default.PuppeteerAbilityNames;
+
+	return Passive('ShadowOps_Puppeteer', "img:///UILibrary_SODragoon.UIPerk_puppetprotocol", false, Effect);
+}
+
+static function X2AbilityTemplate ShieldBattery()
+{
+	local XMBEffect_AddAbilityCharges Effect;
+
+	Effect = new class'XMBEffect_AddAbilityCharges';
+	Effect.AbilityNames.AddItem('ShadowOps_ShieldProtocol');
+	Effect.AbilityNames.AddItem('ShadowOps_AdvancedShieldProtocol');
+	Effect.BonusCharges = default.ShieldBatteryBonusCharges;
+
+	return Passive('ShadowOps_ShieldBattery', "img:///UILibrary_SODragoon.UIPerk_shieldbattery", false, Effect);
+}
+
+static function X2AbilityTemplate Overkill()
+{
+	local X2Effect_Overkill Effect;
+
+	Effect = new class'X2Effect_Overkill';
+	Effect.BonusDamage = default.OverkillBonusDamage;
+
+	return Passive('ShadowOps_Overkill', "img:///UILibrary_SODragoon.UIPerk_overkill", true, Effect);
+}

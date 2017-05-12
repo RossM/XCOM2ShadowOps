@@ -98,10 +98,12 @@ static function bool AlwaysRelevant(XMBEffect_ConditionalBonus Effect)
 
 // Helper method for quickly defining a non-pure passive. Works like PurePassive, except it also 
 // takes an X2Effect_Persistent.
-static function X2AbilityTemplate Passive(name DataName, string IconImage, optional bool bCrossClassEligible = false, optional X2Effect_Persistent Effect = none)
+static function X2AbilityTemplate Passive(name DataName, string IconImage, optional bool bCrossClassEligible = false, optional X2Effect Effect = none)
 {
 	local X2AbilityTemplate Template;
 	local XMBEffect_ConditionalBonus ConditionalBonusEffect;
+	local XMBEffect_ConditionalStatChange ConditionalStatChangeEffect;
+	local X2Effect_Persistent PersistentEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, DataName);
 	Template.IconImage = IconImage;
@@ -114,27 +116,38 @@ static function X2AbilityTemplate Passive(name DataName, string IconImage, optio
 	Template.AbilityTargetStyle = default.SelfTarget;
 	Template.AbilityTriggers.AddItem(default.UnitPostBeginPlayTrigger);
 
-	if (Effect == none)
-		Effect = new class'X2Effect_Persistent';
-
+	PersistentEffect = X2Effect_Persistent(Effect);
 	ConditionalBonusEffect = XMBEffect_ConditionalBonus(Effect);
+	ConditionalStatChangeEffect = XMBEffect_ConditionalStatChange(Effect);
 
-	if ((ConditionalBonusEffect != none && !AlwaysRelevant(ConditionalBonusEffect)) ||
-		XMBEffect_ConditionalStatChange(Effect) != none)
+	if (ConditionalBonusEffect != none && !AlwaysRelevant(ConditionalBonusEffect))
 	{
-		Effect.BuildPersistentEffect(1, true, false, false);
-		Effect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, true,,Template.AbilitySourceName);
-		if (ConditionalBonusEffect != none)
-			ConditionalBonusEffect.bHideWhenNotRelevant = true;
-		Template.AddTargetEffect(Effect);
+		ConditionalBonusEffect.BuildPersistentEffect(1, true, false, false);
+		ConditionalBonusEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, true,,Template.AbilitySourceName);
+		ConditionalBonusEffect.bHideWhenNotRelevant = true;
 
-		Effect = new class'X2Effect_Persistent';
-		Effect.EffectName = name(DataName $ "_Passive");
+		PersistentEffect = new class'X2Effect_Persistent';
+		PersistentEffect.EffectName = name(DataName $ "_Passive");
+	}
+	else if (ConditionalStatChangeEffect != none)
+	{
+		ConditionalStatChangeEffect.BuildPersistentEffect(1, true, false, false);
+		ConditionalStatChangeEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, Template.IconImage, true,,Template.AbilitySourceName);
+
+		PersistentEffect = new class'X2Effect_Persistent';
+		PersistentEffect.EffectName = name(DataName $ "_Passive");
+	}
+	else if (PersistentEffect == none)
+	{
+		PersistentEffect = new class'X2Effect_Persistent';
 	}
 
-	Effect.BuildPersistentEffect(1, true, false, false);
-	Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true,,Template.AbilitySourceName);
-	Template.AddTargetEffect(Effect);
+	PersistentEffect.BuildPersistentEffect(1, true, false, false);
+	PersistentEffect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.LocLongDescription, Template.IconImage, true,,Template.AbilitySourceName);
+	Template.AddTargetEffect(PersistentEffect);
+
+	if (Effect != PersistentEffect && Effect != none)
+		Template.AddTargetEffect(Effect);
 
 	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
 	//  NOTE: No visualization on purpose!

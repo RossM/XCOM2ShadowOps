@@ -2,16 +2,16 @@
 
 [ShadowOps_ShieldProtocol X2AbilityTemplate]
 LocFriendlyName="Shield Protocol"
-LocLongDescription="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. The shield lasts until the end of the mission or until it is destroyed, and also grants poison immunity."
-LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage."
+LocLongDescription="Grant a friendly unit <Ability:Shield/> bonus ablative hit points. The shield also grants poison immunity until all ablative hit points are lost."
+LocHelpText="Grant a friendly unit <Ability:Shield/> bonus ablative hit points."
 LocFlyOverText="Shield Protocol""
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
 [ShadowOps_AdvancedShieldProtocol X2AbilityTemplate]
-LocFriendlyName="Advanced Shield Protocol"
+LocFriendlyName="Rapid Shielding"
 LocLongDescription="Shield Protocol no longer costs an action to use."
-LocHelpText="Give a friendly unit an energy shield which will absorb <Ability:Shield/> points of damage. This ability doesn't cost an action."
-LocFlyOverText="Advanced Shield Protocol""
+LocHelpText="Grant a friendly unit <Ability:Shield/> bonus ablative hit points.. This ability doesn't cost an action."
+LocFlyOverText="Rapid Shielding"
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> Damage absorbed by the shield won't cause wound time, so try to use it to protect your soldiers before they get injured. <br/><Bullet/> Consider saving a use of Shield Protocol to use on a unit that gets into trouble.<br/><Bullet/> The shield lasts until it absorbs its damage limit or the Dragoon dies or evacs. <br/><Bullet/> The shield also grants immunity to poison. <br/><Bullet/> Shield Protocol has two charges per mission.<br/>"
 
 [ShadowOps_HeavyArmor X2AbilityTemplate]
@@ -44,8 +44,8 @@ LocPromotionPopupText="<Bullet/> Barrage has a 70% chance to damage units and a 
 
 [ShadowOps_ShieldsUp X2AbilityTemplate]
 LocFriendlyName="Shields Up"
-LocLongDescription="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
-LocHelpText="All squad members begin play with an energy shield that will absorb <Ability:Shield/> damage."
+LocLongDescription="All squad members gain <Ability:Shield/> bonus ablative HP."
+LocHelpText="All squad members gain <Ability:Shield/> bonus ablative HP."
 LocFlyOverText="Shields Up"
 LocPromotionPopupText="<Bullet/> More advanced GREMLINs will provide a more powerful shield.<br/><Bullet/> The shield granted by Shields Up is small, but it may help save a soldier's life or even just reduce post-battle wound time.<br/><Bullet/> Unlike Shield Protocol, Shields Up does not provide immunity to poison.<br/><Bullet/> The shield is removed if the Dragoon dies or evacs.<br/>"
 
@@ -162,17 +162,17 @@ LocPromotionPopupText="<Bullet/> Charge! has one charge.<br/>"
 
 [ShadowOps_EatThis X2AbilityTemplate]
 LocFriendlyName="Eat This!"
-LocLongDescription="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range."
+LocLongDescription="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range, to a maximum of <Ability:EatThisMaxTiles/> tiles."
 LocHelpText="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range."
 LocFlyOverText="Eat This!"
-LocPromotionPopupText="<Bullet/> The Aim bonus from Eat This! cancels the Aim penalty from using a cannon at close range.<br/>"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
 [ShadowOps_Inspiration X2AbilityTemplate]
 LocFriendlyName="Inspiration"
-LocLongDescription="Allies within 10 tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
-LocHelpText="Allies within 10 tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
+LocLongDescription="You and all allies within <Ability:InspirationMaxTiles/> tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
+LocHelpText="You and all allies within <Ability:InspirationMaxTiles/> tiles of you gain <Ability:+Dodge/> Dodge and <Ability:+Will/> Will."
 LocFlyOverText="Inspiration"
-LocPromotionPopupText="<Bullet/> You also benefit from the bonuses.<br/>"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
 
 [ShadowOps_DigitalWarfare X2AbilityTemplate]
 LocFriendlyName="Digital Warfare"
@@ -180,6 +180,41 @@ LocLongDescription="Gain a second PCS slot."
 LocHelpText="Gain a second PCS slot."
 LocFlyOverText="Digital Warfare"
 LocPromotionPopupText="<Bullet/> You cannot equip two PCSes of the same type.<br/>"
+
+[ShadowOps_ShieldSurge X2AbilityTemplate]
+LocFriendlyName="Shield Surge"
+LocLongDescription="Shield Protocol now also grants the target <Ability:ArmorMitigation:ShadowOps_ShieldProtocol/> Armor for one turn."
+LocHelpText="Shield Protocol now also grants the target <Ability:ArmorMitigation:ShadowOps_ShieldProtocol/> Armor for one turn."
+LocFlyOverText="Shield Surge"
+LocPromotionPopupText="<Bullet/> The Armor lasts until the start of your next turn.<br/>"
+
+[ShadowOps_PhalanxProtocol X2AbilityTemplate]
+LocFriendlyName="Phalanx Protocol"
+LocLongDescription="Your GREMLIN moves to every ally, granting all of them a Defense bonus until the start of your next turn." 
+LocHelpText="Send your GREMLIN to each ally to grant them +<Ability:AidProtocolDefenseBonus/> Defense for a turn." 
+LocFlyOverText="Phalanx Protocol"
+LocPromotionPopupText="<Bullet/> Phalanx Protocol effectively grants Aid Protocol to every ally.<br/>"
+
+[ShadowOps_Puppeteer X2AbilityTemplate]
+LocFriendlyName="Puppeteer"
+LocLongDescription="Haywire Protocol no longer has a cooldown and doesn't end the turn." 
+LocHelpText="Haywire Protocol no longer has a cooldown and doesn't end the turn." 
+LocFlyOverText="Puppeteer"
+LocPromotionPopupText="<Bullet/> You can still only make one attempt to use Haywire Protocol per enemy unit.<br/>"
+
+[ShadowOps_ShieldBattery X2AbilityTemplate]
+LocFriendlyName="Shield Battery"
+LocLongDescription="Grants <Ability:ShieldBatteryBonusCharges/> additional Shield Protocol charges." 
+LocHelpText="Grants <Ability:ShieldBatteryBonusCharges/> additional Shield Protocol charges." 
+LocFlyOverText="Shield Battery"
+LocPromotionPopupText="<Bullet/> Grants additional uses of Shield Protocol.<br/>"
+
+[ShadowOps_Overkill X2AbilityTemplate]
+LocFriendlyName="Overkill"
+LocLongDescription="Your attacks deal <Ability:+Damage/> damage to enemies at half or less of their original hit points." 
+LocHelpText="Your attacks deal <Ability:+Damage/> damage to enemies at half or less of their original hit points." 
+LocFlyOverText="Overkill"
+LocPromotionPopupText="<Bullet/> The bonus damage applies to all your attacks, including gauntlet attacks.<br/><Bullet/> Overkill doesn't affect burn, acid, or poison damage caused by your abilities.<br/>"
 
 ; === Class templates ===
 

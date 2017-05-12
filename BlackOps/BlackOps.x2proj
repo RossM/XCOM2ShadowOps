@@ -46,8 +46,8 @@
     <Folder Include="Src\SOHunter\Classes" />
     <Folder Include="Src\SOInfantry\Classes" />
     <Folder Include="Src\SOItems\Classes" />
-    <Folder Include="Src\XModBase_Core_1_2_1" />
-    <Folder Include="Src\XModBase_Core_1_2_1\Classes" />
+    <Folder Include="Src\XModBase_Core_1_2_2" />
+    <Folder Include="Src\XModBase_Core_1_2_2\Classes" />
     <Folder Include="Src\XModBase_Interfaces" />
     <Folder Include="Src\XModBase_Interfaces\Classes" />
     <Folder Include="Src\XModBase_Utilities" />
@@ -2650,22 +2650,22 @@
     <Content Include="Src\XComGame\Classes\XGWeapon.uc" />
     <Content Include="Src\XComGame\Classes\XLocalizedData.uc" />
     <Content Include="Src\XComGame\Classes\XpEventData.uc" />
-    <Content Include="Src\XModBase_Core_1_2_1\Classes\XMBAbilityMultiTarget_Radius.uc">
+    <Content Include="Src\XModBase_Core_1_2_2\Classes\XMBAbilityMultiTarget_Radius.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Core_1_2_1\Classes\XMBAbilityTag.uc">
+    <Content Include="Src\XModBase_Core_1_2_2\Classes\XMBAbilityTag.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Core_1_2_1\Classes\XMBAbilityToHitCalc_StandardAim.uc">
+    <Content Include="Src\XModBase_Core_1_2_2\Classes\XMBAbilityToHitCalc_StandardAim.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Core_1_2_1\Classes\XMBConfig.uc">
+    <Content Include="Src\XModBase_Core_1_2_2\Classes\XMBConfig.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Core_1_2_1\Classes\XMBDownloadableContentInfo_XModBase.uc">
+    <Content Include="Src\XModBase_Core_1_2_2\Classes\XMBDownloadableContentInfo_XModBase.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XModBase_Core_1_2_1\Classes\XMBTargetingMethod_Grenade.uc">
+    <Content Include="Src\XModBase_Core_1_2_2\Classes\XMBTargetingMethod_Grenade.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XModBase_Interfaces\Classes\XMBEffectInterface.uc">

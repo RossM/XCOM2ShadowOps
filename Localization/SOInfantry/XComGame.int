@@ -2,8 +2,8 @@
 
 [ShadowOps_BulletSwarm X2AbilityTemplate]
 LocFriendlyName="Bullet Swarm"
-LocLongDescription="Firing your <Ability:WeaponName/> with your first action no longer ends your turn."
-LocHelpText="Fire your <Ability:WeaponName/> at a target. This does not end your turn if used as your first action."
+LocLongDescription="Firing your <Ability:WeaponName/> no longer ends your turn."
+LocHelpText="Fire your <Ability:WeaponName/> at a target. This does not end your turn."
 LocFlyOverText="Bullet Swarm"
 LocPromotionPopupText="<Bullet/> Bullet Swarm can deal a lot of damage, but it chews through ammo fast. Consider using a weapon with an expanded magazine or auto-loader.<br/><Bullet/>Good positioning will help you get the most of both shots each turn.<br/><Bullet/> Firing your pistol still ends your turn.<br/>"
 
@@ -184,12 +184,31 @@ LocHelpText="Gain <Ability:+HP/> HP, <Ability:+ToHit/> Aim, and <Ability:+Will/>
 LocFlyOverText="Elite"
 LocPromotionPopupText="<Bullet/> These bonuses are in addition to the normal bonuses from leveling up.<br/>"
 
+[ShadowOps_SonicBeacon X2AbilityTemplate]
+LocFriendlyName="Sonic Beacon"
+LocLongDescription="Grants a special beacon which will attract the attention of enemies that have not yet sighted XCOM."
+LocHelpText="Grants a special beacon which will attract the attention of enemies that have not yet sighted XCOM."
+LocFlyOverText="Sonic Beacon"
+LocPromotionPopupText="<Bullet/> The beacon can be thrown up to 18 tiles away, and is audible to enemies up to 16 tiles from the beacon.<br/><Bullet/> Hearing the Sonic Beacon will put enemies into yellow alert.<br/><Bullet/> This ability can only be used while concealed. <br/>"
+
+[ShadowOps_ThrowSonicBeacon X2AbilityTemplate]
+LocFriendlyName="Throw Sonic Beacon"
+LocLongDescription="Throw a sonic beacon which does no damage but attracts the attention of nearby enemies. Only usable from concealment."
+LocHelpText="Throw a sonic beacon which does no damage but attracts the attention of nearby enemies. Only usable from concealment."
+LocFlyOverText="Throw Sonic Beacon"
+
 ; === Other abilities ===
 
 [ShadowOps_SwapAmmo X2AbilityTemplate]
 LocFriendlyName="Swap Ammo"
 LocLongDescription="Reload your weapons with <Ability:AssociatedWeapon/>."
 LocHelpText="Reload your weapons with <Ability:AssociatedWeapon/>."
+
+; === Items ===
+
+[SonicBeacon X2GrenadeTemplate]
+FriendlyName="Sonic Beacon"
+FriendlyNamePlural="Sonic Beacons"
 
 ; === Class templates ===
 

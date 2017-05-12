@@ -28,6 +28,7 @@ The Scrapper is a close-quarters combat specialist. Its signature ability, Bull 
 The Survivalist is a defensive sniper, able to neutralize multiple enemies each turn. Its backup sawed-off shotgun makes it quite capable at short-range combat, too. The Sentry can take overwatch shots even after firing or moving with Watchful Eye, while the Raider strikes panic into enemies' hearts with Fearsome.
 
 [h1]Special Thanks[/h1]
+John "JohnnyLump" Lumpkin, Tim "Bilfdoffle" Evans, and the Pavonis Interactive team for help with compatibility and playtesting.
 DerBK and TheProfessional, for design review of the LW2 version.
 robojumper, for help with animation and graphics.
 .vhs, for beautiful perk icons.

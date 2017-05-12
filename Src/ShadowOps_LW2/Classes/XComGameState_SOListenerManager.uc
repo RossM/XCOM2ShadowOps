@@ -1,16 +1,5 @@
 class XComGameState_SOListenerManager extends XComGameState_BaseObject config(ShadowOps);
 
-var config string ICON_COLOR_OBJECTIVE;
-var config string ICON_COLOR_PSIONIC_2;
-var config string ICON_COLOR_PSIONIC_END;
-var config string ICON_COLOR_PSIONIC_1;
-var config string ICON_COLOR_PSIONIC_FREE;
-var config string ICON_COLOR_COMMANDER_ALL;
-var config string ICON_COLOR_2;
-var config string ICON_COLOR_END;
-var config string ICON_COLOR_1;
-var config string ICON_COLOR_FREE;
-
 // This class copied and modified from XComGameState_LWListenerManager in Long War 2
 
 static function XComGameState_SOListenerManager GetListenerManager(optional bool AllowNULL = false)
@@ -80,8 +69,6 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 	local XComGameState_Item		WeaponState;
 	local bool Changed;
 	local UnitValue Value;
-	local int k;
-	local X2AbilityCost_ActionPoints ActionPoints;
 
 	OverrideTuple = XComLWTuple(EventData);
 	if(OverrideTuple == none)
@@ -109,34 +96,62 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 		return ELR_NoInterrupt;
 	}
 
-	`Log("ShadowOps_LW2 OnOverrideAbilityIconColor :" @ AbilityName);
-
 	switch (AbilityName)
 	{
 		case 'ThrowGrenade':
-		case 'LaunchGrenade':
 			if (UnitState.AffectedByEffectNames.Find('Fastball') != INDEX_NONE)
 			{
-				IconColor = default.ICON_COLOR_FREE;
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
+				Changed = true;
+			}
+			else if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
+				class'X2Effect_RapidDeployment'.default.VALID_GRENADE_TYPES.Find(WeaponState.GetMyTemplateName()) != -1)
+			{
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
 				Changed = true;
 			}
 			else
 			{
-				for (k = 0; k < AbilityTemplate.AbilityCosts.Length; k++)
-				{
-					ActionPoints = X2AbilityCost_ActionPoints(AbilityTemplate.AbilityCosts[k]);
-					if (ActionPoints != none)
-					{
-						if (ActionPoints.ConsumeAllPoints(AbilityState, UnitState))
-							IconColor = default.ICON_COLOR_END;
-						else
-							IconColor = default.ICON_COLOR_1;
-						Changed = true;
-						break;
-					}
-				}
+				IconColor = GetIconColorByActionPointCost(AbilityTemplate, AbilityState, UnitState);
+				Changed = true;
+				break;
 			}
 			break;
+
+		case 'LaunchGrenade':
+			if (UnitState.AffectedByEffectNames.Find('Fastball') != INDEX_NONE)
+			{
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
+				Changed = true;
+			}
+			else if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
+				class'X2Effect_RapidDeployment'.default.VALID_GRENADE_TYPES.Find(WeaponState.GetLoadedAmmoTemplate(AbilityState).DataName) != -1)
+			{
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
+				Changed = true;
+			}
+			else
+			{
+				IconColor = GetIconColorByActionPointCost(AbilityTemplate, AbilityState, UnitState);
+				Changed = true;
+				break;
+			}
+			break;
+
+		case 'ShadowOps_ThrowSonicBeacon':
+			if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1)
+			{
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
+				Changed = true;
+			}
+			else
+			{
+				IconColor = GetIconColorByActionPointCost(AbilityTemplate, AbilityState, UnitState);
+				Changed = true;
+				break;
+			}
+			break;
+
 		case 'PointBlank':
 		case 'BothBarrels':
 			if (UnitState.HasSoldierAbility('ShadowOps_Hipfire_LW2', true))
@@ -144,7 +159,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 				UnitState.GetUnitValue('Hipfire_Count', Value);
 				if (Value.fValue < 1)
 				{
-					IconColor = default.ICON_COLOR_FREE;
+					IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
 					Changed = true;
 				}
 			}
@@ -152,13 +167,21 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 
 		case 'Deadeye':
 		case 'PrecisionShot':
-			if (X2WeaponTemplate(WeaponState.GetMyTemplate()).iTypicalActionCost >= 2)
-				IconColor = default.ICON_COLOR_2;
-			else
-				IconColor = default.ICON_COLOR_END;
+		case 'Flush':
+		case 'ShadowOps_Bullseye':
+		case 'ShadowOps_DisablingShot':
+			IconColor = GetIconColorByActionPointCost(AbilityTemplate, AbilityState, UnitState);
 			Changed = true;
 			break;
 		
+		case 'HaywireProtocol':
+			if (UnitState.HasSoldierAbility('ShadowOps_Puppeteer', true))
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_1;
+			else
+				IconColor = class'LWTemplateMods'.default.ICON_COLOR_END;
+			Changed = true;
+			break;
+
 		default: break;
 	}
 
@@ -168,6 +191,38 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 	}
 
 	return ELR_NoInterrupt;
+}
+
+function string GetIconColorByActionPointCost(X2AbilityTemplate AbilityTemplate, XComGameState_Ability AbilityState, XComGameState_Unit UnitState)
+{
+	local int k, cost;
+	local X2AbilityCost_ActionPoints ActionPoints;
+	local XComGameState_Item SourceWeapon;
+	local X2WeaponTemplate SourceWeaponTemplate;
+
+	SourceWeapon = AbilityState.GetSourceWeapon();
+	if (SourceWeapon != none)
+		SourceWeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
+
+	for (k = 0; k < AbilityTemplate.AbilityCosts.Length; k++)
+	{
+		ActionPoints = X2AbilityCost_ActionPoints(AbilityTemplate.AbilityCosts[k]);
+		if (ActionPoints != none)
+		{
+			cost = ActionPoints.iNumPoints;
+			if (ActionPoints.bAddWeaponTypicalCost && SourceWeaponTemplate != none)
+				cost += SourceWeaponTemplate.iTypicalActionCost;
+
+			if (cost >= 2)
+				return class'LWTemplateMods'.default.ICON_COLOR_2;
+			else if (ActionPoints.ConsumeAllPoints(AbilityState, UnitState))
+				return class'LWTemplateMods'.default.ICON_COLOR_END;
+			else
+				return class'LWTemplateMods'.default.ICON_COLOR_1;
+		}
+	}
+
+	return class'LWTemplateMods'.default.ICON_COLOR_FREE;
 }
 
 // This function is called on PreGameStateSubmitted and gives us a chance to modify arbitrary game state.

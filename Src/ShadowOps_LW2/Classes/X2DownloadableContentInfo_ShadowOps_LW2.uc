@@ -30,10 +30,19 @@ static event OnPostTemplatesCreated()
 
 	SetVariableIconColor('PointBlank');
 	SetVariableIconColor('BothBarrels');
+	SetVariableIconColor('HaywireProtocol');
+	SetVariableIconColor('ShadowOps_ThrowSonicBeacon');
 	SetVariableIconColor('Deadeye');
 	SetVariableIconColor('PrecisionShot');
+	SetVariableIconColor('Flush');
+	SetVariableIconColor('ShadowOps_Bullseye');
+	SetVariableIconColor('ShadowOps_DisablingShot');
 
 	UpdateFleche();
+
+	SetShotHUDPriorities();
+
+	EditSmallItemWeight();
 
 	// Hack - call the class template editors (sometimes their DLCContentInfos fail to run OnPostTemplatesCreated, no idea why)
 	class'TemplateEditors_CombatEngineer'.static.EditTemplates();
@@ -87,6 +96,133 @@ static function UpdateFleche()
 	}
 }
 
+static function SetShotHUDPriorities()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local array<name>							TemplateNames;
+	local name									AbilityName;
+	local int									ShotHUDPriority;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.GetTemplateNames(TemplateNames);
+
+	foreach TemplateNames(AbilityName)
+	{
+		AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
+		foreach TemplateAllDifficulties(Template)
+		{
+			if (Template.ShotHUDPriority >= class'UIUtilities_Tactical'.const.CLASS_SQUADDIE_PRIORITY &&
+				Template.ShotHUDPriority <= class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY)
+			{
+				ShotHUDPriority = FindShotHUDPriority(Template.DataName);
+				if (ShotHUDPriority != class'UIUtilities_Tactical'.const.UNSPECIFIED_PRIORITY)
+					Template.ShotHUDPriority = ShotHUDPriority;
+			}
+		}
+	}
+}
+
+static function int FindShotHUDPriority(name AbilityName)
+{
+	local X2SoldierClassTemplateManager SoldierClassManager;
+	local array<X2SoldierClassTemplate> AllTemplates;
+	local X2SoldierClassTemplate Template;
+	local array<SoldierClassAbilityType> AbilityTree;
+	local int HighestLevel;
+	local int rank;
+
+	SoldierClassManager = class'X2SoldierClassTemplateManager'.static.GetSoldierClassTemplateManager();
+
+	HighestLevel = -1;
+
+	AllTemplates = SoldierClassManager.GetAllSoldierClassTemplates();
+	foreach AllTemplates(Template)
+	{
+		if (Template.NumInDeck == 0 && Template.NumInForcedDeck == 0)
+			continue;
+
+		for (rank = 0; rank < Template.GetMaxConfiguredRank(); rank++)
+		{
+			if (rank <= HighestLevel)
+				continue;
+
+			AbilityTree = Template.GetAbilityTree(rank);
+			if (AbilityTree.Find('AbilityName', AbilityName) != INDEX_NONE)
+				HighestLevel = rank;
+		}
+	}
+
+	switch (HighestLevel)
+	{
+	case -1:	return class'UIUtilities_Tactical'.const.UNSPECIFIED_PRIORITY;
+	case 0:		return class'UIUtilities_Tactical'.const.CLASS_SQUADDIE_PRIORITY;
+	case 1:		return class'UIUtilities_Tactical'.const.CLASS_CORPORAL_PRIORITY;
+	case 2:		return class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
+	case 3:		return class'UIUtilities_Tactical'.const.CLASS_LIEUTENANT_PRIORITY;
+	case 4:		return class'UIUtilities_Tactical'.const.CLASS_CAPTAIN_PRIORITY;
+	case 5:		return class'UIUtilities_Tactical'.const.CLASS_MAJOR_PRIORITY;
+	case 6:		return class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
+	default:	return 300 + 10 * HighestLevel;
+	}
+}
+
+// Remove mobility UI stat display on small items in the grenade/ammo slot
+static function EditSmallItemWeight()
+{
+	local X2ItemTemplateManager					ItemManager;
+	local array<X2DataTemplate>					TemplateAllDifficulties;
+	local X2DataTemplate						Template;
+	local X2ItemTemplate						NewTemplate;
+	local array<name>							TemplateNames;
+	local name									ItemName;
+	local int									ShotHUDPriority;
+
+	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	ItemManager.GetTemplateNames(TemplateNames);
+
+	foreach TemplateNames(ItemName)
+	{
+		ItemManager.FindDataTemplateAllDifficulties(ItemName, TemplateAllDifficulties);
+		foreach TemplateAllDifficulties(Template)
+		{
+			if (Template.IsA('X2GrenadeTemplate'))
+			{
+				NewTemplate = new class'X2GrenadeTemplate_ShadowOps'(Template);
+				ItemManager.AddItemTemplate(NewTemplate, true);
+			}
+			else if (Template.IsA('X2AmmoTemplate'))
+			{
+				NewTemplate = new class'X2AmmoTemplate_ShadowOps'(Template);
+				ItemManager.AddItemTemplate(NewTemplate, true);
+			}
+		}
+	}
+}
+
+static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out array<AbilitySetupData> SetupData, optional XComGameState StartState, optional XComGameState_Player PlayerState, optional bool bMultiplayerDisplay)
+{
+	local XComGameStateHistory History;
+	local XComGameState_Item Item;
+	local int i;
+
+	History = `XCOMHISTORY;
+
+	for (i = SetupData.Length - 1; i >= 0; --i)
+	{
+		// Remove the weight from items in the ammo or grenade slots
+		if (SetupData[i].TemplateName == 'SmallItemWeight' && SetupData[i].SourceWeaponRef.ObjectID != 0)
+		{
+			Item = XComGameState_Item(History.GetGameStateForObjectID(SetupData[i].SourceWeaponRef.ObjectID));
+			if (Item.InventorySlot == eInvSlot_GrenadePocket || Item.InventorySlot == eInvSlot_AmmoPocket)
+			{
+				`Log("Removing SmallItemWeight from" @ Item.GetMyTemplateName() @ "in" @ Item.InventorySlot);
+				SetupData.Remove(i, 1);
+			}
+		}
+	}
+}
 
 exec function Respec()
 {
@@ -155,5 +291,187 @@ exec function DumpXPInfo()
 			UnitState.GetNumKills() $ "," $
 			UnitState.GetKillAssists().Length $ "," $ 
 			Value.fValue);
+	}
+}
+
+exec function ClearListeners()
+{
+	class'X2EventManager'.static.GetEventManager().Clear();
+}
+
+exec function RerollAWCAbilities(optional name ForceAbility)
+{
+	local UIArmory Armory;
+	local StateObjectReference UnitRef;
+	local XComGameStateHistory History;
+	local XComGameState NewGameState;
+	local XComGameState_Unit Unit;
+	local XComGameState_Unit_AWC_LW AWCState;
+	local int Retries;
+
+	History = `XCOMHISTORY;
+
+	Armory = UIArmory(`SCREENSTACK.GetFirstInstanceOf(class'UIArmory'));
+	if (Armory == none)
+		return;
+
+	UnitRef = Armory.GetUnitRef();
+
+	Unit = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
+	if (Unit == none)
+		return;
+
+	NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Force AWC Reroll (" $ Unit.GetFullName() $ ")");
+
+	if(Unit.GetRank() > 0) // can't do this for rookies, since they have no class tree for AWC restrictions
+	{
+		AWCState = class'LWAWCUtilities'.static.GetAWCComponent(Unit);
+		if(AWCState == none)
+		{
+			//create and link it
+			Unit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', Unit.ObjectID));
+			NewGameState.AddStateObject(Unit);
+			AWCState = XComGameState_Unit_AWC_LW(NewGameState.CreateStateObject(class'XComGameState_Unit_AWC_LW'));
+			NewGameState.AddStateObject(AWCState);
+			Unit.AddComponentObject(AWCState);
+		}
+		else
+		{
+			//UpdatedUnit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', Unit.ObjectID));
+			//NewGameState.AddStateObject(UpdatedUnit);
+			AWCState = XComGameState_Unit_AWC_LW(NewGameState.CreateStateObject(class'XComGameState_Unit_AWC_LW', AWCState.ObjectID));
+			NewGameState.AddStateObject(AWCState);
+		}
+
+		ChooseSoldierAWCoptions(AWCState, Unit, true);
+
+		while (ForceAbility != '' && Retries < 100 && !AWCState.HasAWCAbility(Unit, ForceAbility))
+		{
+			ChooseSoldierAWCoptions(AWCState, Unit, true);
+			Retries++;
+		}
+	}
+	
+	if (NewGameState.GetNumGameStateObjects() > 0)
+	{
+		`XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+	}
+	else
+	{
+		History.CleanupPendingGameState(NewGameState);
+	}
+
+	Armory.PopulateData();
+}
+
+exec function ValidAWCAbilities(const AWCTrainingType Option, const int idx, optional bool bCreateGameState = false, optional bool bCreateAWCState = false)
+{
+	local UIArmory Armory;
+	local StateObjectReference UnitRef;
+	local XComGameState_Unit UnitState;
+	local XComGameStateHistory History;
+	local XComGameState_Unit_AWC_LW AWCState;
+	local array<ClassAgnosticAbility> PossibleAbilities;
+	local ClassAgnosticAbility Ability;
+	local string output;
+	local XComGameState NewGameState;
+
+	`Log("ValidAWCAbilities" @ Option @ idx @ bCreateGameState @ bCreateAWCState);
+
+	History = `XCOMHISTORY;
+
+	Armory = UIArmory(`SCREENSTACK.GetFirstInstanceOf(class'UIArmory'));
+	if (Armory == none)
+		return;
+
+	UnitRef = Armory.GetUnitRef();
+
+	UnitState = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
+	if (UnitState == none)
+		return;
+
+	AWCState = class'LWAWCUtilities'.static.GetAWCComponent(UnitState);
+
+	if (bCreateGameState || AWCState == none)
+	{
+		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Force AWC Rerolls");
+		if (bCreateAWCState || AWCState == none)
+		{
+			UnitState = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', UnitState.ObjectID));
+			NewGameState.AddStateObject(UnitState);
+			AWCState = XComGameState_Unit_AWC_LW(NewGameState.CreateStateObject(class'XComGameState_Unit_AWC_LW'));
+			NewGameState.AddStateObject(AWCState);
+			UnitState.AddComponentObject(AWCState);
+		}
+		else
+		{
+			AWCState = XComGameState_Unit_AWC_LW(NewGameState.CreateStateObject(class'XComGameState_Unit_AWC_LW', AWCState.ObjectID));
+			NewGameState.AddStateObject(AWCState);
+		}
+
+		AWCState.OffenseAbilities.Length = 0;
+		AWCState.DefenseAbilities.Length = 0;
+		AWCState.PistolAbilities.Length = 0;
+	}
+
+	switch (Option)
+	{
+		case AWCTT_Offense:
+			PossibleAbilities = AWCState.GetValidAWCAbilities(class'LWAWCUtilities'.default.AWCAbilityTree_Offense, idx + 1);
+			break;
+		case AWCTT_Defense:
+			PossibleAbilities = AWCState.GetValidAWCAbilities(class'LWAWCUtilities'.default.AWCAbilityTree_Defense, idx + 1);
+			break;
+		case AWCTT_Pistol:
+			PossibleAbilities = AWCState.WeightedSort(class'LWAWCUtilities'.default.AWCAbilityTree_Pistol);
+			break;
+		default:
+			break;
+	}
+
+	foreach PossibleAbilities(Ability)
+	{
+		output $= "\n";
+		output $= Ability.AbilityType.AbilityName;
+	}
+
+	`Log(output);
+
+	if (bCreateGameState)
+	{
+		`XCOMHISTORY.CleanupPendingGameState(NewGameState);
+	}
+}
+
+//This uses the config data in LWAWCUtilities to select a set of AWC abilities for a soldier
+function ChooseSoldierAWCOptions(XComGameState_Unit_AWC_LW AWCState, XComGameState_Unit UnitState, optional bool bForce=false)
+{
+	local int idx;
+	local array<ClassAgnosticAbility> PossibleAbilities;
+	local int NumPistolAbilities;
+
+	//Fill out with randomized abilities
+	for(idx = 0; idx < class'LWAWCUtilities'.default.NUM_OFFENSE_ABILITIES; idx++)
+	{
+		if (AWCState.OffenseAbilities[idx].bUnlocked)
+			continue;
+		AWCState.OffenseAbilities[idx] = AWCState.ChooseSoldierAWCOption(UnitState, idx, AWCTT_Offense);
+	}
+
+	for(idx = 0; idx < class'LWAWCUtilities'.default.NUM_DEFENSE_ABILITIES; idx++)
+	{
+		if (AWCState.DefenseAbilities[idx].bUnlocked)
+			continue;
+		AWCState.DefenseAbilities[idx] = AWCState.ChooseSoldierAWCOption(UnitState, idx, AWCTT_Defense);
+	}
+
+	if (AWCState.PistolAbilities[0].bUnlocked)
+		return;
+
+	PossibleAbilities = AWCState.WeightedSort(class'LWAWCUtilities'.default.AWCAbilityTree_Pistol);
+	NumPistolAbilities = Min(class'LWAWCUtilities'.default.AWCAbilityTree_Pistol.Length, class'LWAWCUtilities'.default.NUM_PISTOL_ABILITIES);
+	for(idx = 0; idx < NumPistolAbilities; idx++)
+	{
+		AWCState.PistolAbilities[idx] = PossibleAbilities[idx];
 	}
 }

@@ -11,9 +11,8 @@ var config int EntrenchDefense, EntrenchDodge;
 var config int FocusedDefenseDefense, FocusedDefenseDodge;
 var config int FractureCritModifier;
 var config int LineEmUpOffense, LineEmUpCrit;
-var config float ControlledDetonationDamageReduction;
-var config int MayhemDamageBonus, MayhemLW2DamageBonus;
-var config array<name> MayhemExcludeAbilities, MayhemLW2ExcludeAbilities;
+var config int MayhemDamageBonus, MayhemLW2DamageBonus, MayhemLW2DamageOverTimeBonus;
+var config array<name> MayhemExcludeAbilities;
 var config int SaboteurDamageBonus;
 var config int AnatomistDamageBonus, AnatomistMaxKills;
 var config float HeatAmmoDamageMultiplier;
@@ -21,6 +20,9 @@ var config WeaponDamageValue BullRushDamage;
 var config int BullRushHitModifier;
 var config int BareKnuckleDamageBonus;
 var config int DemoGrenadesEnvironmentDamageBonus;
+var config int ElusiveDodge, ElusiveRange;
+var config array<name> MadBomberGrenades;
+var config array<ExtShotModifierInfo> FractureLW2Modifiers;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -62,15 +64,18 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(BareKnuckle());
 	Templates.AddItem(PurePassive('ShadowOps_DemoGrenades', "img:///UILibrary_SOCombatEngineer.UIPerk_demogrenades", false));
+	Templates.AddItem(Elusive());
+	Templates.AddItem(MadBomber());
+	Templates.AddItem(Fracture_LW2());
 
 	return Templates;
 }
 
 static function X2AbilityTemplate SmokeAndMirrors()
 {
-	local XMBEffect_AddUtilityItem Effect;
+	local X2Effect_AddGrenade Effect;
 
-	Effect = new class'XMBEffect_AddUtilityItem';
+	Effect = new class'X2Effect_AddGrenade';
 	Effect.DataName = 'SmokeGrenade';
 	Effect.BaseCharges = 1;
 	Effect.SkipAbilities.AddItem('SmallItemWeight');
@@ -658,18 +663,13 @@ static function Entrench_EffectAdded(X2Effect_Persistent PersistentEffect, const
 
 static function X2AbilityTemplate Pyromaniac()
 {
-	local X2AbilityTemplate Template;
-	local XMBEffect_AddUtilityItem ItemEffect;
+	local X2Effect_AddGrenade ItemEffect;
 
-	// TODO: icon
-	Template = Passive('ShadowOps_Pyromaniac', "img:///UILibrary_SOCombatEngineer.UIPerk_pyromaniac", true);
-
-	ItemEffect = new class 'XMBEffect_AddUtilityItem';
+	ItemEffect = new class 'X2Effect_AddGrenade';
 	ItemEffect.DataName = 'Firebomb';
-	Template.AddTargetEffect(ItemEffect);
 	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
 
-	return Template;
+	return Passive('ShadowOps_Pyromaniac', "img:///UILibrary_SOCombatEngineer.UIPerk_pyromaniac", true, ItemEffect);
 }
 
 // Perk name:		Hit and Run
@@ -759,9 +759,6 @@ static function X2AbilityTemplate ControlledDetonation()
 	local X2Effect_ControlledDetonation Effect;
 
 	Effect = new class'X2Effect_ControlledDetonation';
-	Effect.ReductionAmount = default.ControlledDetonationDamageReduction;
-
-	Effect.AbilityTargetConditions.AddItem(default.LivingFriendlyTargetProperty);
 
 	// TODO: icon
 	return Passive('ShadowOps_ControlledDetonation', "img:///UILibrary_SOCombatEngineer.UIPerk_controlleddetonation", true, Effect);
@@ -828,18 +825,14 @@ static function X2AbilityTemplate Mayhem()
 
 static function X2AbilityTemplate Mayhem_LW2()
 {
-	local XMBEffect_ConditionalBonus Effect;
-	local XMBCondition_AbilityName Condition;
+	local X2Effect_HeavyHitter Effect;
 
-	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddDamageModifier(default.MayhemLW2DamageBonus);
-
-	Condition = new class'XMBCondition_AbilityName';
-	Condition.ExcludeAbilityNames = default.MayhemLW2ExcludeAbilities;
-	Effect.AbilityTargetConditions.AddItem(Condition);
+	Effect = new class'X2Effect_HeavyHitter';
+	Effect.BonusDamage = default.MayhemLW2DamageBonus;
+	Effect.BonusDamageOverTime = default.MayhemLW2DamageOverTimeBonus;
 
 	// TODO: icon
-	return Passive('ShadowOps_Mayhem_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_mayhem", true, Effect);
+	return Passive('ShadowOps_Mayhem_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_heavyhitter", true, Effect);
 }
 
 static function X2AbilityTemplate Saboteur()
@@ -880,17 +873,13 @@ static function X2AbilityTemplate Anatomist()
 
 static function X2AbilityTemplate ExtraMunitions()
 {
-	local X2AbilityTemplate Template;
-	local XMBEffect_AddUtilityItem ItemEffect;
+	local X2Effect_AddGrenade ItemEffect;
 
-	Template = Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true);
-
-	ItemEffect = new class 'XMBEffect_AddUtilityItem';
+	ItemEffect = new class 'X2Effect_AddGrenade';
 	ItemEffect.DataName = 'FragGrenade';
-	Template.AddTargetEffect(ItemEffect);
 	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
 
-	return Template;
+	return Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true, ItemEffect);
 }
 
 // Perk name:		Bull Rush
@@ -945,3 +934,53 @@ static function X2AbilityTemplate BareKnuckle()
 
 	return Passive('ShadowOps_BareKnuckle', "img:///UILibrary_SOCombatEngineer.UIPerk_bareknuckle", false, Effect);
 }
+
+static function X2AbilityTemplate Elusive()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local XMBValue_Visibility Value;
+	
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.AddToHitAsTargetModifier(default.ElusiveDodge, eHit_Graze);
+
+	Value = new class'XMBValue_Visibility';
+	Value.RequiredConditions.AddItem(class'X2TacticalVisibilityHelpers'.default.GameplayVisibilityCondition);
+	Value.RequiredConditions.AddItem(class'X2TacticalVisibilityHelpers'.default.AliveUnitPropertyCondition);
+	Value.RequiredConditions.AddItem(TargetWithinTiles(default.ElusiveRange));
+	Value.bCountEnemies = true;
+	Effect.ScaleValue = Value;
+
+	return Passive('ShadowOps_Elusive', "img:///UILibrary_SOCombatEngineer.UIPerk_elusive", true, Effect);
+}
+
+static function X2AbilityTemplate MadBomber()
+{
+	local X2Effect_AddGrenade Effect;
+	local X2AbilityTemplate Template;
+
+	Effect = new class'X2Effect_AddGrenade';
+	Effect.RandomGrenades = default.MadBomberGrenades;
+
+	Template = Passive('ShadowOps_MadBomber', "img:///UILibrary_SOCombatEngineer.UIPerk_madbomber", true, Effect);
+	AddSecondaryEffect(Template, Effect); // Grant a second grenade
+
+	return Template;
+}
+
+static function X2AbilityTemplate Fracture_LW2()
+{
+	local XMBEffect_ConditionalBonus Effect;
+	local X2Condition_UnitProperty Condition;
+
+	Effect = new class'XMBEffect_ConditionalBonus';
+	Effect.Modifiers = default.FractureLW2Modifiers;
+	Effect.AbilityTargetConditions.AddItem(default.MatchingWeaponCondition);
+
+	Condition = new class'X2Condition_UnitProperty';
+	Condition.ExcludeOrganic = true;
+	Condition.IncludeWeakAgainstTechLikeRobot = true;
+	Effect.AbilityTargetConditions.AddItem(Condition);
+
+	return Passive('ShadowOps_Fracture_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_fracture", false, Effect);
+}
+
