@@ -960,6 +960,7 @@ static function X2AbilityTemplate MadBomber()
 
 	Effect = new class'X2Effect_AddGrenade';
 	Effect.RandomGrenades = default.MadBomberGrenades;
+	Effect.SkipAbilities.AddItem('SmallItemWeight');
 
 	Template = Passive('ShadowOps_MadBomber', "img:///UILibrary_SOCombatEngineer.UIPerk_madbomber", true, Effect);
 	AddSecondaryEffect(Template, Effect); // Grant a second grenade
