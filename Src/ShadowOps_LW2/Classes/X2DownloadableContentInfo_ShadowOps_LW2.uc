@@ -204,21 +204,38 @@ static function EditSmallItemWeight()
 static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out array<AbilitySetupData> SetupData, optional XComGameState StartState, optional XComGameState_Player PlayerState, optional bool bMultiplayerDisplay)
 {
 	local XComGameStateHistory History;
-	local XComGameState_Item Item;
-	local int i;
+	local XComGameState_Item Item, InnerItem;
+	local StateObjectReference ItemRef, InnerItemRef;
 
 	History = `XCOMHISTORY;
 
-	for (i = SetupData.Length - 1; i >= 0; --i)
+	if (StartState == none)
+		return;
+
+	foreach UnitState.InventoryItems(ItemRef)
 	{
-		// Remove the weight from items in the ammo or grenade slots
-		if (SetupData[i].TemplateName == 'SmallItemWeight' && SetupData[i].SourceWeaponRef.ObjectID != 0)
+		Item = XComGameState_Item(StartState.GetGameStateForObjectID(ItemRef.ObjectID));
+
+		if (Item.InventorySlot == eInvSlot_AmmoPocket || Item.InventorySlot == eInvSlot_GrenadePocket)
 		{
-			Item = XComGameState_Item(History.GetGameStateForObjectID(SetupData[i].SourceWeaponRef.ObjectID));
-			if (Item.InventorySlot == eInvSlot_GrenadePocket || Item.InventorySlot == eInvSlot_AmmoPocket)
+			// Find the item this was merged into
+			foreach UnitState.InventoryItems(InnerItemRef)
 			{
-				`Log("Removing SmallItemWeight from" @ Item.GetMyTemplateName() @ "in" @ Item.InventorySlot);
-				SetupData.Remove(i, 1);
+				InnerItem = XComGameState_Item(StartState.GetGameStateForObjectID(InnerItemRef.ObjectID));
+
+				if (!InnerItem.bMergedOut && InnerItem.GetMyTemplateName() == Item.GetMyTemplateName())
+				{
+					`Log("Removing item weight from" @ InnerItem.GetMyTemplateName() @ "in" @ InnerItem.InventorySlot);
+
+					InnerItem = XComGameState_Item(StartState.CreateStateObject(InnerItem.class, InnerItem.ObjectID));
+					StartState.AddStateObject(InnerItem);
+
+					// The small item weight depends on the number of merged items, so reduce it 
+					// by 1 to remove the weight for the ammo/grenade slot item.
+					InnerItem.MergedItemCount--;
+
+					break;
+				}
 			}
 		}
 	}
@@ -274,7 +291,7 @@ exec function DumpXPInfo()
 	local XComGameState_Unit UnitState;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local array<XComGameState_Unit> Soldiers;
-	local UnitValue Value;
+	local UnitValue MissionExperienceValue, OfficerBonusKillsValue;
 
 	History = `XCOMHISTORY;
 	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class' XComGameState_HeadquartersXCom'));
@@ -282,7 +299,8 @@ exec function DumpXPInfo()
 
 	foreach Soldiers(UnitState)
 	{
-		UnitState.GetUnitValue('MissionExperience', Value);
+		UnitState.GetUnitValue('MissionExperience', MissionExperienceValue);
+		UnitState.GetUnitValue('OfficerBonusKills', OfficerBonusKillsValue);
 		
 		`Log("CSV," $
 			UnitState.GetName(eNameType_FullNick) $ "," $ 
@@ -290,7 +308,8 @@ exec function DumpXPInfo()
 			UnitState.GetNumMissions() $ "," $ 
 			UnitState.GetNumKills() $ "," $
 			UnitState.GetKillAssists().Length $ "," $ 
-			Value.fValue);
+			MissionExperienceValue.fValue $ "," $
+			OfficerBonusKillsValue.fValue);
 	}
 }
 
