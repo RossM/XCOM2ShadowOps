@@ -16,11 +16,12 @@ var config int AirstrikeCharges;
 var config int AgainstTheOddsAimBonus, AgainstTheOddsMax;
 var config int ParagonHPBonus, ParagonOffenseBonus, ParagonWillBonus;
 var config int SonicBeaconCharges, SonicBeaconMoveTurns;
+var config int ZoneOfControlLW2Shots;
 
 var config name FreeAmmoForPocket;
 
 var config int FullAutoActions;
-var config int FullAutoCooldown, ZoneOfControlCooldown, FlushCooldown;
+var config int FullAutoCooldown, ZoneOfControlCooldown, ZoneOfControlLW2Cooldown, FlushCooldown;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -37,6 +38,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ZoneOfControlShot());
 	Templates.AddItem(ZoneOfControlPistolShot());
 	Templates.AddItem(ZoneOfControlPistolShot_LW());
+	Templates.AddItem(ZoneOfControl_LW2());
 	Templates.AddItem(ZeroIn());
 	Templates.AddItem(Flush());
 	Templates.AddItem(FlushShot());
@@ -1919,6 +1921,68 @@ static function X2AbilityTemplate ThrowSonicBeacon()
 	Template.BuildInterruptGameStateFn = TypicalAbility_BuildInterruptGameState;
 
 	return Template;	
+}
+
+static function X2AbilityTemplate ZoneOfControl_LW2()
+{
+	local X2AbilityTemplate                 Template, CoveringFireTemplate, OverwatchShotTaken;
+	local X2Effect_ReserveOverwatchPoints	ActionPointEffect;
+	local X2Effect_Persistent				CoveringFireEffect;
+	local XMBCondition_AbilityName			Condition;
+
+	ActionPointEffect = new class'X2Effect_ReserveOverwatchPoints';
+	ActionPointEffect.NumPoints = default.ZoneOfControlLW2Shots;
+
+	CoveringFireEffect = new class'X2Effect_Persistent';
+	CoveringFireEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
+	CoveringFireEffect.VisualizationFn = EffectFlyOver_Visualization;
+
+	// Set the CoveringFire effect to display as that perk
+	CoveringFireTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('CoveringFire');
+	if (CoveringFireTemplate != none)
+	{
+		CoveringFireEffect.FriendlyName = CoveringFireTemplate.LocFriendlyName;
+		CoveringFireEffect.FriendlyDescription = CoveringFireTemplate.LocHelpText;
+		CoveringFireEffect.IconImage =  CoveringFireTemplate.IconImage;
+	}
+
+	Template = SelfTargetActivated('ShadowOps_ZoneOfControl_LW2', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", true, ActionPointEffect,, eCost_Overwatch);
+	AddSecondaryEffect(Template, CoveringFireEffect);
+	AddCooldown(Template, default.ZoneOfControlLW2Cooldown);
+
+	OverwatchShotTaken = SelfTargetTrigger('ZoneOfControlOverwatchShotTaken', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", false,, 'AbilityActivated');
+	OverwatchShotTaken.BuildNewGameStateFn = ZoneOfControlOverwatchShotTaken_BuildGameState;
+	Condition = new class'XMBCondition_AbilityName';
+	Condition.IncludeAbilityNames.AddItem('OverwatchShot');
+	Condition.IncludeAbilityNames.AddItem('PistolOverwatchShot');
+	AddTriggerTargetCondition(OverwatchShotTaken, Condition);
+	AddSecondaryAbility(Template, OverwatchShotTaken);
+
+	return Template;
+}
+
+// This records that an overwatch shot was taken so that LW2's X2Condition_OverwatchLimit will
+// prevent taking multiple shots at the same unit.
+simulated function XComGameState ZoneOfControlOverwatchShotTaken_BuildGameState( XComGameStateContext Context )
+{
+	local XComGameStateHistory History;
+	local XComGameState NewGameState;
+	local XComGameStateContext_Ability AbilityContext;
+	local XComGameState_Unit SourceUnit;
+	local name ValueName;
+
+	History = `XCOMHISTORY;	
+
+	NewGameState = History.CreateNewGameState(true, Context);
+
+	AbilityContext = XComGameStateContext_Ability(Context);
+	SourceUnit = XComGameState_Unit(NewGameState.CreateStateObject(class'XComGameState_Unit', AbilityContext.InputContext.SourceObject.ObjectID));
+	NewGameState.AddStateObject(SourceUnit);
+
+	ValueName = name("OverwatchShot" $ AbilityContext.InputContext.PrimaryTarget.ObjectID);
+	SourceUnit.SetUnitFloatValue (ValueName, 1.0, eCleanup_BeginTurn);
+
+	return NewGameState;
 }
 
 DefaultProperties
