@@ -1937,15 +1937,6 @@ static function X2AbilityTemplate ZoneOfControl_LW2()
 	CoveringFireEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
 	CoveringFireEffect.VisualizationFn = EffectFlyOver_Visualization;
 
-	// Set the CoveringFire effect to display as that perk
-	CoveringFireTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('CoveringFire');
-	if (CoveringFireTemplate != none)
-	{
-		CoveringFireEffect.FriendlyName = CoveringFireTemplate.LocFriendlyName;
-		CoveringFireEffect.FriendlyDescription = CoveringFireTemplate.LocHelpText;
-		CoveringFireEffect.IconImage =  CoveringFireTemplate.IconImage;
-	}
-
 	Template = SelfTargetActivated('ShadowOps_ZoneOfControl_LW2', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", true, ActionPointEffect,, eCost_Overwatch);
 	AddSecondaryEffect(Template, CoveringFireEffect);
 	AddCooldown(Template, default.ZoneOfControlLW2Cooldown);
@@ -1957,6 +1948,15 @@ static function X2AbilityTemplate ZoneOfControl_LW2()
 	Condition.IncludeAbilityNames.AddItem('PistolOverwatchShot');
 	AddTriggerTargetCondition(OverwatchShotTaken, Condition);
 	AddSecondaryAbility(Template, OverwatchShotTaken);
+
+	// Set the CoveringFire effect to display as that perk
+	CoveringFireTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('CoveringFire');
+	if (CoveringFireTemplate != none)
+	{
+		CoveringFireEffect.FriendlyName = CoveringFireTemplate.LocFriendlyName;
+		CoveringFireEffect.FriendlyDescription = CoveringFireTemplate.LocHelpText;
+		CoveringFireEffect.IconImage =  CoveringFireTemplate.IconImage;
+	}
 
 	return Template;
 }
