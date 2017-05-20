@@ -206,12 +206,14 @@ static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out a
 	local XComGameStateHistory History;
 	local XComGameState_Item Item, InnerItem;
 	local StateObjectReference ItemRef, InnerItemRef;
+	local int i;
 
 	History = `XCOMHISTORY;
 
 	if (StartState == none)
 		return;
 
+	// Remove the weight for items in the grenade/ammo slots
 	foreach UnitState.InventoryItems(ItemRef)
 	{
 		Item = XComGameState_Item(StartState.GetGameStateForObjectID(ItemRef.ObjectID));
@@ -236,6 +238,20 @@ static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out a
 
 					break;
 				}
+			}
+		}
+	}
+
+	// Remove squadsight from survivalists not using a sniper rifle
+	if (UnitState.GetSoldierClassTemplateName() == 'ShadowOps_Survivalist_LW2' &&
+		X2WeaponTemplate(UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon).GetMyTemplate()).WeaponCat != 'sniper_rifle')
+	{
+		`Log("Removing Squadsight from" @ UnitState.GetFullName());
+		for (i = SetupData.Length - 1; i >= 0; --i)
+		{
+			if (SetupData[i].TemplateName == 'Squadsight')
+			{
+				SetupData.Remove(i, 1);
 			}
 		}
 	}
