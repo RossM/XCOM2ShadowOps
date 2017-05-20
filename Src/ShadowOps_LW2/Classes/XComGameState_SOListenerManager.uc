@@ -138,6 +138,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 			}
 			break;
 
+		case 'VanishingAct':
 		case 'ShadowOps_ThrowSonicBeacon':
 			if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1)
 			{

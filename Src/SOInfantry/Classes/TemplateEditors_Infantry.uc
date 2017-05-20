@@ -1,6 +1,8 @@
 class TemplateEditors_Infantry extends Object config(GameCore);
 
-var config array<name> OverwatchAbilities, MedikitAbilities;
+var config array<name> OverwatchAbilities, MedikitAbilities, FixTacticianAbilities;
+
+var X2Effect_ApplyWeaponDamage WeaponUpgradeMissDamage;
 
 static function EditTemplates()
 {
@@ -28,6 +30,14 @@ static function EditTemplates()
 
 	AddSwapAmmoAbilities();
 	FixHotloadAmmo();
+
+	// Second Wind
+	foreach default.FixTacticianAbilities(DataName)
+	{
+		`Log("SOInfantry: Editing" @ DataName);
+		AddMissDamage(DataName);
+	}
+
 }
 
 static function AddDoNotConsumeAllAbility(name AbilityName, name PassiveAbilityName)
@@ -67,6 +77,34 @@ static function AddPostActivationEvent(name AbilityName, name EventName)
 	{
 		if (Template.PostActivationEvents.Find(EventName) == INDEX_NONE)
 			Template.PostActivationEvents.AddItem(EventName);
+	}
+}
+
+static function AddMissDamage(name AbilityName)
+{
+	local X2AbilityTemplateManager		AbilityManager;
+	local array<X2AbilityTemplate>		TemplateAllDifficulties;
+	local X2AbilityTemplate				Template;
+	local X2Effect						Effect;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		foreach Template.AbilityTargetEffects(Effect)
+		{
+			if (Effect.IsA('X2Effect_ApplyWeaponDamage') && Effect.bApplyOnMiss == true)
+				return;
+		}
+		foreach Template.AbilityMultiTargetEffects(Effect)
+		{
+			if (Effect.IsA('X2Effect_ApplyWeaponDamage') && Effect.bApplyOnMiss == true)
+				return;
+		}
+		if (Template.AbilityTargetEffects.Length > 0)
+			Template.AddTargetEffect(default.WeaponUpgradeMissDamage);
+		if (Template.AbilityMultiTargetEffects.Length > 0)
+			Template.AddMultiTargetEffect(default.WeaponUpgradeMissDamage);
 	}
 }
 
@@ -167,4 +205,17 @@ simulated static function XComGameState HotLoadAmmo_BuildGameState(XComGameState
 	NewGameState.AddStateObject(NewWeaponState);
 
 	return NewGameState;
+}
+
+defaultproperties
+{
+	Begin Object Class=X2Effect_ApplyWeaponDamage Name=DefaultWeaponUpgradeMissDamage
+		bApplyOnHit=false
+		bApplyOnMiss=true
+		bIgnoreBaseDamage=true
+		DamageTag="Miss"
+		bAllowWeaponUpgrade=true
+		bAllowFreeKill=false
+	End Object
+	WeaponUpgradeMissDamage = DefaultWeaponUpgradeMissDamage;
 }
