@@ -31,6 +31,7 @@ static event OnPostTemplatesCreated()
 	SetVariableIconColor('PointBlank');
 	SetVariableIconColor('BothBarrels');
 	SetVariableIconColor('HaywireProtocol');
+	SetVariableIconColor('VanishingAct');
 	SetVariableIconColor('ShadowOps_ThrowSonicBeacon');
 	SetVariableIconColor('Deadeye');
 	SetVariableIconColor('PrecisionShot');
