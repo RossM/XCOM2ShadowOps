@@ -1927,26 +1927,39 @@ static function X2AbilityTemplate ZoneOfControl_LW2()
 {
 	local X2AbilityTemplate                 Template, CoveringFireTemplate, OverwatchShotTaken;
 	local X2Effect_ReserveOverwatchPoints	ActionPointEffect;
-	local X2Effect_Persistent				CoveringFireEffect;
+	local X2Effect_CoveringFire				CoveringFireEffect;
 	local XMBCondition_AbilityName			Condition;
+	local X2Condition_UnitEffects			EffectCondition;
 
 	ActionPointEffect = new class'X2Effect_ReserveOverwatchPoints';
 	ActionPointEffect.NumPoints = default.ZoneOfControlLW2Shots;
-
-	CoveringFireEffect = new class'X2Effect_Persistent';
-	CoveringFireEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
-	CoveringFireEffect.VisualizationFn = EffectFlyOver_Visualization;
-
 	Template = SelfTargetActivated('ShadowOps_ZoneOfControl_LW2', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", true, ActionPointEffect,, eCost_Overwatch);
+
+	CoveringFireEffect = new class'X2Effect_CoveringFire';
+	CoveringFireEffect.EffectName = 'ZoneOfControl';
+	CoveringFireEffect.AbilityToActivate = 'OverwatchShot';
+	CoveringFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
+	CoveringFireEffect.VisualizationFn = EffectFlyOver_Visualization;
 	AddSecondaryEffect(Template, CoveringFireEffect);
+
 	AddCooldown(Template, default.ZoneOfControlLW2Cooldown);
 
 	OverwatchShotTaken = SelfTargetTrigger('ZoneOfControlOverwatchShotTaken', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", false,, 'AbilityActivated');
+	OverwatchShotTaken.AbilityTargetStyle = default.SimpleSingleTarget;
+	XMBAbilityTrigger_EventListener(OverwatchShotTaken.AbilityTriggers[0]).bSelfTarget = false;
+
 	OverwatchShotTaken.BuildNewGameStateFn = ZoneOfControlOverwatchShotTaken_BuildGameState;
+	OverwatchShotTaken.BuildVisualizationFn = ZoneOfControlOverwatchShotTaken_BuildVisualization;
+	
 	Condition = new class'XMBCondition_AbilityName';
 	Condition.IncludeAbilityNames.AddItem('OverwatchShot');
 	Condition.IncludeAbilityNames.AddItem('PistolOverwatchShot');
 	AddTriggerTargetCondition(OverwatchShotTaken, Condition);
+	
+	EffectCondition = new class'X2Condition_UnitEffects';
+	EffectCondition.AddRequireEffect(CoveringFireEffect.EffectName, 'AA_UnitIsImmune');
+	AddTriggerShooterCondition(OverwatchShotTaken, Condition);
+	
 	AddSecondaryAbility(Template, OverwatchShotTaken);
 
 	// Set the CoveringFire effect to display as that perk
@@ -1982,7 +1995,47 @@ simulated function XComGameState ZoneOfControlOverwatchShotTaken_BuildGameState(
 	ValueName = name("OverwatchShot" $ AbilityContext.InputContext.PrimaryTarget.ObjectID);
 	SourceUnit.SetUnitFloatValue (ValueName, 1.0, eCleanup_BeginTurn);
 
+	`Log("ZoneOfControlOverwatchShotTaken" @ ValueName @ SourceUnit);
+
 	return NewGameState;
+}
+
+function ZoneOfControlOverwatchShotTaken_BuildVisualization(XComGameState VisualizeGameState, out array<VisualizationTrack> OutVisualizationTracks)
+{		
+	local X2AbilityTemplate             AbilityTemplate;
+	local XComGameStateContext_Ability  Context;
+	local AbilityInputContext           AbilityContext;
+	
+	local Actor                     TargetVisualizer;
+
+	local VisualizationTrack        EmptyTrack;
+	local VisualizationTrack        BuildTrack;
+	local XComGameStateHistory      History;
+
+	local X2Action_PlaySoundAndFlyOver SoundAndFlyover;
+
+	History = `XCOMHISTORY;
+	Context = XComGameStateContext_Ability(VisualizeGameState.GetContext());
+	AbilityContext = Context.InputContext;
+	AbilityTemplate = class'XComGameState_Ability'.static.GetMyTemplateManager().FindAbilityTemplate(AbilityContext.AbilityTemplateName);
+
+	//Configure the visualization track for the target(s). This functionality uses the context primarily
+	//since the game state may not include state objects for misses.
+	//****************************************************************************************	
+	TargetVisualizer = History.GetVisualizer(AbilityContext.SourceObject.ObjectID);
+
+	BuildTrack = EmptyTrack;
+	BuildTrack.TrackActor = TargetVisualizer;
+	BuildTrack.StateObject_OldState = History.GetGameStateForObjectID(AbilityContext.SourceObject.ObjectID, eReturnType_Reference, VisualizeGameState.HistoryIndex - 1);
+	BuildTrack.StateObject_NewState = VisualizeGameState.GetGameStateForObjectID(AbilityContext.SourceObject.ObjectID);
+
+	if (XComGameState_Unit(BuildTrack.StateObject_NewState).ReserveActionPoints.Length > 0)
+	{
+		SoundAndFlyOver = X2Action_PlaySoundAndFlyOver(class'X2Action_PlaySoundAndFlyover'.static.AddToVisualizationTrack(BuildTrack, Context));
+		SoundAndFlyOver.SetSoundAndFlyOverParameters(none, AbilityTemplate.LocFlyOverText, '', eColor_Good, AbilityTemplate.IconImage);
+	}
+
+	OutVisualizationTracks.AddItem(BuildTrack);
 }
 
 DefaultProperties
