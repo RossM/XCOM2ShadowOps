@@ -18,7 +18,7 @@ var config int AnatomistDamageBonus, AnatomistMaxKills;
 var config float HeatAmmoDamageMultiplier;
 var config WeaponDamageValue BullRushDamage;
 var config int BullRushHitModifier;
-var config int BareKnuckleDamageBonus;
+var config float BareKnuckleDamageBonus, BareKnuckleDamageBonusPerRank;
 var config int DemoGrenadesEnvironmentDamageBonus;
 var config int ElusiveDodge, ElusiveRange;
 var config array<name> MadBomberGrenades;
@@ -749,6 +749,7 @@ static function X2AbilityTemplate LineEmUp()
 	Effect.AddToHitModifier(default.LineEmUpCrit, eHit_Crit);
 
 	Effect.AbilityTargetConditions.AddItem(new class'X2Condition_ClosestVisibleEnemy');
+	Effect.AbilityTargetConditions.AddItem(default.RangedCondition);
 
 	// TODO: icon
 	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_SOCombatEngineer.UIPerk_lineemup", true, Effect);
@@ -923,14 +924,14 @@ static function X2AbilityTemplate BullRush()
 static function X2AbilityTemplate BareKnuckle()
 {
 	local XMBEffect_ConditionalBonus Effect;
-	local XMBCondition_AbilityProperty Condition;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddDamageModifier(default.BareKnuckleDamageBonus);
+	Effect.AddDamageModifier(1);
+	Effect.AbilityTargetConditions.AddItem(default.MeleeCondition);
 
-	Condition = new class'XMBCondition_AbilityProperty';
-	Condition.bRequireMelee = true;
-	Effect.AbilityTargetConditions.AddItem(Condition);
+	Effect.ScaleBase = default.BareKnuckleDamageBonus;
+	Effect.ScaleMultiplier = default.BareKnuckleDamageBonusPerRank;
+	Effect.ScaleValue = new class'X2Value_SoldierRank';
 
 	return Passive('ShadowOps_BareKnuckle', "img:///UILibrary_SOCombatEngineer.UIPerk_bareknuckle", false, Effect);
 }
