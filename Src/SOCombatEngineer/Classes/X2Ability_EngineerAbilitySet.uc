@@ -17,7 +17,7 @@ var config int SaboteurDamageBonus;
 var config int AnatomistDamageBonus, AnatomistMaxKills;
 var config float HeatAmmoDamageMultiplier;
 var config WeaponDamageValue BullRushDamage;
-var config int BullRushHitModifier;
+var config int BullRushHitModifier, BullRushCritModifier;
 var config float BareKnuckleDamageBonus, BareKnuckleDamageBonusPerRank;
 var config int DemoGrenadesEnvironmentDamageBonus;
 var config int ElusiveDodge, ElusiveRange;
@@ -906,6 +906,7 @@ static function X2AbilityTemplate BullRush()
 	// The default hit chance for melee attacks is low. Add +20 to the attack to match swords.
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardMelee';
 	ToHitCalc.BuiltInHitMod = default.BullRushHitModifier;
+	ToHitCalc.BuiltInCritMod = default.BullRushCritModifier;
 	Template.AbilityToHitCalc = ToHitCalc;
 
 	// Create a stun effect that removes 2 actions and has a 100% chance of success if the attack hits.
