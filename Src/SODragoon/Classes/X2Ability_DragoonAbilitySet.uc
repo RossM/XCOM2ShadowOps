@@ -1001,6 +1001,8 @@ static function X2AbilityTemplate EatThis()
 	Effect.ScaleBase = 1.0 - Effect.ScaleMultiplier + 0.5 / max(default.EatThisAimBonus, default.EatThisCritBonus); // Add a constant for rounding
 	Effect.ScaleMax = 1.0;
 
+	Effect.AbilityTargetConditions.AddItem(default.RangedCondition);
+
 	return Passive('ShadowOps_EatThis', "img:///UILibrary_SODragoon.UIPerk_eatthis", false, Effect);
 }
 

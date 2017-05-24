@@ -117,10 +117,10 @@ LocPromotionPopupText="<Bullet/> The bonus doesn't apply against melee attacks.<
 
 [ShadowOps_LineEmUp X2AbilityTemplate]
 LocFriendlyName="Priority Target"
-LocLongDescription="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on attacks against the closest visible enemy."
-LocHelpText="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on attacks against the closest visible enemy."
+LocLongDescription="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on ranged attacks against the closest visible enemy."
+LocHelpText="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on ranged attacks against the closest visible enemy."
 LocFlyOverText="Priority Target"
-LocPromotionPopupText="<Bullet/> If multiple enemies are equally distant, you get the bonus against all of them.<br/>"
+LocPromotionPopupText="<Bullet/> If multiple enemies are equally distant, you get the bonus against all of them.<br/><Bullet/> Priority Target doesn't affect melee attacks.<br/>"
 
 [ShadowOps_ControlledDetonation X2AbilityTemplate]
 LocFriendlyName="Controlled Detonation"
