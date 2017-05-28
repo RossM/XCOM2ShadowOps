@@ -527,7 +527,6 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	local int idx;
 
 	ResultMultiplier = 1;
-	TechResults.Length = class'X2ItemTemplateManager'.default.WeaponTechCategories.Length;
 
 	if (left(Tag, 3) ~= "Max")
 	{
@@ -596,7 +595,7 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		if (idx != INDEX_NONE)
 		{
 			// Track the results for each tech category
-			TechResults[idx] += ExtModInfo.ModInfo.Value;
+			TechResults.AddItem(ExtModInfo.ModInfo.Value);
 			ValidTechModifiers++;
 		}
 
@@ -614,7 +613,7 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	if (ValidModifiers == 0 && ValidTechModifiers > 0)
 	{
 		TagValue = "";
-		for (idx = 0; idx < TechResults.Length && idx < 3; idx++)  // HACK
+		for (idx = 0; idx < TechResults.Length; idx++)
 		{
 			if (idx > 0) TagValue $= "/";
 			TagValue $= string(int(TechResults[idx] * ResultMultiplier));
