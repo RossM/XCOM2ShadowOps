@@ -206,10 +206,10 @@ LocPromotionPopupText="<Bullet/> Smoke and Mirrors also slightly reduces the sol
 
 [ShadowOps_BareKnuckle X2AbilityTemplate]
 LocFriendlyName="Bare Knuckle"
-LocLongDescription="Your melee attacks deal <Ability:+Damage/> damage. The damage bonus increases with rank."
-LocHelpText="Your melee attacks deal <Ability:+Damage/> damage."
+LocLongDescription="Your melee attacks deal more damage. The damage bonus increases with rank."
+LocHelpText="Your melee attacks deal <Ability:+CurDamage/> damage."
 LocFlyOverText="Bare Knuckle"
-LocPromotionPopupText="<Bullet/> Melee attacks include Bull Rush and knife attacks. <br/><Bullet/> The damage bonus increases by 1 for every 2 soldier ranks."
+LocPromotionPopupText="<Bullet/> Melee attacks include Bull Rush and knife attacks. <br/><Bullet/> The damage bonus starts at +3, and increases by 1 for every 2 soldier ranks."
 
 [ShadowOps_DemoGrenades X2AbilityTemplate]
 LocFriendlyName="Demo Grenades"
