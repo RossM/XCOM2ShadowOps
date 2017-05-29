@@ -25,3 +25,8 @@ function protected name ValidateAttack(XComGameState_Effect EffectState, XComGam
 
 	return 'AA_Immune';
 }
+
+function ModifyUISummaryUnitStats(XComGameState_Effect EffectState, XComGameState_Unit UnitState, const ECharStatType Stat, out int StatValue)
+{
+	return;
+}
