@@ -157,15 +157,15 @@ simulated function SelectedItemChanged(UIList ContainerList, int ItemIndex)
 {
 	local int SlotIndex;
 	local XComGameState_Unit Unit;
-	local UISoldierHeader SoldierHeader;
+	local UISoldierHeader_BO SoldierHeader;
 	local array<XComGameState_Item> EquippedImplants;
 	local XComGameState_Item ImplantToAdd, ImplantToRemove;
-	local string Will, Aim, Health, Mobility, Tech, Psi;
+	local string Will, Aim, Health, Mobility, Tech, Psi, Dodge, Defense;
 
 	super(UIInventory).SelectedItemChanged(ContainerList, ItemIndex);
 
 	Unit = GetUnit();
-	SoldierHeader = UIArmory(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory')).Header;
+	SoldierHeader = UISoldierHeader_BO(UIArmory(Movie.Pres.ScreenStack.GetFirstInstanceOf(class'UIArmory')).Header);
 	EquippedImplants = Unit.GetAllItemsInSlot(eInvSlot_CombatSim);
 	SlotIndex = GetSlotIndex();
 
@@ -177,12 +177,14 @@ simulated function SelectedItemChanged(UIList ContainerList, int ItemIndex)
 	Aim = string( int(Unit.GetCurrentStat( eStat_Offense )) ) $ GetStatBoostString(ImplantToAdd, ImplantToRemove, eStat_Offense);
 	Health = string( int(Unit.GetCurrentStat( eStat_HP )) ) $ GetStatBoostString(ImplantToAdd, ImplantToRemove, eStat_HP);
 	Mobility = string( int(Unit.GetCurrentStat( eStat_Mobility )) ) $ GetStatBoostString(ImplantToAdd, ImplantToRemove, eStat_Mobility);
+	Dodge = string( int(Unit.GetCurrentStat( eStat_Dodge )) ) $ GetStatBoostString(ImplantToAdd, ImplantToRemove, eStat_Dodge); // LWS : Added dodge
 	Tech = string( int(Unit.GetCurrentStat( eStat_Hacking )) ) $ GetStatBoostString(ImplantToAdd, ImplantToRemove, eStat_Hacking);
+	Defense = string( int(Unit.GetCurrentStat( eStat_Defense )) ) $ GetStatBoostString(ImplantToAdd, ImplantToRemove, eStat_Defense);
 
 	if(Unit.IsPsiOperative())
 		Psi = string( int(Unit.GetCurrentStat( eStat_PsiOffense )) ) $ GetStatBoostString(ImplantToAdd, ImplantToRemove, eStat_PsiOffense);
 
-	SoldierHeader.SetSoldierStats(Will, Aim, Health, Mobility, Tech, Psi);
+	SoldierHeader.SetSoldierStatsExt(Health, Mobility, Aim, Will,, Dodge, Tech, Psi, Defense); // LWS : Added dodge
 }
 
 simulated function OnItemSelected(UIList ContainerList, int ItemIndex)
