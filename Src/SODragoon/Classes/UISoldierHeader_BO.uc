@@ -2,8 +2,8 @@ class UISoldierHeader_BO extends UISoldierHeader;
 
 public function PopulateData(optional XComGameState_Unit Unit, optional StateObjectReference NewItem, optional StateObjectReference ReplacedItem, optional XComGameState NewCheckGameState)
 {
-	local int iRank, WillBonus, AimBonus, HealthBonus, MobilityBonus, TechBonus, PsiBonus, ArmorBonus, DodgeBonus;
-	local string classIcon, rankIcon, flagIcon, Will, Aim, Health, Mobility, Tech, Psi, Armor, Dodge;
+	local int iRank, WillBonus, AimBonus, HealthBonus, MobilityBonus, TechBonus, PsiBonus, ArmorBonus, DodgeBonus, DefenseBonus;
+	local string classIcon, rankIcon, flagIcon, Will, Aim, Health, Mobility, Tech, Psi, Armor, Dodge, Defense;
 	local X2SoldierClassTemplate SoldierClass;
 	local X2EquipmentTemplate EquipmentTemplate;
 	local XComGameState_Item TmpItem;
@@ -82,6 +82,7 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 	Tech = string(int(Unit.GetCurrentStat(eStat_Hacking)) + Unit.GetUIStatFromAbilities(eStat_Hacking));
 	Armor = string(int(Unit.GetCurrentStat(eStat_ArmorMitigation)) + Unit.GetUIStatFromAbilities(eStat_ArmorMitigation));
 	Dodge = string(int(Unit.GetCurrentStat(eStat_Dodge)) + Unit.GetUIStatFromAbilities(eStat_Dodge));
+	Defense = string(int(Unit.GetCurrentStat(eStat_Defense)) + Unit.GetUIStatFromAbilities(eStat_Defense));
 
 	if (Unit.bIsShaken)
 	{
@@ -96,6 +97,7 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 	TechBonus = GetUIStatFromInventory(Unit, eStat_Hacking);
 	ArmorBonus = GetUIStatFromInventory(Unit, eStat_ArmorMitigation);
 	DodgeBonus = GetUIStatFromInventory(Unit, eStat_Dodge);
+	DefenseBonus = GetUIStatFromInventory(Unit, eStat_Defense);
 
 	if(Unit.IsPsiOperative())
 	{
@@ -123,6 +125,7 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 			TechBonus += GetUIStatFromItem(Unit, eStat_Hacking, TmpItem);
 			ArmorBonus += GetUIStatFromItem(Unit, eStat_ArmorMitigation, TmpItem);
 			DodgeBonus += GetUIStatFromItem(Unit, eStat_Dodge, TmpItem);
+			DefenseBonus += GetUIStatFromItem(Unit, eStat_Defense, TmpItem);
 					
 			if(Unit.IsPsiOperative())
 				PsiBonus += GetUIStatFromItem(Unit, eStat_PsiOffense, TmpItem);
@@ -195,6 +198,11 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 	else if (PsiBonus < 0)
 		Psi $= class'UIUtilities_Text'.static.GetColoredText(""$PsiBonus, eUIState_Bad);
 
+	if( DefenseBonus > 0 )
+		Defense $= class'UIUtilities_Text'.static.GetColoredText("+"$DefenseBonus, eUIState_Good);
+	else if (DefenseBonus < 0)
+		Defense $= class'UIUtilities_Text'.static.GetColoredText(""$DefenseBonus, eUIState_Bad);
+
 	if(Unit.HasPsiGift())
 		PsiMarkup.Show();
 	else
@@ -202,11 +210,75 @@ public function PopulateData(optional XComGameState_Unit Unit, optional StateObj
 
 	if(!bSoldierStatsHidden)
 	{
-		SetSoldierStats(Health, Mobility, Aim, Will, Armor, Dodge, Tech, Psi);
+		SetSoldierStatsExt(Health, Mobility, Aim, Will, Armor, Dodge, Tech, Psi, Defense);
 		RefreshCombatSim(Unit);
 	}
 
 	Show();
+}
+
+// Added Defense
+public function SetSoldierStatsExt(optional string Health	 = "", 
+								optional string Mobility = "", 
+								optional string Aim	     = "", 
+								optional string Will     = "", 
+								optional string Armor	 = "", 
+								optional string Dodge	 = "", 
+								optional string Tech	 = "", 
+								optional string Psi		 = "",
+								optional string Defense  = "")
+{
+	//Stats will stack to the right, and clear out any unused stats 
+
+	mc.BeginFunctionOp("SetSoldierStats");
+	
+	if( Health != "" )
+	{
+		mc.QueueString(m_strHealthLabel);
+		mc.QueueString(Health);
+	}
+	if( Mobility != "" )
+	{
+		mc.QueueString(m_strMobilityLabel);
+		mc.QueueString(Mobility);
+	}
+	if( Aim != "" )
+	{
+		mc.QueueString(m_strAimLabel);
+		mc.QueueString(Aim);
+	}
+	if( Will != "" )
+	{
+		mc.QueueString(m_strWillLabel);
+		mc.QueueString(Will);
+	}
+	if( Armor != "" )
+	{
+		mc.QueueString(m_strArmorLabel);
+		mc.QueueString(Armor);
+	}
+	if( Defense != "" )
+	{
+		mc.QueueString(class'XLocalizedData'.default.DefenseLabel);
+		mc.QueueString(Defense);
+	}
+	if( Dodge != "" )
+	{
+		mc.QueueString(m_strDodgeLabel);
+		mc.QueueString(Dodge);
+	}
+	if( Psi != "" )
+	{
+		mc.QueueString( class'UIUtilities_Text'.static.GetColoredText(m_strPsiLabel, eUIState_Psyonic) );
+		mc.QueueString( class'UIUtilities_Text'.static.GetColoredText(Psi, eUIState_Psyonic) );
+	}
+	else if( Tech != "" )
+	{
+		mc.QueueString(m_strTechLabel);
+		mc.QueueString(Tech);
+	}
+
+	mc.EndOp();
 }
 
 simulated function int GetUIStatFromInventory(XComGameState_Unit Unit, ECharStatType Stat)
