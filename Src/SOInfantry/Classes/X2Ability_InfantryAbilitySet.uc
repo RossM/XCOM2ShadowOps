@@ -1907,7 +1907,7 @@ static function X2AbilityTemplate ThrowSonicBeacon()
 	Template.AddMultiTargetEffect(new class'X2Effect_MapAlert');
 
 	// This triggers the AI to move towards the sonic beacon for a set number of turns
-	SeekBeaconEffect = new class'X2Effect_Persistent';
+	SeekBeaconEffect = new class'X2Effect_SonicBeacon';
 	SeekBeaconEffect.EffectName = 'SeekSonicBeacon';
 	SeekBeaconEffect.BuildPersistentEffect(default.SonicBeaconMoveTurns, false, false, false, eGameRule_PlayerTurnEnd);
 	Template.AddMultiTargetEffect(SeekBeaconEffect);
