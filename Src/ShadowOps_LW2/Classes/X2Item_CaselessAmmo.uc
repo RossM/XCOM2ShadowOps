@@ -22,7 +22,7 @@ static function X2AmmoTemplate CreateCaselessAmmo()
 	Template.strImage = "img:///UILibrary_SOItems.Inv_Caseless_Ammo";
 	Template.bInfiniteItem = true;
 	Template.StartingItem = true;
-	Template.Tier = 1;
+	Template.Tier = 0;
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
 	Template.ModClipSize = default.CaselessAmmoClipSize;
