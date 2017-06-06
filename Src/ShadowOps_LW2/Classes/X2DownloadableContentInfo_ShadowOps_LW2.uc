@@ -258,6 +258,117 @@ static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out a
 	}
 }
 
+// Added by LWS. Used to fix up the ammo slot when validating loadout
+static function GetMinimumRequiredUtilityItems(out int Value, XComGameState_Unit UnitState, XComGameState NewGameState)
+{
+	local XComGameState_HeadquartersXCom XComHQ;
+	local XComGameState_Item EquippedAmmo, EquippedPrimaryWeapon;
+
+	foreach NewGameState.IterateByClassType(class'XComGameState_HeadquartersXCom', XComHQ)
+	{
+		break;
+	}
+
+	EquippedPrimaryWeapon = UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon, NewGameState);
+
+	EquippedAmmo = UnitState.GetItemInSlot(eInvSlot_AmmoPocket, NewGameState);
+	if (EquippedAmmo != none)
+	{
+		if(X2AmmoTemplate(EquippedAmmo.GetMyTemplate()) != none && 
+		   !X2AmmoTemplate(EquippedAmmo.GetMyTemplate()).IsWeaponValidForAmmo(X2WeaponTemplate(EquippedPrimaryWeapon.GetMyTemplate())))
+		{
+			EquippedAmmo = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', EquippedAmmo.ObjectID));
+			NewGameState.AddStateObject(EquippedAmmo);
+			UnitState.RemoveItemFromInventory(EquippedAmmo, NewGameState);
+			XComHQ.PutItemInInventory(NewGameState, EquippedAmmo);
+			EquippedAmmo = none;
+		}
+	}
+
+	if (EquippedAmmo == none && UnitState.HasAmmoPocket())
+	{
+		EquippedAmmo = GetBestAmmo(UnitState, NewGameState);
+		UnitState.AddItemToInventory(EquippedAmmo, eInvSlot_AmmoPocket, NewGameState);
+	}	
+}
+
+static function XComGameState_Item GetBestAmmo(XComGameState_Unit UnitState, XComGameState NewGameState)
+{
+	local array<X2AmmoTemplate> AmmoTemplates;
+	local XComGameState_Item ItemState;
+
+	AmmoTemplates = GetBestAmmoTemplates(UnitState, NewGameState);
+
+	if(AmmoTemplates.Length == 0)
+	{
+		return none;
+	}
+
+	ItemState = AmmoTemplates[`SYNC_RAND_STATIC(AmmoTemplates.Length)].CreateInstanceFromTemplate(NewGameState);
+	NewGameState.AddStateObject(ItemState);
+
+	return ItemState;
+}
+
+static function array<X2AmmoTemplate> GetBestAmmoTemplates(XComGameState_Unit UnitState, XComGameState NewGameState)
+{
+	local XComGameStateHistory History;
+	local XComGameState_HeadquartersXCom XComHQ;
+	local X2AmmoTemplate AmmoTemplate, BestAmmoTemplate;
+	local array<X2AmmoTemplate> BestAmmoTemplates;
+	local XComGameState_Item ItemState;
+	local XComGameState_Item EquippedPrimaryWeapon;
+	local int idx, HighestTier;
+
+	History = `XCOMHISTORY;
+	XComHQ = class'UIUtilities_Strategy'.static.GetXComHQ();
+
+	EquippedPrimaryWeapon = UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon, NewGameState);
+
+	// First get the default Ammo template
+	BestAmmoTemplate = X2AmmoTemplate(class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate(class'X2Ability_InfantryAbilitySet'.default.FreeAmmoForPocket));
+	if (BestAmmoTemplate.IsWeaponValidForAmmo(X2WeaponTemplate(EquippedPrimaryWeapon.GetMyTemplate())))
+	{
+		BestAmmoTemplates.AddItem(BestAmmoTemplate);
+		HighestTier = BestAmmoTemplate.Tier;
+	}
+	else
+	{
+		BestAmmoTemplate = none;
+		HighestTier = 0;
+	}
+
+	if( XComHQ != none )
+	{
+		// Try to find a better Ammo as an infinite item in the inventory
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
+		{
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			AmmoTemplate = X2AmmoTemplate(ItemState.GetMyTemplate());
+
+			if(AmmoTemplate != none && AmmoTemplate.bInfiniteItem && AmmoTemplate.IsWeaponValidForAmmo(X2WeaponTemplate(EquippedPrimaryWeapon.GetMyTemplate())) &&
+				(BestAmmoTemplate == none || (BestAmmoTemplates.Find(AmmoTemplate) == INDEX_NONE && AmmoTemplate.Tier >= BestAmmoTemplate.Tier)))
+			{
+				BestAmmoTemplate = AmmoTemplate;
+				BestAmmoTemplates.AddItem(BestAmmoTemplate);
+				HighestTier = BestAmmoTemplate.Tier;
+			}
+		}
+	}
+
+	for(idx = 0; idx < BestAmmoTemplates.Length; idx++)
+	{
+		if(BestAmmoTemplates[idx].Tier < HighestTier)
+		{
+			BestAmmoTemplates.Remove(idx, 1);
+			idx--;
+		}
+	}
+
+	return BestAmmoTemplates;
+}
+
+
 exec function Respec()
 {
 	local UIArmory Armory;
