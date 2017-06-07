@@ -178,7 +178,6 @@ static function EditSmallItemWeight()
 	local X2ItemTemplate						NewTemplate;
 	local array<name>							TemplateNames;
 	local name									ItemName;
-	local int									ShotHUDPriority;
 
 	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 	ItemManager.GetTemplateNames(TemplateNames);
@@ -204,12 +203,9 @@ static function EditSmallItemWeight()
 
 static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out array<AbilitySetupData> SetupData, optional XComGameState StartState, optional XComGameState_Player PlayerState, optional bool bMultiplayerDisplay)
 {
-	local XComGameStateHistory History;
 	local XComGameState_Item Item, InnerItem;
 	local StateObjectReference ItemRef, InnerItemRef;
 	local int i;
-
-	History = `XCOMHISTORY;
 
 	if (StartState == none)
 		return;

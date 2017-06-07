@@ -289,7 +289,6 @@ simulated function InstallImplant()
 // Copied from LW2, hardcodes PCSRemovalContinentBonusOverride == 'ContinentBonus_Wired/ so that it doesn't depend on LW2
 function bool IsContinentBonusActive ()
 {
-	local X2StrategyElementTemplateManager StratMgr;
 	local array<X2StrategyElementTemplate> ContinentBonuses;
 	local X2StrategyElementTemplate StrategyElement;
 	local XComGameState_Continent Continent;

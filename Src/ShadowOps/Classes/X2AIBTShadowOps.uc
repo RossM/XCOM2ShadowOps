@@ -38,7 +38,6 @@ function bt_status SetDestinationFromAlertData()
 function bt_status SetDestinationForSonicBeacon()
 {
 	local vector vDest;
-	local StateObjectReference AbilityRef;
 	local XComGameState_Effect EffectState;
 	local XComGameStateHistory History;
 	local int i;

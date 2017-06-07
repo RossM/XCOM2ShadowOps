@@ -15,7 +15,6 @@ static function X2AmmoTemplate CreateCaselessAmmo()
 {
 	local X2AmmoTemplate BaseTemplate;
 	local X2AmmoTemplate_ShadowOps Template;
-	local ArtifactCost Resources;
 
 	`CREATE_X2TEMPLATE(class'X2AmmoTemplate', BaseTemplate, 'CaselessAmmo');
 	Template = new class'X2AmmoTemplate_ShadowOps'(BaseTemplate);
