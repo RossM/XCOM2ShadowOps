@@ -1,6 +1,7 @@
 class X2Item_CaselessAmmo extends X2Item config(ShadowOps);
 
-var config int CaselessAmmoClipSize;
+var config int ClipSize;
+var config array<name> ExcludeWeapon;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -24,11 +25,9 @@ static function X2AmmoTemplate CreateCaselessAmmo()
 	Template.Tier = 0;
 	Template.EquipSound = "StrategyUI_Ammo_Equip";
 
-	Template.ModClipSize = default.CaselessAmmoClipSize;
+	Template.ModClipSize = default.ClipSize;
 	Template.AllowedWeaponCat.AddItem('rifle');
-	Template.ExcludeWeapon.AddItem('AlienHunterRifle_CV');
-	Template.ExcludeWeapon.AddItem('AlienHunterRifle_MG');
-	Template.ExcludeWeapon.AddItem('AlienHunterRifle_BM');
+	Template.ExcludeWeapon = default.ExcludeWeapon;
 
 	//FX Reference
 	Template.GameArchetype = "Ammo_AP.PJ_AP";

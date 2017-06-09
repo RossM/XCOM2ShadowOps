@@ -19,4 +19,4 @@
 FriendlyName="Caseless Ammo"
 FriendlyNamePlural="Caseless Ammo"
 BriefSummary="Increases the clip size of the primary weapon by 2."
-TacticalText="<Bullet/> Increases the clip size of the primary weapon by 2. <br/><Bullet/> Only usable in assault rifles and SMGs. <br/>"
+TacticalText="<Bullet/> Increases the clip size of the primary weapon by 2. <br/><Bullet/> Only usable in assault rifles. <br/>"
