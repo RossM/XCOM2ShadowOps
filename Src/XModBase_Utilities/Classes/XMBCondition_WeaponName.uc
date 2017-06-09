@@ -32,3 +32,8 @@ event name CallAbilityMeetsCondition(XComGameState_Ability kAbility, XComGameSta
 
 	return 'AA_Success';
 }
+
+defaultproperties
+{
+	bCheckAmmo = true
+}

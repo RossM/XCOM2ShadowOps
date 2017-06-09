@@ -42,6 +42,9 @@ static event OnPostTemplatesCreated()
 
 	UpdateFleche();
 
+	EditQuickburn();
+	EditRapidDeployment();
+
 	SetShotHUDPriorities();
 
 	EditSmallItemWeight();
@@ -95,6 +98,71 @@ static function UpdateFleche()
 			if (FlecheEffect.AbilityNames.Find('ShadowOps_SliceAndDice') == INDEX_NONE)
 				FlecheEffect.AbilityNames.AddItem('ShadowOps_SliceAndDice');
 		}
+	}
+}
+
+static function EditQuickburn()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local XMBEffect_AbilityCostRefund			Effect;
+	local XMBCondition_AbilityName				Condition;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('Quickburn', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		Template.AbilityTargetEffects.Length = 0;
+
+		Effect = new class'XMBEffect_AbilityCostRefund';
+		Effect.EffectName = 'QuickburnEffect';
+		Effect.TriggeredEvent = 'Quickburn';
+		Effect.bShowFlyOver = true;
+		Effect.CountValueName = 'QuickburnUses';
+		Effect.MaxRefundsPerTurn = 1;
+		Effect.bFreeCost = true;
+
+		Condition = new class'XMBCondition_AbilityName';
+		Condition.IncludeAbilityNames.AddItem('LWFlamethrower');
+		Condition.IncludeAbilityNames.AddItem('Roust');
+		Condition.IncludeAbilityNames.AddItem('Firestorm');
+		Effect.AbilityTargetConditions.AddItem(Condition);
+
+		Effect.BuildPersistentEffect(1, false, false, true, eGameRule_PlayerTurnEnd);
+		Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+		Template.AddTargetEffect(Effect);
+	}
+}
+
+static function EditRapidDeployment()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local XMBEffect_AbilityCostRefund			Effect;
+	local X2Condition_RapidDeployment			Condition;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('RapidDeployment', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		Template.AbilityTargetEffects.Length = 0;
+
+		Effect = new class'XMBEffect_AbilityCostRefund';
+		Effect.EffectName = 'RapidDeploymentEffect';
+		Effect.TriggeredEvent = 'RapidDeployment';
+		Effect.bShowFlyOver = true;
+		Effect.CountValueName = 'RapidDeploymentUses';
+		Effect.MaxRefundsPerTurn = 1;
+		Effect.bFreeCost = true;
+
+		Condition = new class'X2Condition_RapidDeployment';
+		Effect.AbilityTargetConditions.AddItem(Condition);
+
+		Effect.BuildPersistentEffect(1, false, false, true, eGameRule_PlayerTurnEnd);
+		Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+		Template.AddTargetEffect(Effect);
 	}
 }
 
