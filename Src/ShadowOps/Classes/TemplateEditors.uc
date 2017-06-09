@@ -98,7 +98,7 @@ static function ChangeToWeaponActionPoints(name AbilityName)
 		{
 			if (Template.AbilityCosts[i].IsA('X2AbilityCost_ActionPoints'))
 			{
-				ActionPointCost = new class'X2AbilityCost_ActionPoints'(Template.AbilityCosts[i]);
+				ActionPointCost = new class'XMBAbilityCost_ActionPoints'(Template.AbilityCosts[i]);
 				ActionPointCost.iNumPoints = 0;
 				ActionPointCost.bAddWeaponTypicalCost = true;
 				Template.AbilityCosts[i] = ActionPointCost;

@@ -36,7 +36,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(SmokeAndMirrors());
 	Templates.AddItem(Breach());
 	Templates.AddItem(Fastball());
-	Templates.AddItem(FastballRemovalTrigger());
 	Templates.AddItem(FractureAbility());
 	Templates.AddItem(FractureDamage());
 	Templates.AddItem(Packmaster());
@@ -179,86 +178,28 @@ static function X2AbilityTemplate Breach()
 static function X2AbilityTemplate Fastball()
 {
 	local X2AbilityTemplate                 Template;	
-	local X2AbilityCooldown                 Cooldown;
-	local X2Effect_Persistent				FastballEffect;
-	local X2AbilityTargetStyle              TargetStyle;
+	local XMBEffect_AbilityCostRefund		FastballEffect;
+	local XMBCondition_AbilityName			NameCondition;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fastball');
-	
-	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_fastball";
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
-	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
-	Template.Hostility = eHostility_Neutral;
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
+	FastballEffect = new class'XMBEffect_AbilityCostRefund';
+	FastballEffect.TriggeredEvent = 'Fastball';
+	FastballEffect.bShowFlyOver = true;
+	FastballEffect.CountValueName = 'FastballUses';
+	FastballEffect.MaxRefundsPerTurn = 1;
+	FastballEffect.bFreeCost = true;
 
-	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Free));
-	
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.FastballCooldown;
-	Template.AbilityCooldown = Cooldown;
-	
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+	NameCondition = new class'XMBCondition_AbilityName';
+	NameCondition.IncludeAbilityNames = class'TemplateEditors_CombatEngineer'.default.GrenadeAbilities;
+	FastballEffect.AbilityTargetConditions.AddItem(NameCondition);
+
+	Template = SelfTargetActivated('ShadowOps_Fastball', "img:///UILibrary_SOCombatEngineer.UIPerk_fastball", true, FastballEffect,, eCost_Free);
+	AddCooldown(Template, default.FastballCooldown);
 
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_HasGrenade');
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
 
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	FastballEffect = new class'X2Effect_Persistent';
-	FastballEffect.EffectName = 'Fastball';
-	FastballEffect.BuildPersistentEffect(1,,,,eGameRule_PlayerTurnEnd);
-	FastballEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, "img:///UILibrary_PerkIcons.UIPerk_bombard", true);
-	Template.AddTargetEffect(FastballEffect);
-
-	Template.AddShooterEffectExclusions();
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bSkipFireAction = true;
-
-	Template.AdditionalAbilities.AddItem('ShadowOps_FastballRemovalTrigger');
-	
-	Template.bCrossClassEligible = true;
-
-	return Template;	
-}
-
-static function X2AbilityTemplate FastballRemovalTrigger()
-{
-	local X2AbilityTemplate						Template;	
-	local X2Effect_RemoveEffects				RemoveFastballEffect;
-	local X2AbilityTrigger_EventListener		Trigger;
-	local X2AbilityTargetStyle					TargetStyle;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FastballRemovalTrigger');
-	
-	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_fastball";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-
-	Trigger = new class'X2AbilityTrigger_EventListener';
-	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
-	Trigger.ListenerData.EventID = 'GrenadeUsed';
-	Trigger.ListenerData.Filter = eFilter_Unit;
-	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
-	Template.AbilityTriggers.AddItem(Trigger);
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	RemoveFastballEffect = new class'X2Effect_RemoveEffects';
-	RemoveFastballEffect.EffectNamesToRemove.AddItem('Fastball');
-	Template.AddTargetEffect(RemoveFastballEffect);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	// No visualization on purpose
-	
-	return Template;	
+	return Template;
 }
 
 static function X2AbilityTemplate FractureAbility()

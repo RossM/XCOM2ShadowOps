@@ -67,3 +67,17 @@ function OnPostTemplatesCreated()
 		}
 	}
 }
+
+////////////////////////
+// XMBEffectInterface //
+////////////////////////
+
+function bool GetExtValue(LWTuple Data)
+{
+	if (Data.Id == 'GetActionPointCost')
+	{
+	}
+
+	return super.GetExtValue(Data);
+}
+
