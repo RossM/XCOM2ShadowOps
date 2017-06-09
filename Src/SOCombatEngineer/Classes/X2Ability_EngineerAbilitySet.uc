@@ -34,6 +34,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(DeepPockets());
 	Templates.AddItem(DenseSmoke());			// Non-LW only
 	Templates.AddItem(SmokeAndMirrors());
+	Templates.AddItem(SmokeAndMirrors_LW2());
 	Templates.AddItem(Breach());
 	Templates.AddItem(Fastball());
 	Templates.AddItem(FractureAbility());
@@ -60,7 +61,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(ExtraMunitions());
 	Templates.AddItem(BullRush());
-	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(BareKnuckle());
 	Templates.AddItem(PurePassive('ShadowOps_DemoGrenades', "img:///UILibrary_SOCombatEngineer.UIPerk_demogrenades", false));
 	Templates.AddItem(Elusive());
@@ -72,14 +72,43 @@ static function array<X2DataTemplate> CreateTemplates()
 
 static function X2AbilityTemplate SmokeAndMirrors()
 {
+	local X2AbilityTemplate Template;
 	local X2Effect_AddGrenade Effect;
+	local XMBEffect_DoNotConsumeAllPoints CostEffect;
+	local XMBCondition_WeaponName Condition;
 
 	Effect = new class'X2Effect_AddGrenade';
 	Effect.DataName = 'SmokeGrenade';
 	Effect.BaseCharges = 1;
 	Effect.SkipAbilities.AddItem('SmallItemWeight');
 
-	return Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, Effect);
+	CostEffect = new class'XMBEffect_DoNotConsumeAllPoints';
+	CostEffect.AbilityNames = class'TemplateEditors_CombatEngineer'.default.GrenadeAbilities;
+	Condition = new class'XMBCondition_WeaponName';
+	Condition.IncludeWeaponNames = class'X2AbilityCost_GrenadeActionPoints'.default.SmokeGrenadeTemplates;
+	Condition.bCheckAmmo = true;
+	CostEffect.AbilityTargetConditions.AddItem(Condition);
+
+	Template = Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, Effect);
+	AddSecondaryEffect(Template, CostEffect);
+	return Template;
+}
+
+static function X2AbilityTemplate SmokeAndMirrors_LW2()
+{
+	local X2AbilityTemplate Template;
+	local XMBEffect_DoNotConsumeAllPoints CostEffect;
+	local XMBCondition_WeaponName Condition;
+
+	CostEffect = new class'XMBEffect_DoNotConsumeAllPoints';
+	CostEffect.AbilityNames = class'TemplateEditors_CombatEngineer'.default.GrenadeAbilities;
+	Condition = new class'XMBCondition_WeaponName';
+	Condition.IncludeWeaponNames = class'X2AbilityCost_GrenadeActionPoints'.default.SmokeGrenadeTemplates;
+	Condition.bCheckAmmo = true;
+	CostEffect.AbilityTargetConditions.AddItem(Condition);
+
+	Template = Passive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, CostEffect);
+	return Template;
 }
 
 static function X2AbilityTemplate DeepPockets()

@@ -275,7 +275,6 @@ static function UpdateAbilities()
 	local array<name>							TemplateNames;
 	local name									AbilityName;
 	local int i;
-	local int hack;
 
 	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
