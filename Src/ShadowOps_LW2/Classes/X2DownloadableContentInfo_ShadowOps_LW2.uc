@@ -36,6 +36,7 @@ static event OnPostTemplatesCreated()
 	SetVariableIconColor('Deadeye');
 	SetVariableIconColor('PrecisionShot');
 	SetVariableIconColor('Flush');
+	SetVariableIconColor('RapidFire');
 	SetVariableIconColor('ShadowOps_Bullseye');
 	SetVariableIconColor('ShadowOps_DisablingShot');
 

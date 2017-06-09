@@ -99,12 +99,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 	switch (AbilityName)
 	{
 		case 'ThrowGrenade':
-			if (UnitState.AffectedByEffectNames.Find('Fastball') != INDEX_NONE)
-			{
-				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
-				Changed = true;
-			}
-			else if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
+			if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
 				class'X2Effect_RapidDeployment'.default.VALID_GRENADE_TYPES.Find(WeaponState.GetMyTemplateName()) != -1)
 			{
 				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
@@ -119,12 +114,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 			break;
 
 		case 'LaunchGrenade':
-			if (UnitState.AffectedByEffectNames.Find('Fastball') != INDEX_NONE)
-			{
-				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
-				Changed = true;
-			}
-			else if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
+			if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
 				class'X2Effect_RapidDeployment'.default.VALID_GRENADE_TYPES.Find(WeaponState.GetLoadedAmmoTemplate(AbilityState).DataName) != -1)
 			{
 				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
@@ -169,6 +159,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 		case 'Deadeye':
 		case 'PrecisionShot':
 		case 'Flush':
+		case 'RapidFire':
 		case 'ShadowOps_Bullseye':
 		case 'ShadowOps_DisablingShot':
 			IconColor = GetIconColorByActionPointCost(AbilityTemplate, AbilityState, UnitState);
