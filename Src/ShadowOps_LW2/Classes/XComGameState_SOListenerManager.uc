@@ -99,12 +99,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 	switch (AbilityName)
 	{
 		case 'ThrowGrenade':
-			if (UnitState.AffectedByEffectNames.Find('Fastball') != INDEX_NONE)
-			{
-				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
-				Changed = true;
-			}
-			else if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
+			if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
 				class'X2Effect_RapidDeployment'.default.VALID_GRENADE_TYPES.Find(WeaponState.GetMyTemplateName()) != -1)
 			{
 				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
@@ -119,12 +114,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 			break;
 
 		case 'LaunchGrenade':
-			if (UnitState.AffectedByEffectNames.Find('Fastball') != INDEX_NONE)
-			{
-				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
-				Changed = true;
-			}
-			else if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
+			if (UnitState.AffectedByEffectNames.Find('RapidDeploymentEffect') != -1 &&
 				class'X2Effect_RapidDeployment'.default.VALID_GRENADE_TYPES.Find(WeaponState.GetLoadedAmmoTemplate(AbilityState).DataName) != -1)
 			{
 				IconColor = class'LWTemplateMods'.default.ICON_COLOR_FREE;
@@ -169,6 +159,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 		case 'Deadeye':
 		case 'PrecisionShot':
 		case 'Flush':
+		case 'RapidFire':
 		case 'ShadowOps_Bullseye':
 		case 'ShadowOps_DisablingShot':
 			IconColor = GetIconColorByActionPointCost(AbilityTemplate, AbilityState, UnitState);
@@ -196,7 +187,7 @@ function EventListenerReturn OnOverrideAbilityIconColor (Object EventData, Objec
 
 function string GetIconColorByActionPointCost(X2AbilityTemplate AbilityTemplate, XComGameState_Ability AbilityState, XComGameState_Unit UnitState)
 {
-	local int k, cost;
+	local int k, cost, actualCost;
 	local X2AbilityCost_ActionPoints ActionPoints;
 	local XComGameState_Item SourceWeapon;
 	local X2WeaponTemplate SourceWeaponTemplate;
@@ -214,7 +205,11 @@ function string GetIconColorByActionPointCost(X2AbilityTemplate AbilityTemplate,
 			if (ActionPoints.bAddWeaponTypicalCost && SourceWeaponTemplate != none)
 				cost += SourceWeaponTemplate.iTypicalActionCost;
 
-			if (cost >= 2)
+			actualCost = ActionPoints.GetPointCost(AbilityState, UnitState);
+
+			if (actualCost == 0)
+				return class'LWTemplateMods'.default.ICON_COLOR_FREE;
+			else if (cost >= 2)
 				return class'LWTemplateMods'.default.ICON_COLOR_2;
 			else if (ActionPoints.ConsumeAllPoints(AbilityState, UnitState))
 				return class'LWTemplateMods'.default.ICON_COLOR_END;

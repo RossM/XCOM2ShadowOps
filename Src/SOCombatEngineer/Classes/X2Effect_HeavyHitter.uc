@@ -4,9 +4,7 @@ var int BonusDamage, BonusDamageOverTime;
 
 function int GetAttackingDamageModifier(XComGameState_Effect EffectState, XComGameState_Unit Attacker, Damageable TargetDamageable, XComGameState_Ability AbilityState, const out EffectAppliedData AppliedData, const int CurrentDamage, optional XComGameState NewGameState)
 {
-	local XComGameState_Item SourceWeapon;
 	local X2Effect_ApplyWeaponDamage WeaponDamageEffect;
-	local XComGameState_Unit Target;
 
 	if (!class'XComGameStateContext_Ability'.static.IsHitResultHit(AppliedData.AbilityResultContext.HitResult))
 		return 0;

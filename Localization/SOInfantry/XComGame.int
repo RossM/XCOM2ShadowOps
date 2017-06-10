@@ -53,6 +53,13 @@ LocFriendlyName="Zone of Control Shot"
 [ShadowOps_ZoneOfControlPistolShot X2AbilityTemplate]
 LocFriendlyName="Zone of Control Pistol Shot"
 
+[ShadowOps_ZoneOfControl_LW2 X2AbilityTemplate]
+LocFriendlyName="Zone of Control"
+LocLongDescription="Enter a special overwatch which grants up to <Ability:ZoneOfControlLW2Shots/> reaction shots and the Covering Fire ability. <Ability:SelfCooldown/> turn cooldown."
+LocHelpText="Enhanced overwatch that can fire multiple times in a turn."
+LocFlyOverText="Zone of Control"
+LocPromotionPopupText="<Bullet/> Zone of Control has a <Ability:SelfCooldown/> turn cooldown.<br/>"
+
 [ShadowOps_ZeroIn X2AbilityTemplate]
 LocFriendlyName="Zero In"
 LocLongDescription="When you miss an attack, you get <Ability:+ToHit/> Aim on your next attack."
@@ -151,8 +158,8 @@ LocPromotionPopupText="<Bullet/> You won't enter overwatch if you are out of amm
 
 [ShadowOps_ImprovedSuppression X2AbilityTemplate]
 LocFriendlyName="Improved Suppression"
-LocLongDescription="Your Suppression ability also disorients the target."
-LocHelpText="Your Suppression ability also disorients the target."
+LocLongDescription="Your Suppression and Area Suppression abilities also disorient the primary target."
+LocHelpText="Your Suppression and Area Suppression abilities also disorient the primary target."
 LocFlyOverText="Improved Suppression"
 LocPromotionPopupText="<Bullet/> Disoriented units have reduced Aim and Mobility, and can't use most special abilities.<br/><Bullet/> The disorientation is applied when you activate suppression.<br/><Bullet/> Having the suppression broken won't remove the disorientation early.<br/>"
 

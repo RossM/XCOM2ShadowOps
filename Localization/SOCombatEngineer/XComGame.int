@@ -117,10 +117,10 @@ LocPromotionPopupText="<Bullet/> The bonus doesn't apply against melee attacks.<
 
 [ShadowOps_LineEmUp X2AbilityTemplate]
 LocFriendlyName="Priority Target"
-LocLongDescription="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on attacks against the closest visible enemy."
-LocHelpText="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on attacks against the closest visible enemy."
+LocLongDescription="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on ranged attacks against the closest visible enemy."
+LocHelpText="You get <Ability:+ToHit/> Aim and <Ability:+Crit/> Crit chance on ranged attacks against the closest visible enemy."
 LocFlyOverText="Priority Target"
-LocPromotionPopupText="<Bullet/> If multiple enemies are equally distant, you get the bonus against all of them.<br/>"
+LocPromotionPopupText="<Bullet/> If multiple enemies are equally distant, you get the bonus against all of them.<br/><Bullet/> Priority Target doesn't affect melee attacks.<br/>"
 
 [ShadowOps_ControlledDetonation X2AbilityTemplate]
 LocFriendlyName="Controlled Detonation"
@@ -206,10 +206,10 @@ LocPromotionPopupText="<Bullet/> Smoke and Mirrors also slightly reduces the sol
 
 [ShadowOps_BareKnuckle X2AbilityTemplate]
 LocFriendlyName="Bare Knuckle"
-LocLongDescription="Your melee attacks deal <Ability:+Damage/> damage."
-LocHelpText="Your melee attacks deal <Ability:+Damage/> damage."
+LocLongDescription="Your melee attacks deal <Ability:+CurDamage/> damage. The damage bonus increases with rank."
+LocHelpText="Your melee attacks deal <Ability:+CurDamage/> damage."
 LocFlyOverText="Bare Knuckle"
-LocPromotionPopupText="<Bullet/> Melee attacks include Bull Rush and knife attacks. <br/>"
+LocPromotionPopupText="<Bullet/> Melee attacks include Bull Rush and knife attacks. <br/><Bullet/> The damage bonus increases by 1 for every 2 soldier ranks."
 
 [ShadowOps_DemoGrenades X2AbilityTemplate]
 LocFriendlyName="Demo Grenades"

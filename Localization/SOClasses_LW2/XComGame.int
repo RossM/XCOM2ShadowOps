@@ -13,3 +13,10 @@
 +GameplayTips_Tactical="The Hunter is good at both long-range sniping and short-range swordplay."
 +GameplayTips_Tactical="Survivalists are good at long ranges, but weak to enemies that get close."
 +GameplayTips_Tactical="Scrappers start with a shotgun, but they're also effective with an assault rifle."
++GameplayTips_Tactical="When you activate Quickburn or Fastball, you can use your flamethrower or grenade launcher after dashing."
+
+[CaselessAmmo X2AmmoTemplate]
+FriendlyName="Caseless Ammo"
+FriendlyNamePlural="Caseless Ammo"
+BriefSummary="Increases the clip size of the primary weapon by 2."
+TacticalText="<Bullet/> Increases the clip size of the primary weapon by 2. <br/><Bullet/> Only usable in assault rifles. <br/>"

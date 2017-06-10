@@ -10,6 +10,7 @@ var config int PrecisionOffenseBonus;
 var config int LowProfileDefenseBonus;
 var config int SliceAndDiceHitModifier;
 var config int BullseyeOffensePenalty, BullseyeDefensePenalty, BullseyeWillPenalty;
+var config int BullseyeCritModifier;
 var config int FirstStrikeDamageBonus;
 var config int DamnGoodGroundOffenseBonus, DamnGoodGroundDefenseBonus;
 var config float TrackingRadius;
@@ -833,6 +834,7 @@ static function X2AbilityTemplate Bullseye()
 
 	StandardAim = new class'X2AbilityToHitCalc_StandardAim';
 	StandardAim.bHitsAreCrits = true;
+	StandardAim.BuiltInCritMod = default.BullseyeCritModifier;
 	Template.AbilityToHitCalc = StandardAim;
 	Template.AbilityToHitOwnerOnMissCalc = StandardAim;
 		

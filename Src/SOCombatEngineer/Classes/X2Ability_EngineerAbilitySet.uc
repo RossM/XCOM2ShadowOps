@@ -17,8 +17,8 @@ var config int SaboteurDamageBonus;
 var config int AnatomistDamageBonus, AnatomistMaxKills;
 var config float HeatAmmoDamageMultiplier;
 var config WeaponDamageValue BullRushDamage;
-var config int BullRushHitModifier;
-var config int BareKnuckleDamageBonus;
+var config int BullRushHitModifier, BullRushCritModifier;
+var config float BareKnuckleDamageBonus, BareKnuckleDamageBonusPerRank;
 var config int DemoGrenadesEnvironmentDamageBonus;
 var config int ElusiveDodge, ElusiveRange;
 var config array<name> MadBomberGrenades;
@@ -34,9 +34,9 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(DeepPockets());
 	Templates.AddItem(DenseSmoke());			// Non-LW only
 	Templates.AddItem(SmokeAndMirrors());
+	Templates.AddItem(SmokeAndMirrors_LW2());
 	Templates.AddItem(Breach());
 	Templates.AddItem(Fastball());
-	Templates.AddItem(FastballRemovalTrigger());
 	Templates.AddItem(FractureAbility());
 	Templates.AddItem(FractureDamage());
 	Templates.AddItem(Packmaster());
@@ -61,7 +61,6 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(ExtraMunitions());
 	Templates.AddItem(BullRush());
-	Templates.AddItem(PurePassive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false));
 	Templates.AddItem(BareKnuckle());
 	Templates.AddItem(PurePassive('ShadowOps_DemoGrenades', "img:///UILibrary_SOCombatEngineer.UIPerk_demogrenades", false));
 	Templates.AddItem(Elusive());
@@ -73,14 +72,43 @@ static function array<X2DataTemplate> CreateTemplates()
 
 static function X2AbilityTemplate SmokeAndMirrors()
 {
+	local X2AbilityTemplate Template;
 	local X2Effect_AddGrenade Effect;
+	local XMBEffect_DoNotConsumeAllPoints CostEffect;
+	local XMBCondition_WeaponName Condition;
 
 	Effect = new class'X2Effect_AddGrenade';
 	Effect.DataName = 'SmokeGrenade';
 	Effect.BaseCharges = 1;
 	Effect.SkipAbilities.AddItem('SmallItemWeight');
 
-	return Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, Effect);
+	CostEffect = new class'XMBEffect_DoNotConsumeAllPoints';
+	CostEffect.AbilityNames = class'TemplateEditors_CombatEngineer'.default.GrenadeAbilities;
+	Condition = new class'XMBCondition_WeaponName';
+	Condition.IncludeWeaponNames = class'X2AbilityCost_GrenadeActionPoints'.default.SmokeGrenadeTemplates;
+	Condition.bCheckAmmo = true;
+	CostEffect.AbilityTargetConditions.AddItem(Condition);
+
+	Template = Passive('ShadowOps_SmokeAndMirrors', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, Effect);
+	AddSecondaryEffect(Template, CostEffect);
+	return Template;
+}
+
+static function X2AbilityTemplate SmokeAndMirrors_LW2()
+{
+	local X2AbilityTemplate Template;
+	local XMBEffect_DoNotConsumeAllPoints CostEffect;
+	local XMBCondition_WeaponName Condition;
+
+	CostEffect = new class'XMBEffect_DoNotConsumeAllPoints';
+	CostEffect.AbilityNames = class'TemplateEditors_CombatEngineer'.default.GrenadeAbilities;
+	Condition = new class'XMBCondition_WeaponName';
+	Condition.IncludeWeaponNames = class'X2AbilityCost_GrenadeActionPoints'.default.SmokeGrenadeTemplates;
+	Condition.bCheckAmmo = true;
+	CostEffect.AbilityTargetConditions.AddItem(Condition);
+
+	Template = Passive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, CostEffect);
+	return Template;
 }
 
 static function X2AbilityTemplate DeepPockets()
@@ -179,86 +207,28 @@ static function X2AbilityTemplate Breach()
 static function X2AbilityTemplate Fastball()
 {
 	local X2AbilityTemplate                 Template;	
-	local X2AbilityCooldown                 Cooldown;
-	local X2Effect_Persistent				FastballEffect;
-	local X2AbilityTargetStyle              TargetStyle;
+	local XMBEffect_AbilityCostRefund		FastballEffect;
+	local XMBCondition_AbilityName			NameCondition;
 
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Fastball');
-	
-	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_fastball";
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
-	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
-	Template.Hostility = eHostility_Neutral;
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_SERGEANT_PRIORITY;
+	FastballEffect = new class'XMBEffect_AbilityCostRefund';
+	FastballEffect.TriggeredEvent = 'Fastball';
+	FastballEffect.bShowFlyOver = true;
+	FastballEffect.CountValueName = 'FastballUses';
+	FastballEffect.MaxRefundsPerTurn = 1;
+	FastballEffect.bFreeCost = true;
 
-	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Free));
-	
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.FastballCooldown;
-	Template.AbilityCooldown = Cooldown;
-	
-	Template.AbilityToHitCalc = default.DeadEye;
-	Template.AbilityTriggers.AddItem(default.PlayerInputTrigger);
+	NameCondition = new class'XMBCondition_AbilityName';
+	NameCondition.IncludeAbilityNames = class'TemplateEditors_CombatEngineer'.default.GrenadeAbilities;
+	FastballEffect.AbilityTargetConditions.AddItem(NameCondition);
+
+	Template = SelfTargetActivated('ShadowOps_Fastball', "img:///UILibrary_SOCombatEngineer.UIPerk_fastball", true, FastballEffect,, eCost_Free);
+	AddCooldown(Template, default.FastballCooldown);
 
 	Template.AbilityShooterConditions.AddItem(new class'X2Condition_HasGrenade');
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_HideSpecificErrors;
+	Template.HideErrors.AddItem('AA_CannotAfford_AmmoCost');
 
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	FastballEffect = new class'X2Effect_Persistent';
-	FastballEffect.EffectName = 'Fastball';
-	FastballEffect.BuildPersistentEffect(1,,,,eGameRule_PlayerTurnEnd);
-	FastballEffect.SetDisplayInfo(ePerkBuff_Bonus, Template.LocFriendlyName, Template.LocHelpText, "img:///UILibrary_PerkIcons.UIPerk_bombard", true);
-	Template.AddTargetEffect(FastballEffect);
-
-	Template.AddShooterEffectExclusions();
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
-	Template.bSkipFireAction = true;
-
-	Template.AdditionalAbilities.AddItem('ShadowOps_FastballRemovalTrigger');
-	
-	Template.bCrossClassEligible = true;
-
-	return Template;	
-}
-
-static function X2AbilityTemplate FastballRemovalTrigger()
-{
-	local X2AbilityTemplate						Template;	
-	local X2Effect_RemoveEffects				RemoveFastballEffect;
-	local X2AbilityTrigger_EventListener		Trigger;
-	local X2AbilityTargetStyle					TargetStyle;
-
-	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_FastballRemovalTrigger');
-	
-	Template.IconImage = "img:///UILibrary_SOCombatEngineer.UIPerk_fastball";
-
-	Template.AbilitySourceName = 'eAbilitySource_Perk';
-	Template.eAbilityIconBehaviorHUD = EAbilityIconBehavior_NeverShow;
-
-	Trigger = new class'X2AbilityTrigger_EventListener';
-	Trigger.ListenerData.Deferral = ELD_OnStateSubmitted;
-	Trigger.ListenerData.EventID = 'GrenadeUsed';
-	Trigger.ListenerData.Filter = eFilter_Unit;
-	Trigger.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
-	Template.AbilityTriggers.AddItem(Trigger);
-
-	Template.AbilityToHitCalc = default.DeadEye;
-
-	TargetStyle = new class'X2AbilityTarget_Self';
-	Template.AbilityTargetStyle = TargetStyle;
-
-	RemoveFastballEffect = new class'X2Effect_RemoveEffects';
-	RemoveFastballEffect.EffectNamesToRemove.AddItem('Fastball');
-	Template.AddTargetEffect(RemoveFastballEffect);
-
-	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
-	// No visualization on purpose
-	
-	return Template;	
+	return Template;
 }
 
 static function X2AbilityTemplate FractureAbility()
@@ -749,6 +719,7 @@ static function X2AbilityTemplate LineEmUp()
 	Effect.AddToHitModifier(default.LineEmUpCrit, eHit_Crit);
 
 	Effect.AbilityTargetConditions.AddItem(new class'X2Condition_ClosestVisibleEnemy');
+	Effect.AbilityTargetConditions.AddItem(default.RangedCondition);
 
 	// TODO: icon
 	return Passive('ShadowOps_LineEmUp', "img:///UILibrary_SOCombatEngineer.UIPerk_lineemup", true, Effect);
@@ -905,6 +876,7 @@ static function X2AbilityTemplate BullRush()
 	// The default hit chance for melee attacks is low. Add +20 to the attack to match swords.
 	ToHitCalc = new class'X2AbilityToHitCalc_StandardMelee';
 	ToHitCalc.BuiltInHitMod = default.BullRushHitModifier;
+	ToHitCalc.BuiltInCritMod = default.BullRushCritModifier;
 	Template.AbilityToHitCalc = ToHitCalc;
 
 	// Create a stun effect that removes 2 actions and has a 100% chance of success if the attack hits.
@@ -923,14 +895,14 @@ static function X2AbilityTemplate BullRush()
 static function X2AbilityTemplate BareKnuckle()
 {
 	local XMBEffect_ConditionalBonus Effect;
-	local XMBCondition_AbilityProperty Condition;
 
 	Effect = new class'XMBEffect_ConditionalBonus';
-	Effect.AddDamageModifier(default.BareKnuckleDamageBonus);
+	Effect.AddDamageModifier(1);
+	Effect.AbilityTargetConditions.AddItem(default.MeleeCondition);
 
-	Condition = new class'XMBCondition_AbilityProperty';
-	Condition.bRequireMelee = true;
-	Effect.AbilityTargetConditions.AddItem(Condition);
+	Effect.ScaleBase = default.BareKnuckleDamageBonus;
+	Effect.ScaleMultiplier = default.BareKnuckleDamageBonusPerRank;
+	Effect.ScaleValue = new class'X2Value_SoldierRank';
 
 	return Passive('ShadowOps_BareKnuckle', "img:///UILibrary_SOCombatEngineer.UIPerk_bareknuckle", false, Effect);
 }

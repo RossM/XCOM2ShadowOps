@@ -524,6 +524,7 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 	local EAbilityHitResult HitResult;
 	local float ResultMultiplier;
 	local XComGameState_Unit UnitState;
+	local X2AbilityTag AbilityTag;
 	local int idx;
 
 	ResultMultiplier = 1;
@@ -539,10 +540,15 @@ function bool GetTagValue(name Tag, XComGameState_Ability AbilityState, out stri
 		if (AbilityState != none)
 		{
 			UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(AbilityState.OwnerStateObject.ObjectID));
-			if (UnitState != none)
-			{
-				ResultMultiplier *= GetScaleByValue(none, UnitState, none, none);
-			}
+		}
+		if (UnitState == none)
+		{
+			AbilityTag = X2AbilityTag(`XEXPANDCONTEXT.FindTag("Ability"));
+			UnitState = XComGameState_Unit(AbilityTag.StrategyParseObj);
+		}
+		if (UnitState != none)
+		{
+			ResultMultiplier *= GetScaleByValue(none, UnitState, none, none);
 		}
 	}
 

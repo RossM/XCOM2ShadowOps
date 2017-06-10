@@ -36,10 +36,14 @@ static event OnPostTemplatesCreated()
 	SetVariableIconColor('Deadeye');
 	SetVariableIconColor('PrecisionShot');
 	SetVariableIconColor('Flush');
+	SetVariableIconColor('RapidFire');
 	SetVariableIconColor('ShadowOps_Bullseye');
 	SetVariableIconColor('ShadowOps_DisablingShot');
 
 	UpdateFleche();
+
+	EditQuickburn();
+	EditRapidDeployment();
 
 	SetShotHUDPriorities();
 
@@ -94,6 +98,71 @@ static function UpdateFleche()
 			if (FlecheEffect.AbilityNames.Find('ShadowOps_SliceAndDice') == INDEX_NONE)
 				FlecheEffect.AbilityNames.AddItem('ShadowOps_SliceAndDice');
 		}
+	}
+}
+
+static function EditQuickburn()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local XMBEffect_AbilityCostRefund			Effect;
+	local XMBCondition_AbilityName				Condition;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('Quickburn', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		Template.AbilityTargetEffects.Length = 0;
+
+		Effect = new class'XMBEffect_AbilityCostRefund';
+		Effect.EffectName = 'QuickburnEffect';
+		Effect.TriggeredEvent = 'Quickburn';
+		Effect.bShowFlyOver = true;
+		Effect.CountValueName = 'QuickburnUses';
+		Effect.MaxRefundsPerTurn = 1;
+		Effect.bFreeCost = true;
+
+		Condition = new class'XMBCondition_AbilityName';
+		Condition.IncludeAbilityNames.AddItem('LWFlamethrower');
+		Condition.IncludeAbilityNames.AddItem('Roust');
+		Condition.IncludeAbilityNames.AddItem('Firestorm');
+		Effect.AbilityTargetConditions.AddItem(Condition);
+
+		Effect.BuildPersistentEffect(1, false, false, true, eGameRule_PlayerTurnEnd);
+		Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+		Template.AddTargetEffect(Effect);
+	}
+}
+
+static function EditRapidDeployment()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local XMBEffect_AbilityCostRefund			Effect;
+	local X2Condition_RapidDeployment			Condition;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('RapidDeployment', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		Template.AbilityTargetEffects.Length = 0;
+
+		Effect = new class'XMBEffect_AbilityCostRefund';
+		Effect.EffectName = 'RapidDeploymentEffect';
+		Effect.TriggeredEvent = 'RapidDeployment';
+		Effect.bShowFlyOver = true;
+		Effect.CountValueName = 'RapidDeploymentUses';
+		Effect.MaxRefundsPerTurn = 1;
+		Effect.bFreeCost = true;
+
+		Condition = new class'X2Condition_RapidDeployment';
+		Effect.AbilityTargetConditions.AddItem(Condition);
+
+		Effect.BuildPersistentEffect(1, false, false, true, eGameRule_PlayerTurnEnd);
+		Effect.SetDisplayInfo(ePerkBuff_Passive, Template.LocFriendlyName, Template.GetMyLongDescription(), Template.IconImage, true,,Template.AbilitySourceName);
+		Template.AddTargetEffect(Effect);
 	}
 }
 
@@ -178,7 +247,6 @@ static function EditSmallItemWeight()
 	local X2ItemTemplate						NewTemplate;
 	local array<name>							TemplateNames;
 	local name									ItemName;
-	local int									ShotHUDPriority;
 
 	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
 	ItemManager.GetTemplateNames(TemplateNames);
@@ -204,15 +272,14 @@ static function EditSmallItemWeight()
 
 static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out array<AbilitySetupData> SetupData, optional XComGameState StartState, optional XComGameState_Player PlayerState, optional bool bMultiplayerDisplay)
 {
-	local XComGameStateHistory History;
 	local XComGameState_Item Item, InnerItem;
 	local StateObjectReference ItemRef, InnerItemRef;
-
-	History = `XCOMHISTORY;
+	local int i;
 
 	if (StartState == none)
 		return;
 
+	// Remove the weight for items in the grenade/ammo slots
 	foreach UnitState.InventoryItems(ItemRef)
 	{
 		Item = XComGameState_Item(StartState.GetGameStateForObjectID(ItemRef.ObjectID));
@@ -240,7 +307,132 @@ static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out a
 			}
 		}
 	}
+
+	// Remove squadsight from survivalists not using a sniper rifle
+	if (UnitState.GetSoldierClassTemplateName() == 'ShadowOps_Survivalist_LW2' &&
+		X2WeaponTemplate(UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon).GetMyTemplate()).WeaponCat != 'sniper_rifle')
+	{
+		`Log("Removing Squadsight from" @ UnitState.GetFullName());
+		for (i = SetupData.Length - 1; i >= 0; --i)
+		{
+			if (SetupData[i].TemplateName == 'Squadsight')
+			{
+				SetupData.Remove(i, 1);
+			}
+		}
+	}
 }
+
+// Added by LWS. Used to fix up the ammo slot when validating loadout
+static function GetMinimumRequiredUtilityItems(out int Value, XComGameState_Unit UnitState, XComGameState NewGameState)
+{
+	local XComGameState_HeadquartersXCom XComHQ;
+	local XComGameState_Item EquippedAmmo, EquippedPrimaryWeapon;
+
+	foreach NewGameState.IterateByClassType(class'XComGameState_HeadquartersXCom', XComHQ)
+	{
+		break;
+	}
+
+	EquippedPrimaryWeapon = UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon, NewGameState);
+
+	EquippedAmmo = UnitState.GetItemInSlot(eInvSlot_AmmoPocket, NewGameState);
+	if (EquippedAmmo != none)
+	{
+		if(X2AmmoTemplate(EquippedAmmo.GetMyTemplate()) != none && 
+		   !X2AmmoTemplate(EquippedAmmo.GetMyTemplate()).IsWeaponValidForAmmo(X2WeaponTemplate(EquippedPrimaryWeapon.GetMyTemplate())))
+		{
+			EquippedAmmo = XComGameState_Item(NewGameState.CreateStateObject(class'XComGameState_Item', EquippedAmmo.ObjectID));
+			NewGameState.AddStateObject(EquippedAmmo);
+			UnitState.RemoveItemFromInventory(EquippedAmmo, NewGameState);
+			XComHQ.PutItemInInventory(NewGameState, EquippedAmmo);
+			EquippedAmmo = none;
+		}
+	}
+
+	if (EquippedAmmo == none && UnitState.HasAmmoPocket())
+	{
+		EquippedAmmo = GetBestAmmo(UnitState, NewGameState);
+		UnitState.AddItemToInventory(EquippedAmmo, eInvSlot_AmmoPocket, NewGameState);
+	}	
+}
+
+static function XComGameState_Item GetBestAmmo(XComGameState_Unit UnitState, XComGameState NewGameState)
+{
+	local array<X2AmmoTemplate> AmmoTemplates;
+	local XComGameState_Item ItemState;
+
+	AmmoTemplates = GetBestAmmoTemplates(UnitState, NewGameState);
+
+	if(AmmoTemplates.Length == 0)
+	{
+		return none;
+	}
+
+	ItemState = AmmoTemplates[`SYNC_RAND_STATIC(AmmoTemplates.Length)].CreateInstanceFromTemplate(NewGameState);
+	NewGameState.AddStateObject(ItemState);
+
+	return ItemState;
+}
+
+static function array<X2AmmoTemplate> GetBestAmmoTemplates(XComGameState_Unit UnitState, XComGameState NewGameState)
+{
+	local XComGameStateHistory History;
+	local XComGameState_HeadquartersXCom XComHQ;
+	local X2AmmoTemplate AmmoTemplate, BestAmmoTemplate;
+	local array<X2AmmoTemplate> BestAmmoTemplates;
+	local XComGameState_Item ItemState;
+	local XComGameState_Item EquippedPrimaryWeapon;
+	local int idx, HighestTier;
+
+	History = `XCOMHISTORY;
+	XComHQ = class'UIUtilities_Strategy'.static.GetXComHQ();
+
+	EquippedPrimaryWeapon = UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon, NewGameState);
+
+	// First get the default Ammo template
+	BestAmmoTemplate = X2AmmoTemplate(class'X2ItemTemplateManager'.static.GetItemTemplateManager().FindItemTemplate(class'X2Ability_InfantryAbilitySet'.default.FreeAmmoForPocket));
+	if (BestAmmoTemplate.IsWeaponValidForAmmo(X2WeaponTemplate(EquippedPrimaryWeapon.GetMyTemplate())))
+	{
+		BestAmmoTemplates.AddItem(BestAmmoTemplate);
+		HighestTier = BestAmmoTemplate.Tier;
+	}
+	else
+	{
+		BestAmmoTemplate = none;
+		HighestTier = 0;
+	}
+
+	if( XComHQ != none )
+	{
+		// Try to find a better Ammo as an infinite item in the inventory
+		for (idx = 0; idx < XComHQ.Inventory.Length; idx++)
+		{
+			ItemState = XComGameState_Item(History.GetGameStateForObjectID(XComHQ.Inventory[idx].ObjectID));
+			AmmoTemplate = X2AmmoTemplate(ItemState.GetMyTemplate());
+
+			if(AmmoTemplate != none && AmmoTemplate.bInfiniteItem && AmmoTemplate.IsWeaponValidForAmmo(X2WeaponTemplate(EquippedPrimaryWeapon.GetMyTemplate())) &&
+				(BestAmmoTemplate == none || (BestAmmoTemplates.Find(AmmoTemplate) == INDEX_NONE && AmmoTemplate.Tier >= BestAmmoTemplate.Tier)))
+			{
+				BestAmmoTemplate = AmmoTemplate;
+				BestAmmoTemplates.AddItem(BestAmmoTemplate);
+				HighestTier = BestAmmoTemplate.Tier;
+			}
+		}
+	}
+
+	for(idx = 0; idx < BestAmmoTemplates.Length; idx++)
+	{
+		if(BestAmmoTemplates[idx].Tier < HighestTier)
+		{
+			BestAmmoTemplates.Remove(idx, 1);
+			idx--;
+		}
+	}
+
+	return BestAmmoTemplates;
+}
+
 
 exec function Respec()
 {

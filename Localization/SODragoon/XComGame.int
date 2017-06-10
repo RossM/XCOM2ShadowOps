@@ -162,10 +162,10 @@ LocPromotionPopupText="<Bullet/> Charge! has one charge.<br/>"
 
 [ShadowOps_EatThis X2AbilityTemplate]
 LocFriendlyName="Eat This!"
-LocLongDescription="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range, to a maximum of <Ability:EatThisMaxTiles/> tiles."
-LocHelpText="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit against adjacent targets. The bonus decreases with range."
+LocLongDescription="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit on attacks against adjacent targets. The bonus decreases with range, to a maximum of <Ability:EatThisMaxTiles/> tiles."
+LocHelpText="You gain <Ability:+ToHit> Aim and <Ability:+Crit> Crit on attacks against adjacent targets. The bonus decreases with range."
 LocFlyOverText="Eat This!"
-LocPromotionPopupText="<Bullet/> TODO.<br/>"
+LocPromotionPopupText="<Bullet/> The bonus doesn't affect melee attacks.<br/>"
 
 [ShadowOps_Inspiration X2AbilityTemplate]
 LocFriendlyName="Inspiration"

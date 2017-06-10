@@ -76,6 +76,9 @@ var const XMBCondition_AbilityHitResult GrazeCondition;				// The ability grazes
 var const XMBCondition_MatchingWeapon MatchingWeaponCondition;		// The ability matches the weapon of the 
 																	// ability defining the condition
 
+var const XMBCondition_AbilityProperty MeleeCondition;
+var const XMBCondition_AbilityProperty RangedCondition;
+
 // Unit property conditions.
 var const X2Condition_UnitProperty LivingFriendlyTargetProperty;	// The target is alive and an ally.
 
@@ -919,6 +922,16 @@ defaultproperties
 	Begin Object Class=XMBCondition_MatchingWeapon Name=DefaultMatchingWeaponCondition
 	End Object
 	MatchingWeaponCondition = DefaultMatchingWeaponCondition
+
+	Begin Object Class=XMBCondition_AbilityProperty Name=DefaultMeleeCondition
+		bRequireMelee = true
+	End Object
+	MeleeCondition = DefaultMeleeCondition
+
+	Begin Object Class=XMBCondition_AbilityProperty Name=DefaultRangedCondition
+		bExcludeMelee = true
+	End Object
+	RangedCondition = DefaultRangedCondition
 
 	Begin Object Class=X2Condition_UnitProperty Name=DefaultLivingFriendlyTargetProperty
 		ExcludeAlive=false
