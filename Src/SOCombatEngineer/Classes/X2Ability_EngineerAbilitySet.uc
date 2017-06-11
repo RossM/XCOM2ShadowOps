@@ -216,6 +216,7 @@ static function X2AbilityTemplate Fastball()
 	FastballEffect.CountValueName = 'FastballUses';
 	FastballEffect.MaxRefundsPerTurn = 1;
 	FastballEffect.bFreeCost = true;
+	FastballEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
 
 	NameCondition = new class'XMBCondition_AbilityName';
 	NameCondition.IncludeAbilityNames = class'TemplateEditors_CombatEngineer'.default.GrenadeAbilities;
