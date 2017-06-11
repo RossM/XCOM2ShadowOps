@@ -122,6 +122,7 @@ static function EditQuickburn()
 		Effect.CountValueName = 'QuickburnUses';
 		Effect.MaxRefundsPerTurn = 1;
 		Effect.bFreeCost = true;
+		Effect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
 
 		Condition = new class'XMBCondition_AbilityName';
 		Condition.IncludeAbilityNames.AddItem('LWFlamethrower');
@@ -156,6 +157,7 @@ static function EditRapidDeployment()
 		Effect.CountValueName = 'RapidDeploymentUses';
 		Effect.MaxRefundsPerTurn = 1;
 		Effect.bFreeCost = true;
+		Effect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnEnd);
 
 		Condition = new class'X2Condition_RapidDeployment';
 		Effect.AbilityTargetConditions.AddItem(Condition);
