@@ -22,6 +22,7 @@ event name CallMeetsConditionWithSource(XComGameState_BaseObject kTarget, XComGa
 	TargetDistance = SourceUnit.TileDistanceBetween(TargetUnit);
 
 	class'X2TacticalVisibilityHelpers'.static.GetAllVisibleEnemyUnitsForUnit(kSource.ObjectID, VisibleUnits);
+	class'X2TacticalVisibilityHelpers'.static.GetAllSquadsightEnemiesForUnit(kSource.ObjectID, VisibleUnits);
 
 	foreach VisibleUnits(UnitRef)
 	{
