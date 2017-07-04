@@ -195,7 +195,7 @@ LocPromotionPopupText="<Bullet/> The free grenade is not affected by Packmaster.
 LocFriendlyName="Bull Rush"
 LocLongDescription="Make a special melee attack against any enemy within movement range that deals little damage but stuns the target for 1 turn."
 LocHelpText="Make a special melee attack against any enemy within movement range that deals little damage but stuns the target for 1 turn."
-LocPromotionPopupText="<Bullet/> Robotic enemies can't be stunned, but still take the damage.<br/>"
+LocPromotionPopupText="<Bullet/> Bull Rush also affects mechanical units.<br/>"
 
 [ShadowOps_SmokeAndMirrors_LW2 X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
