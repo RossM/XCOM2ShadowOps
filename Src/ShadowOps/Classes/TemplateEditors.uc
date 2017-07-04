@@ -3,12 +3,14 @@ class TemplateEditors extends Object config(GameCore);
 
 var config array<name> SuppressionBlockedAbilities;
 var config array<name> WeaponCostAbilities;
+var config array<name> SquadsightAbilities;
 var config array<name> LWClasses;
 
 static function EditTemplates()
 {
 	AddAllSuppressionConditions();
 	ChangeAllToWeaponActionPoints();
+	ChangeAllToSquadsight();
 
 	KillLongWarDead();
 }
@@ -115,5 +117,40 @@ static function ChangeAllToWeaponActionPoints()
 	{
 		`Log("ShadowOps: ChangeToWeaponActionPoints" @ DataName);
 		ChangeToWeaponActionPoints(DataName);
+	}
+}
+
+static function ChangeToSquadsight(name AbilityName)
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local X2Condition_Visibility				VisibilityCondition;
+	local int i;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties(AbilityName, TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		for (i = 0; i < Template.AbilityTargetConditions.Length; i++)
+		{
+			if (Template.AbilityTargetConditions[i].IsA('X2Condition_Visibility'))
+			{
+				VisibilityCondition = new class'X2Condition_Visibility'(Template.AbilityTargetConditions[i]);
+				VisibilityCondition.bAllowSquadsight = true;
+				Template.AbilityTargetConditions[i] = VisibilityCondition;
+			}
+		}
+	}
+}
+
+static function ChangeAllToSquadsight()
+{
+	local name DataName;
+
+	foreach default.SquadsightAbilities(DataName)
+	{
+		`Log("ShadowOps: ChangeToSquadsight" @ DataName);
+		ChangeToSquadsight(DataName);
 	}
 }
