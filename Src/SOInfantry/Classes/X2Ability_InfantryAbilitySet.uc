@@ -1528,10 +1528,8 @@ static function X2AbilityTemplate ReadyForAnything()
 static function X2AbilityTemplate ReadyForAnythingOverwatch()
 {
 	local X2AbilityTemplate                 Template;
-	local X2AbilityCost                     Cost;
 	local X2Condition_UnitActionPoints		ActionPointCondition;
 	local X2Effect_ActivateOverwatch		OverwatchEffect;
-	local X2AbilityTrigger_EventListener	EventListener;
 
 	OverwatchEffect = new class'X2Effect_ActivateOverwatch';
 	Template = SelfTargetTrigger('ShadowOps_ReadyForAnythingOverwatch', "img:///UILibrary_SOInfantry.UIPerk_readyforanything",, OverwatchEffect, 'StandardShotActivated');
@@ -1545,7 +1543,7 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 	// Don't display in HUD
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 
-	return Template;	
+	return Template;
 }
 
 static function X2AbilityTemplate ImprovedSuppression()

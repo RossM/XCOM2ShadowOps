@@ -90,7 +90,6 @@ static function EventListenerReturn EventHandler(XComGameState_BaseObject Source
 			//  give the unit an action point so they can activate overwatch										
 			UnitState.ActionPoints.AddItem(class'X2CharacterTemplateManager'.default.StandardActionPoint);					
 		}
-		// UnitState.SetUnitFloatValue(class'X2Ability_SpecialistAbilitySet'.default.EverVigilantEffectName, 1, eCleanup_BeginTurn);
 		if (EffectTemplate.UnitValueName != '')
 			UnitState.SetUnitFloatValue(EffectTemplate.UnitValueName, 1, eCleanup_BeginTurn);
 
