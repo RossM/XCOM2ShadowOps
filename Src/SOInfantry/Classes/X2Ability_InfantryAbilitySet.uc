@@ -1530,17 +1530,11 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 	local X2AbilityTemplate                 Template;
 	local X2AbilityCost                     Cost;
 	local X2Condition_UnitActionPoints		ActionPointCondition;
+	local X2Effect_ActivateOverwatch		OverwatchEffect;
 	local X2AbilityTrigger_EventListener	EventListener;
 
-	Template = new class'X2AbilityTemplate'(class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('Overwatch'));
-	Template.SetTemplateName('ShadowOps_ReadyForAnythingOverwatch');
-
-	// Remove action point cost
-	foreach Template.AbilityCosts(Cost)
-	{
-		if (Cost.IsA('X2AbilityCost_ActionPoints'))
-			Template.AbilityCosts.RemoveItem(Cost);
-	}
+	OverwatchEffect = new class'X2Effect_ActivateOverwatch';
+	Template = SelfTargetTrigger('ShadowOps_ReadyForAnythingOverwatch', "img:///UILibrary_SOInfantry.UIPerk_readyforanything",, OverwatchEffect, 'StandardShotActivated');
 
 	// Require that the unit have no standard action points available
 	// This handles the case where the unit's action was refunded by a hair trigger
@@ -1548,16 +1542,6 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 	ActionPointCondition.AddActionPointCheck(0);
 	Template.AbilityShooterConditions.AddItem(ActionPointCondition);
 
-	// Placeholder trigger
-	Template.AbilityTriggers.Length = 0;
-
-	EventListener = new class'X2AbilityTrigger_EventListener';
-	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
-	EventListener.ListenerData.EventID = 'StandardShotActivated';
-	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
-	EventListener.ListenerData.Filter = eFilter_Unit;
-	Template.AbilityTriggers.AddItem(EventListener);
-	
 	// Don't display in HUD
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 

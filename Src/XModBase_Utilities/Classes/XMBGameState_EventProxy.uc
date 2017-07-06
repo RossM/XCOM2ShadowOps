@@ -2,16 +2,25 @@ class XMBGameState_EventProxy extends XComGameState_BaseObject;
 
 var StateObjectReference SourceRef;
 var delegate<ProxyOnEventDelegate> OnEvent;
+var bool bTriggerOnceOnly;
 
 delegate EventListenerReturn ProxyOnEventDelegate(XComGameState_BaseObject SourceState, Object EventData, Object EventSource, XComGameState GameState, Name EventID);
 
 function EventListenerReturn EventHandler(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
+	local X2EventManager EventMgr;
 	local XComGameState_BaseObject SourceState;
+	local object ListenerObj;
+
+	EventMgr = `XEVENTMGR;
+	ListenerObj = self;
 
 	SourceState = GameState.GetGameStateForObjectID(SourceRef.ObjectID);
 	if (SourceState == none)
 		SourceState = `XCOMHISTORY.GetGameStateForObjectID(SourceRef.ObjectID);
+
+	if (bTriggerOnceOnly)
+		EventMgr.UnRegisterFromEvent(ListenerObj, EventID);
 
 	return OnEvent(SourceState, EventData, EventSource, GameState, EventID);
 }
