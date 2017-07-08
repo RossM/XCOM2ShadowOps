@@ -23,6 +23,7 @@ var config int DemoGrenadesEnvironmentDamageBonus;
 var config int ElusiveDodge, ElusiveRange;
 var config array<name> MadBomberGrenades;
 var config array<ExtShotModifierInfo> FractureLW2Modifiers;
+var config array<name> ExplosiveGrenades;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
@@ -60,6 +61,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Saboteur());
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(ExtraMunitions());
+	Templates.AddItem(ExtraMunitions_LW2());
 	Templates.AddItem(BullRush());
 	Templates.AddItem(BareKnuckle());
 	Templates.AddItem(PurePassive('ShadowOps_DemoGrenades', "img:///UILibrary_SOCombatEngineer.UIPerk_demogrenades", false));
@@ -859,6 +861,17 @@ static function X2AbilityTemplate ExtraMunitions()
 	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
 
 	return Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true, ItemEffect);
+}
+
+static function X2AbilityTemplate ExtraMunitions_LW2()
+{
+	local XMBEffect_AddItemCharges ItemEffect;
+
+	ItemEffect = new class 'XMBEffect_AddItemCharges';
+	ItemEffect.PerItemBonus = 1;
+	ItemEffect.ApplyToNames = default.ExplosiveGrenades;
+
+	return Passive('ShadowOps_ExtraMunitions_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true, ItemEffect);
 }
 
 // Perk name:		Bull Rush
