@@ -27,6 +27,8 @@ var config int ShieldSurgeArmor;
 var config array<name> PuppeteerAbilityNames;
 var config int ShieldBatteryBonusCharges;
 var config int OverkillBonusDamage;
+var config int ShotgunFinesseMobilityBonus, ShotgunFinesseCritBonus;
+var config name ShotgunFinesseWeaponCat;
 
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges, PhalanxProtocolCharges;
 var config int StealthProtocolConventionalCharges, StealthProtocolMagneticCharges, StealthProtocolBeamCharges;
@@ -70,6 +72,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Puppeteer());
 	Templates.AddItem(ShieldBattery());
 	Templates.AddItem(Overkill());
+	Templates.AddItem(ShotgunFinesse());
 
 	return Templates;
 }
@@ -356,6 +359,39 @@ static function FinessePurchased(XComGameState NewGameState, XComGameState_Unit 
 		UnitState.AddItemToInventory(ItemState, BestWeaponTemplate.InventorySlot, NewGameState);
 		NewGameState.AddStateObject(ItemState);
 	}
+}
+
+static function X2AbilityTemplate ShotgunFinesse()
+{
+	local X2AbilityTemplate						BaseTemplate;
+	local X2AbilityTemplate_Dragoon				Template;
+	local X2Effect_PersistentStatChange         FinesseEffect;
+	local X2Condition_UnitInventory				Condition;
+
+	FinesseEffect = new class'X2Effect_PersistentStatChange';
+	FinesseEffect.AddPersistentStatChange(eStat_CritChance, default.ShotgunFinesseCritBonus);
+	FinesseEffect.AddPersistentStatChange(eStat_Mobility, default.ShotgunFinesseMobilityBonus);
+
+	BaseTemplate = Passive('ShadowOps_ShotgunFinesse', "img:///UILibrary_PerkIcons.UIPerk_stickandmove", false, FinesseEffect);
+	Template = new class'X2AbilityTemplate_Dragoon'(BaseTemplate);
+
+	Condition = new class'X2Condition_UnitInventory';
+	Condition.RelevantSlot = eInvSlot_PrimaryWeapon;
+	Condition.RequireWeaponCategory = default.ShotgunFinesseWeaponCat;
+	Template.AbilityTargetConditions.AddItem(Condition);
+
+	Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.CharCritChance, eStat_CritChance, default.ShotgunFinesseCritBonus, ShotgunFinesseStatDisplay);
+	Template.SetUIBonusStatMarkup(class'XLocalizedData'.default.MobilityLabel, eStat_Mobility, default.ShotgunFinesseMobilityBonus, ShotgunFinesseStatDisplay);
+
+	return Template;
+}
+
+static function bool ShotgunFinesseStatDisplay(XComGameState_Item InventoryItem)
+{
+	local X2WeaponTemplate WeaponTemplate;
+	
+	WeaponTemplate = X2WeaponTemplate(InventoryItem.GetMyTemplate());
+	return (WeaponTemplate != none && WeaponTemplate.WeaponCat == default.ShotgunFinesseWeaponCat);
 }
 
 static function X2AbilityTemplate StealthProtocol()
