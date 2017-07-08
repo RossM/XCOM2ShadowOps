@@ -98,6 +98,7 @@ static function X2AbilityTemplate SmokeAndMirrors_LW2()
 {
 	local X2AbilityTemplate Template;
 	local XMBEffect_DoNotConsumeAllPoints CostEffect;
+	local XMBEffect_AddItemCharges BonusItemEffect;
 	local XMBCondition_WeaponName Condition;
 
 	CostEffect = new class'XMBEffect_DoNotConsumeAllPoints';
@@ -108,6 +109,12 @@ static function X2AbilityTemplate SmokeAndMirrors_LW2()
 	CostEffect.AbilityTargetConditions.AddItem(Condition);
 
 	Template = Passive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, CostEffect);
+
+	BonusItemEffect = new class'XMBEffect_AddItemCharges';
+	BonusItemEffect.PerItemBonus = 1;
+	BonusItemEffect.ApplyToNames = class'X2AbilityCost_GrenadeActionPoints'.default.SmokeGrenadeTemplates;
+	AddSecondaryEffect(Template, BonusItemEffect);
+
 	return Template;
 }
 
@@ -465,7 +472,7 @@ static function X2AbilityTemplate Packmaster()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local XMBEffect_AddItemChargesBySlot            ItemChargesEffect;
+	local XMBEffect_AddItemCharges            ItemChargesEffect;
 	local X2Effect_Persistent					PersistentEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Packmaster');
@@ -485,7 +492,7 @@ static function X2AbilityTemplate Packmaster()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	ItemChargesEffect = new class'XMBEffect_AddItemChargesBySlot';
+	ItemChargesEffect = new class'XMBEffect_AddItemCharges';
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_Utility);
 	Template.AddTargetEffect(ItemChargesEffect);
 

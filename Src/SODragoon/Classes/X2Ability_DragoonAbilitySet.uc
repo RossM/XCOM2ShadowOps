@@ -973,7 +973,7 @@ static function X2AbilityTemplate Rocketeer()
 {
 	local X2AbilityTemplate                 Template;
 	local XMBEffect_AddAbilityCharges		ByNameEffect;
-	local XMBEffect_AddItemChargesBySlot	BySlotEffect;
+	local XMBEffect_AddItemCharges	BySlotEffect;
 	
 	Template = Passive('ShadowOps_Rocketeer', "img:///UILibrary_SODragoon.UIPerk_rocketeer", true, none);
 
@@ -981,7 +981,7 @@ static function X2AbilityTemplate Rocketeer()
 	ByNameEffect.AbilityNames = default.RocketeerAbilityNames;
 	Template.AddTargetEffect(ByNameEffect);
 
-	BySlotEffect = new class'XMBEffect_AddItemChargesBySlot';
+	BySlotEffect = new class'XMBEffect_AddItemCharges';
 	BySlotEffect.ApplyToSlots.AddItem(eInvSlot_HeavyWeapon);
 	Template.AddTargetEffect(BySlotEffect);
 

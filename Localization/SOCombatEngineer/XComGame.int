@@ -199,8 +199,8 @@ LocPromotionPopupText="<Bullet/> Bull Rush also affects mechanical units.<br/>"
 
 [ShadowOps_SmokeAndMirrors_LW2 X2AbilityTemplate]
 LocFriendlyName="Smoke and Mirrors"
-LocLongDescription="Launching or throwing a smoke grenade does not end your turn. Also slightly reduces this soldier's infiltration time while on missions."
-LocHelpText="Launching or throwing a smoke grenade does not end your turn."
+LocLongDescription="Grants +1 charge per smoke grenade item. Launching or throwing a smoke grenade does not end your turn."
+LocHelpText="Grants +1 charge per smoke grenade item. Launching or throwing a smoke grenade does not end your turn."
 LocFlyOverText="Smoke and Mirrors"
 LocPromotionPopupText="<Bullet/> Smoke and Mirrors also slightly reduces the soldier's infiltration time. <br/>"
 
