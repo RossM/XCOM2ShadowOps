@@ -24,9 +24,13 @@ var config int ElusiveDodge, ElusiveRange;
 var config array<name> MadBomberGrenades;
 var config array<ExtShotModifierInfo> FractureLW2Modifiers;
 var config array<name> ExplosiveGrenades;
+var config int CombatDrugsOffenseBonus, CombatDrugsWillBonus, CombatDrugsDuration;
+var config float DenseSmokeBonusRadius;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
+
+var localized string CombatDrugsName, CombatDrugsDescription;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -70,6 +74,26 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Fracture_LW2());
 
 	return Templates;
+}
+
+static function X2Effect CombatDrugsEffect()
+{
+	local X2Effect_PersistentStatChange Effect;
+	local XMBCondition_SourceAbilities Condition;
+
+	Effect = new class'X2Effect_PersistentStatChange';
+	Effect.EffectName = 'CombatDrugs';
+	Effect.DuplicateResponse = eDupe_Refresh;
+	Effect.AddPersistentStatChange(eStat_Offense, default.CombatDrugsOffenseBonus);
+	Effect.AddPersistentStatChange(eStat_Will, default.CombatDrugsWillBonus);
+	Effect.BuildPersistentEffect(default.CombatDrugsDuration, false, false, false, eGameRule_PlayerTurnBegin);
+	Effect.SetDisplayInfo(ePerkBuff_Bonus, default.CombatDrugsName, default.CombatDrugsDescription, "img:///UILibrary_SOCombatEngineer.UIPerk_combatdrugs", true,,'eAbilitySource_Perk');
+
+	Condition = new class'XMBCondition_SourceAbilities';
+	Condition.AddRequireAbility('ShadowOps_CombatDrugs', 'AA_UnitIsImmune');
+	Effect.TargetConditions.AddItem(Condition);
+
+	return Effect;
 }
 
 static function X2AbilityTemplate SmokeAndMirrors()
@@ -530,7 +554,7 @@ static function X2AbilityTemplate DenseSmoke()
 
 	Effect = new class'XMBEffect_BonusRadius';
 	Effect.EffectName = 'DenseSmokeRadius';
-	Effect.fBonusRadius = class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
+	Effect.fBonusRadius = default.DenseSmokeBonusRadius;
 	Effect.IncludeItemNames.AddItem('SmokeGrenade');
 	Effect.IncludeItemNames.AddItem('SmokeGrenadeMk2');
 

@@ -64,10 +64,10 @@ LocPromotionPopupText="<Bullet/> Aggression even affects attacks that can't norm
 
 [ShadowOps_CombatDrugs X2AbilityTemplate]
 LocFriendlyName="Combat Drugs"
-LocLongDescription="Units in your smoke grenade cloud get +10 Aim and +20 Crit chance."
-LocHelpText="Units in your smoke grenade cloud get +10 Aim and +20 Crit chance."
+LocLongDescription="A fast-acting stimulant in your smoke grenades grants units in the initial area +20 Aim and +20 Will for 2 turns."
+LocHelpText="Your smoke grenades grant units in the initial area +20 Aim and +20 Will for 2 turns."
 LocFlyOverText="Combat Drugs"
-LocPromotionPopupText="<Bullet/> The bonus affects all units in the cloud, so group your soldiers together to give more of them the bonus. Watch out for enemy grenades if you group too tightly, though. <br/><Bullet/> Beware of Stun Lancers and other melee units that might move into your smoke cloud and gain its benefits. <br/>"
+LocPromotionPopupText="<Bullet/> TODO. <br/>"
 
 [ShadowOps_SlamFire X2AbilityTemplate]
 LocFriendlyName="Slam Fire"

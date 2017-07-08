@@ -170,7 +170,7 @@ static function X2Effect ShieldSurgeEffect()
 {
 	local X2Effect_PersistentStatChange ArmorEffect;
 	local X2AbilityTemplate ShieldSurgeTemplate;
-	local X2Condition_SourceAbilities Condition;
+	local XMBCondition_SourceAbilities Condition;
 
 	`CREATE_X2ABILITY_TEMPLATE(ShieldSurgeTemplate, 'ShadowOps_ShieldSurge');
 
@@ -179,7 +179,7 @@ static function X2Effect ShieldSurgeEffect()
 	ArmorEffect.AddPersistentStatChange(eStat_ArmorMitigation, default.ShieldSurgeArmor);
 	ArmorEffect.SetDisplayInfo(ePerkBuff_Bonus, ShieldSurgeTemplate.LocFriendlyName, ShieldSurgeTemplate.LocLongDescription, "img:///UILibrary_SODragoon.UIPerk_shieldsurge", true);
 
-	Condition = new class'X2Condition_SourceAbilities';
+	Condition = new class'XMBCondition_SourceAbilities';
 	Condition.AddRequireAbility('ShadowOps_ShieldSurge', 'AA_AbilityUnavailable');
 	ArmorEffect.TargetConditions.AddItem(Condition);
 
