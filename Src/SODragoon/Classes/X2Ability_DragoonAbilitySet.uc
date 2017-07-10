@@ -33,6 +33,7 @@ var config name ShotgunFinesseWeaponCat;
 var config int ShieldProtocolCharges, StealthProtocolCharges, RestoratonProtocolCharges, ChargeCharges, PhalanxProtocolCharges;
 var config int StealthProtocolConventionalCharges, StealthProtocolMagneticCharges, StealthProtocolBeamCharges;
 var config int RestorationProtocolConventionalCharges, RestorationProtocolMagneticCharges, RestorationProtocolBeamCharges;
+var config int StasisFieldCharges;
 
 var config int BurstFireCooldown, StasisFieldCooldown, PuppetProtocolCooldown;
 var config int BurstFireAmmo;
@@ -781,9 +782,11 @@ static function X2AbilityTemplate StasisField()
 
 	Template.AbilityCosts.AddItem(ActionPointCost(eCost_Single));
 
-	Cooldown = new class'X2AbilityCooldown';
-	Cooldown.iNumTurns = default.StasisFieldCooldown;
-	Template.AbilityCooldown = Cooldown;
+	if (default.StasisFieldCooldown > 0)
+		AddCooldown(Template, default.StasisFieldCooldown);
+
+	if (default.StasisFieldCharges > 0)
+		AddCharges(Template, default.StasisFieldCharges);
 
 	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
 	Template.AddShooterEffectExclusions();
