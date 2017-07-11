@@ -1915,7 +1915,7 @@ static function X2AbilityTemplate ZoneOfControl_LW2()
 
 	ActionPointEffect = new class'X2Effect_ReserveOverwatchPoints';
 	ActionPointEffect.NumPoints = default.ZoneOfControlLW2Shots;
-	Template = SelfTargetActivated('ShadowOps_ZoneOfControl_LW2', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", true, ActionPointEffect,, eCost_Overwatch);
+	Template = SelfTargetActivated('ShadowOps_ZoneOfControl_LW2', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol2", true, ActionPointEffect,, eCost_Overwatch);
 
 	CoveringFireEffect = new class'X2Effect_CoveringFire';
 	CoveringFireEffect.EffectName = 'ZoneOfControl';
