@@ -1298,12 +1298,11 @@ static function X2AbilityTemplate Fearsome()
 static function X2AbilityTemplate CoverMe()
 {
 	local X2AbilityTemplate Template, CoolUnderPressureTemplate;
-	local X2Effect_ModifyReactionFire CoolUnderPressureEffect;
+	local XMBEffect_AddAbility CoolUnderPressureEffect;
 	local X2Effect_GrantReserveActionPoint ActionPointEffect;
 
-	CoolUnderPressureEffect = new class'X2Effect_ModifyReactionFire';
-	CoolUnderPressureEffect.bAllowCrit = true;
-	CoolUnderPressureEffect.ReactionModifier = class'X2Ability_SpecialistAbilitySet'.default.UNDER_PRESSURE_BONUS;
+	CoolUnderPressureEffect = new class'XMBEffect_AddAbility';
+	CoolUnderPressureEffect.AbilityName = 'CoolUnderPressure';
 	CoolUnderPressureEffect.BuildPersistentEffect(1, false, false, false, eGameRule_PlayerTurnBegin);
 	CoolUnderPressureEffect.VisualizationFn = EffectFlyOver_Visualization;
 
@@ -1314,15 +1313,6 @@ static function X2AbilityTemplate CoverMe()
 	Template.AddTargetEffect(ActionPointEffect);
 
 	AddCooldown(Template, default.CoverMeCooldown);
-
-	// Set the Cool Under Pressure effect to display as that perk
-	CoolUnderPressureTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('CoolUnderPressure');
-	if (CoolUnderPressureTemplate != none)
-	{
-		CoolUnderPressureEffect.FriendlyName = CoolUnderPressureTemplate.LocFriendlyName;
-		CoolUnderPressureEffect.FriendlyDescription = CoolUnderPressureTemplate.LocHelpText;
-		CoolUnderPressureEffect.IconImage =  CoolUnderPressureTemplate.IconImage;
-	}
 
 	return Template;
 }
