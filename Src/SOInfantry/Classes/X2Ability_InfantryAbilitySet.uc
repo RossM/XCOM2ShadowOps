@@ -1907,8 +1907,9 @@ static function X2AbilityTemplate ThrowSonicBeacon()
 
 static function X2AbilityTemplate ZoneOfControl_LW2()
 {
-	local X2AbilityTemplate                 Template, CoveringFireTemplate, OverwatchShotTaken;
+	local X2AbilityTemplate                 Template, OverwatchShotTaken;
 	local X2Effect_ReserveOverwatchPoints	ActionPointEffect;
+	local XMBEffect_AddAbility				AddAbilityEffect;
 	local X2Effect_CoveringFire				CoveringFireEffect;
 	local XMBCondition_AbilityName			Condition;
 	local X2Condition_UnitEffects			EffectCondition;
@@ -1917,12 +1918,20 @@ static function X2AbilityTemplate ZoneOfControl_LW2()
 	ActionPointEffect.NumPoints = default.ZoneOfControlLW2Shots;
 	Template = SelfTargetActivated('ShadowOps_ZoneOfControl_LW2', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol2", true, ActionPointEffect,, eCost_Overwatch);
 
+	// Add the covering fire ability. This gets us the passive icon, and ensures that any abilities which check for
+	// the covering fire ability will see it.
+	AddAbilityEffect = new class'XMBEffect_AddAbility';
+	AddAbilityEffect.AbilityName = 'CoveringFire';
+	AddAbilityEffect.EffectName = 'ZoneOfControl';
+	AddAbilityEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
+	AddAbilityEffect.VisualizationFn = EffectFlyOver_Visualization;
+	AddSecondaryEffect(Template, AddAbilityEffect);
+
+	// We need to explicitly include the covering fire effect of overwatch shot here
 	CoveringFireEffect = new class'X2Effect_CoveringFire';
-	CoveringFireEffect.EffectName = 'ZoneOfControl';
 	CoveringFireEffect.AbilityToActivate = 'OverwatchShot';
 	CoveringFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
-	CoveringFireEffect.VisualizationFn = EffectFlyOver_Visualization;
-	AddSecondaryEffect(Template, CoveringFireEffect);
+	Template.AddTargetEffect(CoveringFireEffect);
 
 	AddCooldown(Template, default.ZoneOfControlLW2Cooldown);
 
@@ -1939,19 +1948,10 @@ static function X2AbilityTemplate ZoneOfControl_LW2()
 	AddTriggerTargetCondition(OverwatchShotTaken, Condition);
 	
 	EffectCondition = new class'X2Condition_UnitEffects';
-	EffectCondition.AddRequireEffect(CoveringFireEffect.EffectName, 'AA_UnitIsImmune');
+	EffectCondition.AddRequireEffect(AddAbilityEffect.EffectName, 'AA_UnitIsImmune');
 	AddTriggerShooterCondition(OverwatchShotTaken, Condition);
 	
 	AddSecondaryAbility(Template, OverwatchShotTaken);
-
-	// Set the CoveringFire effect to display as that perk
-	CoveringFireTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('CoveringFire');
-	if (CoveringFireTemplate != none)
-	{
-		CoveringFireEffect.FriendlyName = CoveringFireTemplate.LocFriendlyName;
-		CoveringFireEffect.FriendlyDescription = CoveringFireTemplate.LocHelpText;
-		CoveringFireEffect.IconImage =  CoveringFireTemplate.IconImage;
-	}
 
 	return Template;
 }
