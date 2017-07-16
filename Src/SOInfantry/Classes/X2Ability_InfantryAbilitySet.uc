@@ -1935,7 +1935,7 @@ static function X2AbilityTemplate ZoneOfControl_LW2()
 
 	AddCooldown(Template, default.ZoneOfControlLW2Cooldown);
 
-	OverwatchShotTaken = SelfTargetTrigger('ZoneOfControlOverwatchShotTaken', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", false,, 'AbilityActivated');
+	OverwatchShotTaken = SelfTargetTrigger('ZoneOfControlOverwatchShotTaken', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol2", false,, 'AbilityActivated');
 	OverwatchShotTaken.AbilityTargetStyle = default.SimpleSingleTarget;
 	XMBAbilityTrigger_EventListener(OverwatchShotTaken.AbilityTriggers[0]).bSelfTarget = false;
 
