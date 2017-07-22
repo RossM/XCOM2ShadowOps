@@ -23,9 +23,14 @@ var config int DemoGrenadesEnvironmentDamageBonus;
 var config int ElusiveDodge, ElusiveRange;
 var config array<name> MadBomberGrenades;
 var config array<ExtShotModifierInfo> FractureLW2Modifiers;
+var config array<name> ExplosiveGrenades;
+var config int CombatDrugsOffenseBonus, CombatDrugsWillBonus, CombatDrugsDuration;
+var config float DenseSmokeBonusRadius;
 
 var config int BreachCooldown, FastballCooldown, FractureCooldown, SlamFireCooldown;
 var config int BreachAmmo, FractureAmmo;
+
+var localized string CombatDrugsName, CombatDrugsDescription;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -60,6 +65,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Saboteur());
 	Templates.AddItem(Anatomist());
 	Templates.AddItem(ExtraMunitions());
+	Templates.AddItem(ExtraMunitions_LW2());
 	Templates.AddItem(BullRush());
 	Templates.AddItem(BareKnuckle());
 	Templates.AddItem(PurePassive('ShadowOps_DemoGrenades', "img:///UILibrary_SOCombatEngineer.UIPerk_demogrenades", false));
@@ -68,6 +74,26 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(Fracture_LW2());
 
 	return Templates;
+}
+
+static function X2Effect CombatDrugsEffect()
+{
+	local X2Effect_PersistentStatChange Effect;
+	local XMBCondition_SourceAbilities Condition;
+
+	Effect = new class'X2Effect_PersistentStatChange';
+	Effect.EffectName = 'CombatDrugs';
+	Effect.DuplicateResponse = eDupe_Refresh;
+	Effect.AddPersistentStatChange(eStat_Offense, default.CombatDrugsOffenseBonus);
+	Effect.AddPersistentStatChange(eStat_Will, default.CombatDrugsWillBonus);
+	Effect.BuildPersistentEffect(default.CombatDrugsDuration, false, false, false, eGameRule_PlayerTurnBegin);
+	Effect.SetDisplayInfo(ePerkBuff_Bonus, default.CombatDrugsName, default.CombatDrugsDescription, "img:///UILibrary_SOCombatEngineer.UIPerk_combatdrugs", true,,'eAbilitySource_Perk');
+
+	Condition = new class'XMBCondition_SourceAbilities';
+	Condition.AddRequireAbility('ShadowOps_CombatDrugs', 'AA_UnitIsImmune');
+	Effect.TargetConditions.AddItem(Condition);
+
+	return Effect;
 }
 
 static function X2AbilityTemplate SmokeAndMirrors()
@@ -98,6 +124,7 @@ static function X2AbilityTemplate SmokeAndMirrors_LW2()
 {
 	local X2AbilityTemplate Template;
 	local XMBEffect_DoNotConsumeAllPoints CostEffect;
+	local XMBEffect_AddItemCharges BonusItemEffect;
 	local XMBCondition_WeaponName Condition;
 
 	CostEffect = new class'XMBEffect_DoNotConsumeAllPoints';
@@ -108,6 +135,12 @@ static function X2AbilityTemplate SmokeAndMirrors_LW2()
 	CostEffect.AbilityTargetConditions.AddItem(Condition);
 
 	Template = Passive('ShadowOps_SmokeAndMirrors_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_smokeandmirrors", false, CostEffect);
+
+	BonusItemEffect = new class'XMBEffect_AddItemCharges';
+	BonusItemEffect.PerItemBonus = 1;
+	BonusItemEffect.ApplyToNames = class'X2AbilityCost_GrenadeActionPoints'.default.SmokeGrenadeTemplates;
+	AddSecondaryEffect(Template, BonusItemEffect);
+
 	return Template;
 }
 
@@ -465,7 +498,7 @@ static function X2AbilityTemplate Packmaster()
 	local X2AbilityTemplate						Template;
 	local X2AbilityTargetStyle                  TargetStyle;
 	local X2AbilityTrigger						Trigger;
-	local XMBEffect_AddItemChargesBySlot            ItemChargesEffect;
+	local XMBEffect_AddItemCharges            ItemChargesEffect;
 	local X2Effect_Persistent					PersistentEffect;
 
 	`CREATE_X2ABILITY_TEMPLATE(Template, 'ShadowOps_Packmaster');
@@ -485,7 +518,7 @@ static function X2AbilityTemplate Packmaster()
 	Trigger = new class'X2AbilityTrigger_UnitPostBeginPlay';
 	Template.AbilityTriggers.AddItem(Trigger);
 
-	ItemChargesEffect = new class'XMBEffect_AddItemChargesBySlot';
+	ItemChargesEffect = new class'XMBEffect_AddItemCharges';
 	ItemChargesEffect.ApplyToSlots.AddItem(eInvSlot_Utility);
 	Template.AddTargetEffect(ItemChargesEffect);
 
@@ -521,7 +554,7 @@ static function X2AbilityTemplate DenseSmoke()
 
 	Effect = new class'XMBEffect_BonusRadius';
 	Effect.EffectName = 'DenseSmokeRadius';
-	Effect.fBonusRadius = class'X2Effect_SmokeGrenade_BO'.default.DenseSmokeBonusRadius;
+	Effect.fBonusRadius = default.DenseSmokeBonusRadius;
 	Effect.IncludeItemNames.AddItem('SmokeGrenade');
 	Effect.IncludeItemNames.AddItem('SmokeGrenadeMk2');
 
@@ -852,6 +885,17 @@ static function X2AbilityTemplate ExtraMunitions()
 	ItemEffect.SkipAbilities.AddItem('SmallItemWeight');
 
 	return Passive('ShadowOps_ExtraMunitions', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true, ItemEffect);
+}
+
+static function X2AbilityTemplate ExtraMunitions_LW2()
+{
+	local XMBEffect_AddItemCharges ItemEffect;
+
+	ItemEffect = new class 'XMBEffect_AddItemCharges';
+	ItemEffect.PerItemBonus = 1;
+	ItemEffect.ApplyToNames = default.ExplosiveGrenades;
+
+	return Passive('ShadowOps_ExtraMunitions_LW2', "img:///UILibrary_SOCombatEngineer.UIPerk_extramunitions", true, ItemEffect);
 }
 
 // Perk name:		Bull Rush

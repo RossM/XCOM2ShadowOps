@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------
-//  FILE:    XMBEffect_AddItemChargesBySlot.uc
+//  FILE:    XMBEffect_AddItemCharges.uc
 //  AUTHOR:  xylthixlm
 //
 //  Adds extra charges to equipped items based on the slots those items are in.
@@ -21,7 +21,7 @@
 //
 //  XMBEffectUtilities.uc
 //---------------------------------------------------------------------------------------
-class XMBEffect_AddItemChargesBySlot extends X2Effect;
+class XMBEffect_AddItemCharges extends X2Effect;
 
 
 //////////////////////
@@ -35,6 +35,7 @@ var int PerItemBonus;						// The number of charges to add for each item in the 
 // Condition properties //
 //////////////////////////
 
+var array<name> ApplyToNames;				// The names of items to add charges to.
 var array<EInventorySlot> ApplyToSlots;		// The slot, or slots, to add charges to items in.
 
 
@@ -48,12 +49,16 @@ var array<EInventorySlot> ApplyToSlots;		// The slot, or slots, to add charges t
 // only give extra uses to certain items.
 function int GetItemChargeModifier(XComGameState NewGameState, XComGameState_Unit NewUnit, XComGameState_Item ItemIter)
 {
-	if (ItemIter.Quantity > 0 && ApplyToSlots.Find(ItemIter.InventorySlot) != INDEX_NONE)
-	{
-		return PerItemBonus;
-	}
+	if (ItemIter.Quantity == 0)
+		return 0;
 
-	return 0;
+	if (ApplyToNames.Length > 0 && ApplyToNames.Find(ItemIter.GetMyTemplateName()) == INDEX_NONE)
+		return 0;
+
+	if (ApplyToSlots.Length > 0 && ApplyToSlots.Find(ItemIter.InventorySlot) == INDEX_NONE)
+		return 0;
+
+	return PerItemBonus;
 }
 
 

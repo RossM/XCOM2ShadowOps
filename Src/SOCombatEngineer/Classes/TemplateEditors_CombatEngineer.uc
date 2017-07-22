@@ -15,6 +15,12 @@ static function EditTemplates()
 		`Log("SOCombatEngineer: Editing" @ DataName);
 		AddPostActivationEvent(DataName, 'GrenadeUsed');
 	}
+
+	foreach class'X2AbilityCost_GrenadeActionPoints'.default.SmokeGrenadeTemplates(DataName)
+	{
+		`Log("SOCombatEngineer: Editing" @ DataName);
+		AddCombatDrugsEffect(DataName);
+	}		
 }
 
 static function AddPostActivationEvent(name AbilityName, name EventName)
@@ -29,5 +35,23 @@ static function AddPostActivationEvent(name AbilityName, name EventName)
 	{
 		if (Template.PostActivationEvents.Find(EventName) == INDEX_NONE)
 			Template.PostActivationEvents.AddItem(EventName);
+	}
+}
+
+static function AddCombatDrugsEffect(name ItemName)
+{
+	local X2ItemTemplateManager		ItemManager;
+	local array<X2DataTemplate>		TemplateAllDifficulties;
+	local X2DataTemplate			Template;
+	local X2GrenadeTemplate			GrenadeTemplate;
+
+	ItemManager = class'X2ItemTemplateManager'.static.GetItemTemplateManager();
+	ItemManager.FindDataTemplateAllDifficulties(ItemName, TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		GrenadeTemplate = X2GrenadeTemplate(Template);
+		// Note: Not idempotent!
+		GrenadeTemplate.ThrownGrenadeEffects.AddItem(class'X2Ability_EngineerAbilitySet'.static.CombatDrugsEffect());
+		GrenadeTemplate.LaunchedGrenadeEffects.AddItem(class'X2Ability_EngineerAbilitySet'.static.CombatDrugsEffect());
 	}
 }

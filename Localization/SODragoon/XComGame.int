@@ -216,6 +216,13 @@ LocHelpText="Your attacks deal <Ability:+Damage/> damage to enemies at half or l
 LocFlyOverText="Overkill"
 LocPromotionPopupText="<Bullet/> The bonus damage applies to all your attacks, including gauntlet attacks.<br/><Bullet/> Overkill doesn't affect burn, acid, or poison damage caused by your abilities.<br/>"
 
+[ShadowOps_ShotgunFinesse X2AbilityTemplate]
+LocFriendlyName="Shotgun Finesse"
+LocLongDescription="Gain <Ability:+Crit/> Crit chance and <Ability:+Mobility/> Mobility while equipped with a shotgun."
+LocHelpText="Gain <Ability:+Crit/> Crit chance and <Ability:+Mobility/> Mobility while equipped with a shotgun."
+LocFlyOverText="Finesse"
+LocPromotionPopupText="<Bullet/> TODO.<br/>"
+
 ; === Class templates ===
 
 [ShadowOps_Dragoon X2SoldierClassTemplate]

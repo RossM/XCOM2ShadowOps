@@ -30,10 +30,10 @@ LocPromotionPopupText="<Bullet/>Mark provides a useful second action on turns wh
 
 [ShadowOps_VitalPoint X2AbilityTemplate]
 LocFriendlyName="Keen Edge"
-LocLongDescription="Your sword attacks shred <Ability:Shred/> armor and deal <Ability:+Damage/> damage."
-LocHelpText="Your sword attacks shred <Ability:Shred/> armor and deal <Ability:+Damage/> damage."
+LocLongDescription="Your sword attacks deal <Ability:+Damage/> damage and ignore up to <Ability:ArmorPiercing> armor."
+LocHelpText="Your sword attacks deal <Ability:+Damage/> damage and ignore up to <Ability:ArmorPiercing> armor."
 LocFlyOverText="Keen Edge"
-LocPromotionPopupText="<Bullet/> More advanced swords will shred more armor and deal extra bonus damage.<br/><Bullet/> Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet/> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
+LocPromotionPopupText="<Bullet/> More advanced swords will ignore more armor and deal extra bonus damage.<br/><Bullet/> Your sword attacks can finish off a wounded enemy and move to a better position for using your sniper rifle at the same time.<br/><Bullet/> Because of the Hunter's high Aim stat, your sword attacks will almost always hit.<br/><Bullet/> Keen Edge will make a normal sword deal as much damage as a sniper rifle of the same tech tier.<br/>"
 
 [ShadowOps_Precision X2AbilityTemplate]
 LocFriendlyName="Precision"

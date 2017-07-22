@@ -2,3 +2,7 @@
 m_strKills="KILLS"
 m_strKillsTitle="#1's Kills"
 m_strUnknown="Unknown"
+
+[X2Ability_EngineerAbilitySet]
+CombatDrugsName="Combat Drugs"
+CombatDrugsDescription="A fast-acting stimulant is granting bonuses to Aim and Will."

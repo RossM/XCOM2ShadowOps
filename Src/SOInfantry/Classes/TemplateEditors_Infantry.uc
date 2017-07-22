@@ -38,6 +38,8 @@ static function EditTemplates()
 		AddMissDamage(DataName);
 	}
 
+	// Fix up Ever Vigilant
+	FixEverVigilant();
 }
 
 static function AddDoNotConsumeAllAbility(name AbilityName, name PassiveAbilityName)
@@ -205,6 +207,38 @@ simulated static function XComGameState HotLoadAmmo_BuildGameState(XComGameState
 	NewGameState.AddStateObject(NewWeaponState);
 
 	return NewGameState;
+}
+
+static function FixEverVigilant()
+{
+	local X2AbilityTemplateManager				AbilityManager;
+	local array<X2AbilityTemplate>				TemplateAllDifficulties;
+	local X2AbilityTemplate						Template;
+	local XMBAbilityTrigger_EventListener		EventListener;
+	local X2Effect_ActivateOverwatch			Effect;
+	local X2Condition_UnitValue					Condition;
+
+	AbilityManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityManager.FindAbilityTemplateAllDifficulties('EverVigilant', TemplateAllDifficulties);
+	foreach TemplateAllDifficulties(Template)
+	{
+		Template.AbilityTriggers.Length = 0;
+
+		EventListener = new class'XMBAbilityTrigger_EventListener';
+		EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+		EventListener.ListenerData.EventID = 'PlayerTurnEnded';
+		EventListener.ListenerData.Filter = eFilter_Player;
+		EventListener.bSelfTarget = true;
+		Template.AbilityTriggers.AddItem(EventListener);
+
+		Effect = new class'X2Effect_ActivateOverwatch';
+		Effect.UnitValueName = class'X2Ability_SpecialistAbilitySet'.default.EverVigilantEffectName;
+		Template.AddTargetEffect(Effect);
+
+		Condition = new class'X2Condition_UnitValue';
+		Condition.AddCheckValue('NonMoveActionsThisTurn', 0, eCheck_Exact);
+		Template.AbilityShooterConditions.AddItem(Condition);
+	}
 }
 
 defaultproperties

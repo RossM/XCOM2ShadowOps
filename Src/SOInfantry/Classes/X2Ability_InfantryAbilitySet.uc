@@ -1528,19 +1528,11 @@ static function X2AbilityTemplate ReadyForAnything()
 static function X2AbilityTemplate ReadyForAnythingOverwatch()
 {
 	local X2AbilityTemplate                 Template;
-	local X2AbilityCost                     Cost;
 	local X2Condition_UnitActionPoints		ActionPointCondition;
-	local X2AbilityTrigger_EventListener	EventListener;
+	local X2Effect_ActivateOverwatch		OverwatchEffect;
 
-	Template = new class'X2AbilityTemplate'(class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('Overwatch'));
-	Template.SetTemplateName('ShadowOps_ReadyForAnythingOverwatch');
-
-	// Remove action point cost
-	foreach Template.AbilityCosts(Cost)
-	{
-		if (Cost.IsA('X2AbilityCost_ActionPoints'))
-			Template.AbilityCosts.RemoveItem(Cost);
-	}
+	OverwatchEffect = new class'X2Effect_ActivateOverwatch';
+	Template = SelfTargetTrigger('ShadowOps_ReadyForAnythingOverwatch', "img:///UILibrary_SOInfantry.UIPerk_readyforanything",, OverwatchEffect, 'StandardShotActivated');
 
 	// Require that the unit have no standard action points available
 	// This handles the case where the unit's action was refunded by a hair trigger
@@ -1548,20 +1540,10 @@ static function X2AbilityTemplate ReadyForAnythingOverwatch()
 	ActionPointCondition.AddActionPointCheck(0);
 	Template.AbilityShooterConditions.AddItem(ActionPointCondition);
 
-	// Placeholder trigger
-	Template.AbilityTriggers.Length = 0;
-
-	EventListener = new class'X2AbilityTrigger_EventListener';
-	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
-	EventListener.ListenerData.EventID = 'StandardShotActivated';
-	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
-	EventListener.ListenerData.Filter = eFilter_Unit;
-	Template.AbilityTriggers.AddItem(EventListener);
-	
 	// Don't display in HUD
 	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
 
-	return Template;	
+	return Template;
 }
 
 static function X2AbilityTemplate ImprovedSuppression()
@@ -1925,26 +1907,35 @@ static function X2AbilityTemplate ThrowSonicBeacon()
 
 static function X2AbilityTemplate ZoneOfControl_LW2()
 {
-	local X2AbilityTemplate                 Template, CoveringFireTemplate, OverwatchShotTaken;
+	local X2AbilityTemplate                 Template, OverwatchShotTaken;
 	local X2Effect_ReserveOverwatchPoints	ActionPointEffect;
+	local XMBEffect_AddAbility				AddAbilityEffect;
 	local X2Effect_CoveringFire				CoveringFireEffect;
 	local XMBCondition_AbilityName			Condition;
 	local X2Condition_UnitEffects			EffectCondition;
 
 	ActionPointEffect = new class'X2Effect_ReserveOverwatchPoints';
 	ActionPointEffect.NumPoints = default.ZoneOfControlLW2Shots;
-	Template = SelfTargetActivated('ShadowOps_ZoneOfControl_LW2', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", true, ActionPointEffect,, eCost_Overwatch);
+	Template = SelfTargetActivated('ShadowOps_ZoneOfControl_LW2', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol2", true, ActionPointEffect,, eCost_Overwatch);
 
+	// Add the covering fire ability. This gets us the passive icon, and ensures that any abilities which check for
+	// the covering fire ability will see it.
+	AddAbilityEffect = new class'XMBEffect_AddAbility';
+	AddAbilityEffect.AbilityName = 'CoveringFire';
+	AddAbilityEffect.EffectName = 'ZoneOfControl';
+	AddAbilityEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
+	AddAbilityEffect.VisualizationFn = EffectFlyOver_Visualization;
+	AddSecondaryEffect(Template, AddAbilityEffect);
+
+	// We need to explicitly include the covering fire effect of overwatch shot here
 	CoveringFireEffect = new class'X2Effect_CoveringFire';
-	CoveringFireEffect.EffectName = 'ZoneOfControl';
 	CoveringFireEffect.AbilityToActivate = 'OverwatchShot';
 	CoveringFireEffect.BuildPersistentEffect(1, false, true, false, eGameRule_PlayerTurnBegin);
-	CoveringFireEffect.VisualizationFn = EffectFlyOver_Visualization;
-	AddSecondaryEffect(Template, CoveringFireEffect);
+	Template.AddTargetEffect(CoveringFireEffect);
 
 	AddCooldown(Template, default.ZoneOfControlLW2Cooldown);
 
-	OverwatchShotTaken = SelfTargetTrigger('ZoneOfControlOverwatchShotTaken', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol", false,, 'AbilityActivated');
+	OverwatchShotTaken = SelfTargetTrigger('ZoneOfControlOverwatchShotTaken', "img:///UILibrary_SOInfantry.UIPerk_zoneofcontrol2", false,, 'AbilityActivated');
 	OverwatchShotTaken.AbilityTargetStyle = default.SimpleSingleTarget;
 	XMBAbilityTrigger_EventListener(OverwatchShotTaken.AbilityTriggers[0]).bSelfTarget = false;
 
@@ -1957,19 +1948,10 @@ static function X2AbilityTemplate ZoneOfControl_LW2()
 	AddTriggerTargetCondition(OverwatchShotTaken, Condition);
 	
 	EffectCondition = new class'X2Condition_UnitEffects';
-	EffectCondition.AddRequireEffect(CoveringFireEffect.EffectName, 'AA_UnitIsImmune');
+	EffectCondition.AddRequireEffect(AddAbilityEffect.EffectName, 'AA_UnitIsImmune');
 	AddTriggerShooterCondition(OverwatchShotTaken, Condition);
 	
 	AddSecondaryAbility(Template, OverwatchShotTaken);
-
-	// Set the CoveringFire effect to display as that perk
-	CoveringFireTemplate = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager().FindAbilityTemplate('CoveringFire');
-	if (CoveringFireTemplate != none)
-	{
-		CoveringFireEffect.FriendlyName = CoveringFireTemplate.LocFriendlyName;
-		CoveringFireEffect.FriendlyDescription = CoveringFireTemplate.LocHelpText;
-		CoveringFireEffect.IconImage =  CoveringFireTemplate.IconImage;
-	}
 
 	return Template;
 }

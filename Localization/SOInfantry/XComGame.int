@@ -144,10 +144,10 @@ LocHitMessage="Second Wind"
 
 [ShadowOps_Tactician X2AbilityTemplate]
 LocFriendlyName="Tactician"
-LocLongDescription="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage. Rifle only."
-LocHelpText="Missed shots with your <Ability:WeaponName/> deal <Ability:MissDamage/> damage."
+LocLongDescription="Missed shots with your primary weapon deal <Ability:MissDamage/> damage. Rifles and SMGs only."
+LocHelpText="Missed shots with your primary weapon deal <Ability:MissDamage/> damage."
 LocFlyOverText="Tactician"
-LocPromotionPopupText="<Bullet/> Tactician stacks with the effect of a stock.<br/>"
+LocPromotionPopupText="<Bullet/> Abilities that increase weapon damage, such as Center Mass, don't affect Tactician damage.<br/>"
 
 [ShadowOps_ReadyForAnything X2AbilityTemplate]
 LocFriendlyName="Ready for Anything"
