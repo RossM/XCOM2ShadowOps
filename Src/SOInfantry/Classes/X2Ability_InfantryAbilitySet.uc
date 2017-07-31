@@ -1822,6 +1822,7 @@ static function X2AbilityTemplate SonicBeacon()
 	Effect = new class'XMBEffect_AddUtilityItem';
 	Effect.DataName = 'SonicBeacon';
 	Effect.BaseCharges = default.SonicBeaconCharges;
+	Effect.SkipAbilities.AddItem('LaunchGrenade');
 
 	return Passive('ShadowOps_SonicBeacon', "img:///UILibrary_SOInfantry.UIPerk_sonicbeacon", true, Effect);
 }
